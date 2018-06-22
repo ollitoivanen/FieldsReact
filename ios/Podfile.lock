@@ -1,0 +1,113 @@
+PODS:
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
+  - Firebase/Auth (5.3.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (= 5.0.1)
+  - Firebase/Core (5.3.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 5.0.1)
+  - Firebase/CoreOnly (5.3.0):
+    - FirebaseCore (= 5.0.4)
+  - FirebaseAnalytics (5.0.1):
+    - FirebaseCore (~> 5.0)
+    - FirebaseInstanceID (~> 3.0)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - nanopb (~> 0.3)
+  - FirebaseAuth (5.0.1):
+    - FirebaseCore (~> 5.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - FirebaseCore (5.0.4):
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+  - FirebaseInstanceID (3.1.1):
+    - FirebaseCore (~> 5.0)
+  - GoogleToolboxForMac/Defines (2.1.4)
+  - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - GTMSessionFetcher/Core (1.1.15)
+  - Lock (1.29.2):
+    - Lock/Core (= 1.29.2)
+    - Lock/UI (= 1.29.2)
+    - Lock/WebView (= 1.29.2)
+  - Lock/Core (1.29.2):
+    - AFNetworking (~> 3.0)
+  - Lock/CoreUI (1.29.2):
+    - Lock/Core
+    - Masonry (~> 0.6)
+  - Lock/Email (1.29.2):
+    - Lock/UI
+  - Lock/SMS (1.29.2):
+    - Lock/UI
+  - Lock/TouchID (1.29.2):
+    - Lock/UI
+    - SimpleKeychain (~> 0.2)
+    - TouchIDAuth (~> 0.1)
+  - Lock/UI (1.29.2):
+    - Lock/CoreUI
+  - Lock/WebView (1.29.2):
+    - Lock/CoreUI
+  - Masonry (0.6.4)
+  - nanopb (0.3.8):
+    - nanopb/decode (= 0.3.8)
+    - nanopb/encode (= 0.3.8)
+  - nanopb/decode (0.3.8)
+  - nanopb/encode (0.3.8)
+  - SimpleKeychain (0.8.1)
+  - TouchIDAuth (0.2.0):
+    - SimpleKeychain (~> 0.3)
+
+DEPENDENCIES:
+  - Firebase/Auth
+  - Firebase/Core
+  - Lock (~> 1.26)
+  - Lock/Email
+  - Lock/SMS
+  - Lock/TouchID
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseAuth
+    - FirebaseCore
+    - FirebaseInstanceID
+    - GoogleToolboxForMac
+    - GTMSessionFetcher
+    - Lock
+    - Masonry
+    - nanopb
+    - SimpleKeychain
+    - TouchIDAuth
+
+SPEC CHECKSUMS:
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
+  FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
+  FirebaseAuth: 463b8ce33bd5d05f706dcd4615499e3212b4132b
+  FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
+  FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
+  GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
+  GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
+  Lock: 3414fed031b4044509697dd9b9da9208bc68ad26
+  Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
+  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  SimpleKeychain: e2485c28d82fcece35e9e41faeac42ebfe614815
+  TouchIDAuth: 0cf861f58a2cacfc1c12cb02de4850729d943c81
+
+PODFILE CHECKSUM: 5cfd9d73314ccdb3d34fec49816e53fdf85d7440
+
+COCOAPODS: 1.5.3

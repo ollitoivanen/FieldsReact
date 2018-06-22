@@ -1,57 +1,50 @@
-import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-
-import Swiper from 'react-native-swiper';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import AppIntroSlider from 'react-native-app-intro-slider';
 
 const styles = StyleSheet.create({
-  wrapper: {
-  },
-  slide1: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9DD6EB',
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5',
-  },
-  slide3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold',
+  image: {
+    width: 320,
+    height: 320,
   }
-})
+});
 
-export default class Swiper1 extends Component {
-  render(){
+const slides = [
+  {
+    key: 'somethun',
+    title: 'Title 1',
+    text: 'Description.\nSay something cool',
+    
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: 'somethun-dos',
+    title: 'Title 2',
+    text: 'Other cool stuff',
+    
+    backgroundColor: '#febe29',
+  },
+  {
+    key: 'somethun1',
+    title: 'Rocket guy',
+    text: 'I\'m already out of descriptions\n\nLorem ipsum bla bla bla',
+   
+    backgroundColor: '#22bcb5',
+  }
+];
+
+export default class App extends React.Component {
+  _onDone = () => {
+    // User finished the introduction. Show "real" app
+  }
+  render() {
     return (
-      <Swiper style={styles.wrapper} showsButtons={true}>
-        <View style={styles.slide1}>
-          <Text style={styles.text}>Hello Swiper</Text>
-        </View>
-        <View style={styles.slide2}>
-          <Text style={styles.text}>Beautiful</Text>
-        </View>
-        <View style={styles.slide3}>
-          <Text style={styles.text}>And simple</Text>
-        </View>
-      </Swiper>
+      <AppIntroSlider
+        slides={slides}
+        onDone={this._onDone}
+      />
     );
   }
 }
 
-AppRegistry.registerComponent('FieldsReact', () => Swiper);
+AppRegistry.registerComponent('FieldsReact', () => AppIntroSlider);
