@@ -1,0 +1,9 @@
+export const welcome = "Welcome to Fields! Let's create an account for you!";
+export const welcome_back = 'Welcome back!'
+export const username = 'Username';
+export const email = 'Email';
+export const login = 'Login';
+export const signup = 'Sign Up';
+export const password = 'Password';
+export const already_have_an_account = 'Already have an account? Log in Here';
+export const dont_have_an_account = "Don't have an account? Sign Up here"

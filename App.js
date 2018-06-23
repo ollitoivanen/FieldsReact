@@ -1,50 +1,21 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import AppIntroSlider from 'react-native-app-intro-slider';
-
-const styles = StyleSheet.create({
-  image: {
-    width: 320,
-    height: 320,
-  }
-});
-
-const slides = [
+import React from "react";
+import { StyleSheet, Platform, Image, Text, View } from "react-native";
+import { SwitchNavigator } from "react-navigation";
+// import the different screens
+import LoadingScreen from "FieldsReact/app/screens/LoadingScreen/LoadingScreen";
+import  SignUpScreen  from "FieldsReact/app/screens/SignUpScreen/SignUpScreen";
+import LoginScreen from "FieldsReact/app/screens/LoginScreen/LoginScreen";
+import FeedScreen from "FieldsReact/app/screens/FeedScreen/FeedScreen";
+// create our app's navigation stack
+const App = SwitchNavigator(
   {
-    key: 'somethun',
-    title: 'Title 1',
-    text: 'Description.\nSay something cool',
-    
-    backgroundColor: '#59b2ab',
+    LoadingScreen,
+    SignUpScreen,
+    LoginScreen,
+    FeedScreen
   },
   {
-    key: 'somethun-dos',
-    title: 'Title 2',
-    text: 'Other cool stuff',
-    
-    backgroundColor: '#febe29',
-  },
-  {
-    key: 'somethun1',
-    title: 'Rocket guy',
-    text: 'I\'m already out of descriptions\n\nLorem ipsum bla bla bla',
-   
-    backgroundColor: '#22bcb5',
+    initialRouteName: "LoadingScreen"
   }
-];
-
-export default class App extends React.Component {
-  _onDone = () => {
-    // User finished the introduction. Show "real" app
-  }
-  render() {
-    return (
-      <AppIntroSlider
-        slides={slides}
-        onDone={this._onDone}
-      />
-    );
-  }
-}
-
-AppRegistry.registerComponent('FieldsReact', () => AppIntroSlider);
+);
+export default App;

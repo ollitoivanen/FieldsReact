@@ -7,16 +7,23 @@
     "test": "jest"
   },
   "dependencies": {
+    "firebase": "^5.1.0",
     "native-base": "^2.6.0",
     "react": "16.3.1",
     "react-native": "0.55.4",
     "react-native-app-intro": "^1.1.5",
     "react-native-firebase": "^4.2.0",
-    "react-native-swiper": "^1.5.13"
+    "react-native-swiper": "^1.5.13",
+    "react-navigation": "^2.5.1"
   },
   "devDependencies": {
     "babel-jest": "23.0.1",
     "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.9.1",
     "jest": "23.1.0",
     "react-test-renderer": "16.3.1"
   },
