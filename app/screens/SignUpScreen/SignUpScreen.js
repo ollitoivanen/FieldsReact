@@ -14,9 +14,10 @@ import {
   password,
   welcome,
   signup,
-  already_have_an_account
+  already_have_an_account,
+  name
 } from "FieldsReact/app/strings/strings";
-import firebase from 'react-native-firebase';
+import firebase from "react-native-firebase";
 
 export default class SignUpScreen extends React.Component {
   state = { email1: "", password1: "", errorMessage: null };
@@ -24,23 +25,20 @@ export default class SignUpScreen extends React.Component {
     firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email1, this.state.password1)
-      .then(() => this.props.navigation.navigate('FeedScreen'))
-      .catch(error => this.setState({ errorMessage: error.message }))
-  }
+      .then(() => this.props.navigation.navigate("FeedScreen"))
+      .catch(error => this.setState({ errorMessage: error.message }));
+  };
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <Text>{signup}</Text>
-        {this.state.errorMessage && (
-          <Text style={{ color: "red" }}>{this.state.errorMessage}</Text>
-        )}
-
         <View style={styles.logoContainer}>
           <Image
             style={styles.logo}
             source={require("FieldsReact/app/images/fields_logo_green.png")}
           />
         </View>
+
+        <Text>{welcome}</Text>
 
         <TextInput
           underlineColorAndroid="rgba(0,0,0,0)"
@@ -59,6 +57,9 @@ export default class SignUpScreen extends React.Component {
           onChangeText={password1 => this.setState({ password1 })}
           value={this.state.password1}
         />
+        {this.state.errorMessage && (
+          <Text style={styles.error}>{this.state.errorMessage}</Text>
+        )}
         <TouchableOpacity
           onPress={this.handleSignUp}
           style={styles.buttonContainer}
@@ -111,9 +112,15 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
+  
   text: {
     marginTop: 16,
     color: "#bcbcbc",
     textAlign: "center"
+  },
+
+  error: {
+    marginTop: 8,
+    color: 'red'
   }
 });

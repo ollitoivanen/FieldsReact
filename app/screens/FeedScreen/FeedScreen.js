@@ -9,10 +9,11 @@ export default class FeedScreen extends React.Component {
     this.setState({ currentUser })
 }
   render() {
+    
     const { currentUser } = this.state;
     return (
       <View style={styles.container}>
-        <Text>Hi {currentUser && currentUser.email}!</Text>
+        <Text onPress={()=>firebase.auth().signOut()}>Hi {currentUser && currentUser.email}!</Text>
       </View>
     );
   }
