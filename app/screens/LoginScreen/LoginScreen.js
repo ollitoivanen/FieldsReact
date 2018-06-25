@@ -128,6 +128,6 @@ const styles = StyleSheet.create({
 
   error: {
     marginTop: 8,
-    color: 'red'
+    color: "red"
   }
 });

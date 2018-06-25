@@ -21,7 +21,16 @@ import firebase from "react-native-firebase";
 
 export default class SignUpScreen extends React.Component {
   state = { email1: "", password1: "", errorMessage: null };
+
+  constructor() {
+    super();
+    this.ref = firebase.firestore().collection("Users");
+    this.unsubscribe = null;
+  }
   handleSignUp = () => {
+    this.ref.add({
+      email: this.state.email1,
+    });
     firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email1, this.state.password1)
@@ -46,7 +55,6 @@ export default class SignUpScreen extends React.Component {
           autoCapitalize="none"
           style={styles.textInput}
           onChangeText={email1 => this.setState({ email1 })}
-          value={this.state.email1}
         />
         <TextInput
           underlineColorAndroid="rgba(0,0,0,0)"
@@ -112,7 +120,6 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
-  
   text: {
     marginTop: 16,
     color: "#bcbcbc",
@@ -121,6 +128,6 @@ const styles = StyleSheet.create({
 
   error: {
     marginTop: 8,
-    color: 'red'
+    color: "red"
   }
 });

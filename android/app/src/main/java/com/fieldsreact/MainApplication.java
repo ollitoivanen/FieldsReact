@@ -9,6 +9,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage; // <-- Add this line
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 
 
 import java.util.Arrays;
@@ -27,7 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
               new RNFirebaseAuthPackage(),
-              new RNFirebasePackage()
+              new RNFirebasePackage(),
+              new RNFirebaseFirestorePackage()
       );
     }
 
