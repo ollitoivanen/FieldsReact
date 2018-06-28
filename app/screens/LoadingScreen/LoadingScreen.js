@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import firebase from 'react-native-firebase'
 
 export default class LoadingScreen extends Component {
@@ -11,10 +11,13 @@ export default class LoadingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Loading</Text>
-        <ActivityIndicator size="large" style={styles.container} />
-      </View>
-    );
+       <Image
+            style={styles.logo}
+            source={require("FieldsReact/app/images/fields_logo_green.png")}
+          />
+
+          </View>
+            );
   }
 }
 const styles = StyleSheet.create({
@@ -22,5 +25,9 @@ const styles = StyleSheet.create({
       flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  }
+  },
+  logo: {
+    width: 200,
+    height: 200
+  },
 });

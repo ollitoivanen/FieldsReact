@@ -37,9 +37,7 @@ export default class LoginScreen extends React.Component {
             source={require("FieldsReact/app/images/fields_logo_green.png")}
           />
         </View>
-
         <Text style={styles.text2}>{welcome_back}</Text>
-
         <TextInput
           underlineColorAndroid="rgba(0,0,0,0)"
           style={styles.textInput}
@@ -57,39 +55,44 @@ export default class LoginScreen extends React.Component {
           onChangeText={password1 => this.setState({ password1 })}
           value={this.state.password1}
         />
-
-        {this.state.errorMessage && (
-          <Text style={styles.error}>{this.state.errorMessage}</Text>
-        )}
-
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={this.handleLogin}
         >
           <Text style={styles.buttonText}>{login}</Text>
         </TouchableOpacity>
+        {this.state.errorMessage && (
+          <Text style={styles.error}>{this.state.errorMessage}</Text>
+        )}
 
-        <Text
-          style={styles.text}
-          onPress={() => this.props.navigation.navigate("SignUpScreen")}
-        >
-          {dont_have_an_account}
-        </Text>
+        <View style={styles.alreadyAccountCont}>
+          <Text
+            style={styles.text}
+            onPress={() => this.props.navigation.navigate("SignUpScreen")}
+          >
+            {dont_have_an_account}
+          </Text>
+        </View>
       </KeyboardAvoidingView>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 20,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    height: "100%",
+    width: "100%",
+    flex: 0
   },
   textInput: {
     height: 40,
-    marginTop: 8,
+    marginTop: 12,
     backgroundColor: "#efeded",
-    paddingHorizontal: 8
+    paddingHorizontal: 8,
+    borderRadius: 10,
+    fontWeight: "bold"
   },
 
   buttonText: {
@@ -123,11 +126,19 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: "#3bd774",
     padding: 15,
-    marginTop: 10
+    marginTop: 16,
+    borderRadius: 10
   },
 
   error: {
     marginTop: 8,
-    color: "red"
+    color: "red",
+    fontWeight: "bold"
+  },
+
+  alreadyAccountCont: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 16
   }
 });
