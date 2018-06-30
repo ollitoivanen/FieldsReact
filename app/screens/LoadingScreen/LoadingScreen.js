@@ -11,11 +11,7 @@ export default class LoadingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-       <Image
-            style={styles.logo}
-            source={require("FieldsReact/app/images/fields_logo_green.png")}
-          />
-
+      
           </View>
             );
   }

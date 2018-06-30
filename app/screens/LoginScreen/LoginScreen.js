@@ -14,19 +14,40 @@ import {
   password,
   welcome_back,
   login,
-  dont_have_an_account
+  dont_have_an_account,
+  please_enter_valid_email,
+  please_enter_password,
+  email_and_password_dont_match_any_users,
+  forgot_password
 } from "FieldsReact/app/strings/strings";
 import firebase from "react-native-firebase";
+import validator from "validator";
 
 export default class LoginScreen extends React.Component {
+
+  static navigationOptions = {
+    header: null
+  }
   state = { email1: "", password1: "", errorMessage: null };
   handleLogin = () => {
     const { email1, password1 } = this.state;
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email1, password1)
-      .then(() => this.props.navigation.navigate("FeedScreen"))
-      .catch(error => this.setState({ errorMessage: error.message }));
+    if (!validator.isEmail(this.state.email1)) {
+      this.setState({ errorMessage: [please_enter_valid_email] });
+    } else if (this.state.password1.length == 0) {
+      this.setState({ errorMessage: [please_enter_password] });
+    } else if (this.state.password1.length < 7) {
+      this.setState({ errorMessage: [please_enter_password] });
+    } else {
+      firebase
+        .auth()
+        .signInAndRetrieveDataWithEmailAndPassword(email1, password1)
+        .then(() => this.props.navigation.navigate("FeedScreen"))
+        .catch(error =>
+          this.setState({
+            errorMessage: [email_and_password_dont_match_any_users]
+          })
+        );
+    }
   };
   render() {
     return (
@@ -43,17 +64,22 @@ export default class LoginScreen extends React.Component {
           style={styles.textInput}
           autoCapitalize="none"
           placeholder={email}
+          returnKeyType="next"
+          keyboardType="email-address"
           onChangeText={email1 => this.setState({ email1 })}
           value={this.state.email1}
+          onSubmitEditing={() => this.passwordInput.focus()}
         />
         <TextInput
           underlineColorAndroid="rgba(0,0,0,0)"
           secureTextEntry
           style={styles.textInput}
           autoCapitalize="none"
+          returnKeyType="go"
           placeholder={password}
           onChangeText={password1 => this.setState({ password1 })}
           value={this.state.password1}
+          ref={input1 => (this.passwordInput = input1)}
         />
         <TouchableOpacity
           style={styles.buttonContainer}
@@ -66,6 +92,14 @@ export default class LoginScreen extends React.Component {
         )}
 
         <View style={styles.alreadyAccountCont}>
+          <Text
+            style={styles.text}
+            onPress={() =>
+              this.props.navigation.navigate("ForgotPasswordScreen")
+            }
+          >
+            {forgot_password}
+          </Text>
           <Text
             style={styles.text}
             onPress={() => this.props.navigation.navigate("SignUpScreen")}
@@ -84,6 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: "100%",
     width: "100%",
+  
     flex: 0
   },
   textInput: {

@@ -12,7 +12,6 @@ import {
   Modal,
   ActivityIndicator,
   Dimensions
-  
 } from "react-native";
 import {
   email,
@@ -30,9 +29,12 @@ import {
 import firebase from "react-native-firebase";
 import validator from "validator";
 import { username } from "../../strings/strings";
-import Loader from 'FieldsReact/app/components/Loader/Loader.js'
+import Loader from "FieldsReact/app/components/Loader/Loader.js";
 
 export default class SignUpScreen extends React.Component {
+  static navigationOptions = {
+    header: null
+  };
   constructor(props) {
     super(props);
     this.ref = firebase.firestore().collection("Users");
@@ -52,7 +54,6 @@ export default class SignUpScreen extends React.Component {
   };
 
   handleSignUp = () => {
-
     if (this.state.username1.length == 0) {
       this.setState({ errorMessage: [please_enter_username] });
     } else if (!validator.isEmail(this.state.email1)) {
@@ -62,13 +63,18 @@ export default class SignUpScreen extends React.Component {
     } else if (this.state.password1.length < 7) {
       this.setState({ errorMessage: [please_enter_password] });
     } else {
-      this.setState({loading: true});
+      this.setState({ loading: true });
       firebase
-
         .auth()
         .createUserAndRetrieveDataWithEmailAndPassword(
           this.state.email1,
           this.state.password1
+        )
+        .then(() =>
+          this.ref.add({
+            username: this.state.username1,
+            uid: firebase.auth().uid
+          })
         )
         .then(() => this.props.navigation.navigate("FeedScreen"));
     }
@@ -76,12 +82,9 @@ export default class SignUpScreen extends React.Component {
   render() {
     const { username1 } = this.state;
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" enabled style={styles.container} >
         <View style={styles.logoContainer}>
-          <Image
-            style={styles.logo}
-            source={require("FieldsReact/app/images/fields_logo_green.png")}
-          />
+         
         </View>
         <Text style={styles.text2}>{welcome}</Text>
         <TextInput
@@ -135,7 +138,6 @@ export default class SignUpScreen extends React.Component {
           onPress={this.handleSignUp}
           style={styles.buttonContainer}
         >
-         
           <Text style={styles.buttonText}>{signup}</Text>
         </TouchableOpacity>
         {this.state.errorMessage && (
@@ -150,21 +152,17 @@ export default class SignUpScreen extends React.Component {
           </Text>
         </View>
         <View style={styles.indicatorContainer} />
-        <Loader
-        loading={this.state.loading}
-        />
+        <Loader loading={this.state.loading} />
       </KeyboardAvoidingView>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "flex-start",
     padding: 20,
-    height: "100%",
-    width: "100%",
-    backgroundColor: "white",
-    flex: 0
+
+    backgroundColor: "red",
+    flex: 1
   },
   textInput: {
     height: 40,
@@ -172,13 +170,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     backgroundColor: "#efeded",
     borderRadius: 10,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   buttonContainer: {
     backgroundColor: "#3bd774",
     padding: 15,
-    marginTop: 16,
-    borderRadius: 10
+    marginTop: 12,
+    height: 100,
+    borderRadius: 10,
   },
 
   buttonText: {
@@ -222,8 +221,6 @@ const styles = StyleSheet.create({
   },
 
   alreadyAccountCont: {
-    flex: 1,
-    justifyContent: "flex-end",
     marginBottom: 16
   },
   indicatorContainer: {
