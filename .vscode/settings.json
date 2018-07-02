@@ -1,0 +1,35 @@
+{
+"files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/FieldsReact": true, 
+    "**/FieldsReact1": true, 
+    "**/node_modules": true, 
+    "**/.babelrc": true,
+    "**/.buckconfig": true, 
+    "**/.flowconfig": true,
+    "**/.eslintrc.js": true, 
+    "**/.gitattributes": true, 
+    "**/.gitignore": true, 
+    "**/app.json": true, 
+    "**/package-lock.json": true, 
+    "**/package.json": true, 
+    "**/yarn.lock": true, 
+    "**/.watchmanconfig": true, 
+
+
+
+
+
+
+
+ 
+
+ 
+
+
+
+}}

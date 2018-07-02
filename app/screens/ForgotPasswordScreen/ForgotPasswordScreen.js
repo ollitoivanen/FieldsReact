@@ -5,7 +5,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Image
+  Image,
+  TouchableHighlight
 } from "react-native";
 import {
   forgot_password_enter_email,
@@ -13,32 +14,41 @@ import {
   send
 } from "FieldsReact/app/strings/strings";
 import firebase from "react-native-firebase";
+import validator from "validator";
+import { please_enter_valid_email } from "FieldsReact/app/strings/strings";
 
 export default class ForgotPasswordScreen extends Component {
   static navigationOptions = {
     header: null
-  }
+  };
 
   state = { email1: "" };
-  
+
   sendMessage = () => {
     const { email1 } = this.state;
-    firebase.auth().sendPasswordResetEmail(email1);
+    if (!validator.isEmail(email1)) {
+      this.setState({ errorMessage: [please_enter_valid_email] });
+    } else {
+      firebase.auth().sendPasswordResetEmail(email1);
+    }
   };
 
   render() {
-    
-    const {goBack} = this.props.navigation.goBack;
+    const { goBack } = this.props.navigation.goBack;
 
     return (
       <View style={styles.container}>
-        <Image style={styles.logo}
-          source={require("FieldsReact/app/images/back_icon.png")}
-          onPress={()=> this.props.navigation.goBack()}
-
-        />
+        <TouchableOpacity
+          style={styles.logo}
+          underlayColor="#bcbcbc"
+          onPress={() => this.props.navigation.navigate("LoginScreen")}
+        >
+          <Image
+            style={styles.logo}
+            source={require("FieldsReact/app/images/BackButton/back_button.png")}
+          />
+        </TouchableOpacity>
         <Text style={styles.text}>{forgot_password_enter_email}</Text>
-        
         <TextInput
           value={this.state.email1}
           style={styles.textInput}
@@ -49,13 +59,15 @@ export default class ForgotPasswordScreen extends Component {
           keyboardType="email-address"
           onChangeText={email1 => this.setState({ email1 })}
         />
-
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={this.sendMessage}
         >
           <Text style={styles.buttonText}>{send}</Text>
         </TouchableOpacity>
+        {this.state.errorMessage && (
+          <Text style={styles.error}>{this.state.errorMessage}</Text>
+        )}
       </View>
     );
   }
@@ -99,7 +111,12 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-      height: 48,
-      width: 48
+    height: 48,
+    width: 48
+  },
+  error: {
+    marginTop: 8,
+    color: "red",
+    fontWeight: "bold"
   }
 });

@@ -1,25 +1,19 @@
 import React, { Component } from "react";
 import { AppRegistry, View, StyleSheet } from "react-native";
-import App from "FieldsReact/App";
+import { StackNavigatorApp } from "FieldsReact/App";
+import { YellowBox } from 'react-native';
+
 
 export default class FieldsApp extends Component {
   
+  
   render() {
-   
-    return (
-      <View>
-        <App />
+    YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
-      </View>
+    return(
+    <StackNavigatorApp/>
     );
   }
 }
 
-
 AppRegistry.registerComponent("FieldsReact", () => FieldsApp);
-
-
-
-
-
-

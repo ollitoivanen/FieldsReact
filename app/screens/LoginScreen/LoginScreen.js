@@ -22,13 +22,13 @@ import {
 } from "FieldsReact/app/strings/strings";
 import firebase from "react-native-firebase";
 import validator from "validator";
+import Loader from "FieldsReact/app/components/Loader/Loader.js";
 
 export default class LoginScreen extends React.Component {
-
   static navigationOptions = {
     header: null
-  }
-  state = { email1: "", password1: "", errorMessage: null };
+  };
+  state = { email1: "", password1: "", errorMessage: null, loading: false };
   handleLogin = () => {
     const { email1, password1 } = this.state;
     if (!validator.isEmail(this.state.email1)) {
@@ -38,6 +38,8 @@ export default class LoginScreen extends React.Component {
     } else if (this.state.password1.length < 7) {
       this.setState({ errorMessage: [please_enter_password] });
     } else {
+      this.setState({ loading: true });
+
       firebase
         .auth()
         .signInAndRetrieveDataWithEmailAndPassword(email1, password1)
@@ -51,11 +53,11 @@ export default class LoginScreen extends React.Component {
   };
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Image
             style={styles.logo}
-            source={require("FieldsReact/app/images/fields_logo_green.png")}
+            source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
           />
         </View>
         <Text style={styles.text2}>{welcome_back}</Text>
@@ -90,6 +92,9 @@ export default class LoginScreen extends React.Component {
         {this.state.errorMessage && (
           <Text style={styles.error}>{this.state.errorMessage}</Text>
         )}
+        <View style={styles.indicatorContainer} />
+
+        <Loader loading={this.state.loading} />
 
         <View style={styles.alreadyAccountCont}>
           <Text
@@ -107,7 +112,7 @@ export default class LoginScreen extends React.Component {
             {dont_have_an_account}
           </Text>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
@@ -116,10 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     padding: 20,
     backgroundColor: "white",
-    height: "100%",
-    width: "100%",
-  
-    flex: 0
+    flex: 1
   },
   textInput: {
     height: 40,
@@ -173,7 +175,6 @@ const styles = StyleSheet.create({
 
   alreadyAccountCont: {
     flex: 1,
-    justifyContent: "flex-end",
-    marginBottom: 16
+    justifyContent: "flex-end"
   }
 });

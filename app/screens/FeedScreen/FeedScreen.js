@@ -9,8 +9,13 @@ import {
   Button
 } from "react-native";
 import firebase from "react-native-firebase";
+import { NavigationActions, StackActions } from "react-navigation";
 
 export default class FeedScreen extends React.Component {
+  
+  static navigationOptions = {
+    header: null
+  };
   state = { currentUser: null };
   updateTextInput(value) {
     this.setState({ textInput: value });

@@ -82,9 +82,12 @@ export default class SignUpScreen extends React.Component {
   render() {
     const { username1 } = this.state;
     return (
-      <KeyboardAvoidingView behavior="padding" enabled style={styles.container} >
+      <View style={styles.container}>
         <View style={styles.logoContainer}>
-         
+          <Image
+            style={styles.logo}
+            source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+          />
         </View>
         <Text style={styles.text2}>{welcome}</Text>
         <TextInput
@@ -143,6 +146,9 @@ export default class SignUpScreen extends React.Component {
         {this.state.errorMessage && (
           <Text style={styles.error}>{this.state.errorMessage}</Text>
         )}
+
+        <View style={styles.indicatorContainer} />
+        <Loader loading={this.state.loading} />
         <View style={styles.alreadyAccountCont}>
           <Text
             style={styles.text}
@@ -151,17 +157,16 @@ export default class SignUpScreen extends React.Component {
             {already_have_an_account}
           </Text>
         </View>
-        <View style={styles.indicatorContainer} />
-        <Loader loading={this.state.loading} />
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: "white",
+    justifyContent: "flex-start",
 
-    backgroundColor: "red",
     flex: 1
   },
   textInput: {
@@ -170,14 +175,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     backgroundColor: "#efeded",
     borderRadius: 10,
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   buttonContainer: {
     backgroundColor: "#3bd774",
     padding: 15,
     marginTop: 12,
-    height: 100,
-    borderRadius: 10,
+    borderRadius: 10
   },
 
   buttonText: {
@@ -221,7 +225,8 @@ const styles = StyleSheet.create({
   },
 
   alreadyAccountCont: {
-    marginBottom: 16
+    flex: 1,
+    justifyContent: "flex-end"
   },
   indicatorContainer: {
     alignItems: "center",
