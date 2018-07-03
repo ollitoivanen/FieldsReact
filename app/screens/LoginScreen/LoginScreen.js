@@ -96,7 +96,6 @@ export default class LoginScreen extends React.Component {
 
         <Loader loading={this.state.loading} />
 
-        <View style={styles.alreadyAccountCont}>
           <Text
             style={styles.text}
             onPress={() =>
@@ -106,12 +105,11 @@ export default class LoginScreen extends React.Component {
             {forgot_password}
           </Text>
           <Text
-            style={styles.text}
+            style={styles.text3}
             onPress={() => this.props.navigation.navigate("SignUpScreen")}
           >
             {dont_have_an_account}
           </Text>
-        </View>
       </View>
     );
   }
@@ -151,15 +149,28 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 16,
     color: "#bcbcbc",
-    textAlign: "center"
+    textAlign: "center",
+    flex: 1,
+    justifyContent: 'flex-start',
+
+    
   },
   text2: {
     marginTop: 16,
     color: "#919191",
     marginBottom: 16,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
+
+  text3: {
+    marginTop: 16,
+    color: "#bcbcbc",
+    textAlign: "center",
+    justifyContent: 'flex-end'
+    
+  },
+
   buttonContainer: {
     backgroundColor: "#3bd774",
     padding: 15,
@@ -175,6 +186,6 @@ const styles = StyleSheet.create({
 
   alreadyAccountCont: {
     flex: 1,
-    justifyContent: "flex-end"
+    alignItems: "flex-end"
   }
 });
