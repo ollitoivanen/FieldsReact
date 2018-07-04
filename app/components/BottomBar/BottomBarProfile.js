@@ -41,7 +41,6 @@ export default class BottomBarProfile extends Component {
 const styles = StyleSheet.create({
   navigationContainer: {
     backgroundColor: "white",
-    flex: 1,
     flexDirection: "row",
     alignItems: "flex-end"
   },

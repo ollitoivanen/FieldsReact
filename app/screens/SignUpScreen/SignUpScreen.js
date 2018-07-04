@@ -83,9 +83,8 @@ export default class SignUpScreen extends React.Component {
             userTeamID: null,
             trainingCount: 0,
             timestamp: null,
-            token: null, //Needs to be changed when creating notifications 
+            token: null, //Needs to be changed when creating notifications
             fieldsPlus: false
-
           })
         )
         .then(() => this.props.navigation.navigate("FeedScreen"));
