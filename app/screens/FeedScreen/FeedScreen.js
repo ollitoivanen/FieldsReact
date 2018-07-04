@@ -33,6 +33,9 @@ export default class FeedScreen extends React.Component {
     const { currentUser } = this.state;
     return (
       <View style={styles.container}>
+         <Text style={styles.container1} onPress={() => firebase.auth().signOut()}>
+          Hi {currentUser && currentUser.email}!
+        </Text>
         <BottomBarFeed navigation={this.props.navigation}/>
       </View>
     );
@@ -43,5 +46,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1
+  },
+
+  container1: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 60
   }
 });

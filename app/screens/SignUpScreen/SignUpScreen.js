@@ -71,9 +71,21 @@ export default class SignUpScreen extends React.Component {
           this.state.password1
         )
         .then(() =>
-          this.ref.add({
+          this.ref.doc(firebase.auth().uid).set({
             username: this.state.username1,
-            uid: firebase.auth().uid
+            realName: "",
+            userID: firebase.auth().uid,
+            currentFieldID: "",
+            currentFieldName: "",
+            role: 0,
+            position: -1,
+            reputation: 0,
+            userTeamID: null,
+            trainingCount: 0,
+            timestamp: null,
+            token: null, //Needs to be changed when creating notifications 
+            fieldsPlus: false
+
           })
         )
         .then(() => this.props.navigation.navigate("FeedScreen"));
