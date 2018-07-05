@@ -12,7 +12,8 @@ import {
   trainings,
   friends,
   not_in_a_team,
-  reputation
+  reputation,
+  not_at_any_field
 } from "FieldsReact/app/strings/strings";
 
 export default class ProfileHeader extends Component {
@@ -27,7 +28,10 @@ export default class ProfileHeader extends Component {
       friendCount: "",
       userTeamID: null,
       usersTeam: "",
-      reputation: ""
+      reputation: "",
+      currentFieldName: "",
+      currentFieldID: "",
+      timestamp: ""
     };
     this.ref = firebase
       .firestore()
@@ -44,8 +48,15 @@ export default class ProfileHeader extends Component {
             trainingCount: doc.data().trainingCount,
             friendCount: doc.data().friendCount,
             userTeamID: doc.data().userTeamID,
-            reputation: doc.data().reputation
+            reputation: doc.data().reputation,
+            currentFieldID: doc.data().currentFieldID
           });
+
+          if (this.state.currentFieldID == "") {
+            this.setState({
+              currentFieldName: [not_at_any_field]
+            });
+          }
 
           if (this.state.userTeamID == null) {
             this.setState({
@@ -111,14 +122,15 @@ export default class ProfileHeader extends Component {
         </View>
 
         <View style={styles.actionContainer}>
+          <TouchableOpacity style={styles.roundTextContainerBordered}>
+            <Text style={styles.boxText}>
+              {this.state.reputation} {reputation}
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.roundTextContainerGreen}>
-            <Text style={styles.boxTextWhite}>{this.state.reputation} {reputation}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.roundTextContainerBig}>
-            <Text style={styles.boxText}>Trainings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.roundTextContainerBig}>
-            <Text style={styles.boxText}>Trainings</Text>
+            <Text style={styles.boxTextWhite}>
+              {this.state.currentFieldName}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -171,32 +183,17 @@ const styles = StyleSheet.create({
     marginTop: 8
   },
 
-  roundTextContainerBig: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "center",
-    paddingStart: 12,
-    paddingEnd: 12,
-    paddingTop: 10,
-    paddingBottom: 10,
-
-    backgroundColor: "white",
-    borderRadius: 20,
-    flexShrink: 1,
-    marginTop: 8
-  },
-
-  boxText: {
-    fontWeight: "bold",
-    marginStart: 4,
-    marginEnd: 2,
-    color: "#636363"
-  },
-
   boxTextWhite: {
     fontWeight: "bold",
     fontSize: 16,
     color: "white"
+  },
+
+  boxText: {
+    fontWeight: "bold",
+    fontSize: 16,
+    padding: 2,
+    color: "#636363"
   },
 
   teamIcon: {
@@ -216,16 +213,29 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
-  roundTextContainerGreen: {
+  roundTextContainerBordered: {
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "center",
     padding: 10,
 
+    backgroundColor: "white",
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "#ededed",
+    flexShrink: 1,
+    marginTop: 12
+  },
+
+  roundTextContainerGreen: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    padding: 12,
+
     backgroundColor: "#3bd774",
     borderRadius: 20,
     flexShrink: 1,
-    marginTop: 8
-  },
-
+    marginTop: 12
+  }
 });
