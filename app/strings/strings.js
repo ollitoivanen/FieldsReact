@@ -20,3 +20,7 @@ export const forgot_password = "Forgot password?";
 export const forgot_password_enter_email =
   "Please enter your user email below and we'll send you a recovery email and get you back on Fields!";
 export const send = "send";
+export const trainings = 'Trainings'
+export const friends = 'Friends'
+export const not_in_a_team = 'Not in a team'
+export const reputation = 'Reputation'

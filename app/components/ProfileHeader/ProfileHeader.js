@@ -1,14 +1,90 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  Alert
+} from "react-native";
+import firebase from "react-native-firebase";
+import {
+  trainings,
+  friends,
+  not_in_a_team,
+  reputation
+} from "FieldsReact/app/strings/strings";
 
 export default class ProfileHeader extends Component {
+  componentWillMount() {
+    this.getUserData();
+  }
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      trainingCount: "",
+      friendCount: "",
+      userTeamID: null,
+      usersTeam: "",
+      reputation: ""
+    };
+    this.ref = firebase
+      .firestore()
+      .collection("Users")
+      .doc(firebase.auth().currentUser.uid);
+  }
+
+  getUserData = () => {
+    this.ref.get().then(
+      function(doc) {
+        if (doc.exists) {
+          this.setState({
+            username: doc.data().username,
+            trainingCount: doc.data().trainingCount,
+            friendCount: doc.data().friendCount,
+            userTeamID: doc.data().userTeamID,
+            reputation: doc.data().reputation
+          });
+
+          if (this.state.userTeamID == null) {
+            this.setState({
+              usersTeam: [not_in_a_team]
+            });
+          } else {
+            const teamRef = firebase.firestore().collection("Teams");
+            const query = teamRef.where("teamID", "==", this.state.userTeamID);
+            query.get().then(
+              function(teamDoc) {
+                if (!teamDoc.empty) {
+                  teamDoc.forEach(
+                    function(teamData) {
+                      this.setState({
+                        usersTeam: teamData.data().teamUsernameText
+                      });
+                    }.bind(this)
+                  );
+                }
+              }.bind(this)
+            );
+          }
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      }.bind(this)
+    );
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.backgroundGreen}>
           <View style={styles.imageTabContainer}>
             <TouchableOpacity style={styles.roundTextContainer}>
-              <Text style={styles.boxText}>Friends</Text>
+              <Text style={styles.boxText}>
+                {this.state.friendCount} {friends}
+              </Text>
             </TouchableOpacity>
 
             <Image
@@ -19,22 +95,24 @@ export default class ProfileHeader extends Component {
             />
 
             <TouchableOpacity style={styles.roundTextContainer}>
-              <Text style={styles.boxText}>Trainings</Text>
+              <Text style={styles.boxText}>
+                {this.state.trainingCount} {trainings}
+              </Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.username}>ollitoivanen</Text>
+          <Text style={styles.username}>{this.state.username}</Text>
           <TouchableOpacity style={styles.roundTextContainer}>
             <Image
               style={styles.teamIcon}
               source={require("FieldsReact/app/images/Team/team.png")}
             />
-            <Text style={styles.boxText}>Tiimi</Text>
+            <Text style={styles.boxText}>{this.state.usersTeam}</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.actionContainer}>
-          <TouchableOpacity style={styles.roundTextContainerBig}>
-            <Text style={styles.boxText}>Trainings</Text>
+          <TouchableOpacity style={styles.roundTextContainerGreen}>
+            <Text style={styles.boxTextWhite}>{this.state.reputation} {reputation}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.roundTextContainerBig}>
             <Text style={styles.boxText}>Trainings</Text>
@@ -115,6 +193,12 @@ const styles = StyleSheet.create({
     color: "#636363"
   },
 
+  boxTextWhite: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "white"
+  },
+
   teamIcon: {
     width: 25,
     height: 25
@@ -130,5 +214,18 @@ const styles = StyleSheet.create({
 
   actionContainer: {
     flex: 1
-  }
+  },
+
+  roundTextContainerGreen: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    padding: 10,
+
+    backgroundColor: "#3bd774",
+    borderRadius: 20,
+    flexShrink: 1,
+    marginTop: 8
+  },
+
 });

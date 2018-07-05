@@ -71,10 +71,10 @@ export default class SignUpScreen extends React.Component {
           this.state.password1
         )
         .then(() =>
-          this.ref.doc(firebase.auth().uid).set({
+          this.ref.doc(firebase.auth().currentUser.uid).set({
             username: this.state.username1,
             realName: "",
-            userID: firebase.auth().uid,
+            userID: firebase.auth().currentUser.uid,
             currentFieldID: "",
             currentFieldName: "",
             role: 0,
@@ -82,6 +82,7 @@ export default class SignUpScreen extends React.Component {
             reputation: 0,
             userTeamID: null,
             trainingCount: 0,
+            friendCount: 0,
             timestamp: null,
             token: null, //Needs to be changed when creating notifications
             fieldsPlus: false

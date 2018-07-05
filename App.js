@@ -49,6 +49,6 @@ export const StackNavigatorApp = StackNavigator(
     }
   },
   {
-    initialRouteName: "ProfileScreen"
+    initialRouteName: "LoadingScreen"
   }
 );

@@ -1,26 +1,32 @@
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import BottomBarProfile from "FieldsReact/app/components/BottomBar/BottomBarProfile.js";
 import ProfileHeader from "FieldsReact/app/components/ProfileHeader/ProfileHeader.js";
 import firebase from "react-native-firebase";
 
-
 export default class ProfileScreen extends Component {
+ 
   static navigationOptions = {
     header: null
   };
   constructor(props) {
     super(props);
-    this.ref = firebase.firestore().collection("Users");
+    this.state = {
+      username: firebase.auth().currentUser.uid
+    };
+    this.ref = firebase
+      .firestore()
+      .collection("Users")
+      .doc(firebase.auth().currentUser.uid);
   }
 
-  getUserData = () =>{
-    ref.(firebase.auth().uid)
-  }
+  
   render() {
     return (
       <View style={styles.container}>
-        <ProfileHeader />
+        
+
+        <ProfileHeader/>
         <View style={styles.navigationContainer}>
           <BottomBarProfile navigation={this.props.navigation} />
         </View>
@@ -31,7 +37,8 @@ export default class ProfileScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    
   },
 
   profileGreenBackground: {
