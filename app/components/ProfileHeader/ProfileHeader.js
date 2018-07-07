@@ -20,6 +20,8 @@ export default class ProfileHeader extends Component {
   componentWillMount() {
     this.getUserData();
   }
+  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +33,9 @@ export default class ProfileHeader extends Component {
       reputation: "",
       currentFieldName: "",
       currentFieldID: "",
-      timestamp: ""
+      timestamp: "",
+      countryName: '',
+      regionName: 'moi'
     };
     this.ref = firebase
       .firestore()
@@ -111,7 +115,7 @@ export default class ProfileHeader extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.username}>{this.state.username}</Text>
+          <Text style={styles.username}>{this.state.countryName}</Text>
           <TouchableOpacity style={styles.roundTextContainer}>
             <Image
               style={styles.teamIcon}

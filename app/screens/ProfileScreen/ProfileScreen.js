@@ -3,9 +3,9 @@ import { StyleSheet, View, Text, Alert } from "react-native";
 import BottomBarProfile from "FieldsReact/app/components/BottomBar/BottomBarProfile.js";
 import ProfileHeader from "FieldsReact/app/components/ProfileHeader/ProfileHeader.js";
 import firebase from "react-native-firebase";
+import { SharedElement } from "react-native-motion";
 
 export default class ProfileScreen extends Component {
- 
   static navigationOptions = {
     header: null
   };
@@ -20,15 +20,14 @@ export default class ProfileScreen extends Component {
       .doc(firebase.auth().currentUser.uid);
   }
 
-  
   render() {
     return (
       <View style={styles.container}>
-        
-
-        <ProfileHeader/>
+        <ProfileHeader />
         <View style={styles.navigationContainer}>
-          <BottomBarProfile navigation={this.props.navigation} />
+          <SharedElement id="source">
+            <BottomBarProfile navigation={this.props.navigation} />
+          </SharedElement>
         </View>
       </View>
     );
@@ -37,8 +36,7 @@ export default class ProfileScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    
+    backgroundColor: "white"
   },
 
   profileGreenBackground: {

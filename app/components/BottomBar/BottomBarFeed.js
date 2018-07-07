@@ -19,7 +19,10 @@ export default class BottomBarFeed extends Component {
             source={require("FieldsReact/app/images/Home/home_green.png")}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navigationItemGreen}>
+        <TouchableOpacity
+          style={styles.navigationItemGreen}
+          onPress={() => this.props.navigation.navigate("FieldSearchScreen")}
+        >
           <Image
             style={styles.navigationImage}
             source={require("FieldsReact/app/images/Field/field_icon.png")}

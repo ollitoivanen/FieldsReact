@@ -24,4 +24,9 @@ export const trainings = "Trainings";
 export const friends = "Friends";
 export const not_in_a_team = "Not in a team";
 export const reputation = "Reputation";
-export const not_at_any_field = 'Not at any field'
+export const not_at_any_field = "Not at any field";
+export const search_field = "Search field..";
+export const near_me = "Near Me";
+export const field_name = "Field Name";
+
+export const field_city = "Field City";

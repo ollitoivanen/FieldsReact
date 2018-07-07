@@ -10,6 +10,8 @@ target 'FieldsReact' do
 	pod 'Firebase/Auth'
 	pod 'Firebase/Firestore'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
 end
 
 # Auth0 Lock

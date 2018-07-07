@@ -8,7 +8,7 @@ import {
   Image
 } from "react-native";
 
-export default class BottomBarProfile extends Component {
+export default class BottomBarTraining extends Component {
   render() {
     return (
       <View style={styles.navigationContainer}>
@@ -22,19 +22,19 @@ export default class BottomBarProfile extends Component {
             source={require("FieldsReact/app/images/Home/home.png")}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navigationItemGreen}
-          onPress={() => this.props.navigation.navigate("FieldSearchScreen")}
-        >
+        <TouchableOpacity style={styles.navigationItemBlue}>
           <Image
             style={styles.navigationImage}
             source={require("FieldsReact/app/images/Field/field_icon.png")}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navigationItem}>
+        <TouchableOpacity
+          style={styles.navigationItem}
+          onPress={() => this.props.navigation.navigate("ProfileScreen")}
+        >
           <Image
             style={styles.navigationImage}
-            source={require("FieldsReact/app/images/Profile/profile_green.png")}
+            source={require("FieldsReact/app/images/Profile/profile.png")}
           />
         </TouchableOpacity>
       </View>
@@ -56,10 +56,10 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
-  navigationItemGreen: {
+  navigationItemBlue: {
     flex: 1,
     height: 50,
-    backgroundColor: "#3bd774",
+    backgroundColor: "#3facff",
     alignItems: "center",
     justifyContent: "center"
   },

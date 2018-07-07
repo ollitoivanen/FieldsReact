@@ -5,7 +5,9 @@ import {
   Image,
   Text,
   View,
-  AppRegistry
+  AppRegistry,
+  Animated,
+  Easing
 } from "react-native";
 import {
   StackNavigator,
@@ -21,6 +23,17 @@ import FeedScreen from "FieldsReact/app/screens/FeedScreen/FeedScreen";
 import ProfileScreen from "FieldsReact/app/screens/ProfileScreen/ProfileScreen";
 
 import ForgotPasswordScreen from "FieldsReact/app/screens/ForgotPasswordScreen/ForgotPasswordScreen";
+import FieldSearchScreen from "./app/screens/FieldSearchScreen/FieldSearchScreen";
+
+const
+  transitionConfig = () => ({
+  	transitionSpec: {
+  		duration: 0,
+  		timing: Animated.timing,
+  		easing: Easing.linear,
+  	},
+  })
+
 
 // create our app's navigation stack
 export const StackNavigatorApp = StackNavigator(
@@ -28,6 +41,7 @@ export const StackNavigatorApp = StackNavigator(
     SignUpScreen: {
       screen: SignUpScreen
     },
+    
     LoginScreen: {
       screen: LoginScreen
     },
@@ -46,9 +60,18 @@ export const StackNavigatorApp = StackNavigator(
 
     ProfileScreen: {
       screen: ProfileScreen
+    },
+    FieldSearchScreen: {
+      screen: FieldSearchScreen
     }
   },
   {
-    initialRouteName: "LoadingScreen"
+    initialRouteName: "LoadingScreen",
+    transitionConfig
+    
   }
+
+  
+   
+  
 );
