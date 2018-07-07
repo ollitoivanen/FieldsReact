@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, View, TextInput, FlatList } from "react-native";
-import { ButtonGroup } from "react-native-elements";
+import { StyleSheet, View, TextInput, FlatList, Text } from "react-native";
+import { ButtonGroup, SearchBar } from "react-native-elements";
 import firebase from "react-native-firebase";
 
 import BottomBarTraining from "FieldsReact/app/components/BottomBar/BottomBarTraining.js";
@@ -21,44 +21,60 @@ export default class FieldSearchScreen extends Component {
 
   constructor() {
     super();
-    this.ref = firebase.firestore().collection("Fields");
     this.unsubscribe = null;
     this.state = {
       selectedIndex: 0,
-      textInput: "",
+      fieldSearchTerm: "",
       fields: []
     };
+
     this.updateIndex = this.updateIndex.bind(this);
   }
 
-  componentDidMount() {
-    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  componentDidMount() {}
+
+  updateIndex(selectedIndex) {
+    this.setState({ selectedIndex }, ()=>{
+      if(selectedIndex===1){
+        this.searchFields(this.state.fieldSearchTerm);
+
+      }
+
+    }
+  );
   }
 
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+  searchFields = typedText => {
+    this.setState({ fieldSearchTerm: typedText }, () => {
+      const fields = [];
+      const ref = firebase.firestore().collection("Fields");
+      if (this.state.selectedIndex === 1) {
+        const query = ref.where(
+          "fieldNameLowerCase",
+          "==",
+          this.state.fieldSearchTerm.toLowerCase()
+        );
 
-  onCollectionUpdate = querySnapshot => {
-    const fields = [];
-
-    querySnapshot.forEach(doc => {
-      const { fieldName, fieldArea } = doc.data();
-      fields.push({
-        key: doc.id,
-        doc, // DocumentSnapshot
-        fieldName,
-        fieldArea
-      });
-    });
-    this.setState({
-      fields
+        query.get().then(
+          function(doc) {
+            doc.forEach(doc => {
+              const { fieldName, fieldArea } = doc.data();
+              fields.push({
+                key: doc.id,
+                doc,
+                fieldName,
+                fieldArea
+              });
+            });
+            this.setState({
+              fields
+            });
+          }.bind(this)
+        );
+      }
     });
   };
 
-  updateIndex(selectedIndex) {
-    this.setState({ selectedIndex });
-  }
   render() {
     const buttons = [[near_me], [field_name], [field_city]];
     const { selectedIndex } = this.state;
@@ -66,10 +82,13 @@ export default class FieldSearchScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.searchContainer}>
+          <Text>{this.state.fieldSearchTermLowerCase}</Text>
           <TextInput
             style={styles.searchBar}
             placeholder={search_field}
+            onChangeText={this.searchFields}
             underlineColorAndroid="rgba(0,0,0,0)"
+            value={this.state.fieldSearchTerm}
           />
           <ButtonGroup
             onPress={this.updateIndex}
@@ -83,7 +102,7 @@ export default class FieldSearchScreen extends Component {
         </View>
 
         <FlatList
-        style={{marginBottom: 50}}
+          style={{ marginBottom: 50 }}
           data={this.state.fields}
           renderItem={({ item }) => <FieldSearchItem {...item} />}
         />

@@ -72,7 +72,7 @@ export default class SignUpScreen extends React.Component {
         )
         .then(() =>
           this.ref.doc(firebase.auth().currentUser.uid).set({
-            username: this.state.username1,
+            username: this.state.username1.toLowerCase(),
             realName: "",
             userID: firebase.auth().currentUser.uid,
             currentFieldID: "",
