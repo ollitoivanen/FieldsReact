@@ -29,8 +29,6 @@ import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSea
 export default class FieldSearchScreen extends Component {
   componentDidMount = () => {
     this.initialFetch();
-
-  
   };
   static navigationOptions = {
     header: null
@@ -60,8 +58,7 @@ export default class FieldSearchScreen extends Component {
           });
           this.setState({
             fields,
-            search_placeholder: search_fields_near,
-
+            search_placeholder: search_fields_near
           });
         }.bind(this)
       );
@@ -100,17 +97,15 @@ export default class FieldSearchScreen extends Component {
   getHomeAreaAfterSetting = () => {
     var { params } = this.props.navigation.state;
 
-    params.homeArea = this.state.homeCityText.toLowerCase().trim()
+    params.homeArea = this.state.homeCityText.toLowerCase().trim();
 
-    this.setState({
-      homeAreaConst: this.state.homeCityText.toLowerCase().trim(),
-      selectedIndex: 0, 
-
-    }),
-      () => {
-        
-        this.initialFetch();
-      };
+    this.setState(
+      {
+        homeAreaConst: this.state.homeCityText.toLowerCase().trim(),
+        selectedIndex: 0,
+      }
+    );
+    this.updateIndex(this.state.selectedIndex)
   };
 
   updateIndex = selectedIndex => {
@@ -181,11 +176,9 @@ export default class FieldSearchScreen extends Component {
       } else if (this.state.selectedIndex === 0) {
         var { params } = this.props.navigation.state;
         if (this.state.fieldSearchTerm.trim().length === 0) {
-          const query = ref.where(
-            "fieldAreaLowerCase",
-            "==",
-            this.state.homeAreaConst
-          ).limit(50);
+          const query = ref
+            .where("fieldAreaLowerCase", "==", this.state.homeAreaConst)
+            .limit(50);
 
           query.get().then(
             function(doc) {
@@ -199,7 +192,7 @@ export default class FieldSearchScreen extends Component {
                 });
               });
               this.setState({
-                fields,
+                fields
               });
             }.bind(this)
           );
