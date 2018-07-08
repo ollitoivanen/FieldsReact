@@ -25,8 +25,14 @@ export const friends = "Friends";
 export const not_in_a_team = "Not in a team";
 export const reputation = "Reputation";
 export const not_at_any_field = "Not at any field";
-export const search_field = "Search field..";
+export const search_fields_near = "Search fields near...";
+export const search_fields_by_name = "Search fields by name...";
+export const search_fields_by_city = "Search fields by city...";
+
 export const near_me = "Near Me";
 export const field_name = "Field Name";
 
 export const field_city = "Field City";
+export const enter_home_city = "Add your home city to find Fields near you!";
+export const add_home_city_placeholder = "Add home city...";
+export const set = "Set";

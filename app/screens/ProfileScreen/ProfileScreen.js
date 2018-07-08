@@ -12,12 +12,8 @@ export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: firebase.auth().currentUser.uid
     };
-    this.ref = firebase
-      .firestore()
-      .collection("Users")
-      .doc(firebase.auth().currentUser.uid);
+   
   }
 
   render() {
