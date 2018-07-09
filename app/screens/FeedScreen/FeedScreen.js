@@ -30,8 +30,12 @@ export default class FeedScreen extends React.Component {
     );
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    var { params } = this.props.navigation.state;
+  
+    
+
     this.state = {
       currentUser: null,
       homeArea: "",
@@ -46,6 +50,10 @@ export default class FeedScreen extends React.Component {
     const { currentUser } = firebase.auth();
     this.setState({ currentUser });
     this.getUserData();
+  }
+
+  componentWillUpdate(){
+    this.getUserData()
   }
   render() {
     const { currentUser, loading } = this.state;
@@ -74,6 +82,7 @@ export default class FeedScreen extends React.Component {
               onPress={() =>
                 this.props.navigation.navigate("FieldSearchScreen", {
                   homeArea: this.state.homeArea
+                  
                 })
               }
             >

@@ -5,12 +5,11 @@ import {
   TextInput,
   FlatList,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from "react-native";
 import { ButtonGroup, SearchBar, Alert } from "react-native-elements";
 import firebase from "react-native-firebase";
-
-import BottomBarTraining from "FieldsReact/app/components/BottomBar/BottomBarTraining.js";
 
 import { SharedElement } from "react-native-motion";
 import {
@@ -75,7 +74,7 @@ export default class FieldSearchScreen extends Component {
       fieldSearchTerm: "",
       fields: [],
       homeCityText: "",
-      homeAreaConst: params.homeArea
+      homeAreaConst: params.homeArea,
     };
     this.ref = firebase
       .firestore()
@@ -97,15 +96,12 @@ export default class FieldSearchScreen extends Component {
   getHomeAreaAfterSetting = () => {
     var { params } = this.props.navigation.state;
 
-    params.homeArea = this.state.homeCityText.toLowerCase().trim();
 
-    this.setState(
-      {
-        homeAreaConst: this.state.homeCityText.toLowerCase().trim(),
-        selectedIndex: 0,
-      }
-    );
-    this.updateIndex(this.state.selectedIndex)
+    this.setState({
+      homeAreaConst: this.state.homeCityText.toLowerCase().trim(),
+      selectedIndex: 0,
+    });
+    this.updateIndex(this.state.selectedIndex);
   };
 
   updateIndex = selectedIndex => {
@@ -232,7 +228,7 @@ export default class FieldSearchScreen extends Component {
     const buttons = [[near_me], [field_name], [field_city]];
     const { selectedIndex } = this.state;
 
-    if (this.state.homeAreaConst === "" && selectedIndex === 0) {
+    if (this.state.homeAreaConst == "" && selectedIndex == 0) {
       return (
         <View style={styles.container}>
           <View style={styles.searchContainer}>
@@ -274,9 +270,37 @@ export default class FieldSearchScreen extends Component {
             renderItem={({ item }) => <FieldSearchItem {...item} />}
           />
           <View style={styles.navigationContainer}>
-            <SharedElement sourceId="source">
-              <BottomBarTraining navigation={this.props.navigation} />
-            </SharedElement>
+          <View style={styles.navigationContainerIn}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("FeedScreen", {
+                    homeCityAdded: this.state.home
+                  })
+                }
+                style={styles.navigationItem}
+                underlayColor="#bcbcbc"
+              >
+                <Image
+                  style={styles.navigationImage}
+                  source={require("FieldsReact/app/images/Home/home.png")}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navigationItemBlue}>
+                <Image
+                  style={styles.navigationImage}
+                  source={require("FieldsReact/app/images/Field/field_icon.png")}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.navigationItem}
+                onPress={() => this.props.navigation.navigate("ProfileScreen")}
+              >
+                <Image
+                  style={styles.navigationImage}
+                  source={require("FieldsReact/app/images/Profile/profile.png")}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       );
@@ -301,16 +325,43 @@ export default class FieldSearchScreen extends Component {
               innerBorderStyle={{ width: 0 }}
             />
           </View>
-
           <FlatList
             style={{ marginBottom: 50 }}
             data={this.state.fields}
             renderItem={({ item }) => <FieldSearchItem {...item} />}
           />
           <View style={styles.navigationContainer}>
-            <SharedElement sourceId="source">
-              <BottomBarTraining navigation={this.props.navigation} />
-            </SharedElement>
+            <View style={styles.navigationContainerIn}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("FeedScreen", {
+                    homeCityAdded: this.state.home
+                  })
+                }
+                style={styles.navigationItem}
+                underlayColor="#bcbcbc"
+              >
+                <Image
+                  style={styles.navigationImage}
+                  source={require("FieldsReact/app/images/Home/home.png")}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navigationItemBlue}>
+                <Image
+                  style={styles.navigationImage}
+                  source={require("FieldsReact/app/images/Field/field_icon.png")}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.navigationItem}
+                onPress={() => this.props.navigation.navigate("ProfileScreen")}
+              >
+                <Image
+                  style={styles.navigationImage}
+                  source={require("FieldsReact/app/images/Profile/profile.png")}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       );
@@ -387,5 +438,32 @@ const styles = StyleSheet.create({
   },
   homeAddContainer: {
     padding: 20
+  },
+
+  navigationContainerIn: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "flex-end"
+  },
+
+  navigationItem: {
+    flex: 1,
+    height: 50,
+    backgroundColor: "#f4fff8",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  navigationItemBlue: {
+    flex: 1,
+    height: 50,
+    backgroundColor: "#3facff",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  navigationImage: {
+    height: 35,
+    width: 35
   }
 });
