@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Modal
+} from "react-native";
+import { goals, address, access_type, info } from "../../strings/strings";
 
 export default class DetailFieldsScreen extends Component {
   static navigationOptions = {
@@ -10,28 +18,79 @@ export default class DetailFieldsScreen extends Component {
     super(props);
     var { params } = this.props.navigation.state;
     this.state = {
-      fieldName: params.fieldName
+      fieldName: params.fieldName,
+      fieldArea: params.fieldArea,
+      fieldID: params.fieldID,
+      fieldNameLowerCase: params.fieldNameLowerCase,
+      fieldAreaLowerCase: params.fieldAreaLowerCase,
+      fieldType: params.fieldType,
+      goalCount: params.goalCount,
+      accessType: params.accessType,
+      fieldAddress: params.fieldAddress,
+      infoVisible: false
     };
+  }
+  setModalVisible(visible) {
+    this.setState({ infoVisible: visible });
   }
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.greenBackground}>
-        <View style={styles.greenRowContainer}>
-        <TouchableOpacity
-            style={styles.backButton}
-            underlayColor="#bcbcbc"
-            onPress={() => this.props.navigation.goBack()}
+        <Modal transparent={true} visible={this.state.infoVisible}>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              backgroundColor: "#00000080",
+              alignItems: "center"
+            }}
+            onPress={() => {
+              this.setModalVisible(!this.state.infoVisible);
+            }}
           >
-            <Image
-              style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
-            />
-          </TouchableOpacity>
-          <Text style={styles.fieldName}>{this.state.fieldName} </Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                padding: 20,
+              }}
+              onPress={() => {
+                this.setModalVisible(!this.state.infoVisible);
+              }}
+            >
+              <Text
+                style={{ fontSize: 22, fontWeight: "bold", marginBottom: 8, marginStart: 4 }}
+              >
+                {info}
+              </Text>
 
-        </View>
-         
+              <Text style={styles.infoText}>
+                {goals} {this.state.goalCount}
+              </Text>
+              <Text style={styles.infoText}>
+                {access_type} {this.state.accessType}
+              </Text>
+              <Text style={styles.infoText}>
+                {address} {this.state.fieldAddress}
+              </Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
+        <View style={styles.greenBackground}>
+          <View style={styles.greenRowContainer}>
+            <TouchableOpacity
+              style={styles.backButton}
+              underlayColor="#bcbcbc"
+              onPress={() => this.props.navigation.goBack()}
+            >
+              <Image
+                style={styles.backButton}
+                source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              />
+            </TouchableOpacity>
+            <Text style={styles.fieldName}>{this.state.fieldName} </Text>
+          </View>
+
           <View style={styles.greenRowContainer}>
             <Image
               style={styles.fieldImage}
@@ -40,22 +99,23 @@ export default class DetailFieldsScreen extends Component {
               resizeMode="cover"
             />
 
-             <View >
-            <TouchableOpacity style={styles.peopleHereButton}>
-              <Text style={styles.boxTextBlack}>0 people here</Text>
-            </TouchableOpacity>
-           
-          </View>
+            <View>
+              <TouchableOpacity style={styles.peopleHereButton}>
+                <Text style={styles.boxTextBlack}>0 people here</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
-           <TouchableOpacity style={styles.startTrainingButton}>
-              <Text style={styles.boxTextBlue}>Start Training Here</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.startTrainingButton}>
+            <Text style={styles.boxTextBlue}>Start Training Here</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.infoContainer}
             underlayColor="#bcbcbc"
-            onPress={() => this.props.navigation.goBack()}
+            onPress={() => {
+              this.setModalVisible(true);
+            }}
           >
             <Image
               style={styles.infoIcon}
@@ -93,23 +153,22 @@ const styles = StyleSheet.create({
   fieldName: {
     fontWeight: "bold",
     fontSize: 20,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginStart: 12
   },
 
   greenRowContainer: {
     flexDirection: "row",
-    alignItems: 'center'
+    alignItems: "center"
   },
 
   backButton: {
     height: 48,
     width: 48,
-    alignSelf: 'center'
+    alignSelf: "center"
   },
 
   startTrainingButton: {
-   
     alignSelf: "flex-start",
     paddingStart: 10,
     paddingEnd: 10,
@@ -151,7 +210,7 @@ const styles = StyleSheet.create({
   },
 
   infoContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 18,
     end: 12,
     height: 36,
@@ -161,5 +220,11 @@ const styles = StyleSheet.create({
   infoIcon: {
     height: 36,
     width: 36
+  },
+  infoBox: {},
+
+  infoText: {
+    fontWeight: "bold",
+    margin: 4
   }
 });

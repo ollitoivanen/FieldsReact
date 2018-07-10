@@ -36,3 +36,7 @@ export const field_city = "Field City";
 export const enter_home_city = "Add your home city to find Fields near you!";
 export const add_home_city_placeholder = "Add home city...";
 export const set = "Set";
+export const goals = "Goals:";
+export const access_type = "Access Type:";
+export const address = "Address:";
+export const info = "Info";

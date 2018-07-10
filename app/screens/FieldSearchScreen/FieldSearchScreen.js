@@ -47,12 +47,29 @@ export default class FieldSearchScreen extends Component {
       query.get().then(
         function(doc) {
           doc.forEach(doc => {
-            const { fieldName, fieldArea } = doc.data();
+            const {
+              fieldName,
+              fieldArea,
+              fieldID,
+              fieldNameLowerCase,
+              fieldAreaLowerCase,
+              fieldType,
+              goalCount,
+              accessType,
+              fieldAddress
+            } = doc.data();
             fields.push({
               key: doc.id,
               doc,
               fieldName,
-              fieldArea
+              fieldArea,
+              fieldAreaLowerCase,
+              fieldNameLowerCase,
+              fieldID,
+              fieldType,
+              goalCount,
+              accessType,
+              fieldAddress
             });
           });
           this.setState({
@@ -74,6 +91,8 @@ export default class FieldSearchScreen extends Component {
       fieldSearchTerm: "",
       fields: [],
       homeCityText: "",
+      search_placeholder: search_fields_near,
+
       homeAreaConst: params.homeArea
     };
     this.ref = firebase
@@ -124,7 +143,7 @@ export default class FieldSearchScreen extends Component {
       const ref = firebase.firestore().collection("Fields");
       if (this.state.selectedIndex === 1) {
         const query = ref.where(
-          "fieldNameLowerCase", //tolowercase,
+          "fieldNameLowerCase",
           "==",
           this.state.fieldSearchTerm.toLowerCase().trim()
         );
@@ -132,12 +151,29 @@ export default class FieldSearchScreen extends Component {
         query.get().then(
           function(doc) {
             doc.forEach(doc => {
-              const { fieldName, fieldArea } = doc.data();
+              const {
+                fieldName,
+                fieldArea,
+                fieldID,
+                fieldNameLowerCase,
+                fieldAreaLowerCase,
+                fieldType,
+                goalCount,
+                accessType,
+                fieldAddress
+              } = doc.data();
               fields.push({
                 key: doc.id,
                 doc,
                 fieldName,
-                fieldArea
+                fieldArea,
+                fieldAreaLowerCase,
+                fieldNameLowerCase,
+                fieldID,
+                fieldType,
+                goalCount,
+                accessType,
+                fieldAddress
               });
             });
             this.setState({
@@ -155,12 +191,29 @@ export default class FieldSearchScreen extends Component {
         query.get().then(
           function(doc) {
             doc.forEach(doc => {
-              const { fieldName, fieldArea } = doc.data();
+              const {
+                fieldName,
+                fieldArea,
+                fieldID,
+                fieldNameLowerCase,
+                fieldAreaLowerCase,
+                fieldType,
+                goalCount,
+                accessType,
+                fieldAddress
+              } = doc.data();
               fields.push({
                 key: doc.id,
                 doc,
                 fieldName,
-                fieldArea
+                fieldArea,
+                fieldAreaLowerCase,
+                fieldNameLowerCase,
+                fieldID,
+                fieldType,
+                goalCount,
+                accessType,
+                fieldAddress
               });
             });
             this.setState({
@@ -178,12 +231,29 @@ export default class FieldSearchScreen extends Component {
           query.get().then(
             function(doc) {
               doc.forEach(doc => {
-                const { fieldName, fieldArea } = doc.data();
+                const {
+                  fieldName,
+                  fieldArea,
+                  fieldID,
+                  fieldNameLowerCase,
+                  fieldAreaLowerCase,
+                  fieldType,
+                  goalCount,
+                  accessType,
+                  fieldAddress
+                } = doc.data();
                 fields.push({
                   key: doc.id,
                   doc,
                   fieldName,
-                  fieldArea
+                  fieldArea,
+                  fieldAreaLowerCase,
+                  fieldNameLowerCase,
+                  fieldID,
+                  fieldType,
+                  goalCount,
+                  accessType,
+                  fieldAddress
                 });
               });
               this.setState({
@@ -204,12 +274,29 @@ export default class FieldSearchScreen extends Component {
         query.get().then(
           function(doc) {
             doc.forEach(doc => {
-              const { fieldName, fieldArea } = doc.data();
+              const {
+                fieldName,
+                fieldArea,
+                fieldID,
+                fieldNameLowerCase,
+                fieldAreaLowerCase,
+                fieldType,
+                goalCount,
+                accessType,
+                fieldAddress
+              } = doc.data();
               fields.push({
                 key: doc.id,
                 doc,
                 fieldName,
-                fieldArea
+                fieldArea,
+                fieldAreaLowerCase,
+                fieldNameLowerCase,
+                fieldID,
+                fieldType,
+                goalCount,
+                accessType,
+                fieldAddress
               });
             });
             this.setState({
@@ -270,7 +357,16 @@ export default class FieldSearchScreen extends Component {
               <TouchableOpacity
                 style={styles.item}
                 onPress={() =>
-                  this.props.navigation.navigate("DetailFieldScreen", {fieldName: this.state.fieldName})
+                  this.props.navigation.navigate("DetailFieldScreen", {
+                    fieldName: item.fieldName,
+                    fieldAreaLowerCase: item.fieldAreaLowerCase,
+                    fieldNameLowerCase: item.fieldNameLowerCase,
+                    fieldID: item.fieldID,
+                    fieldType: item.fieldType,
+                    goalCount: item.goalCount,
+                    accessType: item.accessType,
+                    fieldAddress: item.fieldAddress
+                  })
                 }
               >
                 <FieldSearchItem {...item} />
@@ -340,7 +436,16 @@ export default class FieldSearchScreen extends Component {
               <TouchableOpacity
                 style={styles.item}
                 onPress={() =>
-                  this.props.navigation.navigate("DetailFieldScreen", {fieldName: item.fieldName})
+                  this.props.navigation.navigate("DetailFieldScreen", {
+                    fieldName: item.fieldName,
+                    fieldAreaLowerCase: item.fieldAreaLowerCase,
+                    fieldNameLowerCase: item.fieldNameLowerCase,
+                    fieldID: item.fieldID,
+                    fieldType: item.fieldType,
+                    goalCount: item.goalCount,
+                    accessType: item.accessType,
+                    fieldAddress: item.fieldAddress
+                  })
                 }
               >
                 <FieldSearchItem {...item} />
@@ -352,9 +457,7 @@ export default class FieldSearchScreen extends Component {
               <TouchableOpacity
                 style={styles.navigationItem}
                 underlayColor="#bcbcbc"
-                onPress={() =>
-                  this.props.navigation.navigate("FeedScreen")
-                }
+                onPress={() => this.props.navigation.navigate("FeedScreen")}
               >
                 <Image
                   style={styles.navigationImage}
