@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image
 } from "react-native";
-import ProfileHeader from "FieldsReact/app/components/ProfileHeader/ProfileHeader.js";
 import firebase from "react-native-firebase";
 
 import {
@@ -140,7 +139,7 @@ export default class ProfileScreen extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>{" "}
+        </View>
         <View style={styles.navigationContainer}>
           <View style={styles.navigationContainerIn}>
             <TouchableOpacity

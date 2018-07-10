@@ -74,7 +74,7 @@ export default class FieldSearchScreen extends Component {
       fieldSearchTerm: "",
       fields: [],
       homeCityText: "",
-      homeAreaConst: params.homeArea,
+      homeAreaConst: params.homeArea
     };
     this.ref = firebase
       .firestore()
@@ -96,10 +96,9 @@ export default class FieldSearchScreen extends Component {
   getHomeAreaAfterSetting = () => {
     var { params } = this.props.navigation.state;
 
-
     this.setState({
       homeAreaConst: this.state.homeCityText.toLowerCase().trim(),
-      selectedIndex: 0,
+      selectedIndex: 0
     });
     this.updateIndex(this.state.selectedIndex);
   };
@@ -267,10 +266,19 @@ export default class FieldSearchScreen extends Component {
           <FlatList
             style={{ marginBottom: 50 }}
             data={this.state.fields}
-            renderItem={({ item }) => <FieldSearchItem {...item} />}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() =>
+                  this.props.navigation.navigate("DetailFieldScreen", {fieldName: this.state.fieldName})
+                }
+              >
+                <FieldSearchItem {...item} />
+              </TouchableOpacity>
+            )}
           />
           <View style={styles.navigationContainer}>
-          <View style={styles.navigationContainerIn}>
+            <View style={styles.navigationContainerIn}>
               <TouchableOpacity
                 onPress={() =>
                   this.props.navigation.navigate("FeedScreen", {
@@ -328,18 +336,25 @@ export default class FieldSearchScreen extends Component {
           <FlatList
             style={{ marginBottom: 50 }}
             data={this.state.fields}
-            renderItem={({ item }) => <FieldSearchItem {...item} />}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() =>
+                  this.props.navigation.navigate("DetailFieldScreen", {fieldName: item.fieldName})
+                }
+              >
+                <FieldSearchItem {...item} />
+              </TouchableOpacity>
+            )}
           />
           <View style={styles.navigationContainer}>
             <View style={styles.navigationContainerIn}>
               <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("FeedScreen", {
-                    homeCityAdded: this.state.home
-                  })
-                }
                 style={styles.navigationItem}
                 underlayColor="#bcbcbc"
+                onPress={() =>
+                  this.props.navigation.navigate("FeedScreen")
+                }
               >
                 <Image
                   style={styles.navigationImage}
@@ -465,5 +480,9 @@ const styles = StyleSheet.create({
   navigationImage: {
     height: 35,
     width: 35
+  },
+
+  item: {
+    width: "100%"
   }
 });

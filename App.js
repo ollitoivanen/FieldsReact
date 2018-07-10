@@ -24,6 +24,8 @@ import ProfileScreen from "FieldsReact/app/screens/ProfileScreen/ProfileScreen";
 
 import ForgotPasswordScreen from "FieldsReact/app/screens/ForgotPasswordScreen/ForgotPasswordScreen";
 import FieldSearchScreen from "./app/screens/FieldSearchScreen/FieldSearchScreen";
+import DetailFieldScreen from "./app/screens/DetailFieldScreen/DetailFieldScreen";
+
 
 const
   transitionConfig = () => ({
@@ -63,8 +65,14 @@ export const StackNavigatorApp = StackNavigator(
     },
     FieldSearchScreen: {
       screen: FieldSearchScreen
+    },
+    DetailFieldScreen: {
+      screen: DetailFieldScreen
     }
   },
+
+  
+  
   {
     initialRouteName: "LoadingScreen",
     transitionConfig
