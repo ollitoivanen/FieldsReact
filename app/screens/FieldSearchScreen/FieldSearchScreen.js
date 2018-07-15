@@ -56,7 +56,8 @@ export default class FieldSearchScreen extends Component {
               fieldType,
               goalCount,
               accessType,
-              fieldAddress
+              fieldAddress,
+              peopleHere
             } = doc.data();
             fields.push({
               key: doc.id,
@@ -69,7 +70,8 @@ export default class FieldSearchScreen extends Component {
               fieldType,
               goalCount,
               accessType,
-              fieldAddress
+              fieldAddress,
+              peopleHere
             });
           });
           this.setState({
@@ -160,7 +162,8 @@ export default class FieldSearchScreen extends Component {
                 fieldType,
                 goalCount,
                 accessType,
-                fieldAddress
+                fieldAddress,
+                peopleHere
               } = doc.data();
               fields.push({
                 key: doc.id,
@@ -173,7 +176,8 @@ export default class FieldSearchScreen extends Component {
                 fieldType,
                 goalCount,
                 accessType,
-                fieldAddress
+                fieldAddress,
+                peopleHere
               });
             });
             this.setState({
@@ -200,7 +204,8 @@ export default class FieldSearchScreen extends Component {
                 fieldType,
                 goalCount,
                 accessType,
-                fieldAddress
+                fieldAddress,
+                peopleHere
               } = doc.data();
               fields.push({
                 key: doc.id,
@@ -213,7 +218,8 @@ export default class FieldSearchScreen extends Component {
                 fieldType,
                 goalCount,
                 accessType,
-                fieldAddress
+                fieldAddress,
+                peopleHere
               });
             });
             this.setState({
@@ -240,7 +246,8 @@ export default class FieldSearchScreen extends Component {
                   fieldType,
                   goalCount,
                   accessType,
-                  fieldAddress
+                  fieldAddress,
+                  peopleHere
                 } = doc.data();
                 fields.push({
                   key: doc.id,
@@ -253,7 +260,8 @@ export default class FieldSearchScreen extends Component {
                   fieldType,
                   goalCount,
                   accessType,
-                  fieldAddress
+                  fieldAddress,
+                  peopleHere
                 });
               });
               this.setState({
@@ -283,7 +291,8 @@ export default class FieldSearchScreen extends Component {
                 fieldType,
                 goalCount,
                 accessType,
-                fieldAddress
+                fieldAddress,
+                peopleHere
               } = doc.data();
               fields.push({
                 key: doc.id,
@@ -296,7 +305,8 @@ export default class FieldSearchScreen extends Component {
                 fieldType,
                 goalCount,
                 accessType,
-                fieldAddress
+                fieldAddress,
+                peopleHere
               });
             });
             this.setState({
@@ -365,7 +375,12 @@ export default class FieldSearchScreen extends Component {
                     fieldType: item.fieldType,
                     goalCount: item.goalCount,
                     accessType: item.accessType,
-                    fieldAddress: item.fieldAddress
+                    fieldAddress: item.fieldAddress,
+                    peopleHere: item.peopleHere,
+                    userID: params.userID,
+                    currentFieldID: params.currentFieldID,
+                    currentFieldName: params.currentFieldName,
+                    timestamp: params.timestamp
                   })
                 }
               >
@@ -444,7 +459,12 @@ export default class FieldSearchScreen extends Component {
                     fieldType: item.fieldType,
                     goalCount: item.goalCount,
                     accessType: item.accessType,
-                    fieldAddress: item.fieldAddress
+                    fieldAddress: item.fieldAddress,
+                    peopleHere: item.peopleHere,
+                    userID: params.userID,
+                    currentFieldID: params.currentFieldID,
+                    currentFieldName: params.currentFieldName,
+                    timestamp: params.timestamp
                   })
                 }
               >

@@ -25,6 +25,8 @@ import ProfileScreen from "FieldsReact/app/screens/ProfileScreen/ProfileScreen";
 import ForgotPasswordScreen from "FieldsReact/app/screens/ForgotPasswordScreen/ForgotPasswordScreen";
 import FieldSearchScreen from "./app/screens/FieldSearchScreen/FieldSearchScreen";
 import DetailFieldScreen from "./app/screens/DetailFieldScreen/DetailFieldScreen";
+import TrainingScreen from "./app/screens/TrainingScreen/TrainingScreen";
+
 
 
 const
@@ -68,6 +70,10 @@ export const StackNavigatorApp = StackNavigator(
     },
     DetailFieldScreen: {
       screen: DetailFieldScreen
+    },
+
+    TrainingScreen: {
+      screen: TrainingScreen
     }
   },
 

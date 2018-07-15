@@ -5,17 +5,59 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Modal
+  Modal,
+  
 } from "react-native";
-import { goals, address, access_type, info } from "../../strings/strings";
+import {
+  goals,
+  address,
+  access_type,
+  info,
+  field_type,
+  field_type_array,
+  field_access_type_array,
+  people_here,
+  start_training_here,
+  youre_training_here,
+  youre_training_elsewhere
+} from "../../strings/strings";
+import firebase from "react-native-firebase";
+var moment = require("moment");
 
 export default class DetailFieldsScreen extends Component {
   static navigationOptions = {
     header: null
   };
 
+  startTraining = () => {
+    const startTime = moment().format("x");
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(firebase.auth().currentUser.uid)
+      .update({
+        currentFieldID: this.state.fieldID,
+        currentFieldName: this.state.fieldName,
+        timestamp: startTime
+      })
+      .then(
+        this.props.navigation.navigate("TrainingScreen", {
+          startTime: startTime, 
+          fieldName: this.state.fieldName
+        })
+      );
+  };
+
+  existingTraining = () => {
+    this.props.navigation.navigate("TrainingScreen", { startTime: this.state.timestamp, fieldName: this.state.fieldName });
+  };
   constructor(props) {
     super(props);
+    const userRef = firebase
+      .firestore()
+      .collection("Users")
+      .doc(firebase.auth().currentUser.uid);
+
     var { params } = this.props.navigation.state;
     this.state = {
       fieldName: params.fieldName,
@@ -27,6 +69,11 @@ export default class DetailFieldsScreen extends Component {
       goalCount: params.goalCount,
       accessType: params.accessType,
       fieldAddress: params.fieldAddress,
+      peopleHere: params.peopleHere,
+      userID: params.userID,
+      currentFieldID: params.currentFieldID,
+      currentFieldName: params.currentFieldName,
+      timestamp: params.timestamp,
       infoVisible: false
     };
   }
@@ -34,6 +81,41 @@ export default class DetailFieldsScreen extends Component {
     this.setState({ infoVisible: visible });
   }
   render() {
+    const trainingButtonTraining = (
+      <TouchableOpacity style={styles.startTrainingButton}>
+        <Text
+          style={styles.boxTextBlue}
+          onPress={() => this.existingTraining()}
+        >
+          {youre_training_here}
+        </Text>
+      </TouchableOpacity>
+    );
+
+    const trainingButtonNotTraining = (
+      <TouchableOpacity
+        style={styles.startTrainingButton}
+        onPress={() => this.startTraining()}
+      >
+        <Text style={styles.boxTextBlue}>{start_training_here}</Text>
+      </TouchableOpacity>
+    );
+
+    const trainingButtonTrainingElsewhere = (
+      <TouchableOpacity style={styles.startTrainingButton}>
+        <Text style={styles.boxTextBlue}>{youre_training_elsewhere}</Text>
+      </TouchableOpacity>
+    );
+
+    let trainingButton;
+
+    if (this.state.currentFieldID === this.state.fieldID) {
+      trainingButton = trainingButtonTraining;
+    } else if (this.state.currentFieldID !== "") {
+      trainingButton = trainingButtonTrainingElsewhere;
+    } else {
+      trainingButton = trainingButtonNotTraining;
+    }
     return (
       <View style={styles.container}>
         <Modal transparent={true} visible={this.state.infoVisible}>
@@ -52,23 +134,31 @@ export default class DetailFieldsScreen extends Component {
             <TouchableOpacity
               style={{
                 backgroundColor: "#fff",
-                padding: 20,
+                padding: 20
               }}
               onPress={() => {
                 this.setModalVisible(!this.state.infoVisible);
               }}
             >
               <Text
-                style={{ fontSize: 22, fontWeight: "bold", marginBottom: 8, marginStart: 4 }}
+                style={{
+                  fontSize: 22,
+                  fontWeight: "bold",
+                  marginBottom: 8,
+                  marginStart: 4
+                }}
               >
                 {info}
               </Text>
-
               <Text style={styles.infoText}>
                 {goals} {this.state.goalCount}
               </Text>
               <Text style={styles.infoText}>
-                {access_type} {this.state.accessType}
+                {field_type} {field_type_array[[this.state.fieldType]]}
+              </Text>
+
+              <Text style={styles.infoText}>
+                {access_type} {field_access_type_array[[this.state.accessType]]}
               </Text>
               <Text style={styles.infoText}>
                 {address} {this.state.fieldAddress}
@@ -90,7 +180,6 @@ export default class DetailFieldsScreen extends Component {
             </TouchableOpacity>
             <Text style={styles.fieldName}>{this.state.fieldName} </Text>
           </View>
-
           <View style={styles.greenRowContainer}>
             <Image
               style={styles.fieldImage}
@@ -101,14 +190,14 @@ export default class DetailFieldsScreen extends Component {
 
             <View>
               <TouchableOpacity style={styles.peopleHereButton}>
-                <Text style={styles.boxTextBlack}>0 people here</Text>
+                <Text style={styles.boxTextBlack}>
+                  {this.state.peopleHere} {people_here}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          <TouchableOpacity style={styles.startTrainingButton}>
-            <Text style={styles.boxTextBlue}>Start Training Here</Text>
-          </TouchableOpacity>
+          {trainingButton}
 
           <TouchableOpacity
             style={styles.infoContainer}

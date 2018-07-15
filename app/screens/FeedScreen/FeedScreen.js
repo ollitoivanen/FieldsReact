@@ -23,6 +23,11 @@ export default class FeedScreen extends React.Component {
         if (doc.exists) {
           this.setState({
             homeArea: doc.data().homeArea,
+            userID: doc.data().userID,
+            currentFieldID: doc.data().currentFieldID,
+            currentFieldName: doc.data().currentFieldName,
+            timestamp: doc.data().timestamp,
+
             loading: false
           });
         }
@@ -81,7 +86,13 @@ export default class FeedScreen extends React.Component {
               style={styles.navigationItemGreen}
               onPress={() =>
                 this.props.navigation.navigate("FieldSearchScreen", {
-                  homeArea: this.state.homeArea
+                  homeArea: this.state.homeArea,
+                  currentFieldID: this.state.currentFieldID,
+                  currentFieldName: this.state.currentFieldName,
+                  timestamp: this.state.timestamp,
+                  userID: this.state.userID
+
+
                   
                 })
               }
