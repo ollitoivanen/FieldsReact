@@ -80,6 +80,8 @@ export default class DetailFieldsScreen extends Component {
   setModalVisible(visible) {
     this.setState({ infoVisible: visible });
   }
+
+  
   render() {
     const trainingButtonTraining = (
       <TouchableOpacity style={styles.startTrainingButton}>

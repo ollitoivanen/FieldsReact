@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
-import { under_minute, min, h, currently_training_at, training_time } from "../../strings/strings";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import { under_minute, min, h, currently_training_at, training_time, end_training } from "../../strings/strings";
 var moment = require("moment");
 
 export default class TrainingScreen extends Component {
@@ -46,12 +46,7 @@ export default class TrainingScreen extends Component {
     return (
       <View style={styles.greenBackground}>
 
-       <Image
-       style={styles.image}
-       resizeMode={'center'}
-                source={require("FieldsReact/app/images/FootballFieldOutlineWhite/football_field_outline_white.png")}
-              />
-    
+       
       <Text style={styles.headerText}>{currently_training_at}</Text>
       <View style={styles.roundBackground}>
       <Text style={styles.fieldText}>{params.fieldName}</Text>
@@ -61,6 +56,11 @@ export default class TrainingScreen extends Component {
       <View style={styles.roundBackground}>
         <Text style={styles.trainingTimeText}>{this.state.trainingTime}</Text>
         </View>
+
+ <TouchableOpacity style={styles.roundBackgroundEnd}>
+        <Text style={styles.endText}>{end_training}</Text>
+        </TouchableOpacity>
+
       </View>
     );
   }
@@ -106,6 +106,31 @@ const styles = StyleSheet.create({
     marginTop: 36
   },
 
-  image:{
+  roundBackgroundEnd: {
+    paddingStart: 10,
+    paddingEnd: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
+
+    width: '100%',
+    marginEnd: 10,
+    backgroundColor: "white",
+    borderRadius: 20,
+    flexShrink: 1,
+    marginStart: 8,
+    position: 'absolute',
+    bottom: 16
+  },
+
+  endText:{
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'black',
+    textAlign: 'center'
+    
   }
+    
+  
+
+  
 });

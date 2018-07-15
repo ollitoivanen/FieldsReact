@@ -52,5 +52,6 @@ export const min = 'min'
 export const h = 'h'
 export const currently_training_at = 'Currently training at..'
 export const training_time = 'Training time'
+export const end_training = 'End training'
 
 
