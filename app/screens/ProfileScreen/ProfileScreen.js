@@ -21,76 +21,31 @@ export default class ProfileScreen extends Component {
   static navigationOptions = {
     header: null
   };
-  componentWillMount() {
-    this.getUserData();
-  }
+  
   constructor(props) {
     super(props);
+    var { params } = this.props.navigation.state;
+
     this.state = {
-      username: "",
-      trainingCount: "",
-      friendCount: "",
-      userTeamID: null,
-      usersTeam: "",
-      reputation: "",
-      currentFieldName: "",
-      currentFieldID: "",
-      timestamp: "",
-      homeArea: ""
+      username: params.username,
+      trainingCount: params.trainingCount,
+      friendCount: params.friendCount,
+      userTeamID: params.usersTeamID,
+      usersTeam: params.usersTeam,
+      reputation: params.reputation,
+      currentFieldName: params.currentFieldName,
+      currentFieldID: params.currentFieldID,
+      timestamp: params.timestamp,
+      homeArea: params.homeArea,
+      userID: params.userID
     };
     this.ref = firebase
       .firestore()
       .collection("Users")
       .doc(firebase.auth().currentUser.uid);
   }
-  getUserData = () => {
-    this.ref.get().then(
-      function(doc) {
-        if (doc.exists) {
-          this.setState({
-            username: doc.data().username,
-            trainingCount: doc.data().trainingCount,
-            friendCount: doc.data().friendCount,
-            userTeamID: doc.data().userTeamID,
-            reputation: doc.data().reputation,
-            currentFieldID: doc.data().currentFieldID,
-            homeArea: doc.data().homeArea
-          });
-
-          if (this.state.currentFieldID == "") {
-            this.setState({
-              currentFieldName: [not_at_any_field]
-            });
-          }
-
-          if (this.state.userTeamID == null) {
-            this.setState({
-              usersTeam: [not_in_a_team]
-            });
-          } else {
-            const teamRef = firebase.firestore().collection("Teams");
-            const query = teamRef.where("teamID", "==", this.state.userTeamID);
-            query.get().then(
-              function(teamDoc) {
-                if (!teamDoc.empty) {
-                  teamDoc.forEach(
-                    function(teamData) {
-                      this.setState({
-                        usersTeam: teamData.data().teamUsernameText
-                      });
-                    }.bind(this)
-                  );
-                }
-              }.bind(this)
-            );
-          }
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      }.bind(this)
-    );
-  };
+  
+    
 
   render() {
     return (
@@ -117,7 +72,7 @@ export default class ProfileScreen extends Component {
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.username}>{this.state.countryName}</Text>
+            <Text style={styles.username}>{this.state.username}</Text>
             <TouchableOpacity style={styles.roundTextContainer}>
               <Image
                 style={styles.teamIcon}
@@ -156,7 +111,11 @@ export default class ProfileScreen extends Component {
               style={styles.navigationItemGreen}
               onPress={() =>
                 this.props.navigation.navigate("FieldSearchScreen", {
-                  homeArea: this.state.homeArea
+                  homeArea: this.state.homeArea,
+                  currentFieldID: this.state.currentFieldID,
+                  currentFieldName: this.state.currentFieldName,
+                  timestamp: this.state.timestamp,
+                  userID: this.state.userID
                 })
               }
             >

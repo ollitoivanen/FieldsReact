@@ -5,8 +5,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Modal,
-  
+  Modal
 } from "react-native";
 import {
   goals,
@@ -25,6 +24,7 @@ import firebase from "react-native-firebase";
 var moment = require("moment");
 
 export default class DetailFieldsScreen extends Component {
+  componentWillUpdate = () => {};
   static navigationOptions = {
     header: null
   };
@@ -40,16 +40,20 @@ export default class DetailFieldsScreen extends Component {
         currentFieldName: this.state.fieldName,
         timestamp: startTime
       })
+      .then(this.setState({ currentFieldID: this.state.fieldID , timestamp: startTime}))
       .then(
         this.props.navigation.navigate("TrainingScreen", {
-          startTime: startTime, 
+          startTime: startTime,
           fieldName: this.state.fieldName
         })
       );
   };
 
   existingTraining = () => {
-    this.props.navigation.navigate("TrainingScreen", { startTime: this.state.timestamp, fieldName: this.state.fieldName });
+    this.props.navigation.navigate("TrainingScreen", {
+      startTime: this.state.timestamp,
+      fieldName: this.state.fieldName
+    });
   };
   constructor(props) {
     super(props);
@@ -74,14 +78,14 @@ export default class DetailFieldsScreen extends Component {
       currentFieldID: params.currentFieldID,
       currentFieldName: params.currentFieldName,
       timestamp: params.timestamp,
-      infoVisible: false
+      infoVisible: false,
+      comingFromNewTraining: false
     };
   }
   setModalVisible(visible) {
     this.setState({ infoVisible: visible });
   }
 
-  
   render() {
     const trainingButtonTraining = (
       <TouchableOpacity style={styles.startTrainingButton}>

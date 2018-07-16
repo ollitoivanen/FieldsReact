@@ -27,8 +27,12 @@ import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSea
 
 export default class FieldSearchScreen extends Component {
   componentDidMount = () => {
-    this.initialFetch();
+   this.unsubscribe = this.initialFetch();
   };
+
+  componentWillUnmount() {
+    this.unsubscribe();
+}
   static navigationOptions = {
     header: null
   };
@@ -127,13 +131,13 @@ export default class FieldSearchScreen extends Component {
   updateIndex = selectedIndex => {
     this.setState({ selectedIndex }, () => {
       if (selectedIndex === 1) {
-        this.searchFields(this.state.fieldSearchTerm);
+      this.unsubscribe =  this.searchFields(this.state.fieldSearchTerm);
         this.setState({ search_placeholder: search_fields_by_name });
       } else if (selectedIndex === 2) {
-        this.searchFields(this.state.fieldSearchTerm);
+     this.unsubscribe =    this.searchFields(this.state.fieldSearchTerm);
         this.setState({ search_placeholder: search_fields_by_city });
       } else if (selectedIndex === 0) {
-        this.searchFields(this.state.fieldSearchTerm);
+      this.unsubscribe =   this.searchFields(this.state.fieldSearchTerm);
         this.setState({ search_placeholder: search_fields_near });
       }
     });
@@ -321,191 +325,136 @@ export default class FieldSearchScreen extends Component {
   render() {
     var { params } = this.props.navigation.state;
 
+    homeCityAddInput = (
+      <View style={styles.homeAddContainer}>
+        <Text style={styles.blackText}>{enter_home_city}</Text>
+        <TextInput
+          style={styles.searchBar}
+          placeholder={add_home_city_placeholder}
+          onChangeText={homeCityText => this.setState({ homeCityText })}
+        />
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => this.addHomeCity()}
+        >
+          <Text style={styles.buttonText}>{set}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+
     const buttons = [[near_me], [field_name], [field_city]];
     const { selectedIndex } = this.state;
+    let input;
+
 
     if (this.state.homeAreaConst == "" && selectedIndex == 0) {
-      return (
-        <View style={styles.container}>
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchBar}
-              placeholder={this.state.search_placeholder}
-              onChangeText={this.searchFields}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              value={this.state.fieldSearchTerm}
-            />
-            <ButtonGroup
-              onPress={this.updateIndex}
-              selectedIndex={selectedIndex}
-              buttons={buttons}
-              buttonStyle={{ height: 40 }}
-              selectedTextStyle={{ color: "#3bd774", fontWeight: "bold" }}
-              textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
-              innerBorderStyle={{ width: 0 }}
-            />
-          </View>
-          <View style={styles.homeAddContainer}>
-            <Text style={styles.blackText}>{enter_home_city}</Text>
-            <TextInput
-              style={styles.searchBar}
-              placeholder={add_home_city_placeholder}
-              onChangeText={homeCityText => this.setState({ homeCityText })}
-            />
+      input = homeCityAddInput;
+    } else {
+      input = null;
+    }
+    return (
+      <View style={styles.container}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchBar}
+            placeholder={this.state.search_placeholder}
+            onChangeText={ this.unsubscribe = this.searchFields}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            value={this.state.fieldSearchTerm}
+          />
+          <ButtonGroup
+            onPress={this.updateIndex}
+            selectedIndex={selectedIndex}
+            buttons={buttons}
+            buttonStyle={{ height: 40 }}
+            selectedTextStyle={{ color: "#3bd774", fontWeight: "bold" }}
+            textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
+            innerBorderStyle={{ width: 0 }}
+          />
+        </View>
+        {input}
+
+        <FlatList
+          style={{ marginBottom: 50 }}
+          data={this.state.fields}
+          renderItem={({ item }) => (
             <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => this.addHomeCity()}
+              style={styles.item}
+              onPress={() =>
+                this.props.navigation.navigate("DetailFieldScreen", {
+                  fieldName: item.fieldName,
+                  fieldAreaLowerCase: item.fieldAreaLowerCase,
+                  fieldNameLowerCase: item.fieldNameLowerCase,
+                  fieldID: item.fieldID,
+                  fieldType: item.fieldType,
+                  goalCount: item.goalCount,
+                  accessType: item.accessType,
+                  fieldAddress: item.fieldAddress,
+                  peopleHere: item.peopleHere,
+                  userID: params.userID,
+                  currentFieldID: params.currentFieldID,
+                  currentFieldName: params.currentFieldName,
+                  timestamp: params.timestamp
+                })
+              }
             >
-              <Text style={styles.buttonText}>{set}</Text>
+              <FieldSearchItem {...item} />
+            </TouchableOpacity>
+          )}
+        />
+        <View style={styles.navigationContainer}>
+          <View style={styles.navigationContainerIn}>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("FeedScreen", {
+                  homeCityAdded: this.state.home
+                })
+              }
+              style={styles.navigationItem}
+              underlayColor="#bcbcbc"
+            >
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Home/home.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navigationItemBlue}>
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Field/field_icon.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navigationItem}
+              onPress={() => this.props.navigation.navigate("ProfileScreen", {
+                homeArea: params.homeArea,
+                currentFieldID: params.currentFieldID,
+                currentFieldName: params.currentFieldName,
+                timestamp: params.timestamp,
+                userID: params.userID,
+                username: params.username,
+                trainingCount: params.trainingCount,
+                friendCount: params.friendCount,
+                userTeamID: params.userTeamID,
+                reputation: params.reputation,
+                usersTeam: params.usersTeam
+
+
+                
+              })}
+            >
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Profile/profile.png")}
+              />
             </TouchableOpacity>
           </View>
-
-          <FlatList
-            style={{ marginBottom: 50 }}
-            data={this.state.fields}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.item}
-                onPress={() =>
-                  this.props.navigation.navigate("DetailFieldScreen", {
-                    fieldName: item.fieldName,
-                    fieldAreaLowerCase: item.fieldAreaLowerCase,
-                    fieldNameLowerCase: item.fieldNameLowerCase,
-                    fieldID: item.fieldID,
-                    fieldType: item.fieldType,
-                    goalCount: item.goalCount,
-                    accessType: item.accessType,
-                    fieldAddress: item.fieldAddress,
-                    peopleHere: item.peopleHere,
-                    userID: params.userID,
-                    currentFieldID: params.currentFieldID,
-                    currentFieldName: params.currentFieldName,
-                    timestamp: params.timestamp
-                  })
-                }
-              >
-                <FieldSearchItem {...item} />
-              </TouchableOpacity>
-            )}
-          />
-          <View style={styles.navigationContainer}>
-            <View style={styles.navigationContainerIn}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("FeedScreen", {
-                    homeCityAdded: this.state.home
-                  })
-                }
-                style={styles.navigationItem}
-                underlayColor="#bcbcbc"
-              >
-                <Image
-                  style={styles.navigationImage}
-                  source={require("FieldsReact/app/images/Home/home.png")}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.navigationItemBlue}>
-                <Image
-                  style={styles.navigationImage}
-                  source={require("FieldsReact/app/images/Field/field_icon.png")}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.navigationItem}
-                onPress={() => this.props.navigation.navigate("ProfileScreen")}
-              >
-                <Image
-                  style={styles.navigationImage}
-                  source={require("FieldsReact/app/images/Profile/profile.png")}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
         </View>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchBar}
-              placeholder={this.state.search_placeholder}
-              onChangeText={this.searchFields}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              value={this.state.fieldSearchTerm}
-            />
-            <ButtonGroup
-              onPress={this.updateIndex}
-              selectedIndex={selectedIndex}
-              buttons={buttons}
-              buttonStyle={{ height: 40 }}
-              selectedTextStyle={{ color: "#3bd774", fontWeight: "bold" }}
-              textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
-              innerBorderStyle={{ width: 0 }}
-            />
-          </View>
-          <FlatList
-            style={{ marginBottom: 50 }}
-            data={this.state.fields}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.item}
-                onPress={() =>
-                  this.props.navigation.navigate("DetailFieldScreen", {
-                    fieldName: item.fieldName,
-                    fieldAreaLowerCase: item.fieldAreaLowerCase,
-                    fieldNameLowerCase: item.fieldNameLowerCase,
-                    fieldID: item.fieldID,
-                    fieldType: item.fieldType,
-                    goalCount: item.goalCount,
-                    accessType: item.accessType,
-                    fieldAddress: item.fieldAddress,
-                    peopleHere: item.peopleHere,
-                    userID: params.userID,
-                    currentFieldID: params.currentFieldID,
-                    currentFieldName: params.currentFieldName,
-                    timestamp: params.timestamp
-                  })
-                }
-              >
-                <FieldSearchItem {...item} />
-              </TouchableOpacity>
-            )}
-          />
-          <View style={styles.navigationContainer}>
-            <View style={styles.navigationContainerIn}>
-              <TouchableOpacity
-                style={styles.navigationItem}
-                underlayColor="#bcbcbc"
-                onPress={() => this.props.navigation.navigate("FeedScreen")}
-              >
-                <Image
-                  style={styles.navigationImage}
-                  source={require("FieldsReact/app/images/Home/home.png")}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.navigationItemBlue}>
-                <Image
-                  style={styles.navigationImage}
-                  source={require("FieldsReact/app/images/Field/field_icon.png")}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.navigationItem}
-                onPress={() => this.props.navigation.navigate("ProfileScreen")}
-              >
-                <Image
-                  style={styles.navigationImage}
-                  source={require("FieldsReact/app/images/Profile/profile.png")}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      );
-    }
+      </View>
+    );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

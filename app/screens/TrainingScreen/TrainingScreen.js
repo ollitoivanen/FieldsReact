@@ -44,8 +44,20 @@ export default class TrainingScreen extends Component {
     var { params } = this.props.navigation.state;
 
     return (
+      <View style={styles.container}>
       <View style={styles.greenBackground}>
-
+ <View style={styles.greenRowContainer}>
+            <TouchableOpacity
+              style={styles.backButton}
+              underlayColor="#bcbcbc"
+              onPress={() => this.props.navigation.goBack()}
+            >
+              <Image
+                style={styles.backButton}
+                source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              />
+            </TouchableOpacity>
+          </View>
        
       <Text style={styles.headerText}>{currently_training_at}</Text>
       <View style={styles.roundBackground}>
@@ -62,12 +74,15 @@ export default class TrainingScreen extends Component {
         </TouchableOpacity>
 
       </View>
+      </View>
     );
   }
 }
 const styles = StyleSheet.create({
-  container: {},
-
+  container: {
+    flex: 1,
+    backgroundColor: "white"
+  },
   trainingTimeText: {
     fontSize: 40,
     fontWeight: 'bold'
@@ -79,6 +94,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flex: 1,
     alignItems: 'center'
+  },
+
+  greenRowContainer: {
+    flexDirection: "row",
+    justifyContent: 'flex-start',
+    width: '100%',
+  },
+  backButton: {
+    height: 48,
+    width: 48,
+  },
+
+  fieldName: {
+    fontWeight: "bold",
+    fontSize: 20,
+    alignSelf: "center",
+    marginStart: 12
   },
 
   roundBackground: {
