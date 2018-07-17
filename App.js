@@ -26,6 +26,8 @@ import ForgotPasswordScreen from "FieldsReact/app/screens/ForgotPasswordScreen/F
 import FieldSearchScreen from "./app/screens/FieldSearchScreen/FieldSearchScreen";
 import DetailFieldScreen from "./app/screens/DetailFieldScreen/DetailFieldScreen";
 import TrainingScreen from "./app/screens/TrainingScreen/TrainingScreen";
+import TrainingSummaryScreen from "./app/screens/TrainingSummaryScreen/TrainingSummaryScreen";
+
 
 
 
@@ -74,6 +76,10 @@ export const StackNavigatorApp = StackNavigator(
 
     TrainingScreen: {
       screen: TrainingScreen
+    },
+
+    TrainingSummaryScreen: {
+      screen: TrainingSummaryScreen
     }
   },
 

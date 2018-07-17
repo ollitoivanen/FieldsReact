@@ -1,6 +1,16 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
-import { under_minute, min, h, currently_training_at, training_time, end_training } from "../../strings/strings";
+import {
+  under_minute,
+  min,
+  h,
+  currently_training_at,
+  training_time,
+  end_training
+} from "../../strings/strings";
+
+import { StackNavigator, StackActions, NavigationActions } from "react-navigation";
+import TrainingSummaryScreen from "../TrainingSummaryScreen/TrainingSummaryScreen";
 var moment = require("moment");
 
 export default class TrainingScreen extends Component {
@@ -26,27 +36,26 @@ export default class TrainingScreen extends Component {
     const trainingTime = currentTime - startTime;
     this.setState({ trainingTime: trainingTime });
     const seconds = trainingTime / 1000;
-    const minutes =  Math.trunc(seconds / 60);
-    const hours = Math.trunc( minutes / 60);
-
+    const minutes = Math.trunc(seconds / 60);
+    const hours = Math.trunc(minutes / 60);
 
     if (minutes < 1) {
       this.setState({ trainingTime: [under_minute] });
     } else if (hours < 1) {
       this.setState({ trainingTime: minutes + [min] });
     } else {
-      const minSub = minutes - hours*60
-      this.setState({trainingTime: hours + [h] + ' ' + minSub + [min]})
+      const minSub = minutes - hours * 60;
+      this.setState({ trainingTime: hours + [h] + " " + minSub + [min] });
     }
   };
 
   render() {
     var { params } = this.props.navigation.state;
-
+  
     return (
       <View style={styles.container}>
-      <View style={styles.greenBackground}>
- <View style={styles.greenRowContainer}>
+        <View style={styles.greenBackground}>
+          <View style={styles.greenRowContainer}>
             <TouchableOpacity
               style={styles.backButton}
               underlayColor="#bcbcbc"
@@ -58,22 +67,26 @@ export default class TrainingScreen extends Component {
               />
             </TouchableOpacity>
           </View>
-       
-      <Text style={styles.headerText}>{currently_training_at}</Text>
-      <View style={styles.roundBackground}>
-      <Text style={styles.fieldText}>{params.fieldName}</Text>
-      </View>
-      <Text style={styles.headerText}>{training_time}</Text>
 
-      <View style={styles.roundBackground}>
-        <Text style={styles.trainingTimeText}>{this.state.trainingTime}</Text>
+          <Text style={styles.headerText}>{currently_training_at}</Text>
+          <View style={styles.roundBackground}>
+            <Text style={styles.fieldText}>{params.fieldName}</Text>
+          </View>
+          <Text style={styles.headerText}>{training_time}</Text>
+
+          <View style={styles.roundBackground}>
+            <Text style={styles.trainingTimeText}>
+              {this.state.trainingTime}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.roundBackgroundEnd}
+            onPress={()=>this.props.navigation.replace('TrainingSummaryScreen')}
+          >
+            <Text style={styles.endText}>{end_training}</Text>
+          </TouchableOpacity>
         </View>
-
- <TouchableOpacity style={styles.roundBackgroundEnd}>
-        <Text style={styles.endText}>{end_training}</Text>
-        </TouchableOpacity>
-
-      </View>
       </View>
     );
   }
@@ -85,7 +98,7 @@ const styles = StyleSheet.create({
   },
   trainingTimeText: {
     fontSize: 40,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
 
   greenBackground: {
@@ -93,17 +106,17 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 10,
     flex: 1,
-    alignItems: 'center'
+    alignItems: "center"
   },
 
   greenRowContainer: {
     flexDirection: "row",
-    justifyContent: 'flex-start',
-    width: '100%',
+    justifyContent: "flex-start",
+    width: "100%"
   },
   backButton: {
     height: 48,
-    width: 48,
+    width: 48
   },
 
   fieldName: {
@@ -129,12 +142,12 @@ const styles = StyleSheet.create({
 
   fieldText: {
     fontSize: 25,
-    fontWeight: 'bold',
+    fontWeight: "bold"
   },
 
   headerText: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 36
   },
 
@@ -144,25 +157,20 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
 
-    width: '100%',
+    width: "100%",
     marginEnd: 10,
     backgroundColor: "white",
     borderRadius: 20,
     flexShrink: 1,
     marginStart: 8,
-    position: 'absolute',
+    position: "absolute",
     bottom: 16
   },
 
-  endText:{
+  endText: {
     fontSize: 25,
-    fontWeight: 'bold',
-    color: 'black',
-    textAlign: 'center'
-    
+    fontWeight: "bold",
+    color: "black",
+    textAlign: "center"
   }
-    
-  
-
-  
 });

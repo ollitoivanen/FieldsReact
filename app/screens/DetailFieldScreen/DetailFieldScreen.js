@@ -24,7 +24,14 @@ import firebase from "react-native-firebase";
 var moment = require("moment");
 
 export default class DetailFieldsScreen extends Component {
-  componentWillUpdate = () => {};
+  componentWillMount = () => {
+    var { params } = this.props.navigation.state;
+
+    this.setState({
+      currentFieldID: params.currentFieldID,
+      currentFieldName: params.currentFieldName,
+    })
+  };
   static navigationOptions = {
     header: null
   };
@@ -40,7 +47,12 @@ export default class DetailFieldsScreen extends Component {
         currentFieldName: this.state.fieldName,
         timestamp: startTime
       })
-      .then(this.setState({ currentFieldID: this.state.fieldID , timestamp: startTime}))
+      .then(
+        this.setState({
+          currentFieldID: this.state.fieldID,
+          timestamp: startTime
+        })
+      )
       .then(
         this.props.navigation.navigate("TrainingScreen", {
           startTime: startTime,

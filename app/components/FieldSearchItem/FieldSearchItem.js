@@ -2,20 +2,21 @@ import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 export default class FieldSearchitem extends React.PureComponent {
   // toggle a todo as completed or not via update()
-  
+
   render() {
     return (
-     
-        <View style={styles.item}>
-          <Image
-            style={styles.fieldImage}
-            source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-            borderRadius={25}
-            resizeMode="cover"
-          />
-          <Text style={styles.text} numberOfLines={2}>{this.props.fieldName} </Text>
-          <View style={styles.div} />
-        </View>
+      <View style={styles.item}>
+        <Image
+          style={styles.fieldImage}
+          source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+          borderRadius={25}
+          resizeMode="cover"
+        />
+        <Text style={styles.text} numberOfLines={2}>
+          {this.props.fieldName}{" "}
+        </Text>
+        <View style={styles.div} />
+      </View>
     );
   }
 }
@@ -24,9 +25,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     backgroundColor: "white",
-    alignItems: "center",
-   
-
+    alignItems: "center"
   },
 
   div: {
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
-    flexWrap: 'wrap'
+    flexWrap: "wrap"
   },
 
   fieldImage: {
