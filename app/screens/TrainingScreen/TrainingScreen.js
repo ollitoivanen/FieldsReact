@@ -8,8 +8,13 @@ import {
   training_time,
   end_training
 } from "../../strings/strings";
+import firebase from "react-native-firebase";
 
-import { StackNavigator, StackActions, NavigationActions } from "react-navigation";
+import {
+  StackNavigator,
+  StackActions,
+  NavigationActions
+} from "react-navigation";
 import TrainingSummaryScreen from "../TrainingSummaryScreen/TrainingSummaryScreen";
 var moment = require("moment");
 
@@ -19,9 +24,14 @@ export default class TrainingScreen extends Component {
   };
   constructor(props) {
     super(props);
+    this.ref = firebase.firestore().collection("Users");
+
     var { params } = this.props.navigation.state;
     this.state = {
-      trainingTime: ""
+      trainingTime: "",
+      currentFieldID: "",
+      startTime: params.startTime,
+      currentTime: moment().format("x")
     };
   }
 
@@ -49,9 +59,39 @@ export default class TrainingScreen extends Component {
     }
   };
 
+  endTraining = () => {
+    this.props.navigation.state.params.refresh(this.state.currentFieldID);
+    var { params } = this.props.navigation.state;
+    const startTime = params.startTime;
+    const currentTime = moment().format("x");
+    const trainingTime = currentTime - startTime;
+    if (trainingTime < 900000) {
+    } else if (trainingTime > 18000000) {
+    } else {
+    
+
+      var currentReputation = params.reputation;
+      var trainingReputation = trainingTime / 60000;
+       var newReputation = trainingReputation + currentReputation;
+      this.ref
+        .doc(firebase.auth().currentUser.uid)
+        .update({
+          reputation: newReputation,
+          trainingCount: params.trainingCount + 1,
+          currentFieldID: "",
+          currentFieldName: "",
+          timestamp: null
+        })
+
+        .then(() => this.props.navigation.replace("TrainingSummaryScreen"));
+
+      //Add training to db
+    }
+  };
+
   render() {
     var { params } = this.props.navigation.state;
-  
+
     return (
       <View style={styles.container}>
         <View style={styles.greenBackground}>
@@ -82,7 +122,7 @@ export default class TrainingScreen extends Component {
 
           <TouchableOpacity
             style={styles.roundBackgroundEnd}
-            onPress={()=>this.props.navigation.replace('TrainingSummaryScreen')}
+            onPress={() => this.endTraining()}
           >
             <Text style={styles.endText}>{end_training}</Text>
           </TouchableOpacity>

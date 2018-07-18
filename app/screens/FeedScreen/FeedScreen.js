@@ -129,9 +129,9 @@ export default class FeedScreen extends React.Component {
                   userID: this.state.userID,
                   username: this.state.username,
                   trainingCount: this.state.trainingCount,
+                  reputation: this.state.reputation,
                   friendCount: this.state.friendCount,
                   userTeamID: this.state.userTeamID,
-                  reputation: this.state.reputation,
                   usersTeam: this.state.usersTeam
                 })
               }

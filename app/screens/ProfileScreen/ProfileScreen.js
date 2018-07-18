@@ -21,7 +21,7 @@ export default class ProfileScreen extends Component {
   static navigationOptions = {
     header: null
   };
-  
+
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
@@ -44,8 +44,6 @@ export default class ProfileScreen extends Component {
       .collection("Users")
       .doc(firebase.auth().currentUser.uid);
   }
-  
-    
 
   render() {
     return (
@@ -115,7 +113,14 @@ export default class ProfileScreen extends Component {
                   currentFieldID: this.state.currentFieldID,
                   currentFieldName: this.state.currentFieldName,
                   timestamp: this.state.timestamp,
-                  userID: this.state.userID
+                  userID: this.state.userID,
+                  username: this.state.username,
+                  trainingCount: this.state.trainingCount,
+                  reputation: this.state.reputation,
+                  friendCount: this.state.friendCount,
+                  userTeamID: this.state.userTeamID,
+                  usersTeam: this.state.usersTeam
+
                 })
               }
             >

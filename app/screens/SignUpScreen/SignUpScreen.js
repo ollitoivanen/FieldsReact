@@ -86,7 +86,7 @@ export default class SignUpScreen extends React.Component {
             friendCount: 0,
             timestamp: null,
             token: null, //Needs to be changed when creating notifications
-            fieldsPlus: false,
+            fieldsPlus: false
           })
         )
         .then(() => this.props.navigation.navigate("FeedScreen"));

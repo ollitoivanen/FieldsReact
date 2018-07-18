@@ -36,7 +36,17 @@ export default class DetailFieldsScreen extends Component {
     header: null
   };
 
+  setStateAfterTrainingEnd = (currentFieldID)=>{
+    this.setState({
+      currentFieldID: "",
+    })
+  }
+
+
+
   startTraining = () => {
+    var { params } = this.props.navigation.state;
+
     const startTime = moment().format("x");
     firebase
       .firestore()
@@ -56,15 +66,24 @@ export default class DetailFieldsScreen extends Component {
       .then(
         this.props.navigation.navigate("TrainingScreen", {
           startTime: startTime,
-          fieldName: this.state.fieldName
+          fieldName: this.state.fieldName,
+          reputation: params.reputation,
+          trainingCount: params.trainingCount,
+          refresh: this.setStateAfterTrainingEnd
         })
       );
   };
 
   existingTraining = () => {
+    var { params } = this.props.navigation.state;
+
     this.props.navigation.navigate("TrainingScreen", {
       startTime: this.state.timestamp,
-      fieldName: this.state.fieldName
+      fieldName: this.state.fieldName,
+      reputation: params.reputation,
+      trainingCount: params.trainingCount,
+      refresh: this.setStateAfterTrainingEnd
+
     });
   };
   constructor(props) {
@@ -91,6 +110,7 @@ export default class DetailFieldsScreen extends Component {
       currentFieldName: params.currentFieldName,
       timestamp: params.timestamp,
       infoVisible: false,
+      
       comingFromNewTraining: false
     };
   }

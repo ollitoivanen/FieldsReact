@@ -27,12 +27,12 @@ import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSea
 
 export default class FieldSearchScreen extends Component {
   componentDidMount = () => {
-   this.unsubscribe = this.initialFetch();
+    this.unsubscribe = this.initialFetch();
   };
 
   componentWillUnmount() {
     this.unsubscribe();
-}
+  }
   static navigationOptions = {
     header: null
   };
@@ -131,13 +131,13 @@ export default class FieldSearchScreen extends Component {
   updateIndex = selectedIndex => {
     this.setState({ selectedIndex }, () => {
       if (selectedIndex === 1) {
-      this.unsubscribe =  this.searchFields(this.state.fieldSearchTerm);
+        this.unsubscribe = this.searchFields(this.state.fieldSearchTerm);
         this.setState({ search_placeholder: search_fields_by_name });
       } else if (selectedIndex === 2) {
-     this.unsubscribe =    this.searchFields(this.state.fieldSearchTerm);
+        this.unsubscribe = this.searchFields(this.state.fieldSearchTerm);
         this.setState({ search_placeholder: search_fields_by_city });
       } else if (selectedIndex === 0) {
-      this.unsubscribe =   this.searchFields(this.state.fieldSearchTerm);
+        this.unsubscribe = this.searchFields(this.state.fieldSearchTerm);
         this.setState({ search_placeholder: search_fields_near });
       }
     });
@@ -346,7 +346,6 @@ export default class FieldSearchScreen extends Component {
     const { selectedIndex } = this.state;
     let input;
 
-
     if (this.state.homeAreaConst == "" && selectedIndex == 0) {
       input = homeCityAddInput;
     } else {
@@ -358,7 +357,7 @@ export default class FieldSearchScreen extends Component {
           <TextInput
             style={styles.searchBar}
             placeholder={this.state.search_placeholder}
-            onChangeText={ this.unsubscribe = this.searchFields}
+            onChangeText={(this.unsubscribe = this.searchFields)}
             underlineColorAndroid="rgba(0,0,0,0)"
             value={this.state.fieldSearchTerm}
           />
@@ -394,7 +393,9 @@ export default class FieldSearchScreen extends Component {
                   userID: params.userID,
                   currentFieldID: params.currentFieldID,
                   currentFieldName: params.currentFieldName,
-                  timestamp: params.timestamp
+                  timestamp: params.timestamp,
+                  trainingCount: params.trainingCount,
+                  reputation: params.reputation,
                 })
               }
             >
@@ -426,22 +427,21 @@ export default class FieldSearchScreen extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.navigationItem}
-              onPress={() => this.props.navigation.navigate("ProfileScreen", {
-                homeArea: params.homeArea,
-                currentFieldID: params.currentFieldID,
-                currentFieldName: params.currentFieldName,
-                timestamp: params.timestamp,
-                userID: params.userID,
-                username: params.username,
-                trainingCount: params.trainingCount,
-                friendCount: params.friendCount,
-                userTeamID: params.userTeamID,
-                reputation: params.reputation,
-                usersTeam: params.usersTeam
-
-
-                
-              })}
+              onPress={() =>
+                this.props.navigation.navigate("ProfileScreen", {
+                  homeArea: params.homeArea,
+                  currentFieldID: params.currentFieldID,
+                  currentFieldName: params.currentFieldName,
+                  timestamp: params.timestamp,
+                  userID: params.userID,
+                  username: params.username,
+                  trainingCount: params.trainingCount,
+                  friendCount: params.friendCount,
+                  userTeamID: params.userTeamID,
+                  reputation: params.reputation,
+                  usersTeam: params.usersTeam
+                })
+              }
             >
               <Image
                 style={styles.navigationImage}
