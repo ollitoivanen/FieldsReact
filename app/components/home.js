@@ -38,6 +38,9 @@ class Home extends Component {
         } else {
             return (
                 <View style={{flex:1, backgroundColor: '#F5F5F5', paddingTop:20}}>
+
+<Text>moi</Text>
+
                     <FlatList
                         ref='listRef'
                         data={this.props.data}
@@ -47,6 +50,8 @@ class Home extends Component {
             );
         }
     }
+
+    get 
 
     renderItem({item, index}) {
         return (
