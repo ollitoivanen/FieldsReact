@@ -66,13 +66,36 @@ export default class TrainingScreen extends Component {
     const currentTime = moment().format("x");
     const trainingTime = currentTime - startTime;
     if (trainingTime < 900000) {
-    } else if (trainingTime > 18000000) {
-    } else {
-    
+      this.ref
+        .doc(firebase.auth().currentUser.uid)
+        .update({
+          currentFieldID: "",
+          currentFieldName: "",
+          timestamp: null
+        })
 
+        .then(() =>
+          this.props.navigation.replace("TrainingSummaryScreen", {
+            trainingReputation: 0
+          })
+        );
+    } else if (trainingTime > 18000000) {
+      this.ref
+        .doc(firebase.auth().currentUser.uid)
+        .update({
+          currentFieldID: "",
+          currentFieldName: "",
+          timestamp: null
+        })
+        .then(() =>
+          this.props.navigation.replace("TrainingSummaryScreen", {
+            trainingReputation: 0
+          })
+        );
+    } else {
       var currentReputation = params.reputation;
       var trainingReputation = trainingTime / 60000;
-       var newReputation = trainingReputation + currentReputation;
+      var newReputation = trainingReputation + currentReputation;
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -83,7 +106,11 @@ export default class TrainingScreen extends Component {
           timestamp: null
         })
 
-        .then(() => this.props.navigation.replace("TrainingSummaryScreen"));
+        .then(() =>
+          this.props.navigation.replace("TrainingSummaryScreen", {
+            trainingReputation: trainingReputation
+          })
+        );
 
       //Add training to db
     }

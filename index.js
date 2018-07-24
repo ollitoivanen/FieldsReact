@@ -4,7 +4,15 @@ import { StackNavigatorApp } from "FieldsReact/App";
 import { YellowBox } from "react-native";
 import { SharedElementRenderer } from "react-native-motion";
 
+
+
+
+
 export default class FieldsApp extends Component {
+  
+
+ 
+
   render() {
     YellowBox.ignoreWarnings([
       "Warning: isMounted(...) is deprecated",

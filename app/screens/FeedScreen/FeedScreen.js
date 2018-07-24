@@ -16,6 +16,8 @@ import {
   not_at_any_field
 } from "FieldsReact/app/strings/strings";
 
+import {currentFieldID1} from 'FieldsReact/index.js'
+
 export default class FeedScreen extends React.Component {
   componentWillUnmount() {
     this.unsubscribe();
