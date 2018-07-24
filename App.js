@@ -28,13 +28,18 @@ import DetailFieldScreen from "./app/screens/DetailFieldScreen/DetailFieldScreen
 import TrainingScreen from "./app/screens/TrainingScreen/TrainingScreen";
 import TrainingSummaryScreen from "./app/screens/TrainingSummaryScreen/TrainingSummaryScreen";
 
-const transitionConfig = () => ({
-  transitionSpec: {
-    duration: 0,
-    timing: Animated.timing,
-    easing: Easing.linear
-  }
-});
+
+
+
+const
+  transitionConfig = () => ({
+  	transitionSpec: {
+  		duration: 0,
+  		timing: Animated.timing,
+  		easing: Easing.linear,
+  	},
+  })
+
 
 // create our app's navigation stack
 export const StackNavigatorApp = StackNavigator(
@@ -42,7 +47,7 @@ export const StackNavigatorApp = StackNavigator(
     SignUpScreen: {
       screen: SignUpScreen
     },
-
+    
     LoginScreen: {
       screen: LoginScreen
     },
@@ -78,8 +83,15 @@ export const StackNavigatorApp = StackNavigator(
     }
   },
 
+  
+  
   {
     initialRouteName: "LoadingScreen",
     transitionConfig
+    
   }
+
+  
+   
+  
 );

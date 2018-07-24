@@ -29,18 +29,20 @@ export default class DetailFieldsScreen extends Component {
 
     this.setState({
       currentFieldID: params.currentFieldID,
-      currentFieldName: params.currentFieldName
-    });
+      currentFieldName: params.currentFieldName,
+    })
   };
   static navigationOptions = {
     header: null
   };
 
-  setStateAfterTrainingEnd = currentFieldID => {
+  setStateAfterTrainingEnd = (currentFieldID)=>{
     this.setState({
-      currentFieldID: ""
-    });
-  };
+      currentFieldID: "",
+    })
+  }
+
+
 
   startTraining = () => {
     var { params } = this.props.navigation.state;
@@ -81,6 +83,7 @@ export default class DetailFieldsScreen extends Component {
       reputation: params.reputation,
       trainingCount: params.trainingCount,
       refresh: this.setStateAfterTrainingEnd
+
     });
   };
   constructor(props) {
@@ -107,7 +110,7 @@ export default class DetailFieldsScreen extends Component {
       currentFieldName: params.currentFieldName,
       timestamp: params.timestamp,
       infoVisible: false,
-
+      
       comingFromNewTraining: false
     };
   }

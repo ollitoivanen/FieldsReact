@@ -16,8 +16,11 @@ import {
   not_at_any_field
 } from "FieldsReact/app/strings/strings";
 
+<<<<<<< HEAD
 import { currentFieldID1 } from "FieldsReact/index.js";
 
+=======
+>>>>>>> parent of 4f4dfc6... before going redux
 export default class FeedScreen extends React.Component {
   componentWillUnmount() {
     this.unsubscribe();
