@@ -11,13 +11,24 @@ import {
 } from "react-native";
 import firebase from "react-native-firebase";
 import { NavigationActions, StackActions } from "react-navigation";
+import { connect } from "react-redux";
+import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
 import {
   not_in_a_team,
   not_at_any_field
 } from "FieldsReact/app/strings/strings";
-
-export default class FeedScreen extends React.Component {
+const mapStateToProps = state => {
+  return {
+    userData: state.userData
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getUserData: () => dispatch(getUserData())
+  };
+};
+class FeedScreen extends React.Component {
   componentWillUnmount() {
     this.unsubscribe();
   }
@@ -25,58 +36,10 @@ export default class FeedScreen extends React.Component {
     header: null
   };
 
-  getUserData = () => {
-    this.ref.get().then(
-      function(doc) {
-        if (doc.exists) {
-          this.setState({
-            homeArea: doc.data().homeArea,
-            userID: doc.data().userID,
-            currentFieldID: doc.data().currentFieldID,
-            currentFieldName: doc.data().currentFieldName,
-            timestamp: doc.data().timestamp,
-            username: doc.data().username,
-            trainingCount: doc.data().trainingCount,
-            friendCount: doc.data().friendCount,
-            userTeamID: doc.data().userTeamID,
-            reputation: doc.data().reputation
-          });
-          if (this.state.currentFieldID == "") {
-            this.setState({
-              currentFieldName: [not_at_any_field]
-            });
-          }
-
-          if (this.state.userTeamID == null) {
-            this.setState({
-              usersTeam: [not_in_a_team],
-              loading: false
-            });
-          } else {
-            const teamRef = firebase.firestore().collection("Teams");
-            const query = teamRef.where("teamID", "==", this.state.userTeamID);
-            query.get().then(
-              function(teamDoc) {
-                if (!teamDoc.empty) {
-                  teamDoc.forEach(
-                    function(teamData) {
-                      this.setState({
-                        usersTeam: teamData.data().teamUsernameText,
-                        loading: false
-                      });
-                    }.bind(this)
-                  );
-                }
-              }.bind(this)
-            );
-          }
-        }
-      }.bind(this)
-    );
-  };
-
   constructor(props) {
     super(props);
+    this.props.getUserData();
+
     var { params } = this.props.navigation.state;
 
     this.unsubscribe = null;
@@ -86,91 +49,89 @@ export default class FeedScreen extends React.Component {
       homeArea: "",
       loading: true
     };
-    this.ref = firebase
-      .firestore()
-      .collection("Users")
-      .doc(firebase.auth().currentUser.uid);
   }
   componentWillMount() {
-    this.unsubscribe = this.getUserData();
-
     const { currentUser } = firebase.auth();
     this.setState({ currentUser });
   }
   render() {
-    const { currentUser, loading } = this.state;
+    const { currentUser } = this.state;
 
-    if (loading == true) {
-      return null;
-    } else {
-      return (
-        <View style={styles.container}>
-          <Text
-            style={styles.container1}
-            onPress={() => firebase.auth().signOut()}
-          />
-          <View style={styles.navigationContainer}>
-            <TouchableOpacity
-              style={styles.navigationItem}
-              underlayColor="#bcbcbc"
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Home/home_green.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItemGreen}
-              onPress={() =>
-                this.props.navigation.navigate("FieldSearchScreen", {
-                  homeArea: this.state.homeArea,
+    return (
+      <View style={styles.container}>
+        <Text
+          style={styles.container1}
+          onPress={() => firebase.auth().signOut()}
+        >
+          {this.props.userData.username}
+        </Text>
+        <View style={styles.navigationContainer}>
+          <TouchableOpacity
+            style={styles.navigationItem}
+            underlayColor="#bcbcbc"
+          >
+            <Image
+              style={styles.navigationImage}
+              source={require("FieldsReact/app/images/Home/home_green.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItemGreen}
+            onPress={() =>
+              this.props.navigation.navigate("FieldSearchScreen", {
+                homeArea: this.state.homeArea,
+                currentFieldID: this.state.currentFieldID,
+                currentFieldName: this.state.currentFieldName,
+                timestamp: this.state.timestamp,
+                userID: this.state.userID,
+                username: this.state.username,
+                trainingCount: this.state.trainingCount,
+                reputation: this.state.reputation,
+                friendCount: this.state.friendCount,
+                userTeamID: this.state.userTeamID,
+                usersTeam: this.state.usersTeam
+              })
+            }
+          >
+            <Image
+              style={styles.navigationImage}
+              source={require("FieldsReact/app/images/Field/field_icon.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItem}
+            onPress={() =>
+              this.props.navigation.navigate("ProfileScreen", {
+                /*  homeArea: this.state.homeArea,
                   currentFieldID: this.state.currentFieldID,
                   currentFieldName: this.state.currentFieldName,
                   timestamp: this.state.timestamp,
                   userID: this.state.userID,
                   username: this.state.username,
                   trainingCount: this.state.trainingCount,
-                  reputation: this.state.reputation,
-                  friendCount: this.state.friendCount,
-                  userTeamID: this.state.userTeamID,
-                  usersTeam: this.state.usersTeam
-                })
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Field/field_icon.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItem}
-              onPress={() =>
-                this.props.navigation.navigate("ProfileScreen", {
-                  homeArea: this.state.homeArea,
-                  currentFieldID: this.state.currentFieldID,
-                  currentFieldName: this.state.currentFieldName,
-                  timestamp: this.state.timestamp,
-                  userID: this.state.userID,
-                  username: this.state.username,
-                  trainingCount: this.state.trainingCount,
                   friendCount: this.state.friendCount,
                   userTeamID: this.state.userTeamID,
                   reputation: this.state.reputation,
-                  usersTeam: this.state.usersTeam
-                })
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Profile/profile.png")}
-              />
-            </TouchableOpacity>
-          </View>
+                  usersTeam: this.state.usersTeam*/
+              })
+            }
+          >
+            <Image
+              style={styles.navigationImage}
+              source={require("FieldsReact/app/images/Profile/profile.png")}
+            />
+          </TouchableOpacity>
         </View>
-      );
-    }
+      </View>
+    );
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FeedScreen);
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",

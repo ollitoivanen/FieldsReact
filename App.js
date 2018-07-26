@@ -92,7 +92,7 @@ export const StackNavigatorApp = StackNavigator(
   
   
   {
-    initialRouteName: "testing",
+    initialRouteName: "LoadingScreen",
     transitionConfig
     
   }

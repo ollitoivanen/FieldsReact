@@ -2,15 +2,17 @@ import { createStore, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
 import firebase from "react-native-firebase";
 
-
 const initialState = {
-  userData: {}
+  userData: {},
+  usersTeamData: {}
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "GET_USER_DATA":
       return { ...state, userData: action.value };
+    case "GET_USER_TEAM_DATA":
+      return { ...state, usersTeamData: action.value };
     default:
       return state;
   }
@@ -29,20 +31,43 @@ const setUserData = userData => {
   };
 };
 
+const setUserTeamData = usersTeamData => {
+  return {
+    type: "GET_USER_TEAM_DATA",
+    value: usersTeamData
+  };
+};
 const getUserData = () => {
   return function(dispatch) {
     firebase
       .firestore()
       .collection("Users")
-      .doc('tFMg4khdxYPvBalFe6JlYGWwnX82')
+      .doc(firebase.auth().currentUser.uid)
       .get()
       .then(function(doc) {
-        var userData = doc.data();
+        if (doc.data().userTeamID !== null) {
+          firebase
+            .firestore()
+            .collection("Teams")
+            .doc(doc.data().userTeamID)
+            .get()
+            .then(function(teamDoc) {
+              var usersTeamData = teamDoc.data();
+              var userData = doc.data();
+              //fetching not from here
+              var actionSetUserTeamData = setUserTeamData(usersTeamData);
+              var actionSetUserData = setUserData(userData);
+              dispatch(actionSetUserTeamData);
+              dispatch(actionSetUserData);
+            });
+        } else {
+          var userData = doc.data();
 
-        var actionSetUserData = setUserData(userData);
-        dispatch(actionSetUserData);
+          var actionSetUserData = setUserData(userData);
+          dispatch(actionSetUserData);
+        }
       });
   };
 };
 
-export { setUserData, getUserData };
+export { setUserData, getUserData, setUserTeamData };

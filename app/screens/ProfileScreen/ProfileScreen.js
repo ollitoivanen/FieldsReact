@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Image
 } from "react-native";
+import { connect } from "react-redux";
+
 import firebase from "react-native-firebase";
 
 import {
@@ -17,35 +19,37 @@ import {
   not_at_any_field
 } from "FieldsReact/app/strings/strings";
 
-export default class ProfileScreen extends Component {
+const mapStateToProps = state => {
+  return {
+    userData: state.userData,
+    usersTeamData: state.usersTeamData
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getUserData: () => dispatch(getUserData())
+  };
+};
+
+class ProfileScreen extends Component {
   static navigationOptions = {
     header: null
   };
 
   constructor(props) {
     super(props);
-    var { params } = this.props.navigation.state;
-
-    this.state = {
-      username: params.username,
-      trainingCount: params.trainingCount,
-      friendCount: params.friendCount,
-      userTeamID: params.usersTeamID,
-      usersTeam: params.usersTeam,
-      reputation: params.reputation,
-      currentFieldName: params.currentFieldName,
-      currentFieldID: params.currentFieldID,
-      timestamp: params.timestamp,
-      homeArea: params.homeArea,
-      userID: params.userID
-    };
-    this.ref = firebase
-      .firestore()
-      .collection("Users")
-      .doc(firebase.auth().currentUser.uid);
   }
 
   render() {
+    var currentFieldPlaceHolder = not_at_any_field;
+    if (this.props.userData.currentFieldName !== "") {
+      currentFieldPlaceHolder = this.props.userData.currentFieldName;
+    }
+
+    var userTeamPlaceHolder = not_in_a_team;
+    if (this.props.userData.usersTeam !== null) {
+      userTeamPlaceHolder = this.props.userData.usersTeam;
+    }
     return (
       <View style={styles.container}>
         <View style={styles.containerHeader}>
@@ -53,7 +57,7 @@ export default class ProfileScreen extends Component {
             <View style={styles.imageTabContainer}>
               <TouchableOpacity style={styles.roundTextContainer}>
                 <Text style={styles.boxText}>
-                  {this.state.friendCount} {friends}
+                  {this.props.userData.friendCount} {friends}
                 </Text>
               </TouchableOpacity>
 
@@ -66,30 +70,28 @@ export default class ProfileScreen extends Component {
 
               <TouchableOpacity style={styles.roundTextContainer}>
                 <Text style={styles.boxText}>
-                  {this.state.trainingCount} {trainings}
+                  {this.props.userData.trainingCount} {trainings}
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.username}>{this.state.username}</Text>
+            <Text style={styles.username}>{this.props.userData.username}</Text>
             <TouchableOpacity style={styles.roundTextContainer}>
               <Image
                 style={styles.teamIcon}
                 source={require("FieldsReact/app/images/Team/team.png")}
               />
-              <Text style={styles.boxText}>{this.state.usersTeam}</Text>
+              <Text style={styles.boxText}>{this.props.usersTeamData.teamUsernameText}</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.actionContainer}>
             <TouchableOpacity style={styles.roundTextContainerBordered}>
               <Text style={styles.boxText}>
-                {this.state.reputation} {reputation}
+                {this.props.userData.reputation} {reputation}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.roundTextContainerGreen}>
-              <Text style={styles.boxTextWhite}>
-                {this.state.currentFieldName}
-              </Text>
+              <Text style={styles.boxTextWhite}>{currentFieldPlaceHolder}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -120,7 +122,6 @@ export default class ProfileScreen extends Component {
                   friendCount: this.state.friendCount,
                   userTeamID: this.state.userTeamID,
                   usersTeam: this.state.usersTeam
-
                 })
               }
             >
@@ -141,6 +142,11 @@ export default class ProfileScreen extends Component {
     );
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProfileScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
