@@ -4,13 +4,8 @@ import { StackNavigatorApp } from "FieldsReact/App";
 import { YellowBox } from "react-native";
 import { SharedElementRenderer } from "react-native-motion";
 import { Provider } from "react-redux";
+import {store} from "FieldsReact/app/redux/app-redux.js"; //Import the store
 
-<<<<<<< HEAD
-import store from "./app/store"; //Import the store
-import Home from "./app/components/home"; //Import the component file
-
-=======
->>>>>>> parent of 4f4dfc6... before going redux
 export default class FieldsApp extends Component {
   render() {
     YellowBox.ignoreWarnings([
@@ -20,7 +15,7 @@ export default class FieldsApp extends Component {
 
     return (
       <Provider store={store}>
-        <Home />
+        <StackNavigatorApp />
       </Provider>
     );
   }

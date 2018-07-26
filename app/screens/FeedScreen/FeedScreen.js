@@ -11,16 +11,12 @@ import {
 } from "react-native";
 import firebase from "react-native-firebase";
 import { NavigationActions, StackActions } from "react-navigation";
+
 import {
   not_in_a_team,
   not_at_any_field
 } from "FieldsReact/app/strings/strings";
 
-<<<<<<< HEAD
-import { currentFieldID1 } from "FieldsReact/index.js";
-
-=======
->>>>>>> parent of 4f4dfc6... before going redux
 export default class FeedScreen extends React.Component {
   componentWillUnmount() {
     this.unsubscribe();

@@ -27,6 +27,8 @@ import FieldSearchScreen from "./app/screens/FieldSearchScreen/FieldSearchScreen
 import DetailFieldScreen from "./app/screens/DetailFieldScreen/DetailFieldScreen";
 import TrainingScreen from "./app/screens/TrainingScreen/TrainingScreen";
 import TrainingSummaryScreen from "./app/screens/TrainingSummaryScreen/TrainingSummaryScreen";
+import testing from "./app/screens/testing/testing";
+
 
 
 
@@ -80,13 +82,17 @@ export const StackNavigatorApp = StackNavigator(
 
     TrainingSummaryScreen: {
       screen: TrainingSummaryScreen
+    },
+
+    testing: {
+      screen: testing
     }
   },
 
   
   
   {
-    initialRouteName: "LoadingScreen",
+    initialRouteName: "testing",
     transitionConfig
     
   }
