@@ -53,5 +53,7 @@ export const h = 'h'
 export const currently_training_at = 'Currently training at..'
 export const training_time = 'Training time'
 export const end_training = 'End training'
+export const done = 'Done'
+export const you_earned = 'You earned'
 
 

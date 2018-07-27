@@ -9,6 +9,8 @@ import {
   end_training
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
+import { connect } from "react-redux";
+import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
 import {
   StackNavigator,
@@ -17,8 +19,17 @@ import {
 } from "react-navigation";
 import TrainingSummaryScreen from "../TrainingSummaryScreen/TrainingSummaryScreen";
 var moment = require("moment");
-
-export default class TrainingScreen extends Component {
+const mapStateToProps = state => {
+  return {
+    userData: state.userData
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getUserData: () => dispatch(getUserData())
+  };
+};
+class TrainingScreen extends Component {
   static navigationOptions = {
     header: null
   };
@@ -30,7 +41,7 @@ export default class TrainingScreen extends Component {
     this.state = {
       trainingTime: "",
       currentFieldID: "",
-      startTime: params.startTime,
+      startTime: params.startTime, //ONly thing via params
       currentTime: moment().format("x")
     };
   }
@@ -60,30 +71,67 @@ export default class TrainingScreen extends Component {
   };
 
   endTraining = () => {
-    this.props.navigation.state.params.refresh(this.state.currentFieldID);
     var { params } = this.props.navigation.state;
     const startTime = params.startTime;
     const currentTime = moment().format("x");
     const trainingTime = currentTime - startTime;
     if (trainingTime < 900000) {
-    } else if (trainingTime > 18000000) {
-    } else {
-    
-
-      var currentReputation = params.reputation;
-      var trainingReputation = trainingTime / 60000;
-       var newReputation = trainingReputation + currentReputation;
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
-          reputation: newReputation,
-          trainingCount: params.trainingCount + 1,
           currentFieldID: "",
           currentFieldName: "",
           timestamp: null
         })
 
-        .then(() => this.props.navigation.replace("TrainingSummaryScreen"));
+        .then(() => {
+          this.props.getUserData();
+        })
+
+        .then(() =>
+          this.props.navigation.replace("TrainingSummaryScreen", {
+            trainingReputation: 0
+          })
+        );
+    } else if (trainingTime > 18000000) {
+      this.ref
+        .doc(firebase.auth().currentUser.uid)
+        .update({
+          currentFieldID: "",
+          currentFieldName: "",
+          timestamp: null
+        })
+        .then(() => {
+          this.props.getUserData();
+        })
+
+        .then(() =>
+          this.props.navigation.replace("TrainingSummaryScreen", {
+            trainingReputation: 0
+          })
+        );
+    } else {
+      var currentReputation = this.props.userData.reputation;
+      var trainingReputation = Math.trunc(trainingTime / 60000);
+      var newReputation = trainingReputation + currentReputation;
+      this.ref
+        .doc(firebase.auth().currentUser.uid)
+        .update({
+          reputation: newReputation,
+          trainingCount: this.props.userData.trainingCount + 1,
+          currentFieldID: "",
+          currentFieldName: "",
+          timestamp: null
+        })
+        .then(() => {
+          this.props.getUserData();
+        })
+
+        .then(() =>
+          this.props.navigation.replace("TrainingSummaryScreen", {
+            trainingReputation: trainingReputation
+          })
+        );
 
       //Add training to db
     }
@@ -110,7 +158,9 @@ export default class TrainingScreen extends Component {
 
           <Text style={styles.headerText}>{currently_training_at}</Text>
           <View style={styles.roundBackground}>
-            <Text style={styles.fieldText}>{params.fieldName}</Text>
+            <Text style={styles.fieldText}>
+              {this.props.userData.currentFieldName}
+            </Text>
           </View>
           <Text style={styles.headerText}>{training_time}</Text>
 
@@ -131,6 +181,10 @@ export default class TrainingScreen extends Component {
     );
   }
 }
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TrainingScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

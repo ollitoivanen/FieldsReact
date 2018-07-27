@@ -78,19 +78,7 @@ class FeedScreen extends React.Component {
           <TouchableOpacity
             style={styles.navigationItemGreen}
             onPress={() =>
-              this.props.navigation.navigate("FieldSearchScreen", {
-                homeArea: this.state.homeArea,
-                currentFieldID: this.state.currentFieldID,
-                currentFieldName: this.state.currentFieldName,
-                timestamp: this.state.timestamp,
-                userID: this.state.userID,
-                username: this.state.username,
-                trainingCount: this.state.trainingCount,
-                reputation: this.state.reputation,
-                friendCount: this.state.friendCount,
-                userTeamID: this.state.userTeamID,
-                usersTeam: this.state.usersTeam
-              })
+              this.props.navigation.navigate("FieldSearchScreen")
             }
           >
             <Image
@@ -101,19 +89,7 @@ class FeedScreen extends React.Component {
           <TouchableOpacity
             style={styles.navigationItem}
             onPress={() =>
-              this.props.navigation.navigate("ProfileScreen", {
-                /*  homeArea: this.state.homeArea,
-                  currentFieldID: this.state.currentFieldID,
-                  currentFieldName: this.state.currentFieldName,
-                  timestamp: this.state.timestamp,
-                  userID: this.state.userID,
-                  username: this.state.username,
-                  trainingCount: this.state.trainingCount,
-                  friendCount: this.state.friendCount,
-                  userTeamID: this.state.userTeamID,
-                  reputation: this.state.reputation,
-                  usersTeam: this.state.usersTeam*/
-              })
+              this.props.navigation.navigate("ProfileScreen")
             }
           >
             <Image

@@ -11,6 +11,11 @@ import {
 import { ButtonGroup, SearchBar, Alert } from "react-native-elements";
 import firebase from "react-native-firebase";
 
+import { connect } from "react-redux";
+import {
+  getUserData,
+} from "FieldsReact/app/redux/app-redux.js";
+
 import { SharedElement } from "react-native-motion";
 import {
   field_city,
@@ -25,7 +30,19 @@ import {
 } from "../../strings/strings";
 import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem"; // we'll create this next
 
-export default class FieldSearchScreen extends Component {
+const mapStateToProps = state => {
+  return {
+    userData: state.userData,
+    userHomeArea: state.userHomeArea
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getUserData: () => dispatch(getUserData())
+  };
+};
+
+class FieldSearchScreen extends Component {
   componentDidMount = () => {
     this.unsubscribe = this.initialFetch();
   };
@@ -99,7 +116,7 @@ export default class FieldSearchScreen extends Component {
       homeCityText: "",
       search_placeholder: search_fields_near,
 
-      homeAreaConst: params.homeArea
+      homeAreaConst: this.props.userData.homeArea
     };
     this.ref = firebase
       .firestore()
@@ -119,6 +136,8 @@ export default class FieldSearchScreen extends Component {
   };
 
   getHomeAreaAfterSetting = () => {
+    this.props.getUserData();
+
     var { params } = this.props.navigation.state;
 
     this.setState({
@@ -390,12 +409,12 @@ export default class FieldSearchScreen extends Component {
                   accessType: item.accessType,
                   fieldAddress: item.fieldAddress,
                   peopleHere: item.peopleHere,
-                  userID: params.userID,
-                  currentFieldID: params.currentFieldID,
-                  currentFieldName: params.currentFieldName,
-                  timestamp: params.timestamp,
-                  trainingCount: params.trainingCount,
-                  reputation: params.reputation,
+                  userID: this.props.userData.userID,
+                  currentFieldID: this.props.userData.currentFieldID,
+                  currentFieldName: this.props.userData.currentFieldName,
+                  timestamp: this.props.userData.timestamp,
+                  trainingCount: this.props.userData.trainingCount,
+                  reputation: this.props.userData.reputation
                 })
               }
             >
@@ -454,6 +473,11 @@ export default class FieldSearchScreen extends Component {
     );
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FieldSearchScreen);
 
 const styles = StyleSheet.create({
   container: {

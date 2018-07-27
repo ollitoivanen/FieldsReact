@@ -22,27 +22,34 @@ import {
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 var moment = require("moment");
+import { connect } from "react-redux";
+import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
-export default class DetailFieldsScreen extends Component {
+const mapStateToProps = state => {
+  return {
+    userData: state.userData
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getUserData: () => dispatch(getUserData())
+  };
+};
+
+ class DetailFieldsScreen extends Component {
   componentWillMount = () => {
     var { params } = this.props.navigation.state;
 
     this.setState({
-      currentFieldID: params.currentFieldID,
-      currentFieldName: params.currentFieldName,
-    })
+      currentFieldID: this.props.userData.currentFieldID,
+      currentFieldName: this.props.userData.currentFieldName
+    });
   };
   static navigationOptions = {
     header: null
   };
 
-  setStateAfterTrainingEnd = (currentFieldID)=>{
-    this.setState({
-      currentFieldID: "",
-    })
-  }
-
-
+  
 
   startTraining = () => {
     var { params } = this.props.navigation.state;
@@ -58,18 +65,12 @@ export default class DetailFieldsScreen extends Component {
         timestamp: startTime
       })
       .then(
-        this.setState({
-          currentFieldID: this.state.fieldID,
-          timestamp: startTime
-        })
+        
+        this.props.getUserData()
       )
       .then(
         this.props.navigation.navigate("TrainingScreen", {
           startTime: startTime,
-          fieldName: this.state.fieldName,
-          reputation: params.reputation,
-          trainingCount: params.trainingCount,
-          refresh: this.setStateAfterTrainingEnd
         })
       );
   };
@@ -78,12 +79,11 @@ export default class DetailFieldsScreen extends Component {
     var { params } = this.props.navigation.state;
 
     this.props.navigation.navigate("TrainingScreen", {
-      startTime: this.state.timestamp,
-      fieldName: this.state.fieldName,
+      startTime: this.props.userData.timestamp,
+    /*  fieldName: this.state.fieldName,
       reputation: params.reputation,
       trainingCount: params.trainingCount,
-      refresh: this.setStateAfterTrainingEnd
-
+      refresh: this.setStateAfterTrainingEnd*/
     });
   };
   constructor(props) {
@@ -105,12 +105,8 @@ export default class DetailFieldsScreen extends Component {
       accessType: params.accessType,
       fieldAddress: params.fieldAddress,
       peopleHere: params.peopleHere,
-      userID: params.userID,
-      currentFieldID: params.currentFieldID,
-      currentFieldName: params.currentFieldName,
-      timestamp: params.timestamp,
       infoVisible: false,
-      
+
       comingFromNewTraining: false
     };
   }
@@ -147,9 +143,9 @@ export default class DetailFieldsScreen extends Component {
 
     let trainingButton;
 
-    if (this.state.currentFieldID === this.state.fieldID) {
+    if (this.props.userData.currentFieldID === this.state.fieldID) {
       trainingButton = trainingButtonTraining;
-    } else if (this.state.currentFieldID !== "") {
+    } else if (this.props.userData.currentFieldID !== "") {
       trainingButton = trainingButtonTrainingElsewhere;
     } else {
       trainingButton = trainingButtonNotTraining;
@@ -254,6 +250,12 @@ export default class DetailFieldsScreen extends Component {
     );
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DetailFieldsScreen);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

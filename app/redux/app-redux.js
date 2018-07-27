@@ -13,6 +13,7 @@ const reducer = (state = initialState, action) => {
       return { ...state, userData: action.value };
     case "GET_USER_TEAM_DATA":
       return { ...state, usersTeamData: action.value };
+
     default:
       return state;
   }
@@ -37,6 +38,7 @@ const setUserTeamData = usersTeamData => {
     value: usersTeamData
   };
 };
+
 const getUserData = () => {
   return function(dispatch) {
     firebase
