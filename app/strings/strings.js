@@ -37,23 +37,33 @@ export const enter_home_city = "Add your home city to find Fields near you!";
 export const add_home_city_placeholder = "Add home city...";
 export const set = "Set";
 export const goals = "Goals:";
-export const field_type = 'Field Type:'
+export const field_type = "Field Type:";
 export const access_type = "Access Type:";
 export const address = "Address:";
 export const info = "Info";
-export const field_type_array = ['Maintained natural grass', 'Natural grass', 'Soft artificial grass', 'Hard artificial grass', 'Sand', 'Pavement']
-export const field_access_type_array = ['Booking only', 'Booking, free if space', 'No booking, free if space', 'No outside access']
-export const people_here= 'People here'
-export const start_training_here= 'Start training here'
-export const youre_training_here= "You're training here"
-export const youre_training_elsewhere= "You're training elsewhere"
-export const under_minute = '<1 minute'
-export const min = 'min'
-export const h = 'h'
-export const currently_training_at = 'Currently training at..'
-export const training_time = 'Training time'
-export const end_training = 'End training'
-export const done = 'Done'
-export const you_earned = 'You earned'
-
-
+export const field_type_array = [
+  "Maintained natural grass",
+  "Natural grass",
+  "Soft artificial grass",
+  "Hard artificial grass",
+  "Sand",
+  "Pavement"
+];
+export const field_access_type_array = [
+  "Booking only",
+  "Booking, free if space",
+  "No booking, free if space",
+  "No outside access"
+];
+export const people_here = "People here";
+export const start_training_here = "Start training here";
+export const youre_training_here = "You're training here";
+export const youre_training_elsewhere = "You're training elsewhere";
+export const under_minute = "<1 minute";
+export const min = "min";
+export const h = "h";
+export const currently_training_at = "Currently training at..";
+export const training_time = "Training time";
+export const end_training = "End training";
+export const done = "Done";
+export const you_earned = "You earned";

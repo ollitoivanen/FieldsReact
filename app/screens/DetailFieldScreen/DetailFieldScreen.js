@@ -36,7 +36,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
- class DetailFieldsScreen extends Component {
+class DetailFieldsScreen extends Component {
   componentWillMount = () => {
     var { params } = this.props.navigation.state;
 
@@ -48,8 +48,6 @@ const mapDispatchToProps = dispatch => {
   static navigationOptions = {
     header: null
   };
-
-  
 
   startTraining = () => {
     var { params } = this.props.navigation.state;
@@ -64,13 +62,22 @@ const mapDispatchToProps = dispatch => {
         currentFieldName: this.state.fieldName,
         timestamp: startTime
       })
+      .then(this.props.getUserData())
+      .then(()=>{
+        firebase.firestore()
+        .collection("Fields")
+        .doc(this.state.fieldID)
+        .update({
+        peopleHere: this.state.peopleHere + 1
+        })
+      })
       .then(
-        
-        this.props.getUserData()
-      )
-      .then(
+
         this.props.navigation.navigate("TrainingScreen", {
-          startTime: startTime,
+          startTime: startTime, 
+          peopleHere: this.state.peopleHere + 1,
+          fieldID: this.state.fieldID
+
         })
       );
   };
@@ -80,7 +87,10 @@ const mapDispatchToProps = dispatch => {
 
     this.props.navigation.navigate("TrainingScreen", {
       startTime: this.props.userData.timestamp,
-    /*  fieldName: this.state.fieldName,
+      peopleHere: this.state.peopleHere,
+      fieldID: this.state.fieldID
+
+      /*  fieldName: this.state.fieldName,
       reputation: params.reputation,
       trainingCount: params.trainingCount,
       refresh: this.setStateAfterTrainingEnd*/

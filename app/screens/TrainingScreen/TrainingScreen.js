@@ -35,6 +35,7 @@ class TrainingScreen extends Component {
   };
   constructor(props) {
     super(props);
+    
     this.ref = firebase.firestore().collection("Users");
 
     var { params } = this.props.navigation.state;
@@ -42,7 +43,7 @@ class TrainingScreen extends Component {
       trainingTime: "",
       currentFieldID: "",
       startTime: params.startTime, //ONly thing via params
-      currentTime: moment().format("x")
+      currentTime: moment().format("x"),
     };
   }
 
@@ -82,6 +83,24 @@ class TrainingScreen extends Component {
           currentFieldID: "",
           currentFieldName: "",
           timestamp: null
+        })
+        .then(() => {
+          firebase
+            .firestore()
+            .collection("Fields")
+            .doc(params.fieldID)
+            .get()
+            .then(function(doc) {
+
+              firebase
+              .firestore()
+              .collection("Fields")
+              .doc(params.fieldID)
+              .update({
+                peopleHere: doc.data().peopleHere -1
+              });
+            })
+            
         })
 
         .then(() => {

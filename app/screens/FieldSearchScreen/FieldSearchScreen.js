@@ -12,9 +12,7 @@ import { ButtonGroup, SearchBar, Alert } from "react-native-elements";
 import firebase from "react-native-firebase";
 
 import { connect } from "react-redux";
-import {
-  getUserData,
-} from "FieldsReact/app/redux/app-redux.js";
+import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
 import { SharedElement } from "react-native-motion";
 import {
@@ -447,19 +445,7 @@ class FieldSearchScreen extends Component {
             <TouchableOpacity
               style={styles.navigationItem}
               onPress={() =>
-                this.props.navigation.navigate("ProfileScreen", {
-                  homeArea: params.homeArea,
-                  currentFieldID: params.currentFieldID,
-                  currentFieldName: params.currentFieldName,
-                  timestamp: params.timestamp,
-                  userID: params.userID,
-                  username: params.username,
-                  trainingCount: params.trainingCount,
-                  friendCount: params.friendCount,
-                  userTeamID: params.userTeamID,
-                  reputation: params.reputation,
-                  usersTeam: params.usersTeam
-                })
+                this.props.navigation.navigate("ProfileScreen", {})
               }
             >
               <Image
