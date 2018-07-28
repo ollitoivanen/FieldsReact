@@ -18,7 +18,8 @@ import {
   people_here,
   start_training_here,
   youre_training_here,
-  youre_training_elsewhere
+  youre_training_elsewhere,
+  edit_field
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 var moment = require("moment");
@@ -63,21 +64,20 @@ class DetailFieldsScreen extends Component {
         timestamp: startTime
       })
       .then(this.props.getUserData())
-      .then(()=>{
-        firebase.firestore()
-        .collection("Fields")
-        .doc(this.state.fieldID)
-        .update({
-        peopleHere: this.state.peopleHere + 1
-        })
+      .then(() => {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            peopleHere: this.state.peopleHere + 1
+          });
       })
       .then(
-
         this.props.navigation.navigate("TrainingScreen", {
-          startTime: startTime, 
+          startTime: startTime,
           peopleHere: this.state.peopleHere + 1,
           fieldID: this.state.fieldID
-
         })
       );
   };
@@ -96,8 +96,19 @@ class DetailFieldsScreen extends Component {
       refresh: this.setStateAfterTrainingEnd*/
     });
   };
+
+  /*getFieldImage = () => {
+    var fieldImageRef = firebase
+      .storage()
+      .ref(
+        "fieldpics/" + this.state.fieldID + "/" + this.state.fieldID + ".jpg"
+      );
+    this.setState({ fieldImage: fieldImageRef });
+  };*/
+
   constructor(props) {
     super(props);
+
     const userRef = firebase
       .firestore()
       .collection("Users")
@@ -115,9 +126,7 @@ class DetailFieldsScreen extends Component {
       accessType: params.accessType,
       fieldAddress: params.fieldAddress,
       peopleHere: params.peopleHere,
-      infoVisible: false,
-
-      comingFromNewTraining: false
+      infoVisible: false
     };
   }
   setModalVisible(visible) {
@@ -150,6 +159,16 @@ class DetailFieldsScreen extends Component {
         <Text style={styles.boxTextBlue}>{youre_training_elsewhere}</Text>
       </TouchableOpacity>
     );
+
+    const navigateToEditFieldScreen = () => {
+      this.setModalVisible(!this.state.infoVisible);
+      this.props.navigation.navigate("EditFieldScreen", {
+        fieldName: this.state.fieldName,
+        fieldArea: this.state.fieldArea,
+        fieldAddress: this.state.fieldAddress,
+        fieldID: this.state.fieldID
+      });
+    };
 
     let trainingButton;
 
@@ -207,6 +226,13 @@ class DetailFieldsScreen extends Component {
               <Text style={styles.infoText}>
                 {address} {this.state.fieldAddress}
               </Text>
+
+              <TouchableOpacity
+                style={styles.editFieldButton}
+                onPress={() => navigateToEditFieldScreen()}
+              >
+                <Text style={styles.buttonText}>{edit_field}</Text>
+              </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
@@ -222,7 +248,7 @@ class DetailFieldsScreen extends Component {
                 source={require("FieldsReact/app/images/BackButton/back_button.png")}
               />
             </TouchableOpacity>
-            <Text style={styles.fieldName}>{this.state.fieldName} </Text>
+            <Text style={styles.fieldName}>{this.state.fieldName}</Text>
           </View>
           <View style={styles.greenRowContainer}>
             <Image
@@ -365,5 +391,18 @@ const styles = StyleSheet.create({
   infoText: {
     fontWeight: "bold",
     margin: 4
+  },
+
+  editFieldButton: {
+    backgroundColor: "#3bd774",
+    padding: 15,
+    marginTop: 12,
+    borderRadius: 10
+  },
+
+  buttonText: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold"
   }
 });

@@ -16,8 +16,8 @@ import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
 import { SharedElement } from "react-native-motion";
 import {
-  field_city,
-  field_name,
+  field_city_cap,
+  field_name_cap,
   near_me,
   set,
   enter_home_city,
@@ -359,7 +359,7 @@ class FieldSearchScreen extends Component {
       </View>
     );
 
-    const buttons = [[near_me], [field_name], [field_city]];
+    const buttons = [[near_me], [field_name_cap], [field_city_cap]];
     const { selectedIndex } = this.state;
     let input;
 
@@ -401,6 +401,7 @@ class FieldSearchScreen extends Component {
                   fieldName: item.fieldName,
                   fieldAreaLowerCase: item.fieldAreaLowerCase,
                   fieldNameLowerCase: item.fieldNameLowerCase,
+                  fieldArea: item.fieldArea,
                   fieldID: item.fieldID,
                   fieldType: item.fieldType,
                   goalCount: item.goalCount,

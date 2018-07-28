@@ -94,13 +94,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 27
     buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.fieldsreact"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -139,7 +139,7 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-vector-icons')
+    implementation project(':react-native-vector-icons')
     implementation(project(':react-native-firebase')) {
         transitive = false
     }
@@ -152,7 +152,9 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:15.0.1"
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation 'com.google.firebase:firebase-auth:16.0.2'
-    implementation "com.google.firebase:firebase-firestore:16.0.0"
+    implementation "com.google.firebase:firebase-firestore:17.0.4"
+    implementation "com.google.firebase:firebase-storage:16.0.1"
+
 
 }
 

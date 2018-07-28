@@ -77,9 +77,7 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navigationItemGreen}
-            onPress={() =>
-              this.props.navigation.navigate("FieldSearchScreen")
-            }
+            onPress={() => this.props.navigation.navigate("FieldSearchScreen")}
           >
             <Image
               style={styles.navigationImage}
@@ -88,9 +86,7 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navigationItem}
-            onPress={() =>
-              this.props.navigation.navigate("ProfileScreen")
-            }
+            onPress={() => this.props.navigation.navigate("ProfileScreen")}
           >
             <Image
               style={styles.navigationImage}

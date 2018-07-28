@@ -30,9 +30,9 @@ export const search_fields_by_name = "Search fields by name...";
 export const search_fields_by_city = "Search fields by city...";
 
 export const near_me = "Near Me";
-export const field_name = "Field Name";
+export const field_name_cap = "Field Name";
 
-export const field_city = "Field City";
+export const field_city_cap = "Field City";
 export const enter_home_city = "Add your home city to find Fields near you!";
 export const add_home_city_placeholder = "Add home city...";
 export const set = "Set";
@@ -67,3 +67,8 @@ export const training_time = "Training time";
 export const end_training = "End training";
 export const done = "Done";
 export const you_earned = "You earned";
+export const field_name = "Field name";
+export const field_address = "Field address";
+export const field_city = "Field city";
+export const save = "Save";
+export const edit_field = "Edit field"
