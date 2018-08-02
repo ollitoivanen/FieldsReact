@@ -364,20 +364,6 @@ class DetailFieldScreen extends Component {
     };
 
     let trainingButton;
-    let fieldImage = <Text>gg</Text>;
-
-    const getFieldImage = () => {
-      const fieldImageRef = firebase
-        .storage()
-        .ref()
-        .child(
-          "fieldpics/" + this.state.fieldID + "/" + this.state.fieldID + ".jpg"
-        )
-        .getDownloadURL()
-        .then(function(url) {
-          fieldImage = <Text>moi</Text>;
-        });
-    };
 
     if (this.props.userData.currentFieldID === this.state.fieldID) {
       trainingButton = trainingButtonTraining;
@@ -515,10 +501,9 @@ class DetailFieldScreen extends Component {
             <Text style={styles.fieldName}>{this.state.fieldName}</Text>
           </View>
           <View style={styles.greenRowContainer}>
-            {fieldImage}
             <Image
               style={styles.fieldImage}
-              source={{ uri: imageUrl }}
+              source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
               borderRadius={35}
               resizeMode="cover"
             />
@@ -537,7 +522,7 @@ class DetailFieldScreen extends Component {
           <TouchableOpacity
             style={styles.infoContainer}
             underlayColor="#bcbcbc"
-            onPress={() => getFieldImage()}
+            onPress={() => this.setModalVisible(true)}
           >
             <Image
               style={styles.infoIcon}

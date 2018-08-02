@@ -27,7 +27,21 @@ import {
   field_type
 } from "../../strings/strings";
 
-export default class CreateNewFieldScreen extends Component {
+import { connect } from "react-redux";
+import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+
+const mapStateToProps = state => {
+  return {
+    userData: state.userData
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getUserData: () => dispatch(getUserData())
+  };
+};
+
+class CreateNewFieldScreen extends Component {
   static navigationOptions = {
     header: null
   };
@@ -120,7 +134,25 @@ export default class CreateNewFieldScreen extends Component {
             //Goal count
           })
           .then(() => {
-            this.props.navigation.goBack();
+            this.props.navigation.replace("DetailFieldScreen", {
+              fieldName: this.state.fieldName,
+              fieldArea: this.state.fieldArea,
+              fieldAddress: this.state.fieldAddress,
+              fieldAreaLowerCase: this.state.fieldArea.toLowerCase(),
+              fieldNameLowerCase: this.state.fieldName.toLowerCase(),
+              fieldID: fieldID,
+              fieldType: this.state.chosenFieldType,
+              accessType: this.state.chosenAccessType,
+              peopleHere: 0,
+              goalCount: this.state.goalCount,
+
+              userID: this.props.userData.userID,
+              currentFieldID: this.props.userData.currentFieldID,
+              currentFieldName: this.props.userData.currentFieldName,
+              timestamp: this.props.userData.timestamp,
+              trainingCount: this.props.userData.trainingCount,
+              reputation: this.props.userData.reputation
+            });
           });
       } else {
         this.setState({ errorMessage: [please_fill_all_fields] });
@@ -360,6 +392,12 @@ export default class CreateNewFieldScreen extends Component {
     );
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateNewFieldScreen);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
