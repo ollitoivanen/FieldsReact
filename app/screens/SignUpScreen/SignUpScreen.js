@@ -11,7 +11,8 @@ import {
   Linking,
   Modal,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  
 } from "react-native";
 import {
   email,

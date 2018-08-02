@@ -24,7 +24,8 @@ import {
   add_home_city_placeholder,
   search_fields_by_city,
   search_fields_by_name,
-  search_fields_near
+  search_fields_near,
+  add_new_field
 } from "../../strings/strings";
 import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem"; // we'll create this next
 
@@ -47,6 +48,7 @@ class FieldSearchScreen extends Component {
 
   componentWillUnmount() {
     this.unsubscribe();
+    //Some problems with this
   }
   static navigationOptions = {
     header: null
@@ -387,6 +389,15 @@ class FieldSearchScreen extends Component {
             textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
             innerBorderStyle={{ width: 0 }}
           />
+
+          <TouchableOpacity
+            style={styles.addNewFieldBox}
+            onPress={() =>
+              this.props.navigation.navigate("CreateNewFieldScreen")
+            }
+          >
+            <Text style={styles.addNewFieldText}>{add_new_field}</Text>
+          </TouchableOpacity>
         </View>
         {input}
 
@@ -567,5 +578,21 @@ const styles = StyleSheet.create({
 
   item: {
     width: "100%"
+  },
+
+  addNewFieldBox: {
+    backgroundColor: "white",
+    padding: 10,
+    marginTop: 8,
+    marginHorizontal: 10,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    borderColor: "#e0e0e0"
+  },
+
+  addNewFieldText: {
+    color: "#3facff",
+    fontWeight: "bold",
+    textAlign: "center"
   }
 });

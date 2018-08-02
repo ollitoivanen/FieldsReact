@@ -15,8 +15,21 @@ import {
   edit_field
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
+import { connect } from "react-redux";
+import { getFieldData } from "FieldsReact/app/redux/app-redux.js";
 
-export default class EditFieldScreen extends Component {
+const mapStateToProps = state => {
+  return {
+    fieldData: state.fieldData
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getFieldData: () => dispatch(getFieldData())
+  };
+};
+
+class EditFieldScreen extends Component {
   static navigationOptions = {
     header: null
   };
@@ -32,26 +45,150 @@ export default class EditFieldScreen extends Component {
     };
   }
 
-    
-
   render() {
-
     const saveFieldData = () => {
-        var { params } = this.props.navigation.state;
-    
-        if (
-          this.state.fieldName === params.fieldName &&
-          this.state.fieldAddress === params.fieldAddress &&
-          this.state.fieldArea === params.fieldArea
-        ) {
-          this.props.navigation.goBack();
-        }
+      var { params } = this.props.navigation.state;
+
+      if (
+        this.state.fieldName === params.fieldName &&
+        this.state.fieldAddress === params.fieldAddress &&
+        this.state.fieldArea === params.fieldArea
+      ) {
+        this.props.navigation.goBack();
+        //Only saving the changed
+      } else if (
+        this.state.fieldName !== params.fieldName &&
+        this.state.fieldAddress === params.fieldAddress &&
+        this.state.fieldArea === params.fieldArea
+      ) {
         firebase
           .firestore()
           .collection("Fields")
           .doc(this.state.fieldID)
-          .update();
-      };
+          .update({
+            fieldName: this.state.fieldName
+          })
+          .then(() => {
+            this.props.getFieldData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
+      } else if (
+        this.state.fieldName === params.fieldName &&
+        this.state.fieldAddress !== params.fieldAddress &&
+        this.state.fieldArea === params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldAddress: this.state.fieldAddress
+          })
+          .then(() => {
+            this.props.getFieldData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
+      } else if (
+        this.state.fieldName === params.fieldName &&
+        this.state.fieldAddress === params.fieldAddress &&
+        this.state.fieldArea !== params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldArea: this.state.fieldArea
+          })
+          .then(() => {
+            this.props.getFieldData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
+      } else if (
+        this.state.fieldName !== params.fieldName &&
+        this.state.fieldAddress !== params.fieldAddress &&
+        this.state.fieldArea === params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldName: this.state.fieldName,
+            fieldAddress: this.state.fieldAddress
+          })
+          .then(() => {
+            this.props.getFieldData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
+      } else if (
+        this.state.fieldName === params.fieldName &&
+        this.state.fieldAddress !== params.fieldAddress &&
+        this.state.fieldArea !== params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldAddress: this.state.fieldAddress,
+            fieldArea: this.state.fieldArea
+          })
+          .then(() => {
+            this.props.getFieldData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
+      } else if (
+        this.state.fieldName !== params.fieldName &&
+        this.state.fieldAddress === params.fieldAddress &&
+        this.state.fieldArea !== params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldName: this.state.fieldName,
+            fieldArea: this.state.fieldArea
+          })
+          .then(() => {
+            this.props.getFieldData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
+      } else if (
+        this.state.fieldName !== params.fieldName &&
+        this.state.fieldAddress !== params.fieldAddress &&
+        this.state.fieldArea !== params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldName: this.state.fieldName,
+            fieldAddress: this.state.fieldAddress,
+            fieldArea: this.state.fieldArea
+          })
+          .then(() => {
+            this.props.getFieldData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
+      }
+    };
     return (
       <View style={styles.container}>
         <View style={styles.greenRowContainer}>
@@ -75,6 +212,7 @@ export default class EditFieldScreen extends Component {
           underlineColorAndroid="rgba(0,0,0,0)"
           placeholder={field_name}
           value={this.state.fieldName}
+          onChangeText={fieldName => this.setState({ fieldName })}
         />
         <Text style={styles.headerText}>{field_city}</Text>
 
@@ -84,6 +222,7 @@ export default class EditFieldScreen extends Component {
           underlineColorAndroid="rgba(0,0,0,0)"
           placeholder={field_city}
           value={this.state.fieldArea}
+          onChangeText={fieldArea => this.setState({ fieldArea })}
         />
         <Text style={styles.headerText}>{field_address}</Text>
 
@@ -93,6 +232,7 @@ export default class EditFieldScreen extends Component {
           underlineColorAndroid="rgba(0,0,0,0)"
           placeholder={field_address}
           value={this.state.fieldAddress}
+          onChangeText={fieldAddress => this.setState({ fieldAddress })}
         />
 
         <TouchableOpacity
@@ -105,6 +245,11 @@ export default class EditFieldScreen extends Component {
     );
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditFieldScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

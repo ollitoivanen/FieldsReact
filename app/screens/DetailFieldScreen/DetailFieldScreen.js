@@ -5,7 +5,8 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Modal
+  Modal,
+  TextInput
 } from "react-native";
 import {
   goals,
@@ -19,7 +20,11 @@ import {
   start_training_here,
   youre_training_here,
   youre_training_elsewhere,
-  edit_field
+  edit_field,
+  field_name,
+  field_city,
+  field_address,
+  save
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 var moment = require("moment");
@@ -37,10 +42,22 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-class DetailFieldsScreen extends Component {
+/*const getFieldImage = () => {
+  firebase
+    .storage()
+    .ref("/files/1234")
+    .downloadFile("/path/to/save/file")
+    .then(downloadedFile => {
+      this.setState({ fieldName: downloadedFile.toString() }); //success
+    })
+    .catch(err => {
+      //Error
+    });
+};*/
+
+class DetailFieldScreen extends Component {
   componentWillMount = () => {
     var { params } = this.props.navigation.state;
-
     this.setState({
       currentFieldID: this.props.userData.currentFieldID,
       currentFieldName: this.props.userData.currentFieldName
@@ -97,24 +114,16 @@ class DetailFieldsScreen extends Component {
     });
   };
 
-  /*getFieldImage = () => {
-    var fieldImageRef = firebase
-      .storage()
-      .ref(
-        "fieldpics/" + this.state.fieldID + "/" + this.state.fieldID + ".jpg"
-      );
-    this.setState({ fieldImage: fieldImageRef });
-  };*/
-
   constructor(props) {
     super(props);
+    var { params } = this.props.navigation.state;
 
     const userRef = firebase
       .firestore()
       .collection("Users")
       .doc(firebase.auth().currentUser.uid);
-
     var { params } = this.props.navigation.state;
+
     this.state = {
       fieldName: params.fieldName,
       fieldArea: params.fieldArea,
@@ -126,14 +135,198 @@ class DetailFieldsScreen extends Component {
       accessType: params.accessType,
       fieldAddress: params.fieldAddress,
       peopleHere: params.peopleHere,
-      infoVisible: false
+      infoVisible: false,
+      editVisible: false,
+      fieldNameEdit: params.fieldName,
+      fieldAreaEdit: params.fieldArea,
+      fieldAddressEdit: params.fieldAddress
     };
   }
   setModalVisible(visible) {
     this.setState({ infoVisible: visible });
   }
 
+  setEditVisible(visible) {
+    this.setState({ infoVisible: false, editVisible: visible });
+  }
+
   render() {
+    let imageUrl;
+
+    //Small problem: if data is changed back to the param values, it wont be updated 31.7.2018
+    const saveFieldData = () => {
+      var { params } = this.props.navigation.state;
+
+      if (
+        this.state.fieldNameEdit === params.fieldName &&
+        this.state.fieldAddressEdit === params.fieldAddress &&
+        this.state.fieldAreaEdit === params.fieldArea
+      ) {
+        this.setEditVisible(false);
+        //Only saving the changed
+      } else if (
+        this.state.fieldNameEdit !== params.fieldName &&
+        this.state.fieldAddressEdit === params.fieldAddress &&
+        this.state.fieldAreaEdit === params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldName: this.state.fieldNameEdit,
+            fieldNameLowerCase: this.state.fieldNameEdit.toLowerCase()
+          })
+          .then(() => {
+            this.setState({ fieldName: this.state.fieldNameEdit });
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      } else if (
+        this.state.fieldNameEdit === params.fieldName &&
+        this.state.fieldAddressEdit !== params.fieldAddress &&
+        this.state.fieldAreaEdit === params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldAddress: this.state.fieldAddressEdit
+          })
+          .then(() => {
+            this.setState({ fieldAddress: this.state.fieldAddressEdit });
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      } else if (
+        this.state.fieldNameEdit === params.fieldName &&
+        this.state.fieldAddressEdit === params.fieldAddress &&
+        this.state.fieldArea !== params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldArea: this.state.fieldAreaEdit,
+            fieldAreaLowerCase: this.state.fieldAreaEdit.toLowerCase()
+          })
+          .then(() => {
+            this.setState({ fieldArea: this.state.fieldAreaEdit });
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      } else if (
+        this.state.fieldNameEdit !== params.fieldName &&
+        this.state.fieldAddressEdit !== params.fieldAddress &&
+        this.state.fieldAreaEdit === params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldName: this.state.fieldNameEdit,
+            fieldNameLowerCase: this.state.fieldNameEdit.toLowerCase(),
+
+            fieldAddress: this.state.fieldAddressEdit
+          })
+          .then(() => {
+            this.setState({
+              fieldName: this.state.fieldNameEdit,
+              address: this.state.fieldAddressEdit
+            });
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      } else if (
+        this.state.fieldNameEdit === params.fieldName &&
+        this.state.fieldAddressEdit !== params.fieldAddress &&
+        this.state.fieldAreaEdit !== params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldAddress: this.state.fieldAddressEdit,
+            fieldArea: this.state.fieldAreaEdit,
+            fieldAreaLowerCase: this.state.fieldAreaEdit.toLowerCase()
+          })
+          .then(() => {
+            this.setState({
+              fieldAddress: this.state.fieldAddressEdit,
+              fieldArea: this.state.fieldAreaEdit
+            });
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      } else if (
+        this.state.fieldNameEdit !== params.fieldName &&
+        this.state.fieldAddressEdit === params.fieldAddress &&
+        this.state.fieldAreaEdit !== params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldName: this.state.fieldNameEdit,
+            fieldArea: this.state.fieldAreaEdit,
+            fieldAreaLowerCase: this.state.fieldAreaEdit.toLowerCase(),
+            fieldNameLowerCase: this.state.fieldNameEdit.toLowerCase()
+          })
+          .then(() => {
+            this.setState({
+              fieldName: this.state.fieldNameEdit,
+              fieldArea: this.state.fieldAreaEdit
+            });
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      } else if (
+        this.state.fieldNameEdit !== params.fieldName &&
+        this.state.fieldAddressEdit !== params.fieldAddress &&
+        this.state.fieldAreaEdit !== params.fieldArea
+      ) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(this.state.fieldID)
+          .update({
+            fieldName: this.state.fieldNameEdit,
+            fieldAddress: this.state.fieldAddressEdit,
+            fieldArea: this.state.fieldAreaEdit,
+            fieldNameLowerCase: this.state.fieldNameEdit.toLowerCase(),
+            fieldAreaLowerCase: this.state.fieldAreaEdit.toLowerCase()
+          })
+          .then(() => {
+            this.setState({
+              fieldName: this.state.fieldNameEdit,
+              fieldAddress: this.state.fieldAddressEdit,
+              fieldArea: this.state.fieldAreaEdit
+            });
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      }
+    };
+
     const trainingButtonTraining = (
       <TouchableOpacity style={styles.startTrainingButton}>
         <Text
@@ -171,6 +364,20 @@ class DetailFieldsScreen extends Component {
     };
 
     let trainingButton;
+    let fieldImage = <Text>gg</Text>;
+
+    const getFieldImage = () => {
+      const fieldImageRef = firebase
+        .storage()
+        .ref()
+        .child(
+          "fieldpics/" + this.state.fieldID + "/" + this.state.fieldID + ".jpg"
+        )
+        .getDownloadURL()
+        .then(function(url) {
+          fieldImage = <Text>moi</Text>;
+        });
+    };
 
     if (this.props.userData.currentFieldID === this.state.fieldID) {
       trainingButton = trainingButtonTraining;
@@ -181,6 +388,63 @@ class DetailFieldsScreen extends Component {
     }
     return (
       <View style={styles.container}>
+        <Modal visible={this.state.editVisible}>
+          <View style={styles.editContainer}>
+            <View style={styles.greenRowContainer}>
+              <TouchableOpacity
+                style={styles.backButton}
+                underlayColor="#bcbcbc"
+                onPress={() => this.setEditVisible(false)}
+              >
+                <Image
+                  style={styles.backButton}
+                  source={require("FieldsReact/app/images/BackButton/back_button.png")}
+                />
+              </TouchableOpacity>
+              <Text style={styles.fieldName}>{edit_field}</Text>
+            </View>
+
+            <Text style={styles.headerText}>{field_name}</Text>
+            <TextInput
+              style={styles.textInput}
+              maxLength={30}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder={field_name}
+              value={this.state.fieldNameEdit}
+              onChangeText={fieldNameEdit => this.setState({ fieldNameEdit })}
+            />
+            <Text style={styles.headerText}>{field_city}</Text>
+
+            <TextInput
+              style={styles.textInput}
+              maxLength={30}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder={field_city}
+              value={this.state.fieldAreaEdit}
+              onChangeText={fieldAreaEdit => this.setState({ fieldAreaEdit })}
+            />
+            <Text style={styles.headerText}>{field_address}</Text>
+
+            <TextInput
+              style={styles.textInput}
+              maxLength={30}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder={field_address}
+              value={this.state.fieldAddressEdit}
+              onChangeText={fieldAddressEdit =>
+                this.setState({ fieldAddressEdit })
+              }
+            />
+
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => saveFieldData()}
+            >
+              <Text style={styles.buttonText}>{save}</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
         <Modal transparent={true} visible={this.state.infoVisible}>
           <TouchableOpacity
             style={{
@@ -229,7 +493,7 @@ class DetailFieldsScreen extends Component {
 
               <TouchableOpacity
                 style={styles.editFieldButton}
-                onPress={() => navigateToEditFieldScreen()}
+                onPress={() => this.setEditVisible(true)}
               >
                 <Text style={styles.buttonText}>{edit_field}</Text>
               </TouchableOpacity>
@@ -251,9 +515,10 @@ class DetailFieldsScreen extends Component {
             <Text style={styles.fieldName}>{this.state.fieldName}</Text>
           </View>
           <View style={styles.greenRowContainer}>
+            {fieldImage}
             <Image
               style={styles.fieldImage}
-              source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+              source={{ uri: imageUrl }}
               borderRadius={35}
               resizeMode="cover"
             />
@@ -272,9 +537,7 @@ class DetailFieldsScreen extends Component {
           <TouchableOpacity
             style={styles.infoContainer}
             underlayColor="#bcbcbc"
-            onPress={() => {
-              this.setModalVisible(true);
-            }}
+            onPress={() => getFieldImage()}
           >
             <Image
               style={styles.infoIcon}
@@ -290,7 +553,7 @@ class DetailFieldsScreen extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DetailFieldsScreen);
+)(DetailFieldScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -404,5 +667,59 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
     fontWeight: "bold"
+  },
+
+  textInput: {
+    height: 60,
+    marginTop: 12,
+    paddingHorizontal: 8,
+    backgroundColor: "#efeded",
+    borderRadius: 10,
+    fontWeight: "bold",
+    fontSize: 20
+  },
+
+  buttonContainer: {
+    backgroundColor: "#3bd774",
+    padding: 15,
+    marginTop: 12,
+    borderRadius: 10
+  },
+
+  buttonText: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold"
+  },
+
+  headerText: {
+    fontWeight: "bold",
+    marginStart: 8,
+    marginTop: 12
+  },
+
+  greenRowContainer: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+
+  backButton: {
+    height: 48,
+    width: 48,
+    alignSelf: "center"
+  },
+
+  fieldName: {
+    fontWeight: "bold",
+    fontSize: 20,
+    alignSelf: "center",
+    marginStart: 12
+  },
+
+  editContainer: {
+    flex: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    backgroundColor: "white"
   }
 });
