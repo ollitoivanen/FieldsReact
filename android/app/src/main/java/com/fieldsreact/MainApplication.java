@@ -32,11 +32,9 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new VectorIconsPackage(),
             new RNFirebasePackage(),
-            new RNFirebasePackage(),
               new RNFirebaseStoragePackage(),
 
       new RNFirebaseAuthPackage(),
-              new RNFirebasePackage(),
               new RNFirebaseFirestorePackage()
       );
     }

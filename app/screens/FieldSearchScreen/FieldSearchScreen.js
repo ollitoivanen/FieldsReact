@@ -14,7 +14,6 @@ import firebase from "react-native-firebase";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
-import { SharedElement } from "react-native-motion";
 import {
   field_city_cap,
   field_name_cap,
