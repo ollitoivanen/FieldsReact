@@ -20,7 +20,8 @@ import {
 } from "FieldsReact/app/strings/strings";
 const mapStateToProps = state => {
   return {
-    userData: state.userData
+    userData: state.userData,
+    usersTeamData: state.usersTeamData
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -38,7 +39,7 @@ class FeedScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.props.getUserData();
+   // this.props.getUserData();
 
     var { params } = this.props.navigation.state;
 
@@ -47,7 +48,7 @@ class FeedScreen extends React.Component {
     this.state = {
       currentUser: null,
       homeArea: "",
-      loading: true
+      loading: true,
     };
   }
   componentWillMount() {
@@ -57,8 +58,28 @@ class FeedScreen extends React.Component {
   render() {
     const { currentUser } = this.state;
 
+    var teamCard;
+
+    if (this.props.userData.userTeamID !== null) {
+      teamCard = (
+        <TouchableOpacity style={styles.teamCard}>
+          <Text style={styles.teamCardText}>
+            {this.props.usersTeamData.teamUsernameText}
+          </Text>
+        </TouchableOpacity>
+      );
+    } else {
+      teamCard = (
+        <TouchableOpacity style={styles.teamCard}>
+          <Text style={styles.teamCardText}>{not_in_a_team}</Text>
+        </TouchableOpacity>
+      );
+    }
+
     return (
       <View style={styles.container}>
+        {teamCard}
+
         <Text
           style={styles.container1}
           onPress={() => firebase.auth().signOut()}
@@ -108,7 +129,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    flex: 1
+    flex: 1,
+    backgroundColor: "white"
   },
 
   container1: {
@@ -142,5 +164,20 @@ const styles = StyleSheet.create({
   navigationImage: {
     height: 35,
     width: 35
+  },
+
+  teamCard: {
+    padding: 20,
+    backgroundColor: "white",
+    borderWidth: 3,
+    borderRadius: 5,
+    borderColor: "#e0e0e0",
+    marginTop: 40,
+    width: "95%"
+  },
+
+  teamCardText: {
+    fontWeight: "bold",
+    color: "black"
   }
 });

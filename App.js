@@ -29,6 +29,7 @@ import TrainingScreen from "./app/screens/TrainingScreen/TrainingScreen";
 import TrainingSummaryScreen from "./app/screens/TrainingSummaryScreen/TrainingSummaryScreen";
 import EditFieldScreen from "./app/screens/EditFieldScreen/EditFieldScreen";
 import CreateNewFieldScreen from "./app/screens/CreateNewFieldScreen/CreateNewFieldScreen";
+ 
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -84,7 +85,9 @@ export const StackNavigatorApp = StackNavigator(
     },
     CreateNewFieldScreen: {
       screen: CreateNewFieldScreen
-    }
+    },
+
+   
   },
 
   {

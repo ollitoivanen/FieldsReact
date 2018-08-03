@@ -1,10 +1,11 @@
 import { createStore, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
 import firebase from "react-native-firebase";
+import { NavigationActions, StackActions } from "react-navigation";
 
 const initialState = {
   userData: {},
-  usersTeamData: {},
+  usersTeamData: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -13,7 +14,7 @@ const reducer = (state = initialState, action) => {
       return { ...state, userData: action.value };
     case "GET_USER_TEAM_DATA":
       return { ...state, usersTeamData: action.value };
-   
+
     default:
       return state;
   }
@@ -39,10 +40,7 @@ const setUserTeamData = usersTeamData => {
   };
 };
 
-
-
-
-const getUserData = () => {
+const getUserData =() => {
   return function(dispatch) {
     firebase
       .firestore()
@@ -59,7 +57,6 @@ const getUserData = () => {
             .then(function(teamDoc) {
               var usersTeamData = teamDoc.data();
               var userData = doc.data();
-              //fetching not from here
               var actionSetUserTeamData = setUserTeamData(usersTeamData);
               var actionSetUserData = setUserData(userData);
               dispatch(actionSetUserTeamData);
@@ -69,14 +66,10 @@ const getUserData = () => {
           var userData = doc.data();
 
           var actionSetUserData = setUserData(userData);
-          dispatch(actionSetUserData);
+          dispatch(actionSetUserData).then();
         }
       });
   };
 };
 
-export {
-  setUserData,
-  getUserData,
-  setUserTeamData,
-};
+export { setUserData, getUserData, setUserTeamData };
