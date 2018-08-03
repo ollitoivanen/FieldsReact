@@ -29,7 +29,9 @@ import TrainingScreen from "./app/screens/TrainingScreen/TrainingScreen";
 import TrainingSummaryScreen from "./app/screens/TrainingSummaryScreen/TrainingSummaryScreen";
 import EditFieldScreen from "./app/screens/EditFieldScreen/EditFieldScreen";
 import CreateNewFieldScreen from "./app/screens/CreateNewFieldScreen/CreateNewFieldScreen";
- 
+import TeamScreen from "./app/screens/TeamScreen/TeamScreen";
+import TeamPlayersScreen from "./app/screens/TeamPlayersScreen/TeamPlayersScreen";
+
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -87,7 +89,13 @@ export const StackNavigatorApp = StackNavigator(
       screen: CreateNewFieldScreen
     },
 
-   
+    TeamScreen: {
+      screen: TeamScreen
+    },
+
+    TeamPlayersScreen: {
+      screen: TeamPlayersScreen
+    }
   },
 
   {

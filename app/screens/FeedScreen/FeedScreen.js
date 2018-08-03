@@ -39,7 +39,7 @@ class FeedScreen extends React.Component {
 
   constructor(props) {
     super(props);
-   // this.props.getUserData();
+    // this.props.getUserData();
 
     var { params } = this.props.navigation.state;
 
@@ -48,7 +48,7 @@ class FeedScreen extends React.Component {
     this.state = {
       currentUser: null,
       homeArea: "",
-      loading: true,
+      loading: true
     };
   }
   componentWillMount() {
@@ -62,7 +62,10 @@ class FeedScreen extends React.Component {
 
     if (this.props.userData.userTeamID !== null) {
       teamCard = (
-        <TouchableOpacity style={styles.teamCard}>
+        <TouchableOpacity
+          style={styles.teamCard}
+          onPress={() => this.props.navigation.navigate("TeamScreen")}
+        >
           <Text style={styles.teamCardText}>
             {this.props.usersTeamData.teamUsernameText}
           </Text>

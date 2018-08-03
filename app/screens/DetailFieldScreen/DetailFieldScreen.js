@@ -530,6 +530,41 @@ class DetailFieldScreen extends Component {
             />
           </TouchableOpacity>
         </View>
+        <View style={styles.navigationContainer}>
+          <View style={styles.navigationContainerIn}>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("FeedScreen", {
+                  homeCityAdded: this.state.home
+                })
+              }
+              style={styles.navigationItem}
+              underlayColor="#bcbcbc"
+            >
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Home/home.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navigationItemBlue}>
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Field/field_icon.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navigationItem}
+              onPress={() =>
+                this.props.navigation.navigate("ProfileScreen", {})
+              }
+            >
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Profile/profile.png")}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   }
@@ -706,5 +741,36 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 10,
     backgroundColor: "white"
+  },
+  navigationContainer: {
+    bottom: 0,
+    position: "absolute",
+    width: "100%",
+    flex: 1
+  },
+  navigationContainerIn: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "flex-end"
+  },
+  navigationItem: {
+    flex: 1,
+    height: 50,
+    backgroundColor: "#f4fff8",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  navigationItemBlue: {
+    flex: 1,
+    height: 50,
+    backgroundColor: "#3facff",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  navigationImage: {
+    height: 35,
+    width: 35
   }
 });

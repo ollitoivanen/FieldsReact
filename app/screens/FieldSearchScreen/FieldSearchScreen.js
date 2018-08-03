@@ -42,7 +42,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 class FieldSearchScreen extends Component {
-  componentDidMount = () => {
+  componentWillMount = () => {
     this.unsubscribe = this.initialFetch();
   };
 

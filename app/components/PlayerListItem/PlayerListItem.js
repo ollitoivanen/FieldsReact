@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
-export default class FieldSearchitem extends React.PureComponent {
+export default class PlayerListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
   render() {
@@ -13,7 +13,7 @@ export default class FieldSearchitem extends React.PureComponent {
           resizeMode="cover"
         />
         <Text style={styles.text} numberOfLines={2}>
-          {this.props.fieldName}
+          {this.props.usernameMember}
         </Text>
         <View style={styles.div} />
       </View>
