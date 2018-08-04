@@ -67,7 +67,7 @@ class FeedScreen extends React.Component {
           onPress={() => this.props.navigation.navigate("TeamScreen")}
         >
           <Text style={styles.teamCardText}>
-            {this.props.usersTeamData.teamUsernameText}
+            {this.props.usersTeamData.teamUsername}
           </Text>
         </TouchableOpacity>
       );
@@ -87,7 +87,7 @@ class FeedScreen extends React.Component {
           style={styles.container1}
           onPress={() => firebase.auth().signOut()}
         >
-          {this.props.userData.username}
+          {this.props.userData.id}
         </Text>
         <View style={styles.navigationContainer}>
           <TouchableOpacity

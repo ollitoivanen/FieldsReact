@@ -77,7 +77,8 @@ class FieldSearchScreen extends Component {
               goalCount,
               accessType,
               fieldAddress,
-              peopleHere
+              peopleHere,
+              id
             } = doc.data();
             fields.push({
               key: doc.id,

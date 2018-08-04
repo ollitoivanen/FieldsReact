@@ -374,7 +374,8 @@ class DetailFieldScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        <Modal visible={this.state.editVisible}>
+        <Modal visible={this.state.editVisible} onRequestClose={()=>{}}
+>
           <View style={styles.editContainer}>
             <View style={styles.greenRowContainer}>
               <TouchableOpacity
@@ -431,7 +432,8 @@ class DetailFieldScreen extends Component {
           </View>
         </Modal>
 
-        <Modal transparent={true} visible={this.state.infoVisible}>
+        <Modal transparent={true} visible={this.state.infoVisible} onRequestClose={()=>{}}
+>
           <TouchableOpacity
             style={{
               flex: 1,
@@ -482,7 +484,7 @@ class DetailFieldScreen extends Component {
                 onPress={() => this.setEditVisible(true)}
               >
                 <Text style={styles.buttonText}>{edit_field}</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>  
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>

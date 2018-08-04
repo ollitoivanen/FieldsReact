@@ -6,12 +6,21 @@ import {
   Text,
   Image,
   Modal,
-  FlatList
+  FlatList,
+  TextInput
 } from "react-native";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
-import { info, players, edit_team } from "../../strings/strings";
+import {
+  info,
+  players,
+  edit_team,
+  team_full_name,
+  team_username,
+  save,
+  events
+} from "../../strings/strings";
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
 
@@ -32,28 +41,21 @@ class TeamScreen extends Component {
     header: null
   };
 
-  componentWillUnmount() {
-    this.unsubscribe();
-    //Some problems with this
-  }
-
   constructor(props) {
     super(props);
-    this.unsubscribe = null;
 
     this.state = {
       infoVisible: false,
       editVisible: false,
-      playerListVisible: false,
-      players: []
+      players: [], // remove text prefix here
+      teamUsernameEdit: this.props.usersTeamData.teamUsername,
+      teamFullNameEdit: this.props.usersTeamData.teamFullName
     };
   }
 
-
-
   openPlayerList() {
-   this.setModalVisible(false)
-   this.props.navigation.navigate("TeamPlayersScreen")
+    this.setModalVisible(false);
+    this.props.navigation.navigate("TeamPlayersScreen");
   }
 
   setModalVisible(visible) {
@@ -63,13 +65,129 @@ class TeamScreen extends Component {
   setEditVisible(visible) {
     this.setState({ infoVisible: false, editVisible: visible });
   }
- 
+
   render() {
+    const saveTeamData = () => {
+      if (
+        this.state.teamFullNameEdit === this.props.usersTeamData.teamFullName &&
+        this.state.teamUsernameEdit === this.props.usersTeamData.teamUsername
+      ) {
+        this.setEditVisible(false);
+        //Only saving the changed
+      } else if (
+        this.state.teamFullNameEdit !== this.props.usersTeamData.teamFullName &&
+        this.state.teamUsernameEdit === this.props.usersTeamData.teamUsername
+      ) {
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.usersTeamData.id)
+          .update({
+            teamFullName: this.state.teamFullNameEdit
+          })
+          .then(() => {
+            this.props.getUserData();
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      } else if (
+        this.state.teamFullNameEdit === this.props.usersTeamData.teamFullName &&
+        this.state.teamUsernameEdit !== this.props.usersTeamData.teamUsername
+      ) {
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.usersTeamData.id)
+          .update({
+            teamUsername: this.state.teamUsernameEdit
+          })
+          .then(() => {
+            this.props.getUserData();
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      } else if (
+        this.state.teamFullNameEdit !== this.props.usersTeamData.teamFullName &&
+        this.state.teamUsernameEdit !== this.props.usersTeamData.teamUsername
+      ) {
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.usersTeamData.id)
+          .update({
+            teamUsername: this.state.teamUsernameEdit,
+            teamFullName: this.state.teamFullNameEdit
+          })
+          .then(() => {
+            this.props.getUserData();
+          })
+
+          .then(() => {
+            this.setEditVisible(false);
+          });
+      }
+    };
+
     return (
       <View style={styles.container}>
-       
+        <Modal visible={this.state.editVisible} onRequestClose={() => {}}>
+          <View style={styles.editContainer}>
+            <View style={styles.greenRowContainer}>
+              <TouchableOpacity
+                style={styles.backButton}
+                underlayColor="#bcbcbc"
+                onPress={() => this.setEditVisible(false)}
+              >
+                <Image
+                  style={styles.backButton}
+                  source={require("FieldsReact/app/images/BackButton/back_button.png")}
+                />
+              </TouchableOpacity>
+              <Text style={styles.teamName}>{edit_team}</Text>
+            </View>
 
-        <Modal transparent={true} visible={this.state.infoVisible}>
+            <Text style={styles.headerText}>{team_username}</Text>
+            <TextInput
+              style={styles.textInput}
+              maxLength={30}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder={team_username}
+              value={this.state.teamUsernameEdit}
+              onChangeText={teamUsernameEdit =>
+                this.setState({ teamUsernameEdit })
+              }
+            />
+            <Text style={styles.headerText}>{team_full_name}</Text>
+
+            <TextInput
+              style={styles.textInput}
+              maxLength={30}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder={team_full_name}
+              value={this.state.teamFullNameEdit}
+              onChangeText={teamFullNameEdit =>
+                this.setState({ teamFullNameEdit })
+              }
+            />
+
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => saveTeamData()}
+            >
+              <Text style={styles.buttonText}>{save}</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
+        <Modal
+          transparent={true}
+          visible={this.state.infoVisible}
+          onRequestClose={() => {}}
+        >
           <TouchableOpacity
             style={{
               flex: 1,
@@ -132,7 +250,7 @@ class TeamScreen extends Component {
               />
             </TouchableOpacity>
             <Text style={styles.teamName}>
-              {this.props.usersTeamData.teamUsernameText}
+              {this.props.usersTeamData.teamUsername}
             </Text>
           </View>
           <View style={styles.greenRowContainer}>
@@ -142,6 +260,10 @@ class TeamScreen extends Component {
               borderRadius={35}
               resizeMode="cover"
             />
+
+            <Text style={styles.teamFullName}>
+              {this.props.usersTeamData.teamFullName}
+            </Text>
           </View>
 
           <TouchableOpacity
@@ -155,6 +277,11 @@ class TeamScreen extends Component {
             />
           </TouchableOpacity>
         </View>
+
+        <View style={styles.greenRowContainer}>
+          <Text style={styles.teamName}>{events}</Text>
+        </View>
+
         <View style={styles.navigationContainer}>
           <View style={styles.navigationContainerIn}>
             <TouchableOpacity
@@ -240,6 +367,15 @@ const styles = StyleSheet.create({
     marginStart: 12
   },
 
+  teamFullName: {
+    fontWeight: "bold",
+    fontSize: 22,
+    alignSelf: "center",
+    marginStart: 20,
+    flexWrap: "wrap",
+    flex: 1
+  },
+
   backButtonContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -252,10 +388,6 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
 
-  
-
-  
-  
   item: {
     width: "100%"
   },
@@ -307,8 +439,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     borderRadius: 10
   },
-
-  
 
   headerText: {
     fontWeight: "bold",

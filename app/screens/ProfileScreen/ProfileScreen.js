@@ -47,8 +47,8 @@ class ProfileScreen extends Component {
     }
 
     var userTeamPlaceHolder = not_in_a_team;
-    if (this.props.userData.usersTeam !== null) {
-      userTeamPlaceHolder = this.props.userData.usersTeam;
+    if (this.props.usersTeamData.teamUsername !== null) {
+      userTeamPlaceHolder = this.props.usersTeamData.teamUsername;
     }
     return (
       <View style={styles.container}>
@@ -80,9 +80,7 @@ class ProfileScreen extends Component {
                 style={styles.teamIcon}
                 source={require("FieldsReact/app/images/Team/team.png")}
               />
-              <Text style={styles.boxText}>
-                {this.props.usersTeamData.teamUsernameText}
-              </Text>
+              <Text style={styles.boxText}>{userTeamPlaceHolder} </Text>
             </TouchableOpacity>
           </View>
 

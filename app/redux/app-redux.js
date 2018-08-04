@@ -40,7 +40,9 @@ const setUserTeamData = usersTeamData => {
   };
 };
 
-const getUserData =() => {
+
+
+const getUserData = () => {
   return function(dispatch) {
     firebase
       .firestore()
@@ -55,7 +57,13 @@ const getUserData =() => {
             .doc(doc.data().userTeamID)
             .get()
             .then(function(teamDoc) {
-              var usersTeamData = teamDoc.data();
+
+
+              var usersTeamData1 = Object.assign({ id: teamDoc.id }, teamDoc.data())
+              var usersTeamData = usersTeamData1
+
+
+              teamDoc.data();
               var userData = doc.data();
               var actionSetUserTeamData = setUserTeamData(usersTeamData);
               var actionSetUserData = setUserData(userData);
