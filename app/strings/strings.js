@@ -55,6 +55,14 @@ export const field_access_type_array = [
   "No booking, free if space",
   "No outside access"
 ];
+
+export const event_type_array = [
+  "Training",
+  "Game",
+  "Meeting",
+  "Tournament",
+  "Other"
+]
 export const people_here = "People here";
 export const start_training_here = "Start training here";
 export const youre_training_here = "You're training here";
@@ -82,3 +90,10 @@ export const edit_team = "Edit Team";
 export const team_username = "Team username";
 export const team_full_name = "Team full name";
 export const events = "Events"
+export const create_new_event = "Create new event"
+export const start_time = "Start time"
+export const end_time = "End time"
+export const event_date = "Event date"
+export const event_ends_before_it_starts = "Event ends before it starts"
+export const event_date_has_already_passed = "Event date has already passed"
+export const event_type = "Event type"

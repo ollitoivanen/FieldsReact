@@ -278,8 +278,15 @@ class TeamScreen extends Component {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.greenRowContainer}>
+        <View style={styles.eventRowContainer}>
           <Text style={styles.teamName}>{events}</Text>
+          <TouchableOpacity onPress={()=> this.props.navigation.navigate("CreateEventScreen")}>
+          <Image
+                style={styles.addIcon}
+                source={require("FieldsReact/app/images/Add/add.png")}
+              />
+          </TouchableOpacity>
+          
         </View>
 
         <View style={styles.navigationContainer}>
@@ -287,7 +294,6 @@ class TeamScreen extends Component {
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("FeedScreen", {
-                  homeCityAdded: this.state.home
                 })
               }
               style={styles.navigationItem}
@@ -388,6 +394,12 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
 
+  addIcon: {
+    height: 44,
+    width: 44,
+    marginTop: 2
+  },
+
   item: {
     width: "100%"
   },
@@ -447,6 +459,12 @@ const styles = StyleSheet.create({
   },
 
   greenRowContainer: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+
+  eventRowContainer: {
+    marginTop: 8,
     flexDirection: "row",
     alignItems: "center"
   },

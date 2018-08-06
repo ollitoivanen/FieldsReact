@@ -226,7 +226,7 @@ class CreateNewFieldScreen extends Component {
           <Text style={styles.pickerText}>{this.state.goalCount}</Text>
         </TouchableOpacity>
 
-        <Modal transparent={true} visible={this.state.fieldTypeModalVisible}>
+        <Modal transparent={true} visible={this.state.fieldTypeModalVisible}  onRequestClose={()=>{}}>
           <TouchableOpacity
             style={{
               flex: 1,
@@ -273,6 +273,7 @@ class CreateNewFieldScreen extends Component {
         <Modal
           transparent={true}
           visible={this.state.fieldAccessTypeModalVisible}
+          onRequestClose={()=>{}}
         >
           <TouchableOpacity
             style={{
@@ -326,6 +327,7 @@ class CreateNewFieldScreen extends Component {
         <Modal
           transparent={true}
           visible={this.state.fieldGoalCountModalVisible}
+          onRequestClose={()=>{}}
         >
           <TouchableOpacity
             style={{
