@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Image
 } from "react-native";
-import { ButtonGroup, SearchBar, Alert } from "react-native-elements";
 import firebase from "react-native-firebase";
 
 import { connect } from "react-redux";
@@ -380,6 +379,7 @@ class FieldSearchScreen extends Component {
             underlineColorAndroid="rgba(0,0,0,0)"
             value={this.state.fieldSearchTerm}
           />
+          {/*
           <ButtonGroup
             onPress={this.updateIndex}
             selectedIndex={selectedIndex}
@@ -388,7 +388,7 @@ class FieldSearchScreen extends Component {
             selectedTextStyle={{ color: "#3bd774", fontWeight: "bold" }}
             textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
             innerBorderStyle={{ width: 0 }}
-          />
+          />*/}
 
           <TouchableOpacity
             style={styles.addNewFieldBox}
