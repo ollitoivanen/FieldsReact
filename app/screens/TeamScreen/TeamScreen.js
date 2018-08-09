@@ -11,6 +11,9 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+var moment = require("moment");
+
+import EventListItem from "FieldsReact/app/components/EventListItem/EventListItem"; // we'll create this next
 
 import {
   info,
@@ -37,14 +40,47 @@ const mapDispatchToProps = dispatch => {
 };
 
 class TeamScreen extends Component {
+  
   static navigationOptions = {
     header: null
   };
+  loadEvents = () => {
+    //Possibility for live updates
+    const events = [];
 
+    const ref = firebase.firestore().collection("Teams");
+    const query = ref.doc(this.props.userData.userTeamID).collection("Events");
+    query.get().then(
+      function(doc) {
+        doc.forEach(doc => {
+          const { endTime, eventFieldID, eventFieldName, eventType } = doc.data();
+          const id = doc.id;
+          const date = moment(id).format("ddd D MMM");
+          const startTime = moment(id).format("HH:mm");
+          events.push({
+            date,
+            startTime,
+
+            key: doc.id,
+            doc,
+            eventType,
+            eventFieldID,
+            eventFieldName,
+            //How to fetch name
+            id,
+            endTime
+          });
+        });
+        this.setState({ events });
+      }.bind(this)
+    );
+  };
   constructor(props) {
     super(props);
+    this.loadEvents();
 
     this.state = {
+      events: [],
       infoVisible: false,
       editVisible: false,
       players: [], // remove text prefix here
@@ -280,22 +316,33 @@ class TeamScreen extends Component {
 
         <View style={styles.eventRowContainer}>
           <Text style={styles.teamName}>{events}</Text>
-          <TouchableOpacity onPress={()=> this.props.navigation.navigate("CreateEventScreen")}>
-          <Image
-                style={styles.addIcon}
-                source={require("FieldsReact/app/images/Add/add.png")}
-              />
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate("CreateEventScreen", {
+                fieldID: null
+              })
+            }
+          >
+            <Image
+              style={styles.addIcon}
+              source={require("FieldsReact/app/images/Add/add.png")}
+            />
           </TouchableOpacity>
-          
         </View>
+        <FlatList
+        style={{marginBottom: 50}}
+          data={this.state.events}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.item}>
+              <EventListItem {...item} />
+            </TouchableOpacity>
+          )}
+        />
 
         <View style={styles.navigationContainer}>
           <View style={styles.navigationContainerIn}>
             <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("FeedScreen", {
-                })
-              }
+              onPress={() => this.props.navigation.navigate("FeedScreen", {})}
               style={styles.navigationItem}
               underlayColor="#bcbcbc"
             >
@@ -307,7 +354,7 @@ class TeamScreen extends Component {
             <TouchableOpacity
               style={styles.navigationItemGreen}
               onPress={() =>
-                this.props.navigation.navigate("FieldSearchScreen")
+                this.props.navigation.navigate("FieldSearchScreen", {})
               }
             >
               <Image

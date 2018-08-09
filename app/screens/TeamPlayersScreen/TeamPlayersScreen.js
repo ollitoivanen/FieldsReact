@@ -28,19 +28,13 @@ const mapDispatchToProps = dispatch => {
 };
 
 class TeamPlayerScreen extends Component {
-    componentWillMount() {
-        this.loadPlayersList();
-      };
-   
-    
-     
+  componentWillMount() {
+    this.loadPlayersList();
+  }
+
   static navigationOptions = {
     header: null
   };
-
-  
-
-  
 
   constructor(props) {
     super(props);

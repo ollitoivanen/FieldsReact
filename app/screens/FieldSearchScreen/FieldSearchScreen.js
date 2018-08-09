@@ -9,6 +9,7 @@ import {
   Image
 } from "react-native";
 import firebase from "react-native-firebase";
+import { ButtonGroup } from "react-native-elements";
 
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
@@ -369,6 +370,80 @@ class FieldSearchScreen extends Component {
     } else {
       input = null;
     }
+
+const openFieldDetail = (item)=>{
+  var { params } = this.props.navigation.state;
+
+  if(params.fromEvent === false){
+  this.props.navigation.navigate("DetailFieldScreen", {
+    fieldName: item.fieldName,
+    fieldAreaLowerCase: item.fieldAreaLowerCase,
+    fieldNameLowerCase: item.fieldNameLowerCase,
+    fieldArea: item.fieldArea,
+    fieldID: item.fieldID,
+    fieldType: item.fieldType,
+    goalCount: item.goalCount,
+    accessType: item.accessType,
+    fieldAddress: item.fieldAddress,
+    peopleHere: item.peopleHere,
+    userID: this.props.userData.userID,
+    currentFieldID: this.props.userData.currentFieldID,
+    currentFieldName: this.props.userData.currentFieldName,
+    timestamp: this.props.userData.timestamp,
+    trainingCount: this.props.userData.trainingCount,
+    reputation: this.props.userData.reputation
+  })
+}else{
+  this.props.navigation.navigate("CreateEventScreen", {fieldName: item.fieldName, fieldID: item.fieldID})
+
+  //Add field data here next. things are going great!
+}
+
+
+}
+
+if(params.fromEvent !== true){
+  var navigation =  <View style={styles.navigationContainer}>
+  <View style={styles.navigationContainerIn}>
+    <TouchableOpacity
+      onPress={() =>
+        this.props.navigation.navigate("FeedScreen", {
+          homeCityAdded: this.state.home
+        })
+      }
+      style={styles.navigationItem}
+      underlayColor="#bcbcbc"
+    >
+      <Image
+        style={styles.navigationImage}
+        source={require("FieldsReact/app/images/Home/home.png")}
+      />
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.navigationItemBlue}>
+      <Image
+        style={styles.navigationImage}
+        source={require("FieldsReact/app/images/Field/field_icon.png")}
+      />
+    </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.navigationItem}
+      onPress={() =>
+        this.props.navigation.navigate("ProfileScreen", {})
+      }
+    >
+      <Image
+        style={styles.navigationImage}
+        source={require("FieldsReact/app/images/Profile/profile.png")}
+      />
+    </TouchableOpacity>
+  </View>
+</View>
+
+}else {
+  var navigation = null
+}
+
+
     return (
       <View style={styles.container}>
         <View style={styles.searchContainer}>
@@ -379,7 +454,7 @@ class FieldSearchScreen extends Component {
             underlineColorAndroid="rgba(0,0,0,0)"
             value={this.state.fieldSearchTerm}
           />
-          {/*
+
           <ButtonGroup
             onPress={this.updateIndex}
             selectedIndex={selectedIndex}
@@ -388,7 +463,7 @@ class FieldSearchScreen extends Component {
             selectedTextStyle={{ color: "#3bd774", fontWeight: "bold" }}
             textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
             innerBorderStyle={{ width: 0 }}
-          />*/}
+          />
 
           <TouchableOpacity
             style={styles.addNewFieldBox}
@@ -407,66 +482,16 @@ class FieldSearchScreen extends Component {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.item}
-              onPress={() =>
-                this.props.navigation.navigate("DetailFieldScreen", {
-                  fieldName: item.fieldName,
-                  fieldAreaLowerCase: item.fieldAreaLowerCase,
-                  fieldNameLowerCase: item.fieldNameLowerCase,
-                  fieldArea: item.fieldArea,
-                  fieldID: item.fieldID,
-                  fieldType: item.fieldType,
-                  goalCount: item.goalCount,
-                  accessType: item.accessType,
-                  fieldAddress: item.fieldAddress,
-                  peopleHere: item.peopleHere,
-                  userID: this.props.userData.userID,
-                  currentFieldID: this.props.userData.currentFieldID,
-                  currentFieldName: this.props.userData.currentFieldName,
-                  timestamp: this.props.userData.timestamp,
-                  trainingCount: this.props.userData.trainingCount,
-                  reputation: this.props.userData.reputation
-                })
+              onPress={() => openFieldDetail(item)
+                
               }
             >
               <FieldSearchItem {...item} />
             </TouchableOpacity>
           )}
         />
-        <View style={styles.navigationContainer}>
-          <View style={styles.navigationContainerIn}>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("FeedScreen", {
-                  homeCityAdded: this.state.home
-                })
-              }
-              style={styles.navigationItem}
-              underlayColor="#bcbcbc"
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Home/home.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navigationItemBlue}>
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Field/field_icon.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItem}
-              onPress={() =>
-                this.props.navigation.navigate("ProfileScreen", {})
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Profile/profile.png")}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        {navigation}
+       
       </View>
     );
   }

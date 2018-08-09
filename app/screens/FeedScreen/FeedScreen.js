@@ -101,7 +101,7 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navigationItemGreen}
-            onPress={() => this.props.navigation.navigate("FieldSearchScreen")}
+            onPress={() => this.props.navigation.navigate("FieldSearchScreen", {fromEvent: false})}
           >
             <Image
               style={styles.navigationImage}

@@ -17,6 +17,8 @@ pod 'Firebase/Storage', '~> 5.3.0'
 
 
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
 end
 
 # Auth0 Lock

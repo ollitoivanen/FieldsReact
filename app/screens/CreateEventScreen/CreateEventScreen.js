@@ -16,12 +16,29 @@ import {
   event_date_has_already_passed,
   save,
   event_type_array,
-  event_type
+  event_type,
+  choose_field,
+  event_field
 } from "../../strings/strings";
 var moment = require("moment");
+import firebase from "react-native-firebase";
+import { connect } from "react-redux";
+import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+
 import DateTimePicker from "react-native-modal-datetime-picker";
 
-export default class CreateEventScreen extends Component {
+const mapStateToProps = state => {
+  return {
+    userData: state.userData
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getUserData: () => dispatch(getUserData())
+  };
+};
+
+class CreateEventScreen extends Component {
   static navigationOptions = {
     header: null
   };
@@ -50,47 +67,68 @@ export default class CreateEventScreen extends Component {
   };
 
   handleDatePicked = date => {
-    this.setState({
-      date: moment(date).format("ddd D MMM")
-    });
+    this.setState(
+      {
+        ogDate: moment(this.state.ogDate)
+          .date(moment(date).format("DD"))
+          .month(moment(date).format("MM") - 1)
+          .year(moment(date).format("YYYY"))
+          .format(),
+        date: moment(date).format("ddd DD MMM")
+      },
+      () => {
+        var diff = moment().format("x") - moment(date).format("x");
+        if (diff > 86400000) {
+          this.setState({ errorMessage: event_date_has_already_passed });
+          this.hideDatePicker();
+        } else {
+          this.setState({ errorMessage: null });
 
-    if (date < moment()) {
-      this.setState({ errorMessage: event_date_has_already_passed });
-      this.hideDatePicker();
-    } else {
-      this.setState({ errorMessage: null });
-
-      this.hideDatePicker();
-    }
+          this.hideDatePicker();
+        }
+      }
+    );
   };
 
   handleStartTimePicked = date => {
-    this.setState({
-      startTime: moment(date).format("HH:mm")
-    });
+    this.setState(
+      {
+        ogDate: moment(this.state.ogDate)
+          .hours(moment(date).format("HH"))
+          .minutes(moment(date).format("mm")) //Seconds?
+          .format(),
+        startTime: moment(date).format("HH:mm")
+        //How to wait setstate on iOS
+      },
+      () => {
+        if (this.state.startTime > this.state.endTime) {
+          this.setState({ errorMessage: event_ends_before_it_starts });
+          this.hideStartTimePicker();
+        } else {
+          this.setState({ errorMessage: null });
 
-    if (this.state.startTime > this.state.endTime) {
-      this.setState({ errorMessage: event_ends_before_it_starts });
-      this.hideStartTimePicker();
-    } else {
-      this.setState({ errorMessage: null });
-
-      this.hideStartTimePicker();
-    }
+          this.hideStartTimePicker();
+        }
+      }
+    );
   };
+
   handleEndTimePicked = date => {
-    this.setState({
-      endTime: moment(date).format("HH:mm")
-    });
+    this.setState(
+      {
+        endTime: moment(date).format("HH:mm")
+      },
+      () => {
+        if (this.state.startTime > this.state.endTime) {
+          this.setState({ errorMessage: event_ends_before_it_starts });
+          this.hideEndTimePicker();
+        } else {
+          this.setState({ errorMessage: null });
 
-    if (this.state.startTime > this.state.endTime) {
-      this.setState({ errorMessage: event_ends_before_it_starts });
-      this.hideEndTimePicker();
-    } else {
-      this.setState({ errorMessage: null });
-
-      this.hideEndTimePicker();
-    }
+          this.hideEndTimePicker();
+        }
+      }
+    );
   };
 
   setEventTypeModal(visible) {
@@ -106,6 +144,7 @@ export default class CreateEventScreen extends Component {
       endTimePickerVisible: false,
       eventTypeModalVisible: false,
 
+      ogDate: moment().format(),
       errorMessage: null,
       chosenEventType: 0,
       date: moment().format("ddd D MMM"),
@@ -114,13 +153,73 @@ export default class CreateEventScreen extends Component {
     };
   }
   render() {
+    var { params } = this.props.navigation.state;
+
     const changeEventType = index => {
       this.setState({ chosenEventType: index });
       this.setEventTypeModal(false);
     };
+
+    const openFieldSearch = () => {
+      this.props.navigation.navigate("FieldSearchScreen", { fromEvent: true });
+    };
+    if (params.fieldID === null) {
+      var chosenField = (
+        <TouchableOpacity onPress={() => openFieldSearch()}>
+          <Text style={styles.chooseFieldText}>{choose_field}</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      var chosenField = (
+        <TouchableOpacity onPress={() => openFieldSearch()}>
+          <Text style={styles.chooseFieldText}>{params.fieldName}</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    const saveEvent = () => {
+      if (this.state.errorMessage === null) {
+        if (params.fieldID === null) {
+          firebase
+            .firestore()
+            .collection("Teams")
+            .doc(this.props.userData.userTeamID)
+            .collection("Events")
+            .doc(moment(this.state.ogDate).format())
+            .set({
+              eventType: this.state.chosenEventType,
+              endTime: this.state.endTime
+            })
+            .then(() => {
+              this.props.navigation.navigate("TeamScreen");
+            });
+        } else {
+          firebase
+            .firestore()
+            .collection("Teams")
+            .doc(this.props.userData.userTeamID)
+            .collection("Events")
+            .doc(moment(this.state.ogDate).format())
+            .set({
+              eventType: this.state.chosenEventType,
+              endTime: this.state.endTime,
+              eventFieldID: params.fieldID,
+              eventFieldName: params.fieldName
+            })
+            .then(() => {
+              this.props.navigation.navigate("TeamScreen");
+            });
+        }
+      }
+    };
+
     return (
       <View style={styles.container}>
-        <Modal transparent={true} visible={this.state.eventTypeModalVisible}  onRequestClose={()=>{}}>
+        <Modal
+          transparent={true}
+          visible={this.state.eventTypeModalVisible}
+          onRequestClose={() => {}}
+        >
           <TouchableOpacity
             style={{
               flex: 1,
@@ -172,11 +271,13 @@ export default class CreateEventScreen extends Component {
               source={require("FieldsReact/app/images/BackButton/back_button.png")}
             />
           </TouchableOpacity>
-          <Text style={styles.header}>{create_new_event}</Text>
+          <Text style={styles.topHeader}>{create_new_event}</Text>
         </View>
+        <Text style={styles.header}>{event_field}</Text>
+        {chosenField}
         <Text style={styles.header}>{event_type}</Text>
 
-        <TouchableOpacity onPress={()=>this.setEventTypeModal(true)}>
+        <TouchableOpacity onPress={() => this.setEventTypeModal(true)}>
           <Text style={styles.timeText}>
             {event_type_array[this.state.chosenEventType]}
           </Text>
@@ -226,7 +327,7 @@ export default class CreateEventScreen extends Component {
 
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={() => saveFieldData()}
+          onPress={() => saveEvent()}
         >
           <Text style={styles.buttonText}>{save}</Text>
         </TouchableOpacity>
@@ -234,6 +335,11 @@ export default class CreateEventScreen extends Component {
     );
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateEventScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -252,6 +358,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     margin: 8
   },
+
   buttonText: {
     textAlign: "center",
     color: "white",
@@ -261,7 +368,23 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: "bold",
     fontSize: 20,
+    marginStart: 12,
+    marginBottom: 8,
+    color: "#a5a5a5"
+  },
+
+  topHeader: {
+    fontWeight: "bold",
+    fontSize: 20,
     marginStart: 12
+  },
+
+  chooseFieldText: {
+    color: "#3bd774",
+    fontWeight: "bold",
+    fontSize: 30,
+    marginStart: 30,
+    marginBottom: 12
   },
 
   backButtonContainer: {
