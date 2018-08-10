@@ -110,7 +110,7 @@ class ProfileScreen extends Component {
             <TouchableOpacity
               style={styles.navigationItemGreen}
               onPress={() =>
-                this.props.navigation.navigate("FieldSearchScreen", {})
+                this.props.navigation.navigate("FieldSearchScreen", {fromEvent: false})
               }
             >
               <Image

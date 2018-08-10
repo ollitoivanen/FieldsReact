@@ -372,7 +372,7 @@ class TeamScreen extends Component {
             <TouchableOpacity
               style={styles.navigationItemGreen}
               onPress={() =>
-                this.props.navigation.navigate("FieldSearchScreen", {})
+                this.props.navigation.navigate("FieldSearchScreen", {fromEvent: false})
               }
             >
               <Image

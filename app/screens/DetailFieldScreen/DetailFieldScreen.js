@@ -6,7 +6,8 @@ import {
   Image,
   TouchableOpacity,
   Modal,
-  TextInput
+  TextInput,
+  FlatList
 } from "react-native";
 import {
   goals,
@@ -30,6 +31,8 @@ import firebase from "react-native-firebase";
 var moment = require("moment");
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
+
 
 const mapStateToProps = state => {
   return {
@@ -68,8 +71,44 @@ class DetailFieldScreen extends Component {
   };
 
   loadEvents = () => {
-   var ref = firebase.firestore().collection("Teams")
-  }
+    var { params } = this.props.navigation.state;
+
+    const events = [];
+    var ref = firebase.firestore().collection("Events");
+    const query = ref.where("eventFieldID", "==", params.fieldID);
+    query.get().then(
+      function(doc) {
+        doc.forEach(doc => {
+          const {
+            endTime,
+            eventFieldID,
+            eventFieldName,
+            eventType,
+            teamName
+          } = doc.data();
+          const id = doc.id;
+          const date = moment(id).format("ddd D MMM");
+          const startTime = moment(id).format("HH:mm");
+          events.push({
+            date,
+            startTime,
+            teamName,
+            key: doc.id,
+            doc,
+            eventType,
+            eventFieldID,
+            eventFieldName,
+            //How to fetch name
+            id,
+            endTime
+          });
+        });
+        this.setState({
+          events
+        });
+      }.bind(this)
+    );
+  };
 
   startTraining = () => {
     var { params } = this.props.navigation.state;
@@ -93,14 +132,7 @@ class DetailFieldScreen extends Component {
           .update({
             peopleHere: this.state.peopleHere + 1
           });
-      })
-      .then(
-        this.props.navigation.navigate("TrainingScreen", {
-          startTime: startTime,
-          peopleHere: this.state.peopleHere + 1,
-          fieldID: this.state.fieldID
-        })
-      );
+      });
   };
 
   existingTraining = () => {
@@ -121,6 +153,7 @@ class DetailFieldScreen extends Component {
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
+    this.loadEvents()
 
     const userRef = firebase
       .firestore()
@@ -129,6 +162,7 @@ class DetailFieldScreen extends Component {
     var { params } = this.props.navigation.state;
 
     this.state = {
+      events: [],
       fieldName: params.fieldName,
       fieldArea: params.fieldArea,
       fieldID: params.fieldID,
@@ -378,8 +412,7 @@ class DetailFieldScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        <Modal visible={this.state.editVisible} onRequestClose={()=>{}}
->
+        <Modal visible={this.state.editVisible} onRequestClose={() => {}}>
           <View style={styles.editContainer}>
             <View style={styles.greenRowContainer}>
               <TouchableOpacity
@@ -436,8 +469,11 @@ class DetailFieldScreen extends Component {
           </View>
         </Modal>
 
-        <Modal transparent={true} visible={this.state.infoVisible} onRequestClose={()=>{}}
->
+        <Modal
+          transparent={true}
+          visible={this.state.infoVisible}
+          onRequestClose={() => {}}
+        >
           <TouchableOpacity
             style={{
               flex: 1,
@@ -488,7 +524,7 @@ class DetailFieldScreen extends Component {
                 onPress={() => this.setEditVisible(true)}
               >
                 <Text style={styles.buttonText}>{edit_field}</Text>
-              </TouchableOpacity>  
+              </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
@@ -536,6 +572,22 @@ class DetailFieldScreen extends Component {
             />
           </TouchableOpacity>
         </View>
+
+
+ <FlatList
+          style={{ marginBottom: 50 }}
+          data={this.state.events}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.item}
+              
+            >
+              <EventListItem {...item} />
+            </TouchableOpacity>
+          )}
+        />
+
+
         <View style={styles.navigationContainer}>
           <View style={styles.navigationContainerIn}>
             <TouchableOpacity

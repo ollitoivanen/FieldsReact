@@ -29,7 +29,9 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 
 const mapStateToProps = state => {
   return {
-    userData: state.userData
+    userData: state.userData,
+    usersTeamData: state.usersTeamData
+
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -189,7 +191,8 @@ class CreateEventScreen extends Component {
             .set({
               eventType: this.state.chosenEventType,
               endTime: this.state.endTime,
-              team: this.props.userData.userTeamID
+              team: this.props.userData.userTeamID,
+              teamName: this.props.usersTeamData.teamUsername
             })
             .then(() => {
               var ref = firebase.firestore().collection("Teams");
@@ -227,7 +230,9 @@ class CreateEventScreen extends Component {
               endTime: this.state.endTime,
               eventFieldID: params.fieldID,
               eventFieldName: params.fieldName,
-              team: this.props.userData.userTeamID
+              team: this.props.userData.userTeamID,
+              teamName: this.props.usersTeamData.teamUsername
+
 
             }).then(() => {
               var ref = firebase.firestore().collection("Teams");
