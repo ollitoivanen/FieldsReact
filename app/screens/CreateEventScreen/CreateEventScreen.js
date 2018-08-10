@@ -209,7 +209,7 @@ class CreateEventScreen extends Component {
                       .collection("Users")
                       .doc(doc.id)
                       .set({
-                        state: 0,
+                        state: 1,
                         usernameMember: doc.data().usernameMember
                       });
                   });
@@ -248,7 +248,7 @@ class CreateEventScreen extends Component {
                       .collection("Users")
                       .doc(doc.id)
                       .set({
-                        state: 0,
+                        state: 1,
                         usernameMember: doc.data().usernameMember
                       });
                   });

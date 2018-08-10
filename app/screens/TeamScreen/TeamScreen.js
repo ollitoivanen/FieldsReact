@@ -43,45 +43,23 @@ class TeamScreen extends Component {
   static navigationOptions = {
     header: null
   };
-  loadEvents = () => {
-    //Possibility for live updates
-    const events = [];
-
-    const ref = firebase.firestore().collection("Teams");
-    const query = ref.doc(this.props.userData.userTeamID).collection("Events");
-    query.get().then(
-      function(doc) {
-        doc.forEach(doc => {
-          const {
-            endTime,
-            eventFieldID,
-            eventFieldName,
-            eventType
-          } = doc.data();
-          const id = doc.id;
-          const date = moment(id).format("ddd D MMM");
-          const startTime = moment(id).format("HH:mm");
-          events.push({
-            date,
-            startTime,
-
-            key: doc.id,
-            doc,
-            eventType,
-            eventFieldID,
-            eventFieldName,
-            //How to fetch name
-            id,
-            endTime
-          });
-        });
-        this.setState({ events });
-      }.bind(this)
-    );
-  };
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  
   constructor(props) {
     super(props);
-    this.loadEvents();
+
+    this.ref = firebase
+      .firestore()
+      .collection("Teams")
+      .doc(this.props.userData.userTeamID)
+      .collection("Events")
+          this.unsubscribe = null;
+
 
     this.state = {
       events: [],
@@ -92,6 +70,38 @@ class TeamScreen extends Component {
       teamFullNameEdit: this.props.usersTeamData.teamFullName
     };
   }
+
+  onCollectionUpdate = querySnapshot => {
+    const events = [];
+    querySnapshot.forEach(doc => {
+      const {  endTime,
+        eventFieldID,
+        eventFieldName,
+        eventType} = doc.data();
+        const id = doc.id;
+        const date = moment(id).format("ddd D MMM");
+        const startTime = moment(id).format("HH:mm");
+
+     
+
+      events.push({
+        date,
+        startTime,
+
+        key: doc.id,
+        doc,
+        eventType,
+        eventFieldID,
+        eventFieldName,
+        //How to fetch name
+        id,
+        endTime
+      });
+    });
+    this.setState({
+      events
+    });
+  };
 
   openPlayerList() {
     this.setModalVisible(false);

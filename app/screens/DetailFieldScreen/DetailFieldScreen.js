@@ -67,6 +67,11 @@ class DetailFieldScreen extends Component {
     header: null
   };
 
+  loadEvents = () => {
+   var ref = firebase.firestore().collection("Teams")
+   const query = 
+  }
+
   startTraining = () => {
     var { params } = this.props.navigation.state;
 

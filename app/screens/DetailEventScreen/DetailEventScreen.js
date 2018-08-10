@@ -5,7 +5,8 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  FlatList
+  FlatList,
+  Modal
 } from "react-native";
 import {
   at,
@@ -13,7 +14,9 @@ import {
   event_details,
   event_in,
   event_open,
-  event_out
+  event_out,
+  field_not_set,
+  delete_event
 } from "../../strings/strings";
 import firebase, { Firebase } from "react-native-firebase";
 
@@ -33,51 +36,105 @@ const mapDispatchToProps = dispatch => {
     getUserData: () => dispatch(getUserData())
   };
 };
- class DetailEventScreen extends Component {
+class DetailEventScreen extends Component {
   static navigationOptions = {
     header: null
   };
 
-  loadPlayersList() {
-    var { params } = this.props.navigation.state;
+  setModalVisible(visible) {
+    this.setState({ infoVisible: visible });
+  }
 
-    const ref = firebase.firestore().collection("Teams");
-
+  onCollectionUpdate = querySnapshot => {
     const players = [];
+    querySnapshot.forEach(doc => {
+      const { usernameMember, state } = doc.data();
 
-    const query = ref
-      .doc(this.props.userData.userTeamID)
-      .collection("Events").doc(params.id).collection("Users");
-    query.get().then(
-      function(doc) {
-        doc.forEach(doc => {
-          const { usernameMember } = doc.data();
-          players.push({
-            key: doc.id,
-            doc,
-            usernameMember
-          });
-        });
+      if (doc.id === firebase.auth().currentUser.uid) {
         this.setState({
-          players
+          selectedIndex: doc.data().state
         });
-      }.bind(this)
-    );
+      }
+
+      players.push({
+        key: doc.id,
+        doc, // DocumentSnapshot
+        usernameMember,
+        state
+      });
+    });
+    this.setState({
+      players
+    });
+  };
+
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   constructor(props) {
     super(props);
-    this.loadPlayersList()
+    var { params } = this.props.navigation.state;
+
+    this.ref = firebase
+      .firestore()
+      .collection("Teams")
+      .doc(this.props.userData.userTeamID)
+      .collection("Events")
+      .doc(params.id)
+      .collection("Users");
+
+    this.unsubscribe = null;
+
     this.state = {
-      selectedIndex: 0,
-      players: []
+      selectedIndex: 1,
+      players: [],
+      infoVisible: false
     };
   }
   updateIndex = selectedIndex => {
+    var { params } = this.props.navigation.state;
+
     this.setState({ selectedIndex }, () => {
-      if (selectedIndex === 1) {
+      if (selectedIndex === 0) {
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.userData.userTeamID)
+          .collection("Events")
+          .doc(params.id)
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .update({
+            state: 0
+          });
+      } else if (selectedIndex === 1) {
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.userData.userTeamID)
+          .collection("Events")
+          .doc(params.id)
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .update({
+            state: 1
+          });
       } else if (selectedIndex === 2) {
-      } else if (selectedIndex === 0) {
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.userData.userTeamID)
+          .collection("Events")
+          .doc(params.id)
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .update({
+            state: 2
+          });
       }
     });
   };
@@ -125,8 +182,64 @@ const mapDispatchToProps = dispatch => {
       );
     }
 
+    if (params.eventFieldName === undefined) {
+      var eventField = <Text style={styles.infoText}>{field_not_set}</Text>;
+    } else {
+      var eventField = (
+        <Text style={styles.infoText}>{params.eventFieldName}</Text>
+      );
+    }
+
+    const deleteEvent = () => {
+      firebase.firestore().collection("Teams").doc(this.props.userData.userTeamID)
+      .collection("Events").doc(params.id).delete().then(()=>{
+        this.props.navigation.goBack()
+      })
+
+    }
+
     return (
       <View style={styles.container}>
+      <Modal
+          transparent={true}
+          visible={this.state.infoVisible}
+          onRequestClose={() => {}}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              backgroundColor: "#00000080",
+              alignItems: "center"
+            }}
+            onPress={() => {
+              this.setModalVisible(!this.state.infoVisible);
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                paddingHorizontal: 30,
+                paddingVertical: 20
+              }}
+              onPress={() => {
+                this.setModalVisible(!this.state.infoVisible);
+              }}
+            >
+             
+
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={() => deleteEvent()}
+              >
+                <Text style={styles.deleteText}>{delete_event}</Text>
+              </TouchableOpacity>
+
+            
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
         <View style={styles.backButtonContainer}>
           <TouchableOpacity
             style={styles.backButton}
@@ -139,6 +252,16 @@ const mapDispatchToProps = dispatch => {
             />
           </TouchableOpacity>
           <Text style={styles.teamName}>{event_details}</Text>
+          <TouchableOpacity
+            style={styles.infoContainer}
+            underlayColor="#bcbcbc"
+            onPress={() => this.setModalVisible(true)}
+          >
+            <Image
+              style={styles.infoIcon}
+              source={require("FieldsReact/app/images/InfoBlack/info_black.png")}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.eventInfoCont}>
           <View style={styles.greenTab} />
@@ -146,7 +269,7 @@ const mapDispatchToProps = dispatch => {
             <Text style={styles.infoTextType}>
               {event_type_array[params.eventType]}
             </Text>
-            <Text style={styles.infoText}>{params.eventFieldName}</Text>
+            {eventField}
             <Text style={styles.infoTextDate}>
               {params.date + "  " + params.startTime + "-" + params.endTime}
             </Text>
@@ -157,18 +280,7 @@ const mapDispatchToProps = dispatch => {
         <FlatList
           data={this.state.players}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.item}
-              onPress={() =>
-                this.props.navigation.navigate("DetailEventScreen", {
-                  eventFieldName: item.eventFieldName,
-                  eventType: item.eventType,
-                  startTime: item.startTime,
-                  endTime: item.endTime,
-                  date: item.date
-                })
-              }
-            >
+            <TouchableOpacity style={styles.item}>
               <PlayerListItem {...item} />
             </TouchableOpacity>
           )}
@@ -191,6 +303,26 @@ const styles = StyleSheet.create({
   buttonGroup: {
     marginTop: 100
   },
+  infoContainer: {
+   
+  },
+
+  deleteText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 24
+  },
+
+  infoIcon: {
+    height: 36,
+    width: 36,
+    margin:4,
+    },
+    buttonContainer: {
+      backgroundColor: "red",
+      padding: 15,
+      borderRadius: 10
+    },
 
   infoTextDate: {
     fontWeight: "600",
