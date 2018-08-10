@@ -40,7 +40,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 class TeamScreen extends Component {
-  
   static navigationOptions = {
     header: null
   };
@@ -53,7 +52,12 @@ class TeamScreen extends Component {
     query.get().then(
       function(doc) {
         doc.forEach(doc => {
-          const { endTime, eventFieldID, eventFieldName, eventType } = doc.data();
+          const {
+            endTime,
+            eventFieldID,
+            eventFieldName,
+            eventType
+          } = doc.data();
           const id = doc.id;
           const date = moment(id).format("ddd D MMM");
           const startTime = moment(id).format("HH:mm");
@@ -330,10 +334,22 @@ class TeamScreen extends Component {
           </TouchableOpacity>
         </View>
         <FlatList
-        style={{marginBottom: 50}}
+          style={{ marginBottom: 50 }}
           data={this.state.events}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() =>
+                this.props.navigation.navigate("DetailEventScreen", {
+                  eventFieldName: item.eventFieldName,
+                  eventType: item.eventType,
+                  startTime: item.startTime,
+                  endTime: item.endTime,
+                  date: item.date,
+                  id: item.id
+                })
+              }
+            >
               <EventListItem {...item} />
             </TouchableOpacity>
           )}

@@ -21,7 +21,7 @@ import {
   event_field
 } from "../../strings/strings";
 var moment = require("moment");
-import firebase from "react-native-firebase";
+import firebase, { Firebase } from "react-native-firebase";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
@@ -178,6 +178,8 @@ class CreateEventScreen extends Component {
     }
 
     const saveEvent = () => {
+      var batch = firebase.firestore().batch();
+
       if (this.state.errorMessage === null) {
         if (params.fieldID === null) {
           firebase
@@ -189,6 +191,30 @@ class CreateEventScreen extends Component {
             .set({
               eventType: this.state.chosenEventType,
               endTime: this.state.endTime
+            })
+            .then(() => {
+              var ref = firebase.firestore().collection("Teams");
+              var query = ref
+                .doc(this.props.userData.userTeamID)
+                .collection("TeamUsers");
+              query.get().then(
+                function(doc) {
+                  doc.forEach(doc => {
+                    firebase
+                      .firestore()
+                      .collection("Teams")
+                      .doc(this.props.userData.userTeamID)
+                      .collection("Events")
+                      .doc(moment(this.state.ogDate).format())
+                      .collection("Users")
+                      .doc(doc.id)
+                      .set({
+                        state: 0,
+                        usernameMember: doc.data().usernameMember
+                      });
+                  });
+                }.bind(this)
+              );
             })
             .then(() => {
               this.props.navigation.navigate("TeamScreen");
@@ -205,6 +231,29 @@ class CreateEventScreen extends Component {
               endTime: this.state.endTime,
               eventFieldID: params.fieldID,
               eventFieldName: params.fieldName
+            }).then(() => {
+              var ref = firebase.firestore().collection("Teams");
+              var query = ref
+                .doc(this.props.userData.userTeamID)
+                .collection("TeamUsers");
+              query.get().then(
+                function(doc) {
+                  doc.forEach(doc => {
+                    firebase
+                      .firestore()
+                      .collection("Teams")
+                      .doc(this.props.userData.userTeamID)
+                      .collection("Events")
+                      .doc(moment(this.state.ogDate).format())
+                      .collection("Users")
+                      .doc(doc.id)
+                      .set({
+                        state: 0,
+                        usernameMember: doc.data().usernameMember
+                      });
+                  });
+                }.bind(this)
+              );
             })
             .then(() => {
               this.props.navigation.navigate("TeamScreen");

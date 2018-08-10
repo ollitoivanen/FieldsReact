@@ -455,6 +455,7 @@ if(params.fromEvent !== true){
             value={this.state.fieldSearchTerm}
           />
 
+
           <ButtonGroup
             onPress={this.updateIndex}
             selectedIndex={selectedIndex}
