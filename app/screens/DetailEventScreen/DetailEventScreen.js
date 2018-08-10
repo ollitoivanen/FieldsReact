@@ -81,8 +81,7 @@ class DetailEventScreen extends Component {
 
     this.ref = firebase
       .firestore()
-      .collection("Teams")
-      .doc(this.props.userData.userTeamID)
+      
       .collection("Events")
       .doc(params.id)
       .collection("Users");
@@ -102,8 +101,7 @@ class DetailEventScreen extends Component {
       if (selectedIndex === 0) {
         firebase
           .firestore()
-          .collection("Teams")
-          .doc(this.props.userData.userTeamID)
+         
           .collection("Events")
           .doc(params.id)
           .collection("Users")
@@ -114,8 +112,7 @@ class DetailEventScreen extends Component {
       } else if (selectedIndex === 1) {
         firebase
           .firestore()
-          .collection("Teams")
-          .doc(this.props.userData.userTeamID)
+          
           .collection("Events")
           .doc(params.id)
           .collection("Users")
@@ -126,8 +123,7 @@ class DetailEventScreen extends Component {
       } else if (selectedIndex === 2) {
         firebase
           .firestore()
-          .collection("Teams")
-          .doc(this.props.userData.userTeamID)
+      
           .collection("Events")
           .doc(params.id)
           .collection("Users")

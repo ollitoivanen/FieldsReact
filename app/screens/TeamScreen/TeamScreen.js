@@ -49,17 +49,14 @@ class TeamScreen extends Component {
   componentWillUnmount() {
     this.unsubscribe();
   }
-  
+
   constructor(props) {
     super(props);
 
     this.ref = firebase
       .firestore()
-      .collection("Teams")
-      .doc(this.props.userData.userTeamID)
-      .collection("Events")
-          this.unsubscribe = null;
-
+      .collection("Events").where("team", "==", this.props.userData.userTeamID);
+    this.unsubscribe = null;
 
     this.state = {
       events: [],
@@ -74,15 +71,10 @@ class TeamScreen extends Component {
   onCollectionUpdate = querySnapshot => {
     const events = [];
     querySnapshot.forEach(doc => {
-      const {  endTime,
-        eventFieldID,
-        eventFieldName,
-        eventType} = doc.data();
-        const id = doc.id;
-        const date = moment(id).format("ddd D MMM");
-        const startTime = moment(id).format("HH:mm");
-
-     
+      const { endTime, eventFieldID, eventFieldName, eventType } = doc.data();
+      const id = doc.id;
+      const date = moment(id).format("ddd D MMM");
+      const startTime = moment(id).format("HH:mm");
 
       events.push({
         date,

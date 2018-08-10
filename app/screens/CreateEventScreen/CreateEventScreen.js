@@ -178,19 +178,18 @@ class CreateEventScreen extends Component {
     }
 
     const saveEvent = () => {
-      var batch = firebase.firestore().batch();
 
       if (this.state.errorMessage === null) {
         if (params.fieldID === null) {
           firebase
             .firestore()
-            .collection("Teams")
-            .doc(this.props.userData.userTeamID)
+            
             .collection("Events")
             .doc(moment(this.state.ogDate).format())
             .set({
               eventType: this.state.chosenEventType,
-              endTime: this.state.endTime
+              endTime: this.state.endTime,
+              team: this.props.userData.userTeamID
             })
             .then(() => {
               var ref = firebase.firestore().collection("Teams");
@@ -202,8 +201,6 @@ class CreateEventScreen extends Component {
                   doc.forEach(doc => {
                     firebase
                       .firestore()
-                      .collection("Teams")
-                      .doc(this.props.userData.userTeamID)
                       .collection("Events")
                       .doc(moment(this.state.ogDate).format())
                       .collection("Users")
@@ -222,15 +219,16 @@ class CreateEventScreen extends Component {
         } else {
           firebase
             .firestore()
-            .collection("Teams")
-            .doc(this.props.userData.userTeamID)
+           
             .collection("Events")
             .doc(moment(this.state.ogDate).format())
             .set({
               eventType: this.state.chosenEventType,
               endTime: this.state.endTime,
               eventFieldID: params.fieldID,
-              eventFieldName: params.fieldName
+              eventFieldName: params.fieldName,
+              team: this.props.userData.userTeamID
+
             }).then(() => {
               var ref = firebase.firestore().collection("Teams");
               var query = ref
@@ -241,8 +239,7 @@ class CreateEventScreen extends Component {
                   doc.forEach(doc => {
                     firebase
                       .firestore()
-                      .collection("Teams")
-                      .doc(this.props.userData.userTeamID)
+                     
                       .collection("Events")
                       .doc(moment(this.state.ogDate).format())
                       .collection("Users")
