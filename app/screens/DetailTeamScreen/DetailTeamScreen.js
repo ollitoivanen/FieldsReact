@@ -39,96 +39,58 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-class TeamScreen extends Component {
+class DetailTeamScreen extends Component {
   static navigationOptions = {
     header: null
   };
-  componentDidMount() {
-    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
-  }
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
 
   constructor(props) {
     super(props);
-
-    this.ref = firebase
-      .firestore()
-      .collection("Events")
-      .where("team", "==", this.props.userData.userTeamID);
-    this.unsubscribe = null;
+    var { params } = this.props.navigation.state;
+    this.loadEvents();
 
     this.state = {
       events: [],
       infoVisible: false,
       editVisible: false,
-      players: [], // remove text prefix here
-      teamUsernameEdit: this.props.usersTeamData.teamUsername,
-      teamFullNameEdit: this.props.usersTeamData.teamFullName
+      players: [] // remove text prefix here
     };
   }
 
-  deleteEvent = id => {
-    firebase
-      .firestore()
-      .collection("Events")
-      .doc(id)
-      .collection("Users")
-      .get()
-      .then(
-        function(doc) {
-          doc.forEach(doc => {
-            firebase
-              .firestore()
-              .collection("Events")
-              .doc(id)
-              .collection("Users")
-              .doc(doc.id)
-              .delete();
-          });
-        }.bind(this)
-      )
-      //Arrow function waits till the whole collection is deleted!
-      .then(() => {
-        firebase
-          .firestore()
-          .collection("Events")
-          .doc(id)
-          .delete();
-      });
-  };
-
-  onCollectionUpdate = querySnapshot => {
+  loadEvents = () => {
+    var { params } = this.props.navigation.state;
+    var ref = firebase.firestore().collection("Events");
+    const query = ref.where("team", "==", params.teamID);
+    //Rules
     const events = [];
-    querySnapshot.forEach(doc => {
-      const { endTime, eventFieldID, eventFieldName, eventType } = doc.data();
-      const id = doc.id;
-      const date = moment(id).format("ddd D MMM");
-      const startTime = moment(id).format("HH:mm");
+    query.get().then(function(doc) {
+      doc.forEach(doc => {
+        const { endTime, eventFieldID, eventFieldName, eventType } = doc.data();
+        const id = doc.id;
+        const date = moment(id).format("ddd D MMM");
+        const startTime = moment(id).format("HH:mm");
 
-      var diff = moment().format("x") - moment(id).format("x");
-      if (diff > 86400000) {
-        this.deleteEvent(id);
-      }
+       
 
-      events.push({
-        date,
-        startTime,
+        events.push({
+          date,
+          startTime,
 
-        key: doc.id,
-        doc,
-        eventType,
-        eventFieldID,
-        eventFieldName,
-        //How to fetch name
-        id,
-        endTime
+          key: doc.id,
+          doc,
+          eventType,
+          eventFieldID,
+          eventFieldName,
+          //How to fetch name
+          id,
+          endTime
+        });
       });
-    });
-    this.setState({
-      events
-    });
+      this.setState({
+        events
+      });
+    }.bind(this)
+);
   };
 
   openPlayerList() {
@@ -140,127 +102,11 @@ class TeamScreen extends Component {
     this.setState({ infoVisible: visible });
   }
 
-  setEditVisible(visible) {
-    this.setState({ infoVisible: false, editVisible: visible });
-  }
-
   render() {
-    const saveTeamData = () => {
-      if (
-        this.state.teamFullNameEdit === this.props.usersTeamData.teamFullName &&
-        this.state.teamUsernameEdit === this.props.usersTeamData.teamUsername
-      ) {
-        this.setEditVisible(false);
-        //Only saving the changed
-      } else if (
-        this.state.teamFullNameEdit !== this.props.usersTeamData.teamFullName &&
-        this.state.teamUsernameEdit === this.props.usersTeamData.teamUsername
-      ) {
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(this.props.usersTeamData.id)
-          .update({
-            teamFullName: this.state.teamFullNameEdit
-          })
-          .then(() => {
-            this.props.getUserData();
-          })
-
-          .then(() => {
-            this.setEditVisible(false);
-          });
-      } else if (
-        this.state.teamFullNameEdit === this.props.usersTeamData.teamFullName &&
-        this.state.teamUsernameEdit !== this.props.usersTeamData.teamUsername
-      ) {
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(this.props.usersTeamData.id)
-          .update({
-            teamUsername: this.state.teamUsernameEdit
-          })
-          .then(() => {
-            this.props.getUserData();
-          })
-
-          .then(() => {
-            this.setEditVisible(false);
-          });
-      } else if (
-        this.state.teamFullNameEdit !== this.props.usersTeamData.teamFullName &&
-        this.state.teamUsernameEdit !== this.props.usersTeamData.teamUsername
-      ) {
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(this.props.usersTeamData.id)
-          .update({
-            teamUsername: this.state.teamUsernameEdit,
-            teamFullName: this.state.teamFullNameEdit
-          })
-          .then(() => {
-            this.props.getUserData();
-          })
-
-          .then(() => {
-            this.setEditVisible(false);
-          });
-      }
-    };
+    var { params } = this.props.navigation.state;
 
     return (
       <View style={styles.container}>
-        <Modal visible={this.state.editVisible} onRequestClose={() => {}}>
-          <View style={styles.editContainer}>
-            <View style={styles.greenRowContainer}>
-              <TouchableOpacity
-                style={styles.backButton}
-                underlayColor="#bcbcbc"
-                onPress={() => this.setEditVisible(false)}
-              >
-                <Image
-                  style={styles.backButton}
-                  source={require("FieldsReact/app/images/BackButton/back_button.png")}
-                />
-              </TouchableOpacity>
-              <Text style={styles.teamName}>{edit_team}</Text>
-            </View>
-
-            <Text style={styles.headerText}>{team_username}</Text>
-            <TextInput
-              style={styles.textInput}
-              maxLength={30}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder={team_username}
-              value={this.state.teamUsernameEdit}
-              onChangeText={teamUsernameEdit =>
-                this.setState({ teamUsernameEdit })
-              }
-            />
-            <Text style={styles.headerText}>{team_full_name}</Text>
-
-            <TextInput
-              style={styles.textInput}
-              maxLength={30}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder={team_full_name}
-              value={this.state.teamFullNameEdit}
-              onChangeText={teamFullNameEdit =>
-                this.setState({ teamFullNameEdit })
-              }
-            />
-
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => saveTeamData()}
-            >
-              <Text style={styles.buttonText}>{save}</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-
         <Modal
           transparent={true}
           visible={this.state.infoVisible}
@@ -305,13 +151,6 @@ class TeamScreen extends Component {
               >
                 <Text style={styles.infoText}>{players}</Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.editTeamButton}
-                onPress={() => this.setEditVisible(true)}
-              >
-                <Text style={styles.buttonText}>{edit_team}</Text>
-              </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
@@ -327,9 +166,7 @@ class TeamScreen extends Component {
                 source={require("FieldsReact/app/images/BackButton/back_button.png")}
               />
             </TouchableOpacity>
-            <Text style={styles.teamName}>
-              {this.props.usersTeamData.teamUsername}
-            </Text>
+            <Text style={styles.teamName}>{params.teamUsername}</Text>
           </View>
           <View style={styles.greenRowContainer}>
             <Image
@@ -339,9 +176,7 @@ class TeamScreen extends Component {
               resizeMode="cover"
             />
 
-            <Text style={styles.teamFullName}>
-              {this.props.usersTeamData.teamFullName}
-            </Text>
+            <Text style={styles.teamFullName}>{params.teamFullName}</Text>
           </View>
 
           <TouchableOpacity
@@ -438,7 +273,7 @@ class TeamScreen extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TeamScreen);
+)(DetailTeamScreen);
 
 const styles = StyleSheet.create({
   container: {

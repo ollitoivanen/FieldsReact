@@ -162,145 +162,99 @@ class FieldSearchScreen extends Component {
     });
   };
 
-  searchFields = typedText => {
-    this.setState({ fieldSearchTerm: typedText }, () => {
-      const fields = [];
-      const ref = firebase.firestore().collection("Fields");
-      if (this.state.selectedIndex === 1) {
-        const query = ref.where(
-          "fieldNameLowerCase",
-          "==",
-          this.state.fieldSearchTerm.toLowerCase().trim()
-        );
+  searchAfterSetState = () => {
+    const fields = [];
+    const ref = firebase.firestore().collection("Fields");
+    if (this.state.selectedIndex === 1) {
+      const query = ref.where(
+        "fieldNameLowerCase",
+        "==",
+        this.state.fieldSearchTerm.toLowerCase().trim()
+      );
 
-        query.get().then(
-          function(doc) {
-            doc.forEach(doc => {
-              const {
-                fieldName,
-                fieldArea,
-                fieldID,
-                fieldNameLowerCase,
-                fieldAreaLowerCase,
-                fieldType,
-                goalCount,
-                accessType,
-                fieldAddress,
-                peopleHere
-              } = doc.data();
-              fields.push({
-                key: doc.id,
-                doc,
-                fieldName,
-                fieldArea,
-                fieldAreaLowerCase,
-                fieldNameLowerCase,
-                fieldID,
-                fieldType,
-                goalCount,
-                accessType,
-                fieldAddress,
-                peopleHere
-              });
+      query.get().then(
+        function(doc) {
+          doc.forEach(doc => {
+            const {
+              fieldName,
+              fieldArea,
+              fieldID,
+              fieldNameLowerCase,
+              fieldAreaLowerCase,
+              fieldType,
+              goalCount,
+              accessType,
+              fieldAddress,
+              peopleHere
+            } = doc.data();
+            fields.push({
+              key: doc.id,
+              doc,
+              fieldName,
+              fieldArea,
+              fieldAreaLowerCase,
+              fieldNameLowerCase,
+              fieldID,
+              fieldType,
+              goalCount,
+              accessType,
+              fieldAddress,
+              peopleHere
             });
-            this.setState({
-              fields
-            });
-          }.bind(this)
-        );
-      } else if (this.state.selectedIndex === 2) {
-        const query = ref.where(
-          "fieldAreaLowerCase",
-          "==",
-          this.state.fieldSearchTerm.toLowerCase().trim()
-        );
+          });
+          this.setState({
+            fields
+          });
+        }.bind(this)
+      );
+    } else if (this.state.selectedIndex === 2) {
+      const query = ref.where(
+        "fieldAreaLowerCase",
+        "==",
+        this.state.fieldSearchTerm.toLowerCase().trim()
+      );
 
-        query.get().then(
-          function(doc) {
-            doc.forEach(doc => {
-              const {
-                fieldName,
-                fieldArea,
-                fieldID,
-                fieldNameLowerCase,
-                fieldAreaLowerCase,
-                fieldType,
-                goalCount,
-                accessType,
-                fieldAddress,
-                peopleHere
-              } = doc.data();
-              fields.push({
-                key: doc.id,
-                doc,
-                fieldName,
-                fieldArea,
-                fieldAreaLowerCase,
-                fieldNameLowerCase,
-                fieldID,
-                fieldType,
-                goalCount,
-                accessType,
-                fieldAddress,
-                peopleHere
-              });
+      query.get().then(
+        function(doc) {
+          doc.forEach(doc => {
+            const {
+              fieldName,
+              fieldArea,
+              fieldID,
+              fieldNameLowerCase,
+              fieldAreaLowerCase,
+              fieldType,
+              goalCount,
+              accessType,
+              fieldAddress,
+              peopleHere
+            } = doc.data();
+            fields.push({
+              key: doc.id,
+              doc,
+              fieldName,
+              fieldArea,
+              fieldAreaLowerCase,
+              fieldNameLowerCase,
+              fieldID,
+              fieldType,
+              goalCount,
+              accessType,
+              fieldAddress,
+              peopleHere
             });
-            this.setState({
-              fields
-            });
-          }.bind(this)
-        );
-      } else if (this.state.selectedIndex === 0) {
-        var { params } = this.props.navigation.state;
-        if (this.state.fieldSearchTerm.trim().length === 0) {
-          const query = ref
-            .where("fieldAreaLowerCase", "==", this.state.homeAreaConst)
-            .limit(50);
-
-          query.get().then(
-            function(doc) {
-              doc.forEach(doc => {
-                const {
-                  fieldName,
-                  fieldArea,
-                  fieldID,
-                  fieldNameLowerCase,
-                  fieldAreaLowerCase,
-                  fieldType,
-                  goalCount,
-                  accessType,
-                  fieldAddress,
-                  peopleHere
-                } = doc.data();
-                fields.push({
-                  key: doc.id,
-                  doc,
-                  fieldName,
-                  fieldArea,
-                  fieldAreaLowerCase,
-                  fieldNameLowerCase,
-                  fieldID,
-                  fieldType,
-                  goalCount,
-                  accessType,
-                  fieldAddress,
-                  peopleHere
-                });
-              });
-              this.setState({
-                fields
-              });
-            }.bind(this)
-          );
-        }
-
+          });
+          this.setState({
+            fields
+          });
+        }.bind(this)
+      );
+    } else if (this.state.selectedIndex === 0) {
+      var { params } = this.props.navigation.state;
+      if (this.state.fieldSearchTerm.trim().length === 0) {
         const query = ref
           .where("fieldAreaLowerCase", "==", this.state.homeAreaConst)
-          .where(
-            "fieldNameLowerCase",
-            "==",
-            this.state.fieldSearchTerm.toLowerCase().trim()
-          );
+          .limit(50);
 
         query.get().then(
           function(doc) {
@@ -338,7 +292,55 @@ class FieldSearchScreen extends Component {
           }.bind(this)
         );
       }
-    });
+
+      const query = ref
+        .where("fieldAreaLowerCase", "==", this.state.homeAreaConst)
+        .where(
+          "fieldNameLowerCase",
+          "==",
+          this.state.fieldSearchTerm.toLowerCase().trim()
+        );
+
+      query.get().then(
+        function(doc) {
+          doc.forEach(doc => {
+            const {
+              fieldName,
+              fieldArea,
+              fieldID,
+              fieldNameLowerCase,
+              fieldAreaLowerCase,
+              fieldType,
+              goalCount,
+              accessType,
+              fieldAddress,
+              peopleHere
+            } = doc.data();
+            fields.push({
+              key: doc.id,
+              doc,
+              fieldName,
+              fieldArea,
+              fieldAreaLowerCase,
+              fieldNameLowerCase,
+              fieldID,
+              fieldType,
+              goalCount,
+              accessType,
+              fieldAddress,
+              peopleHere
+            });
+          });
+          this.setState({
+            fields
+          });
+        }.bind(this)
+      );
+    }
+  };
+
+  searchFields = typedText => {
+    this.setState({ fieldSearchTerm: typedText }, this.searchAfterSetState);
   };
 
   render() {
@@ -371,78 +373,79 @@ class FieldSearchScreen extends Component {
       input = null;
     }
 
-const openFieldDetail = (item)=>{
-  var { params } = this.props.navigation.state;
+    const openFieldDetail = item => {
+      var { params } = this.props.navigation.state;
 
-  if(params.fromEvent === false){
-  this.props.navigation.navigate("DetailFieldScreen", {
-    fieldName: item.fieldName,
-    fieldAreaLowerCase: item.fieldAreaLowerCase,
-    fieldNameLowerCase: item.fieldNameLowerCase,
-    fieldArea: item.fieldArea,
-    fieldID: item.fieldID,
-    fieldType: item.fieldType,
-    goalCount: item.goalCount,
-    accessType: item.accessType,
-    fieldAddress: item.fieldAddress,
-    peopleHere: item.peopleHere,
-    userID: this.props.userData.userID,
-    currentFieldID: this.props.userData.currentFieldID,
-    currentFieldName: this.props.userData.currentFieldName,
-    timestamp: this.props.userData.timestamp,
-    trainingCount: this.props.userData.trainingCount,
-    reputation: this.props.userData.reputation
-  })
-}else{
-  this.props.navigation.navigate("CreateEventScreen", {fieldName: item.fieldName, fieldID: item.fieldID})
+      if (params.fromEvent === false) {
+        this.props.navigation.navigate("DetailFieldScreen", {
+          fieldName: item.fieldName,
+          fieldAreaLowerCase: item.fieldAreaLowerCase,
+          fieldNameLowerCase: item.fieldNameLowerCase,
+          fieldArea: item.fieldArea,
+          fieldID: item.fieldID,
+          fieldType: item.fieldType,
+          goalCount: item.goalCount,
+          accessType: item.accessType,
+          fieldAddress: item.fieldAddress,
+          peopleHere: item.peopleHere,
+          userID: this.props.userData.userID,
+          currentFieldID: this.props.userData.currentFieldID,
+          currentFieldName: this.props.userData.currentFieldName,
+          timestamp: this.props.userData.timestamp,
+          trainingCount: this.props.userData.trainingCount,
+          reputation: this.props.userData.reputation
+        });
+      } else {
+        this.props.navigation.navigate("CreateEventScreen", {
+          fieldName: item.fieldName,
+          fieldID: item.fieldID
+        });
 
-  //Add field data here next. things are going great!
-}
-
-
-}
-
-if(params.fromEvent !== true){
-  var navigation =  <View style={styles.navigationContainer}>
-  <View style={styles.navigationContainerIn}>
-    <TouchableOpacity
-      onPress={() =>
-        this.props.navigation.navigate("FeedScreen", {
-          homeCityAdded: this.state.home
-        })
+        //Add field data here next. things are going great!
       }
-      style={styles.navigationItem}
-      underlayColor="#bcbcbc"
-    >
-      <Image
-        style={styles.navigationImage}
-        source={require("FieldsReact/app/images/Home/home.png")}
-      />
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.navigationItemBlue}>
-      <Image
-        style={styles.navigationImage}
-        source={require("FieldsReact/app/images/Field/field_icon.png")}
-      />
-    </TouchableOpacity>
-    <TouchableOpacity
-      style={styles.navigationItem}
-      onPress={() =>
-        this.props.navigation.navigate("ProfileScreen", {})
-      }
-    >
-      <Image
-        style={styles.navigationImage}
-        source={require("FieldsReact/app/images/Profile/profile.png")}
-      />
-    </TouchableOpacity>
-  </View>
-</View>
+    };
 
-}else {
-  var navigation = null
-}
-
+    if (params.fromEvent !== true) {
+      var navigation = (
+        <View style={styles.navigationContainer}>
+          <View style={styles.navigationContainerIn}>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("FeedScreen", {
+                  homeCityAdded: this.state.home
+                })
+              }
+              style={styles.navigationItem}
+              underlayColor="#bcbcbc"
+            >
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Home/home.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navigationItemBlue}>
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Field/field_icon.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navigationItem}
+              onPress={() =>
+                this.props.navigation.navigate("ProfileScreen", {})
+              }
+            >
+              <Image
+                style={styles.navigationImage}
+                source={require("FieldsReact/app/images/Profile/profile.png")}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    } else {
+      var navigation = null;
+    }
 
     return (
       <View style={styles.container}>
@@ -454,7 +457,6 @@ if(params.fromEvent !== true){
             underlineColorAndroid="rgba(0,0,0,0)"
             value={this.state.fieldSearchTerm}
           />
-
 
           <ButtonGroup
             onPress={this.updateIndex}
@@ -483,16 +485,13 @@ if(params.fromEvent !== true){
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.item}
-              onPress={() => openFieldDetail(item)
-                
-              }
+              onPress={() => openFieldDetail(item)}
             >
               <FieldSearchItem {...item} />
             </TouchableOpacity>
           )}
         />
         {navigation}
-       
       </View>
     );
   }

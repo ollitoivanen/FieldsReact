@@ -81,7 +81,7 @@ class DetailEventScreen extends Component {
 
     this.ref = firebase
       .firestore()
-      
+
       .collection("Events")
       .doc(params.id)
       .collection("Users");
@@ -101,7 +101,7 @@ class DetailEventScreen extends Component {
       if (selectedIndex === 0) {
         firebase
           .firestore()
-         
+
           .collection("Events")
           .doc(params.id)
           .collection("Users")
@@ -112,7 +112,7 @@ class DetailEventScreen extends Component {
       } else if (selectedIndex === 1) {
         firebase
           .firestore()
-          
+
           .collection("Events")
           .doc(params.id)
           .collection("Users")
@@ -123,7 +123,7 @@ class DetailEventScreen extends Component {
       } else if (selectedIndex === 2) {
         firebase
           .firestore()
-      
+
           .collection("Events")
           .doc(params.id)
           .collection("Users")
@@ -187,16 +187,41 @@ class DetailEventScreen extends Component {
     }
 
     const deleteEvent = () => {
-      firebase.firestore().collection("Teams").doc(this.props.userData.userTeamID)
-      .collection("Events").doc(params.id).delete().then(()=>{
-        this.props.navigation.goBack()
-      })
-
-    }
+      firebase
+        .firestore()
+        .collection("Events")
+        .doc(params.id)
+        .collection("Users")
+        .get()
+        .then(
+          function(doc) {
+            doc.forEach(doc => {
+              firebase
+                .firestore()
+                .collection("Events")
+                .doc(params.id)
+                .collection("Users")
+                .doc(doc.id)
+                .delete();
+            });
+          }.bind(this)
+        )
+        //Arrow function waits till the whole collection is deleted!
+        .then(() => {
+          firebase
+            .firestore()
+            .collection("Events")
+            .doc(params.id)
+            .delete();
+        })
+        .then(() => {
+          this.props.navigation.goBack();
+        });
+    };
 
     return (
       <View style={styles.container}>
-      <Modal
+        <Modal
           transparent={true}
           visible={this.state.infoVisible}
           onRequestClose={() => {}}
@@ -223,16 +248,12 @@ class DetailEventScreen extends Component {
                 this.setModalVisible(!this.state.infoVisible);
               }}
             >
-             
-
               <TouchableOpacity
                 style={styles.buttonContainer}
                 onPress={() => deleteEvent()}
               >
                 <Text style={styles.deleteText}>{delete_event}</Text>
               </TouchableOpacity>
-
-            
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
@@ -299,9 +320,7 @@ const styles = StyleSheet.create({
   buttonGroup: {
     marginTop: 100
   },
-  infoContainer: {
-   
-  },
+  infoContainer: {},
 
   deleteText: {
     color: "white",
@@ -312,13 +331,13 @@ const styles = StyleSheet.create({
   infoIcon: {
     height: 36,
     width: 36,
-    margin:4,
-    },
-    buttonContainer: {
-      backgroundColor: "red",
-      padding: 15,
-      borderRadius: 10
-    },
+    margin: 4
+  },
+  buttonContainer: {
+    backgroundColor: "red",
+    padding: 15,
+    borderRadius: 10
+  },
 
   infoTextDate: {
     fontWeight: "600",

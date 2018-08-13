@@ -81,7 +81,21 @@ class FeedScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        {teamCard}
+      <View style={styles.rowCont}>
+      {teamCard}
+
+      <TouchableOpacity
+            style={styles.infoContainer}
+            underlayColor="#bcbcbc"
+            onPress={() => this.props.navigation.navigate("SearchScreen")}
+          >
+            <Image
+              style={styles.infoIcon}
+              source={require("FieldsReact/app/images/Search/search.png")}
+            />
+          </TouchableOpacity>
+
+      </View>
 
         <Text
           style={styles.container1}
@@ -136,6 +150,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
 
+  rowCont: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 40
+  },
+
   container1: {
     justifyContent: "center",
     alignItems: "center",
@@ -164,6 +184,19 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
+  infoContainer: {
+   
+    height: 36,
+    width: 36,
+    marginEnd: 15,
+    marginStart: 5
+  },
+
+  infoIcon: {
+    height: 36,
+    width: 36
+  },
+
   navigationImage: {
     height: 35,
     width: 35
@@ -175,8 +208,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 5,
     borderColor: "#e0e0e0",
-    marginTop: 40,
-    width: "95%"
+    marginHorizontal: 10,
+    flex: 1
   },
 
   teamCardText: {

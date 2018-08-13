@@ -80,7 +80,9 @@ componentWillReceiveProps(){
 
 
   render() {
-    return <View style={styles.container} />;
+    return <View style={styles.container}>
+   <Text>Loading</Text>
+    </View>;
   }
 }
 
