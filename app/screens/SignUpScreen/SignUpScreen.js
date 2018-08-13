@@ -11,8 +11,7 @@ import {
   Linking,
   Modal,
   ActivityIndicator,
-  Dimensions,
-  
+  Dimensions
 } from "react-native";
 import {
   email,
@@ -74,20 +73,7 @@ export default class SignUpScreen extends React.Component {
         .then(() =>
           this.ref.doc(firebase.auth().currentUser.uid).set({
             username: this.state.username1.toLowerCase(),
-            realName: "",
-            userID: firebase.auth().currentUser.uid,
-            currentFieldID: "",
-            currentFieldName: "",
-            homeCity: "",
-            role: 0,
-            position: -1,
-            reputation: 0,
-            userTeamID: null,
-            trainingCount: 0,
-            friendCount: 0,
-            timestamp: null,
-            token: null, //Needs to be changed when creating notifications
-            fieldsPlus: false
+           
           })
         )
         .then(() => this.props.navigation.navigate("FeedScreen"));

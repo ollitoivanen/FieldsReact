@@ -35,7 +35,7 @@ class TrainingScreen extends Component {
   };
   constructor(props) {
     super(props);
-    
+
     this.ref = firebase.firestore().collection("Users");
 
     var { params } = this.props.navigation.state;
@@ -43,7 +43,7 @@ class TrainingScreen extends Component {
       trainingTime: "",
       currentFieldID: "",
       startTime: params.startTime, //ONly thing via params
-      currentTime: moment().format("x"),
+      currentTime: moment().format("x")
     };
   }
 
@@ -80,9 +80,9 @@ class TrainingScreen extends Component {
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
-          currentFieldID: "",
-          currentFieldName: "",
-          timestamp: null
+          cFI: firebase.firestore.FieldValue.delete(),
+          cFN: firebase.firestore.FieldValue.delete(),
+          ts: firebase.firestore.FieldValue.delete()
         })
         .then(() => {
           firebase
@@ -91,16 +91,14 @@ class TrainingScreen extends Component {
             .doc(params.fieldID)
             .get()
             .then(function(doc) {
-
               firebase
-              .firestore()
-              .collection("Fields")
-              .doc(params.fieldID)
-              .update({
-                peopleHere: doc.data().peopleHere -1
-              });
-            })
-            
+                .firestore()
+                .collection("Fields")
+                .doc(params.fieldID)
+                .update({
+                  pH: doc.data().pH - 1
+                });
+            });
         })
 
         .then(() => {
@@ -116,9 +114,25 @@ class TrainingScreen extends Component {
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
-          currentFieldID: "",
-          currentFieldName: "",
-          timestamp: null
+          cFI: firebase.firestore.FieldValue.delete(),
+          cFN: firebase.firestore.FieldValue.delete(),
+          ts: firebase.firestore.FieldValue.delete()
+        })
+        .then(() => {
+          firebase
+            .firestore()
+            .collection("Fields")
+            .doc(params.fieldID)
+            .get()
+            .then(function(doc) {
+              firebase
+                .firestore()
+                .collection("Fields")
+                .doc(params.fieldID)
+                .update({
+                  pH: doc.data().pH - 1
+                });
+            });
         })
         .then(() => {
           this.props.getUserData();
@@ -136,11 +150,27 @@ class TrainingScreen extends Component {
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
-          reputation: newReputation,
-          trainingCount: this.props.userData.trainingCount + 1,
-          currentFieldID: "",
-          currentFieldName: "",
-          timestamp: null
+          re: newReputation,
+          trainingCount: this.props.userData.tC + 1,
+          cFI: firebase.firestore.FieldValue.delete(),
+          cFN: firebase.firestore.FieldValue.delete(),
+          ts: firebase.firestore.FieldValue.delete()
+        })
+        .then(() => {
+          firebase
+            .firestore()
+            .collection("Fields")
+            .doc(params.fieldID)
+            .get()
+            .then(function(doc) {
+              firebase
+                .firestore()
+                .collection("Fields")
+                .doc(params.fieldID)
+                .update({
+                  pH: doc.data().pH - 1
+                });
+            });
         })
         .then(() => {
           this.props.getUserData();
@@ -177,9 +207,7 @@ class TrainingScreen extends Component {
 
           <Text style={styles.headerText}>{currently_training_at}</Text>
           <View style={styles.roundBackground}>
-            <Text style={styles.fieldText}>
-              {this.props.userData.currentFieldName}
-            </Text>
+            <Text style={styles.fieldText}>{this.props.userData.cFN}</Text>
           </View>
           <Text style={styles.headerText}>{training_time}</Text>
 

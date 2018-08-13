@@ -13,7 +13,7 @@ import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
 import { info, players, edit_team } from "../../strings/strings";
 import firebase from "react-native-firebase";
-import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
+import TeamPlayerListItem from "FieldsReact/app/components/TeamPlayerListItem/TeamPlayerListItem"; // we'll create this next
 
 const mapStateToProps = state => {
   return {
@@ -50,16 +50,16 @@ class TeamPlayerScreen extends Component {
     const players = [];
 
     const query = ref
-      .doc(this.props.userData.userTeamID)
-      .collection("TeamUsers");
+      .doc(this.props.userData.uTI)
+      .collection("TU");
     query.get().then(
       function(doc) {
         doc.forEach(doc => {
-          const { usernameMember } = doc.data();
+          const { unM } = doc.data();
           players.push({
             key: doc.id,
             doc,
-            usernameMember
+            unM
           });
         });
         this.setState({
@@ -89,7 +89,7 @@ class TeamPlayerScreen extends Component {
           data={this.state.players}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.item}>
-              <PlayerListItem {...item} />
+              <TeamPlayerListItem {...item} />
             </TouchableOpacity>
           )}
         />

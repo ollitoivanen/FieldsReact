@@ -48,19 +48,19 @@ class DetailEventScreen extends Component {
   onCollectionUpdate = querySnapshot => {
     const players = [];
     querySnapshot.forEach(doc => {
-      const { usernameMember, state } = doc.data();
+      const { unE, st } = doc.data();
 
       if (doc.id === firebase.auth().currentUser.uid) {
         this.setState({
-          selectedIndex: doc.data().state
+          selectedIndex: doc.data().st
         });
       }
 
       players.push({
         key: doc.id,
         doc, // DocumentSnapshot
-        usernameMember,
-        state
+        unE,
+        st
       });
     });
     this.setState({
@@ -84,7 +84,7 @@ class DetailEventScreen extends Component {
 
       .collection("Events")
       .doc(params.id)
-      .collection("Users");
+      .collection("EU");
 
     this.unsubscribe = null;
 
@@ -104,10 +104,10 @@ class DetailEventScreen extends Component {
 
           .collection("Events")
           .doc(params.id)
-          .collection("Users")
+          .collection("EU")
           .doc(firebase.auth().currentUser.uid)
           .update({
-            state: 0
+            st: 0
           });
       } else if (selectedIndex === 1) {
         firebase
@@ -115,10 +115,10 @@ class DetailEventScreen extends Component {
 
           .collection("Events")
           .doc(params.id)
-          .collection("Users")
+          .collection("EU")
           .doc(firebase.auth().currentUser.uid)
           .update({
-            state: 1
+            st: 1
           });
       } else if (selectedIndex === 2) {
         firebase
@@ -126,10 +126,10 @@ class DetailEventScreen extends Component {
 
           .collection("Events")
           .doc(params.id)
-          .collection("Users")
+          .collection("EU")
           .doc(firebase.auth().currentUser.uid)
           .update({
-            state: 2
+            st: 2
           });
       }
     });
@@ -191,7 +191,7 @@ class DetailEventScreen extends Component {
         .firestore()
         .collection("Events")
         .doc(params.id)
-        .collection("Users")
+        .collection("EU")
         .get()
         .then(
           function(doc) {
@@ -200,7 +200,7 @@ class DetailEventScreen extends Component {
                 .firestore()
                 .collection("Events")
                 .doc(params.id)
-                .collection("Users")
+                .collection("EU")
                 .doc(doc.id)
                 .delete();
             });

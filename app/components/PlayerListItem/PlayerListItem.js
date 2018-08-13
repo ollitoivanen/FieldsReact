@@ -4,22 +4,22 @@ export default class PlayerListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
   render() {
-    if (this.props.state === 0) {
+    if (this.props.st === 0) {
       var usernameText = (
         <Text style={styles.textGreen} numberOfLines={2}>
-          {this.props.usernameMember}
+          {this.props.unE}
         </Text>
       );
-    }else if(this.props.state === 1){
+    }else if(this.props.st === 1){
       var usernameText = (
         <Text style={styles.textGray} numberOfLines={2}>
-          {this.props.usernameMember}
+          {this.props.unE}
         </Text>
       )
-    } else if(this.props.state === 2){
+    } else if(this.props.st === 2){
       var usernameText = (
         <Text style={styles.textRed} numberOfLines={2}>
-          {this.props.usernameMember}
+          {this.props.unE}
         </Text>
       )
     }

@@ -22,7 +22,10 @@ import {
   team_full_name,
   team_username,
   save,
-  events
+  events,
+  request_pending,
+  request_pending_on_other_team,
+  join_team
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
@@ -61,7 +64,6 @@ class DetailTeamScreen extends Component {
     var { params } = this.props.navigation.state;
     var ref = firebase.firestore().collection("Events");
     const query = ref.where("team", "==", params.teamID);
-    //Rules
     const events = [];
     query.get().then(function(doc) {
       doc.forEach(doc => {
@@ -93,67 +95,58 @@ class DetailTeamScreen extends Component {
 );
   };
 
-  openPlayerList() {
-    this.setModalVisible(false);
-    this.props.navigation.navigate("TeamPlayersScreen");
-  }
 
-  setModalVisible(visible) {
-    this.setState({ infoVisible: visible });
-  }
+
+ 
+
+ 
 
   render() {
+
+    const sendRequest = () => {
+      firebase.firestore().collection("Teams").doc(params.teamID).collection("TPU")
+      .doc(firebase.auth().currentUser.uid).set({
+          pUN: this.props.userData.username
+
+      })
+    }
+
+    var requestModal = 
+
+    <Modal>
+        <Text></Text>
+    </Modal>
+
     var { params } = this.props.navigation.state;
+
+    //Set modals for remove request and remove request && send new request
+    if(this.props.userData.pt !== undefined){
+        if(this.props.userData.pt === params.teamID){
+            var joinTeam = 
+            <TouchableOpacity style={styles.roundTextContainer}>
+            <Text style={styles.blueText}>{request_pending}</Text>
+        </TouchableOpacity>
+        }else if(this.props.userData.pt !== params.teamID){
+            var joinTeam = 
+            <TouchableOpacity style={styles.roundTextContainer}>
+            <Text style={styles.blueText}>{request_pending_on_other_team}</Text>
+        </TouchableOpacity>
+        }
+    }else if(this.props.userData.pt===undefined){
+        if(this.props.userData.userTeamID===undefined){
+            var joinTeam = 
+            <TouchableOpacity style={styles.roundTextContainer}>
+            <Text style={styles.blueText}>{join_team}</Text>
+        </TouchableOpacity>
+        }else if(this.props.userData.userTeamID!==undefined){
+            var joinTeam = null
+
+        }
+    }
 
     return (
       <View style={styles.container}>
-        <Modal
-          transparent={true}
-          visible={this.state.infoVisible}
-          onRequestClose={() => {}}
-        >
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-              backgroundColor: "#00000080",
-              alignItems: "center"
-            }}
-            onPress={() => {
-              this.setModalVisible(!this.state.infoVisible);
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#fff",
-                paddingHorizontal: 30,
-                paddingVertical: 20
-              }}
-              onPress={() => {
-                this.setModalVisible(!this.state.infoVisible);
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 22,
-                  fontWeight: "bold",
-                  marginBottom: 8,
-                  marginStart: 4
-                }}
-              >
-                {info}
-              </Text>
-
-              <TouchableOpacity
-                style={styles.playersButton}
-                onPress={() => this.openPlayerList()}
-              >
-                <Text style={styles.infoText}>{players}</Text>
-              </TouchableOpacity>
-            </TouchableOpacity>
-          </TouchableOpacity>
-        </Modal>
+       
         <View style={styles.greenBackground}>
           <View style={styles.greenRowContainer}>
             <TouchableOpacity
@@ -177,34 +170,18 @@ class DetailTeamScreen extends Component {
             />
 
             <Text style={styles.teamFullName}>{params.teamFullName}</Text>
+
+          
           </View>
 
-          <TouchableOpacity
-            style={styles.infoContainer}
-            underlayColor="#bcbcbc"
-            onPress={() => this.setModalVisible(true)}
-          >
-            <Image
-              style={styles.infoIcon}
-              source={require("FieldsReact/app/images/Info/info.png")}
-            />
-          </TouchableOpacity>
+          {joinTeam}
+
+        
         </View>
 
         <View style={styles.eventRowContainer}>
           <Text style={styles.teamName}>{events}</Text>
-          <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate("CreateEventScreen", {
-                fieldID: null
-              })
-            }
-          >
-            <Image
-              style={styles.addIcon}
-              source={require("FieldsReact/app/images/Add/add.png")}
-            />
-          </TouchableOpacity>
+         
         </View>
         <FlatList
           style={{ marginBottom: 50 }}
@@ -279,6 +256,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white"
+  },
+
+  blueText: {
+      color: '#3facff',
+      fontWeight: "bold",
+      fontSize: 16
+  },
+
+  roundTextContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    paddingStart: 8,
+    paddingEnd: 8,
+    paddingTop: 6,
+    paddingBottom: 6,
+
+    backgroundColor: "white",
+    borderRadius: 20,
+    marginTop: 8
   },
 
   greenBackground: {

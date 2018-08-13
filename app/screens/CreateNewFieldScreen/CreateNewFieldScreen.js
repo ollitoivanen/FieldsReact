@@ -121,16 +121,15 @@ class CreateNewFieldScreen extends Component {
           .collection("Fields")
           .doc(fieldID)
           .set({
-            fieldName: this.state.fieldName,
-            fieldArea: this.state.fieldArea,
-            fieldAddress: this.state.fieldAddress,
-            fieldAreaLowerCase: this.state.fieldArea.toLowerCase(),
-            fieldNameLowerCase: this.state.fieldName.toLowerCase(),
-            fieldID: fieldID,
-            fieldType: this.state.chosenFieldType,
-            accessType: this.state.chosenAccessType,
-            peopleHere: 0,
-            goalCount: this.state.goalCount
+            fN: this.state.fieldName,
+            fAR: this.state.fieldArea,
+            fA: this.state.fieldAddress,
+            fARL: this.state.fieldArea.toLowerCase(),
+            fNL: this.state.fieldName.toLowerCase(),
+            fT: this.state.chosenFieldType,
+            fAT: this.state.chosenAccessType,
+            pH: 0,
+            gG: this.state.goalCount
             //Goal count
           })
           .then(() => {
@@ -142,16 +141,15 @@ class CreateNewFieldScreen extends Component {
               fieldNameLowerCase: this.state.fieldName.toLowerCase(),
               fieldID: fieldID,
               fieldType: this.state.chosenFieldType,
-              accessType: this.state.chosenAccessType,
+              fieldAccessType: this.state.chosenAccessType,
               peopleHere: 0,
               goalCount: this.state.goalCount,
 
-              userID: this.props.userData.userID,
-              currentFieldID: this.props.userData.currentFieldID,
-              currentFieldName: this.props.userData.currentFieldName,
-              timestamp: this.props.userData.timestamp,
-              trainingCount: this.props.userData.trainingCount,
-              reputation: this.props.userData.reputation
+              currentFieldID: this.props.userData.cFI,
+              currentFieldName: this.props.userData.cFN,
+              timestamp: this.props.userData.ts,
+              trainingCount: this.props.userData.tC,
+              reputation: this.props.userData.re
             });
           });
       } else {

@@ -1,9 +1,15 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
-export default class FieldSearchitem extends React.PureComponent {
+export default class TeamPlayerListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
   render() {
+      var usernameText = (
+        <Text style={styles.textGray} numberOfLines={2}>
+          {this.props.unM}
+        </Text>
+      );
+   
     return (
       <View style={styles.item}>
         <Image
@@ -12,9 +18,7 @@ export default class FieldSearchitem extends React.PureComponent {
           borderRadius={25}
           resizeMode="cover"
         />
-        <Text style={styles.text} numberOfLines={2}>
-          {this.props.fN}
-        </Text>
+{usernameText}
         <View style={styles.div} />
       </View>
     );
@@ -36,13 +40,13 @@ const styles = StyleSheet.create({
     position: "absolute"
   },
 
-  text: {
+  textGray: {
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
     flexWrap: "wrap"
   },
-
+  
   fieldImage: {
     width: 50,
     height: 50,
@@ -51,6 +55,5 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "white",
     margin: 5
-  },
-  
+  }
 });

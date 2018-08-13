@@ -33,7 +33,6 @@ import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
 
-
 const mapStateToProps = state => {
   return {
     userData: state.userData
@@ -62,8 +61,8 @@ class DetailFieldScreen extends Component {
   componentWillMount = () => {
     var { params } = this.props.navigation.state;
     this.setState({
-      currentFieldID: this.props.userData.currentFieldID,
-      currentFieldName: this.props.userData.currentFieldName
+      currentFieldID: this.props.userData.cFI,
+      currentFieldName: this.props.userData.cFN
     });
   };
   static navigationOptions = {
@@ -75,32 +74,26 @@ class DetailFieldScreen extends Component {
 
     const events = [];
     var ref = firebase.firestore().collection("Events");
-    const query = ref.where("eventFieldID", "==", params.fieldID);
+    const query = ref.where("eFI", "==", params.fieldID);
     query.get().then(
       function(doc) {
         doc.forEach(doc => {
-          const {
-            endTime,
-            eventFieldID,
-            eventFieldName,
-            eventType,
-            teamName
-          } = doc.data();
+          const { eT, eFI, eFN, eTY, tUN } = doc.data();
           const id = doc.id;
           const date = moment(id).format("ddd D MMM");
           const startTime = moment(id).format("HH:mm");
           events.push({
             date,
             startTime,
-            teamName,
+            tUN,
             key: doc.id,
             doc,
-            eventType,
-            eventFieldID,
-            eventFieldName,
+            eTY,
+            eFI,
+            eFN,
             //How to fetch name
             id,
-            endTime
+            eT
           });
         });
         this.setState({
@@ -112,26 +105,41 @@ class DetailFieldScreen extends Component {
 
   startTraining = () => {
     var { params } = this.props.navigation.state;
-
     const startTime = moment().format("x");
     firebase
       .firestore()
       .collection("Users")
       .doc(firebase.auth().currentUser.uid)
       .update({
-        currentFieldID: this.state.fieldID,
-        currentFieldName: this.state.fieldName,
-        timestamp: startTime
+        cFI: this.state.fieldID,
+        cFN: this.state.fieldName,
+        ts: startTime
       })
-      .then(this.props.getUserData())
+
       .then(() => {
         firebase
           .firestore()
           .collection("Fields")
-          .doc(this.state.fieldID)
-          .update({
-            peopleHere: this.state.peopleHere + 1
+          .doc(params.fieldID)
+          .get()
+          .then(function(doc) {
+            firebase
+              .firestore()
+              .collection("Fields")
+              .doc(params.fieldID)
+              .update({
+                pH: doc.data().pH + 1
+              });
           });
+      })
+      .then(this.props.getUserData())
+
+      .then(() => {
+        this.props.navigation.navigate("TrainingScreen", {
+          startTime: startTime,
+          peopleHere: this.state.peopleHere,
+          fieldID: this.state.fieldID
+        });
       });
   };
 
@@ -139,7 +147,7 @@ class DetailFieldScreen extends Component {
     var { params } = this.props.navigation.state;
 
     this.props.navigation.navigate("TrainingScreen", {
-      startTime: this.props.userData.timestamp,
+      startTime: this.props.userData.ts,
       peopleHere: this.state.peopleHere,
       fieldID: this.state.fieldID
 
@@ -153,7 +161,7 @@ class DetailFieldScreen extends Component {
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
-    this.loadEvents()
+    this.loadEvents();
 
     const userRef = firebase
       .firestore()
@@ -403,9 +411,9 @@ class DetailFieldScreen extends Component {
 
     let trainingButton;
 
-    if (this.props.userData.currentFieldID === this.state.fieldID) {
+    if (this.props.userData.cFI === this.state.fieldID) {
       trainingButton = trainingButtonTraining;
-    } else if (this.props.userData.currentFieldID !== "") {
+    } else if (this.props.userData.cFI !== "") {
       trainingButton = trainingButtonTrainingElsewhere;
     } else {
       trainingButton = trainingButtonNotTraining;
@@ -573,20 +581,15 @@ class DetailFieldScreen extends Component {
           </TouchableOpacity>
         </View>
 
-
- <FlatList
+        <FlatList
           style={{ marginBottom: 50 }}
           data={this.state.events}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.item}
-              
-            >
+            <TouchableOpacity style={styles.item}>
               <EventListItem {...item} />
             </TouchableOpacity>
           )}
         />
-
 
         <View style={styles.navigationContainer}>
           <View style={styles.navigationContainerIn}>

@@ -189,16 +189,16 @@ class CreateEventScreen extends Component {
             .collection("Events")
             .doc(moment(this.state.ogDate).format())
             .set({
-              eventType: this.state.chosenEventType,
-              endTime: this.state.endTime,
-              team: this.props.userData.userTeamID,
-              teamName: this.props.usersTeamData.teamUsername
+              eTY: this.state.chosenEventType,
+              eT: this.state.endTime,
+              tI: this.props.userData.uTI,
+              tUN: this.props.usersTeamData.tUN
             })
             .then(() => {
               var ref = firebase.firestore().collection("Teams");
               var query = ref
-                .doc(this.props.userData.userTeamID)
-                .collection("TeamUsers");
+                .doc(this.props.userData.uTI)
+                .collection("TU");
               query.get().then(
                 function(doc) {
                   doc.forEach(doc => {
@@ -206,11 +206,11 @@ class CreateEventScreen extends Component {
                       .firestore()
                       .collection("Events")
                       .doc(moment(this.state.ogDate).format())
-                      .collection("Users")
+                      .collection("EU")
                       .doc(doc.id)
                       .set({
-                        state: 1,
-                        usernameMember: doc.data().usernameMember
+                        st: 1,
+                        unE: doc.data().unM
                       });
                   });
                 }.bind(this)
@@ -226,19 +226,19 @@ class CreateEventScreen extends Component {
             .collection("Events")
             .doc(moment(this.state.ogDate).format())
             .set({
-              eventType: this.state.chosenEventType,
-              endTime: this.state.endTime,
-              eventFieldID: params.fieldID,
-              eventFieldName: params.fieldName,
-              team: this.props.userData.userTeamID,
-              teamName: this.props.usersTeamData.teamUsername
+              eTY: this.state.chosenEventType,
+              eT: this.state.endTime,
+              eFI: params.fieldID,
+              eFN: params.fieldName,
+              tI: this.props.userData.uTI,
+              tUN: this.props.usersTeamData.tUN
 
 
             }).then(() => {
               var ref = firebase.firestore().collection("Teams");
               var query = ref
                 .doc(this.props.userData.userTeamID)
-                .collection("TeamUsers");
+                .collection("TU");
               query.get().then(
                 function(doc) {
                   doc.forEach(doc => {
@@ -247,11 +247,11 @@ class CreateEventScreen extends Component {
                      
                       .collection("Events")
                       .doc(moment(this.state.ogDate).format())
-                      .collection("Users")
+                      .collection("EU")
                       .doc(doc.id)
                       .set({
-                        state: 1,
-                        usernameMember: doc.data().usernameMember
+                        st: 1,
+                        unE: doc.data().unM
                       });
                   });
                 }.bind(this)

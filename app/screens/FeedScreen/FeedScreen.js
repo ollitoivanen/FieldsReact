@@ -60,14 +60,14 @@ class FeedScreen extends React.Component {
 
     var teamCard;
 
-    if (this.props.userData.userTeamID !== null) {
+    if (this.props.userData.uTI !== undefined) {
       teamCard = (
         <TouchableOpacity
           style={styles.teamCard}
           onPress={() => this.props.navigation.navigate("TeamScreen")}
         >
           <Text style={styles.teamCardText}>
-            {this.props.usersTeamData.teamUsername}
+            {this.props.usersTeamData.tUN}
           </Text>
         </TouchableOpacity>
       );
@@ -81,10 +81,10 @@ class FeedScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-      <View style={styles.rowCont}>
-      {teamCard}
+        <View style={styles.rowCont}>
+          {teamCard}
 
-      <TouchableOpacity
+          <TouchableOpacity
             style={styles.infoContainer}
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.navigate("SearchScreen")}
@@ -94,8 +94,7 @@ class FeedScreen extends React.Component {
               source={require("FieldsReact/app/images/Search/search.png")}
             />
           </TouchableOpacity>
-
-      </View>
+        </View>
 
         <Text
           style={styles.container1}
@@ -115,7 +114,11 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navigationItemGreen}
-            onPress={() => this.props.navigation.navigate("FieldSearchScreen", {fromEvent: false})}
+            onPress={() =>
+              this.props.navigation.navigate("FieldSearchScreen", {
+                fromEvent: false
+              })
+            }
           >
             <Image
               style={styles.navigationImage}
@@ -185,7 +188,6 @@ const styles = StyleSheet.create({
   },
 
   infoContainer: {
-   
     height: 36,
     width: 36,
     marginEnd: 15,

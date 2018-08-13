@@ -56,7 +56,7 @@ class TeamScreen extends Component {
     this.ref = firebase
       .firestore()
       .collection("Events")
-      .where("team", "==", this.props.userData.userTeamID);
+      .where("tI", "==", this.props.userData.uTI);
     this.unsubscribe = null;
 
     this.state = {
@@ -64,8 +64,8 @@ class TeamScreen extends Component {
       infoVisible: false,
       editVisible: false,
       players: [], // remove text prefix here
-      teamUsernameEdit: this.props.usersTeamData.teamUsername,
-      teamFullNameEdit: this.props.usersTeamData.teamFullName
+      teamUsernameEdit: this.props.usersTeamData.tUN,
+      teamFullNameEdit: this.props.usersTeamData.tFN
     };
   }
 
@@ -74,7 +74,7 @@ class TeamScreen extends Component {
       .firestore()
       .collection("Events")
       .doc(id)
-      .collection("Users")
+      .collection("EU")
       .get()
       .then(
         function(doc) {
@@ -83,7 +83,7 @@ class TeamScreen extends Component {
               .firestore()
               .collection("Events")
               .doc(id)
-              .collection("Users")
+              .collection("EU")
               .doc(doc.id)
               .delete();
           });
@@ -102,7 +102,7 @@ class TeamScreen extends Component {
   onCollectionUpdate = querySnapshot => {
     const events = [];
     querySnapshot.forEach(doc => {
-      const { endTime, eventFieldID, eventFieldName, eventType } = doc.data();
+      const { eT, eFI, eFN, eTY } = doc.data();
       const id = doc.id;
       const date = moment(id).format("ddd D MMM");
       const startTime = moment(id).format("HH:mm");
@@ -118,12 +118,12 @@ class TeamScreen extends Component {
 
         key: doc.id,
         doc,
-        eventType,
-        eventFieldID,
-        eventFieldName,
+        eTY,
+        eFI,
+        eFN,
         //How to fetch name
         id,
-        endTime
+        eT
       });
     });
     this.setState({
@@ -147,21 +147,21 @@ class TeamScreen extends Component {
   render() {
     const saveTeamData = () => {
       if (
-        this.state.teamFullNameEdit === this.props.usersTeamData.teamFullName &&
-        this.state.teamUsernameEdit === this.props.usersTeamData.teamUsername
+        this.state.teamFullNameEdit === this.props.usersTeamData.tFN &&
+        this.state.teamUsernameEdit === this.props.usersTeamData.tUN
       ) {
         this.setEditVisible(false);
         //Only saving the changed
       } else if (
-        this.state.teamFullNameEdit !== this.props.usersTeamData.teamFullName &&
-        this.state.teamUsernameEdit === this.props.usersTeamData.teamUsername
+        this.state.teamFullNameEdit !== this.props.usersTeamData.tFN &&
+        this.state.teamUsernameEdit === this.props.usersTeamData.tUN
       ) {
         firebase
           .firestore()
           .collection("Teams")
           .doc(this.props.usersTeamData.id)
           .update({
-            teamFullName: this.state.teamFullNameEdit
+            tFN: this.state.teamFullNameEdit
           })
           .then(() => {
             this.props.getUserData();
@@ -171,15 +171,15 @@ class TeamScreen extends Component {
             this.setEditVisible(false);
           });
       } else if (
-        this.state.teamFullNameEdit === this.props.usersTeamData.teamFullName &&
-        this.state.teamUsernameEdit !== this.props.usersTeamData.teamUsername
+        this.state.teamFullNameEdit === this.props.usersTeamData.tFN &&
+        this.state.teamUsernameEdit !== this.props.usersTeamData.tUN
       ) {
         firebase
           .firestore()
           .collection("Teams")
           .doc(this.props.usersTeamData.id)
           .update({
-            teamUsername: this.state.teamUsernameEdit
+            tUN: this.state.teamUsernameEdit
           })
           .then(() => {
             this.props.getUserData();
@@ -189,16 +189,16 @@ class TeamScreen extends Component {
             this.setEditVisible(false);
           });
       } else if (
-        this.state.teamFullNameEdit !== this.props.usersTeamData.teamFullName &&
-        this.state.teamUsernameEdit !== this.props.usersTeamData.teamUsername
+        this.state.teamFullNameEdit !== this.props.usersTeamData.tFN &&
+        this.state.teamUsernameEdit !== this.props.usersTeamData.tUN
       ) {
         firebase
           .firestore()
           .collection("Teams")
           .doc(this.props.usersTeamData.id)
           .update({
-            teamUsername: this.state.teamUsernameEdit,
-            teamFullName: this.state.teamFullNameEdit
+            tUN: this.state.teamUsernameEdit,
+            tFN: this.state.teamFullNameEdit
           })
           .then(() => {
             this.props.getUserData();
@@ -328,7 +328,7 @@ class TeamScreen extends Component {
               />
             </TouchableOpacity>
             <Text style={styles.teamName}>
-              {this.props.usersTeamData.teamUsername}
+              {this.props.usersTeamData.tUN}
             </Text>
           </View>
           <View style={styles.greenRowContainer}>
@@ -340,7 +340,7 @@ class TeamScreen extends Component {
             />
 
             <Text style={styles.teamFullName}>
-              {this.props.usersTeamData.teamFullName}
+              {this.props.usersTeamData.tFN}
             </Text>
           </View>
 
@@ -379,10 +379,10 @@ class TeamScreen extends Component {
               style={styles.item}
               onPress={() =>
                 this.props.navigation.navigate("DetailEventScreen", {
-                  eventFieldName: item.eventFieldName,
-                  eventType: item.eventType,
+                  eventFieldName: item.eFN,
+                  eventType: item.eTY,
                   startTime: item.startTime,
-                  endTime: item.endTime,
+                  endTime: item.eT,
                   date: item.date,
                   id: item.id
                 })

@@ -100,13 +100,13 @@ class SearchScreen extends Component {
         function(doc) {
           doc.forEach(doc => {
             const id = doc.id;
-            const { teamUsername , teamFullName } = doc.data();
+            const { tUN , tFN } = doc.data();
             teams.push({
               key: doc.id,
               doc,
               id,
-              username: teamUsername,
-              teamFullName
+              username: tUN,
+              teamFullName: tFN
             });
           });
           this.setState({
@@ -122,6 +122,8 @@ class SearchScreen extends Component {
     const buttons = [[users], [teams]];
     const { selectedIndex } = this.state;
     let input;
+
+   
 
    
 

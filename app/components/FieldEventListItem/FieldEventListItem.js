@@ -19,13 +19,13 @@ var eventField = " " + [at] + " " + this.props.eventFieldName
           </Text>
 
           <Text style={styles.timeText} numberOfLines={2}>
-            {this.props.startTime + "-" + this.props.endTime}
+            {this.props.startTime + "-" + this.props.eT}
           </Text>
         </View>
         <View style={styles.item}>
           <Text style={styles.trainingText} numberOfLines={2}>
-            {event_type_array[this.props.eventType] + ","
-             + " " + this.props.teamName}
+            {event_type_array[this.props.eTY] + ","
+             + " " + this.props.tUN}
           </Text>
         </View>
       </View>

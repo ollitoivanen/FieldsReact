@@ -61,38 +61,40 @@ class FieldSearchScreen extends Component {
       const homeAreaConst = this.state.homeAreaConst;
 
       const query = ref
-        .where("fieldAreaLowerCase", "==", this.state.homeAreaConst)
+        .where("fARL", "==", this.state.homeAreaConst)
         .limit(50);
 
       query.get().then(
         function(doc) {
           doc.forEach(doc => {
+            const id = doc.id
             const {
-              fieldName,
-              fieldArea,
-              fieldID,
-              fieldNameLowerCase,
-              fieldAreaLowerCase,
-              fieldType,
-              goalCount,
-              accessType,
-              fieldAddress,
-              peopleHere,
-              id
+              
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
             } = doc.data();
             fields.push({
               key: doc.id,
               doc,
-              fieldName,
-              fieldArea,
-              fieldAreaLowerCase,
-              fieldNameLowerCase,
-              fieldID,
-              fieldType,
-              goalCount,
-              accessType,
-              fieldAddress,
-              peopleHere
+              id,
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
             });
           });
           this.setState({
@@ -116,7 +118,7 @@ class FieldSearchScreen extends Component {
       homeCityText: "",
       search_placeholder: search_fields_near,
 
-      homeAreaConst: this.props.userData.homeArea
+      homeAreaConst: this.props.userData.hA
     };
     this.ref = firebase
       .firestore()
@@ -129,7 +131,7 @@ class FieldSearchScreen extends Component {
     if (homeCityText.length !== 0) {
       this.ref
         .update({
-          homeArea: homeCityText.toLowerCase().trim()
+          hA: homeCityText.toLowerCase().trim()
         })
         .then(this.getHomeAreaAfterSetting());
     }
@@ -167,7 +169,7 @@ class FieldSearchScreen extends Component {
     const ref = firebase.firestore().collection("Fields");
     if (this.state.selectedIndex === 1) {
       const query = ref.where(
-        "fieldNameLowerCase",
+        "fNL",
         "==",
         this.state.fieldSearchTerm.toLowerCase().trim()
       );
@@ -175,31 +177,34 @@ class FieldSearchScreen extends Component {
       query.get().then(
         function(doc) {
           doc.forEach(doc => {
+            const id = doc.id
+
             const {
-              fieldName,
-              fieldArea,
-              fieldID,
-              fieldNameLowerCase,
-              fieldAreaLowerCase,
-              fieldType,
-              goalCount,
-              accessType,
-              fieldAddress,
-              peopleHere
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
             } = doc.data();
             fields.push({
               key: doc.id,
               doc,
-              fieldName,
-              fieldArea,
-              fieldAreaLowerCase,
-              fieldNameLowerCase,
-              fieldID,
-              fieldType,
-              goalCount,
-              accessType,
-              fieldAddress,
-              peopleHere
+              id,
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
             });
           });
           this.setState({
@@ -209,39 +214,43 @@ class FieldSearchScreen extends Component {
       );
     } else if (this.state.selectedIndex === 2) {
       const query = ref.where(
-        "fieldAreaLowerCase",
+        "fARL",
         "==",
         this.state.fieldSearchTerm.toLowerCase().trim()
       );
 
       query.get().then(
         function(doc) {
+
           doc.forEach(doc => {
+            const id = doc.id
+
             const {
-              fieldName,
-              fieldArea,
-              fieldID,
-              fieldNameLowerCase,
-              fieldAreaLowerCase,
-              fieldType,
-              goalCount,
-              accessType,
-              fieldAddress,
-              peopleHere
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
             } = doc.data();
             fields.push({
               key: doc.id,
               doc,
-              fieldName,
-              fieldArea,
-              fieldAreaLowerCase,
-              fieldNameLowerCase,
-              fieldID,
-              fieldType,
-              goalCount,
-              accessType,
-              fieldAddress,
-              peopleHere
+              id,
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
             });
           });
           this.setState({
@@ -253,37 +262,40 @@ class FieldSearchScreen extends Component {
       var { params } = this.props.navigation.state;
       if (this.state.fieldSearchTerm.trim().length === 0) {
         const query = ref
-          .where("fieldAreaLowerCase", "==", this.state.homeAreaConst)
+          .where("fARL", "==", this.state.homeAreaConst)
           .limit(50);
 
         query.get().then(
           function(doc) {
             doc.forEach(doc => {
+              const id = doc.id
+
               const {
-                fieldName,
-                fieldArea,
-                fieldID,
-                fieldNameLowerCase,
-                fieldAreaLowerCase,
-                fieldType,
-                goalCount,
-                accessType,
-                fieldAddress,
-                peopleHere
+                fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
               } = doc.data();
               fields.push({
                 key: doc.id,
                 doc,
-                fieldName,
-                fieldArea,
-                fieldAreaLowerCase,
-                fieldNameLowerCase,
-                fieldID,
-                fieldType,
-                goalCount,
-                accessType,
-                fieldAddress,
-                peopleHere
+                id,
+                fN,
+                fAR,
+                fI,
+                fNL,
+                fARL,
+                fT,
+                gG,
+                fAT,
+                fA,
+                pH
               });
             });
             this.setState({
@@ -294,41 +306,45 @@ class FieldSearchScreen extends Component {
       }
 
       const query = ref
-        .where("fieldAreaLowerCase", "==", this.state.homeAreaConst)
+        .where("fARL", "==", this.state.homeAreaConst)
         .where(
-          "fieldNameLowerCase",
+          "fNL",
           "==",
           this.state.fieldSearchTerm.toLowerCase().trim()
         );
 
       query.get().then(
         function(doc) {
+
           doc.forEach(doc => {
+            const id = doc.id
+
             const {
-              fieldName,
-              fieldArea,
-              fieldID,
-              fieldNameLowerCase,
-              fieldAreaLowerCase,
-              fieldType,
-              goalCount,
-              accessType,
-              fieldAddress,
-              peopleHere
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
             } = doc.data();
             fields.push({
               key: doc.id,
               doc,
-              fieldName,
-              fieldArea,
-              fieldAreaLowerCase,
-              fieldNameLowerCase,
-              fieldID,
-              fieldType,
-              goalCount,
-              accessType,
-              fieldAddress,
-              peopleHere
+              id,
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH
             });
           });
           this.setState({
@@ -378,22 +394,21 @@ class FieldSearchScreen extends Component {
 
       if (params.fromEvent === false) {
         this.props.navigation.navigate("DetailFieldScreen", {
-          fieldName: item.fieldName,
-          fieldAreaLowerCase: item.fieldAreaLowerCase,
-          fieldNameLowerCase: item.fieldNameLowerCase,
-          fieldArea: item.fieldArea,
-          fieldID: item.fieldID,
-          fieldType: item.fieldType,
-          goalCount: item.goalCount,
-          accessType: item.accessType,
-          fieldAddress: item.fieldAddress,
-          peopleHere: item.peopleHere,
-          userID: this.props.userData.userID,
-          currentFieldID: this.props.userData.currentFieldID,
-          currentFieldName: this.props.userData.currentFieldName,
-          timestamp: this.props.userData.timestamp,
-          trainingCount: this.props.userData.trainingCount,
-          reputation: this.props.userData.reputation
+          fieldName: item.fN,
+          fieldAreaLowerCase: item.fARL,
+          fieldNameLowerCase: item.fNL,
+          fieldArea: item.fAR,
+          fieldID: item.id,
+          fieldType: item.fT,
+          goalCount: item.gG,
+          accessType: item.fAT,
+          fieldAddress: item.fA,
+          peopleHere: item.pH,
+          currentFieldID: this.props.userData.cFI,
+          currentFieldName: this.props.userData.cFN,
+          timestamp: this.props.userData.ts,
+          trainingCount: this.props.userData.tC,
+          reputation: this.props.userData.re
         });
       } else {
         this.props.navigation.navigate("CreateEventScreen", {

@@ -42,13 +42,16 @@ class ProfileScreen extends Component {
 
   render() {
     var currentFieldPlaceHolder = not_at_any_field;
-    if (this.props.userData.currentFieldName !== "") {
-      currentFieldPlaceHolder = this.props.userData.currentFieldName;
+    if (this.props.userData.cFI !== "") {
+      currentFieldPlaceHolder = this.props.userData.cFN;
     }
 
-    var userTeamPlaceHolder = not_in_a_team;
-    if (this.props.usersTeamData.teamUsername !== null) {
-      userTeamPlaceHolder = this.props.usersTeamData.teamUsername;
+    //This
+    if (this.props.userData.uTI !== undefined) {
+     var userTeamPlaceHolder = this.props.usersTeamData.tUN;
+    }else if(this.props.userData.userTeamID === undefined){
+      var userTeamPlaceHolder = not_in_a_team;
+
     }
     return (
       <View style={styles.container}>
@@ -57,7 +60,7 @@ class ProfileScreen extends Component {
             <View style={styles.imageTabContainer}>
               <TouchableOpacity style={styles.roundTextContainer}>
                 <Text style={styles.boxText}>
-                  {this.props.userData.friendCount} {friends}
+                  {this.props.userData.fC} {friends}
                 </Text>
               </TouchableOpacity>
 
@@ -70,11 +73,11 @@ class ProfileScreen extends Component {
 
               <TouchableOpacity style={styles.roundTextContainer}>
                 <Text style={styles.boxText}>
-                  {this.props.userData.trainingCount} {trainings}
+                  {this.props.userData.tC} {trainings}
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.username}>{this.props.userData.username}</Text>
+            <Text style={styles.username}>{this.props.userData.un}</Text>
             <TouchableOpacity style={styles.roundTextContainer}>
               <Image
                 style={styles.teamIcon}
@@ -87,7 +90,7 @@ class ProfileScreen extends Component {
           <View style={styles.actionContainer}>
             <TouchableOpacity style={styles.roundTextContainerBordered}>
               <Text style={styles.boxText}>
-                {this.props.userData.reputation} {reputation}
+                {this.props.userData.re} {reputation}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.roundTextContainerGreen}>
