@@ -60,27 +60,13 @@ class FieldSearchScreen extends Component {
       const fields = [];
       const homeAreaConst = this.state.homeAreaConst;
 
-      const query = ref
-        .where("fARL", "==", this.state.homeAreaConst)
-        .limit(50);
+      const query = ref.where("fARL", "==", this.state.homeAreaConst).limit(50);
 
       query.get().then(
         function(doc) {
           doc.forEach(doc => {
-            const id = doc.id
-            const {
-              
-              fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH
-            } = doc.data();
+            const id = doc.id;
+            const { fN, fAR, fI, fNL, fARL, fT, gG, fAT, fA, pH } = doc.data();
             fields.push({
               key: doc.id,
               doc,
@@ -177,20 +163,9 @@ class FieldSearchScreen extends Component {
       query.get().then(
         function(doc) {
           doc.forEach(doc => {
-            const id = doc.id
+            const id = doc.id;
 
-            const {
-              fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH
-            } = doc.data();
+            const { fN, fAR, fI, fNL, fARL, fT, gG, fAT, fA, pH } = doc.data();
             fields.push({
               key: doc.id,
               doc,
@@ -221,22 +196,10 @@ class FieldSearchScreen extends Component {
 
       query.get().then(
         function(doc) {
-
           doc.forEach(doc => {
-            const id = doc.id
+            const id = doc.id;
 
-            const {
-              fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH
-            } = doc.data();
+            const { fN, fAR, fI, fNL, fARL, fT, gG, fAT, fA, pH } = doc.data();
             fields.push({
               key: doc.id,
               doc,
@@ -268,19 +231,19 @@ class FieldSearchScreen extends Component {
         query.get().then(
           function(doc) {
             doc.forEach(doc => {
-              const id = doc.id
+              const id = doc.id;
 
               const {
                 fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH
+                fAR,
+                fI,
+                fNL,
+                fARL,
+                fT,
+                gG,
+                fAT,
+                fA,
+                pH
               } = doc.data();
               fields.push({
                 key: doc.id,
@@ -307,30 +270,14 @@ class FieldSearchScreen extends Component {
 
       const query = ref
         .where("fARL", "==", this.state.homeAreaConst)
-        .where(
-          "fNL",
-          "==",
-          this.state.fieldSearchTerm.toLowerCase().trim()
-        );
+        .where("fNL", "==", this.state.fieldSearchTerm.toLowerCase().trim());
 
       query.get().then(
         function(doc) {
-
           doc.forEach(doc => {
-            const id = doc.id
+            const id = doc.id;
 
-            const {
-              fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH
-            } = doc.data();
+            const { fN, fAR, fI, fNL, fARL, fT, gG, fAT, fA, pH } = doc.data();
             fields.push({
               key: doc.id,
               doc,
@@ -412,8 +359,8 @@ class FieldSearchScreen extends Component {
         });
       } else {
         this.props.navigation.navigate("CreateEventScreen", {
-          fieldName: item.fieldName,
-          fieldID: item.fieldID
+          fieldName: item.fN,
+          fieldID: item.id
         });
 
         //Add field data here next. things are going great!

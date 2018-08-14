@@ -25,7 +25,9 @@ import {
   events,
   request_pending,
   request_pending_on_other_team,
-  join_team
+  join_team,
+  remove_old_request_and_send_new_request_to_this_team,
+  remove_request
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
@@ -56,6 +58,8 @@ class DetailTeamScreen extends Component {
       events: [],
       infoVisible: false,
       editVisible: false,
+      removeRequestVisible: false,
+      removeAndSendRequestVisible: false,
       players: [] // remove text prefix here
     };
   }
@@ -63,90 +67,257 @@ class DetailTeamScreen extends Component {
   loadEvents = () => {
     var { params } = this.props.navigation.state;
     var ref = firebase.firestore().collection("Events");
-    const query = ref.where("team", "==", params.teamID);
+    const query = ref.where("tI", "==", params.teamID);
     const events = [];
-    query.get().then(function(doc) {
-      doc.forEach(doc => {
-        const { endTime, eventFieldID, eventFieldName, eventType } = doc.data();
-        const id = doc.id;
-        const date = moment(id).format("ddd D MMM");
-        const startTime = moment(id).format("HH:mm");
+    query.get().then(
+      function(doc) {
+        doc.forEach(doc => {
+          const { eT, eFI, eFN, eTY } = doc.data();
+          const id = doc.id;
+          const date = moment(id).format("ddd D MMM");
+          const startTime = moment(id).format("HH:mm");
 
-       
+          events.push({
+            date,
+            startTime,
 
-        events.push({
-          date,
-          startTime,
-
-          key: doc.id,
-          doc,
-          eventType,
-          eventFieldID,
-          eventFieldName,
-          //How to fetch name
-          id,
-          endTime
+            key: doc.id,
+            doc,
+            eTY,
+            eFI,
+            eFN,
+            //How to fetch name
+            id,
+            eT
+          });
         });
-      });
-      this.setState({
-        events
-      });
-    }.bind(this)
-);
+        this.setState({
+          events
+        });
+      }.bind(this)
+    );
   };
 
+  openRemoveRequestModal = visible => {
+    this.setState({ removeRequestVisible: visible });
+  };
 
-
- 
-
- 
+  openRemoveAndSendRequestModal = visible => {
+    this.setState({ removeAndSendRequestVisible: visible });
+  };
 
   render() {
+    const removeRequest = () => {
+      firebase
+        .firestore()
+        .collection("Teams")
+        .doc(params.teamID)
+        .collection("PTU")
+        .doc(firebase.auth().currentUser.uid)
+        .delete()
 
+        .then(() => {
+          firebase
+            .firestore()
+            .collection("Users")
+            .doc(firebase.auth().currentUser.uid)
+            .update({
+              pT: firebase.firestore.FieldValue.delete()
+            });
+        })
+        .then(() => {
+          this.props.getUserData();
+        })
+
+        .then(() => {
+          this.openRemoveRequestModal(false);
+        });
+    };
     const sendRequest = () => {
-      firebase.firestore().collection("Teams").doc(params.teamID).collection("TPU")
-      .doc(firebase.auth().currentUser.uid).set({
-          pUN: this.props.userData.username
+      firebase
+        .firestore()
+        .collection("Teams")
+        .doc(params.teamID)
+        .collection("PTU")
+        .doc(firebase.auth().currentUser.uid)
+        .set({
+          pUN: this.props.userData.un
+        })
+        .then(() => {
+          firebase
+            .firestore()
+            .collection("Users")
+            .doc(firebase.auth().currentUser.uid)
 
-      })
-    }
+            .update({
+              pT: params.teamID
+            });
+        })
+        .then(() => {
+          this.props.getUserData();
+        });
+    };
+    const removeRequestAndSendNewOne = () => {
+      firebase
+        .firestore()
+        .collection("Teams")
+        .doc(this.props.userData.pT)
+        .collection("PTU")
+        .doc(firebase.auth().currentUser.uid)
+        .delete()
 
-    var requestModal = 
+        .then(() => {
+          firebase
+        .firestore()
+        .collection("Teams")
+        .doc(params.teamID)
+        .collection("PTU")
+        .doc(firebase.auth().currentUser.uid)
+        .set({
+          pUN: this.props.userData.un
+        })
+        }).then(()=>{
+          firebase
+          .firestore()
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
 
-    <Modal>
-        <Text></Text>
-    </Modal>
+          .update({
+            pT: params.teamID
+          });
+        }).then(()=>this.props.getUserData())
+        .then(this.openRemoveAndSendRequestModal(false));
+    };
+
+    
 
     var { params } = this.props.navigation.state;
 
     //Set modals for remove request and remove request && send new request
-    if(this.props.userData.pt !== undefined){
-        if(this.props.userData.pt === params.teamID){
-            var joinTeam = 
-            <TouchableOpacity style={styles.roundTextContainer}>
+    if (this.props.userData.pT !== undefined) {
+      if (this.props.userData.pT === params.teamID) {
+        var joinTeam = (
+          <TouchableOpacity
+            style={styles.roundTextContainer}
+            onPress={() => this.openRemoveRequestModal(true)}
+          >
             <Text style={styles.blueText}>{request_pending}</Text>
-        </TouchableOpacity>
-        }else if(this.props.userData.pt !== params.teamID){
-            var joinTeam = 
-            <TouchableOpacity style={styles.roundTextContainer}>
+          </TouchableOpacity>
+        );
+      } else if (this.props.userData.pT !== params.teamID) {
+        var joinTeam = (
+          <TouchableOpacity
+            style={styles.roundTextContainer}
+            onPress={() => this.openRemoveAndSendRequestModal()}
+          >
             <Text style={styles.blueText}>{request_pending_on_other_team}</Text>
-        </TouchableOpacity>
-        }
-    }else if(this.props.userData.pt===undefined){
-        if(this.props.userData.userTeamID===undefined){
-            var joinTeam = 
-            <TouchableOpacity style={styles.roundTextContainer}>
+          </TouchableOpacity>
+        );
+      }
+    } else if (this.props.userData.pT === undefined) {
+      if (this.props.userData.uTI === undefined) {
+        var joinTeam = (
+          <TouchableOpacity
+            style={styles.roundTextContainer}
+            onPress={() => sendRequest()}
+            //Permissions
+          >
             <Text style={styles.blueText}>{join_team}</Text>
-        </TouchableOpacity>
-        }else if(this.props.userData.userTeamID!==undefined){
-            var joinTeam = null
-
-        }
+          </TouchableOpacity>
+        );
+      } else if (this.props.userData.uTI !== undefined) {
+        var joinTeam = null;
+      }
     }
 
     return (
       <View style={styles.container}>
-       
+        <Modal
+          transparent={true}
+          visible={this.state.removeRequestVisible}
+          onRequestClose={() => {}}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              backgroundColor: "#00000080",
+              alignItems: "center"
+            }}
+            onPress={() => {
+              this.openRemoveRequestModal(false);
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                paddingHorizontal: 30,
+                paddingVertical: 20
+              }}
+              onPress={() => {
+                this.openRemoveRequestModal(false);
+              }}
+            >
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={() => {
+                  removeRequest();
+                }}
+              >
+                <Text style={styles.removeText}>{remove_request}</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
+
+
+
+
+
+
+<Modal
+          transparent={true}
+          visible={this.state.removeAndSendRequestVisible}
+          onRequestClose={() => {}}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              backgroundColor: "#00000080",
+              alignItems: "center"
+            }}
+            onPress={() => {
+              this.openRemoveAndSendRequestModal(false);
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                paddingHorizontal: 30,
+                paddingVertical: 20
+              }}
+              onPress={() => {
+                this.openRemoveAndSendRequestModal(false);
+              }}
+            >
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={() => {
+                  removeRequestAndSendNewOne();
+                }}
+              >
+                <Text style={styles.removeText}>{remove_old_request_and_send_new_request_to_this_team}</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
+
+
+
+
         <View style={styles.greenBackground}>
           <View style={styles.greenRowContainer}>
             <TouchableOpacity
@@ -170,36 +341,19 @@ class DetailTeamScreen extends Component {
             />
 
             <Text style={styles.teamFullName}>{params.teamFullName}</Text>
-
-          
           </View>
 
           {joinTeam}
-
-        
         </View>
 
         <View style={styles.eventRowContainer}>
           <Text style={styles.teamName}>{events}</Text>
-         
         </View>
         <FlatList
           style={{ marginBottom: 50 }}
           data={this.state.events}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.item}
-              onPress={() =>
-                this.props.navigation.navigate("DetailEventScreen", {
-                  eventFieldName: item.eventFieldName,
-                  eventType: item.eventType,
-                  startTime: item.startTime,
-                  endTime: item.endTime,
-                  date: item.date,
-                  id: item.id
-                })
-              }
-            >
+            <TouchableOpacity style={styles.item}>
               <EventListItem {...item} />
             </TouchableOpacity>
           )}
@@ -258,10 +412,21 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
 
+  removeButton: {
+    backgroundColor: "red",
+    padding: 15,
+    borderRadius: 10
+  },
+
+  removeText: {
+    color: "white",
+    fontWeight: "bold"
+  },
+
   blueText: {
-      color: '#3facff',
-      fontWeight: "bold",
-      fontSize: 16
+    color: "#3facff",
+    fontWeight: "bold",
+    fontSize: 16
   },
 
   roundTextContainer: {

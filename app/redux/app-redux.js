@@ -161,6 +161,12 @@ const getUserData = () => {
             });
           }
 
+          if (doc.data().pT === undefined) {
+            undefinedOnes.push({
+              pT: undefined
+            });
+          }
+
           var userData = Object.assign(...undefinedOnes, doc.data());
 
           var actionSetUserData = setUserData(userData);

@@ -27,10 +27,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-class TeamPlayerScreen extends Component {
-  componentWillMount() {
-    this.loadPlayersList();
-  }
+class TeamPlayersScreen extends Component {
+  
 
   static navigationOptions = {
     header: null
@@ -38,6 +36,7 @@ class TeamPlayerScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.loadPlayersList()
 
     this.state = {
       players: []
@@ -100,7 +99,7 @@ class TeamPlayerScreen extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TeamPlayerScreen);
+)(TeamPlayersScreen);
 
 const styles = StyleSheet.create({
   container: {

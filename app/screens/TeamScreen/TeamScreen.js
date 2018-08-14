@@ -22,7 +22,8 @@ import {
   team_full_name,
   team_username,
   save,
-  events
+  events,
+  pending_players
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
@@ -136,6 +137,11 @@ class TeamScreen extends Component {
     this.props.navigation.navigate("TeamPlayersScreen");
   }
 
+  openPendingPlayerList() {
+    this.setModalVisible(false);
+    this.props.navigation.navigate("TeamPendingPlayersScreen");
+  }
+
   setModalVisible(visible) {
     this.setState({ infoVisible: visible });
   }
@@ -143,6 +149,11 @@ class TeamScreen extends Component {
   setEditVisible(visible) {
     this.setState({ infoVisible: false, editVisible: visible });
   }
+
+  usernameHandle = value => {
+    const newText = value.replace(/\s/g, "");
+    this.setState({ teamUsernameEdit: newText });
+  };
 
   render() {
     const saveTeamData = () => {
@@ -235,9 +246,7 @@ class TeamScreen extends Component {
               underlineColorAndroid="rgba(0,0,0,0)"
               placeholder={team_username}
               value={this.state.teamUsernameEdit}
-              onChangeText={teamUsernameEdit =>
-                this.setState({ teamUsernameEdit })
-              }
+              onChangeText={this.usernameHandle}
             />
             <Text style={styles.headerText}>{team_full_name}</Text>
 
@@ -306,6 +315,14 @@ class TeamScreen extends Component {
                 <Text style={styles.infoText}>{players}</Text>
               </TouchableOpacity>
 
+                <TouchableOpacity
+                style={styles.playersButton}
+                onPress={() => this.openPendingPlayerList()}
+              >
+                <Text style={styles.infoText}>{pending_players}</Text>
+              </TouchableOpacity>
+
+
               <TouchableOpacity
                 style={styles.editTeamButton}
                 onPress={() => this.setEditVisible(true)}
@@ -327,9 +344,7 @@ class TeamScreen extends Component {
                 source={require("FieldsReact/app/images/BackButton/back_button.png")}
               />
             </TouchableOpacity>
-            <Text style={styles.teamName}>
-              {this.props.usersTeamData.tUN}
-            </Text>
+            <Text style={styles.teamName}>{this.props.usersTeamData.tUN}</Text>
           </View>
           <View style={styles.greenRowContainer}>
             <Image

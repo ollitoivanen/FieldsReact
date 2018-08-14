@@ -96,12 +96,10 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
         </View>
 
-        <Text
-          style={styles.container1}
-          onPress={() => firebase.auth().signOut()}
-        >
-          {this.props.userData.id}
-        </Text>
+        <TouchableOpacity onPress={() => firebase.auth().signOut()}>
+          <Text>moi</Text>
+        </TouchableOpacity>
+
         <View style={styles.navigationContainer}>
           <TouchableOpacity
             style={styles.navigationItem}

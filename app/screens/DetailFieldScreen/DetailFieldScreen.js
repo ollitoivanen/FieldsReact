@@ -220,8 +220,8 @@ class DetailFieldScreen extends Component {
           .collection("Fields")
           .doc(this.state.fieldID)
           .update({
-            fieldName: this.state.fieldNameEdit,
-            fieldNameLowerCase: this.state.fieldNameEdit.toLowerCase()
+            fN: this.state.fieldNameEdit,
+            fNL: this.state.fieldNameEdit.toLowerCase()
           })
           .then(() => {
             this.setState({ fieldName: this.state.fieldNameEdit });
@@ -240,7 +240,7 @@ class DetailFieldScreen extends Component {
           .collection("Fields")
           .doc(this.state.fieldID)
           .update({
-            fieldAddress: this.state.fieldAddressEdit
+            fA: this.state.fieldAddressEdit
           })
           .then(() => {
             this.setState({ fieldAddress: this.state.fieldAddressEdit });
@@ -259,8 +259,8 @@ class DetailFieldScreen extends Component {
           .collection("Fields")
           .doc(this.state.fieldID)
           .update({
-            fieldArea: this.state.fieldAreaEdit,
-            fieldAreaLowerCase: this.state.fieldAreaEdit.toLowerCase()
+            fAR: this.state.fieldAreaEdit,
+            fARL: this.state.fieldAreaEdit.toLowerCase()
           })
           .then(() => {
             this.setState({ fieldArea: this.state.fieldAreaEdit });
@@ -279,10 +279,10 @@ class DetailFieldScreen extends Component {
           .collection("Fields")
           .doc(this.state.fieldID)
           .update({
-            fieldName: this.state.fieldNameEdit,
-            fieldNameLowerCase: this.state.fieldNameEdit.toLowerCase(),
+            fN: this.state.fieldNameEdit,
+            fNL: this.state.fieldNameEdit.toLowerCase(),
 
-            fieldAddress: this.state.fieldAddressEdit
+            fA: this.state.fieldAddressEdit
           })
           .then(() => {
             this.setState({
@@ -304,9 +304,9 @@ class DetailFieldScreen extends Component {
           .collection("Fields")
           .doc(this.state.fieldID)
           .update({
-            fieldAddress: this.state.fieldAddressEdit,
-            fieldArea: this.state.fieldAreaEdit,
-            fieldAreaLowerCase: this.state.fieldAreaEdit.toLowerCase()
+            fA: this.state.fieldAddressEdit,
+            fAR: this.state.fieldAreaEdit,
+            fARL: this.state.fieldAreaEdit.toLowerCase()
           })
           .then(() => {
             this.setState({
@@ -328,10 +328,10 @@ class DetailFieldScreen extends Component {
           .collection("Fields")
           .doc(this.state.fieldID)
           .update({
-            fieldName: this.state.fieldNameEdit,
-            fieldArea: this.state.fieldAreaEdit,
-            fieldAreaLowerCase: this.state.fieldAreaEdit.toLowerCase(),
-            fieldNameLowerCase: this.state.fieldNameEdit.toLowerCase()
+            fN: this.state.fieldNameEdit,
+            fAR: this.state.fieldAreaEdit,
+            fARL: this.state.fieldAreaEdit.toLowerCase(),
+            fNL: this.state.fieldNameEdit.toLowerCase()
           })
           .then(() => {
             this.setState({
@@ -353,11 +353,11 @@ class DetailFieldScreen extends Component {
           .collection("Fields")
           .doc(this.state.fieldID)
           .update({
-            fieldName: this.state.fieldNameEdit,
-            fieldAddress: this.state.fieldAddressEdit,
-            fieldArea: this.state.fieldAreaEdit,
-            fieldNameLowerCase: this.state.fieldNameEdit.toLowerCase(),
-            fieldAreaLowerCase: this.state.fieldAreaEdit.toLowerCase()
+            fN: this.state.fieldNameEdit,
+            fA: this.state.fieldAddressEdit,
+            fAR: this.state.fieldAreaEdit,
+            fNL: this.state.fieldNameEdit.toLowerCase(),
+            fARL: this.state.fieldAreaEdit.toLowerCase()
           })
           .then(() => {
             this.setState({

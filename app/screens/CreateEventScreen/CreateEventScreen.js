@@ -31,7 +31,6 @@ const mapStateToProps = state => {
   return {
     userData: state.userData,
     usersTeamData: state.usersTeamData
-
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -180,12 +179,11 @@ class CreateEventScreen extends Component {
     }
 
     const saveEvent = () => {
-
       if (this.state.errorMessage === null) {
         if (params.fieldID === null) {
           firebase
             .firestore()
-            
+
             .collection("Events")
             .doc(moment(this.state.ogDate).format())
             .set({
@@ -196,9 +194,7 @@ class CreateEventScreen extends Component {
             })
             .then(() => {
               var ref = firebase.firestore().collection("Teams");
-              var query = ref
-                .doc(this.props.userData.uTI)
-                .collection("TU");
+              var query = ref.doc(this.props.userData.uTI).collection("TU");
               query.get().then(
                 function(doc) {
                   doc.forEach(doc => {
@@ -222,7 +218,7 @@ class CreateEventScreen extends Component {
         } else {
           firebase
             .firestore()
-           
+
             .collection("Events")
             .doc(moment(this.state.ogDate).format())
             .set({
@@ -232,9 +228,8 @@ class CreateEventScreen extends Component {
               eFN: params.fieldName,
               tI: this.props.userData.uTI,
               tUN: this.props.usersTeamData.tUN
-
-
-            }).then(() => {
+            })
+            .then(() => {
               var ref = firebase.firestore().collection("Teams");
               var query = ref
                 .doc(this.props.userData.userTeamID)
@@ -244,7 +239,7 @@ class CreateEventScreen extends Component {
                   doc.forEach(doc => {
                     firebase
                       .firestore()
-                     
+
                       .collection("Events")
                       .doc(moment(this.state.ogDate).format())
                       .collection("EU")

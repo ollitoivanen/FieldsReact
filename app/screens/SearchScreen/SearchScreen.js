@@ -46,7 +46,7 @@ class SearchScreen extends Component {
       selectedIndex: 0,
       searchTerm: "",
       teams: [],
-      users:[],
+      users: [],
       search_placeholder: search_users
     };
   }
@@ -60,8 +60,6 @@ class SearchScreen extends Component {
     }
   };
 
-  
-
   search = () => {
     const users = [];
     const teams = [];
@@ -71,7 +69,7 @@ class SearchScreen extends Component {
 
     if (this.state.selectedIndex === 0) {
       const query = userRef.where(
-        "username",
+        "un",
         "==",
         this.state.searchTerm.toLowerCase().trim()
       );
@@ -79,10 +77,12 @@ class SearchScreen extends Component {
         function(doc) {
           doc.forEach(doc => {
             const { username } = doc.data();
+            const id = doc.id
             users.push({
               key: doc.id,
               doc,
-              username
+              id,
+              username: un
             });
           });
           this.setState({
@@ -92,7 +92,7 @@ class SearchScreen extends Component {
       );
     } else if (this.state.selectedIndex === 1) {
       const query = teamRef.where(
-        "teamUsername",
+        "tUN",
         "==",
         this.state.searchTerm.toLowerCase().trim()
       );
@@ -100,7 +100,7 @@ class SearchScreen extends Component {
         function(doc) {
           doc.forEach(doc => {
             const id = doc.id;
-            const { tUN , tFN } = doc.data();
+            const { tUN, tFN } = doc.data();
             teams.push({
               key: doc.id,
               doc,
@@ -114,7 +114,8 @@ class SearchScreen extends Component {
           });
         }.bind(this)
       );
-    }  };
+    }
+  };
 
   render() {
     var { params } = this.props.navigation.state;
@@ -122,10 +123,6 @@ class SearchScreen extends Component {
     const buttons = [[users], [teams]];
     const { selectedIndex } = this.state;
     let input;
-
-   
-
-   
 
     if (this.state.selectedIndex === 0) {
       var searchList = (
@@ -209,18 +206,21 @@ class SearchScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-        <View style={styles.searchRow}>
-          <TextInput
-            style={styles.searchBar}
-            placeholder={this.state.search_placeholder}
-            onChangeText={searchTerm => this.setState({searchTerm})}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            value={this.state.searchTerm}
-          />
+          <View style={styles.searchRow}>
+            <TextInput
+              style={styles.searchBar}
+              placeholder={this.state.search_placeholder}
+              onChangeText={searchTerm => this.setState({ searchTerm })}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              value={this.state.searchTerm}
+            />
 
-          <TouchableOpacity style={styles.searchTextBox} onPress={()=> this.search()}>
-            <Text style={styles.searchText}>search</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.searchTextBox}
+              onPress={() => this.search()}
+            >
+              <Text style={styles.searchText}>search</Text>
+            </TouchableOpacity>
           </View>
           <ButtonGroup
             onPress={this.updateIndex}
@@ -273,19 +273,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     height: 60,
     fontSize: 20,
-    flex:1
+    flex: 1
   },
 
-  searchText:{
+  searchText: {
     color: "#3facff",
     fontWeight: "bold",
     margin: 5,
-    textAlign: 'center'
+    textAlign: "center"
   },
 
   searchTextBox: {
     backgroundColor: "white",
-    borderRadius:5,
+    borderRadius: 5,
     borderWidth: 0.5,
     borderColor: "#e0e0e0",
     margin: 5,
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
     marginEnd: 10,
-    justifyContent: 'center'
+    justifyContent: "center"
   },
 
   searchRow: {
@@ -303,8 +303,7 @@ const styles = StyleSheet.create({
 
   searchContainer: {
     backgroundColor: "#3bd774",
-    paddingVertical: 10,
-    
+    paddingVertical: 10
   },
 
   filter: {

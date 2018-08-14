@@ -36,9 +36,7 @@ import DetailEventScreen from "./app/screens/DetailEventScreen/DetailEventScreen
 import SearchScreen from "./app/screens/SearchScreen/SearchScreen";
 import DetailProfileScreen from "./app/screens/DetailProfileScreen/DetailProfileScreen";
 import DetailTeamScreen from "./app/screens/DetailTeamScreen/DetailTeamScreen";
-
-
-
+import TeamPendingPlayersScreen from "./app/screens/TeamPendingPlayersScreen/TeamPendingPlayersScreen";
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -113,15 +111,16 @@ export const StackNavigatorApp = StackNavigator(
     SearchScreen: {
       screen: SearchScreen
     },
-    DetailProfileScreen:{
+    DetailProfileScreen: {
       screen: DetailProfileScreen
     },
     DetailTeamScreen: {
       screen: DetailTeamScreen
+    },
+    TeamPendingPlayersScreen: {
+      screen: TeamPendingPlayersScreen
     }
   },
-
-
 
   {
     initialRouteName: "LoadingScreen",
