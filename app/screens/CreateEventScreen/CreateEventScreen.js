@@ -232,7 +232,7 @@ class CreateEventScreen extends Component {
             .then(() => {
               var ref = firebase.firestore().collection("Teams");
               var query = ref
-                .doc(this.props.userData.userTeamID)
+                .doc(this.props.userData.uTI)
                 .collection("TU");
               query.get().then(
                 function(doc) {

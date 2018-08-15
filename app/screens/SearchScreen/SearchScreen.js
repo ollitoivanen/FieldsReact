@@ -34,16 +34,24 @@ const mapDispatchToProps = dispatch => {
 };
 
 class SearchScreen extends Component {
+  componentWillMount(){
+    var { params } = this.props.navigation.state;
+
+    this.updateIndex(params.selectedIndex)
+
+  }
   static navigationOptions = {
     header: null
   };
+
+  
 
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
 
     this.state = {
-      selectedIndex: 0,
+      selectedIndex: params.selectedIndex,
       searchTerm: "",
       teams: [],
       users: [],
@@ -77,7 +85,7 @@ class SearchScreen extends Component {
         function(doc) {
           doc.forEach(doc => {
             const { username } = doc.data();
-            const id = doc.id
+            const id = doc.id;
             users.push({
               key: doc.id,
               doc,
@@ -208,18 +216,25 @@ class SearchScreen extends Component {
         <View style={styles.searchContainer}>
           <View style={styles.searchRow}>
             <TextInput
+            clearButtonMode={"always"}
               style={styles.searchBar}
               placeholder={this.state.search_placeholder}
               onChangeText={searchTerm => this.setState({ searchTerm })}
               underlineColorAndroid="rgba(0,0,0,0)"
               value={this.state.searchTerm}
+              onSubmitEditing={()=>this.search()}
+              returnKeyType={"search"}
+              spellCheck={false}
+              autoCapitalize={"none"}
+
             />
 
             <TouchableOpacity
-              style={styles.searchTextBox}
               onPress={() => this.search()}
             >
-              <Text style={styles.searchText}>search</Text>
+            <Image style={styles.button}
+              source={require("FieldsReact/app/images/Forward/forward_white.png")}
+              />
             </TouchableOpacity>
           </View>
           <ButtonGroup
@@ -252,6 +267,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
 
+  button: {
+    height: 48,
+    width: 48,
+    alignSelf: "center",
+    marginTop: 4,
+    marginEnd: 10
+  },
+
   navigationContainer: {
     bottom: 0,
     position: "absolute",
@@ -260,6 +283,7 @@ const styles = StyleSheet.create({
   },
 
   searchBar: {
+
     backgroundColor: "white",
     borderWidth: 0.5,
     borderRadius: 5,
@@ -298,7 +322,7 @@ const styles = StyleSheet.create({
 
   searchRow: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   searchContainer: {

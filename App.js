@@ -37,6 +37,10 @@ import SearchScreen from "./app/screens/SearchScreen/SearchScreen";
 import DetailProfileScreen from "./app/screens/DetailProfileScreen/DetailProfileScreen";
 import DetailTeamScreen from "./app/screens/DetailTeamScreen/DetailTeamScreen";
 import TeamPendingPlayersScreen from "./app/screens/TeamPendingPlayersScreen/TeamPendingPlayersScreen";
+import NoTeamScreen from "./app/screens/NoTeamScreen/NoTeamScreen";
+import CreateTeamScreen from "./app/screens/CreateTeamScreen/CreateTeamScreen";
+import ReputationScreen from "./app/screens/ReputationScreen/ReputationScreen";
+
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -119,6 +123,18 @@ export const StackNavigatorApp = StackNavigator(
     },
     TeamPendingPlayersScreen: {
       screen: TeamPendingPlayersScreen
+    },
+
+    NoTeamScreen: {
+      screen: NoTeamScreen
+    },
+
+    CreateTeamScreen: {
+      screen: CreateTeamScreen
+    },
+
+    ReputationScreen: {
+      screen: ReputationScreen
     }
   },
 

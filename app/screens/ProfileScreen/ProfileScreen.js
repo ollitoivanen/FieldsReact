@@ -27,7 +27,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getUserData: () => dispatch(getUserData())
+    getuserData: () => dispatch(getuserData())
   };
 };
 
@@ -41,6 +41,51 @@ class ProfileScreen extends Component {
   }
 
   render() {
+let badge;
+    if (this.props.userData.re < 500) {
+       badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_1.png")} />
+    } else if (this.props.userData.re < 1500) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_2.png")} />
+    } else if (this.props.userData.re < 3000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_3.png")} />
+    } else if (this.props.userData.re < 6000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_4.png")} />
+    } else if (this.props.userData.re < 10000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_5.png")} />
+    } else if (this.props.userData.re < 15000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_6.png")} />
+    } else if (this.props.userData.re < 21000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_7.png")} />
+    } else if (this.props.userData.re < 28000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_8.png")} />
+    } else if (this.props.userData.re < 38000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_9.png")} />
+    } else if (this.props.userData.re < 48000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_10.png")} />
+    } else if (this.props.userData.re < 58000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_11.png")} />
+    } else if (this.props.userData.re < 70000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_12.png")} />
+    } else if (this.props.userData.re < 85000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_13.png")} />
+    } else if (this.props.userData.re >= 85000) {
+      badge = 
+      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_14.png")} />
+    }
+
     var currentFieldPlaceHolder = not_at_any_field;
     if (this.props.userData.cFI !== "") {
       currentFieldPlaceHolder = this.props.userData.cFN;
@@ -48,10 +93,9 @@ class ProfileScreen extends Component {
 
     //This
     if (this.props.userData.uTI !== undefined) {
-     var userTeamPlaceHolder = this.props.usersTeamData.tUN;
-    }else if(this.props.userData.userTeamID === undefined){
+      var userTeamPlaceHolder = this.props.usersTeamData.tUN;
+    } else if (this.props.userData.userTeamID === undefined) {
       var userTeamPlaceHolder = not_in_a_team;
-
     }
     return (
       <View style={styles.container}>
@@ -88,11 +132,13 @@ class ProfileScreen extends Component {
           </View>
 
           <View style={styles.actionContainer}>
-            <TouchableOpacity style={styles.roundTextContainerBordered}>
+            <TouchableOpacity style={styles.roundTextContainerBordered} onPress={()=>this.props.navigation.navigate("ReputationScreen")}>
+            {badge}
               <Text style={styles.boxText}>
                 {this.props.userData.re} {reputation}
               </Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.roundTextContainerGreen}>
               <Text style={styles.boxTextWhite}>{currentFieldPlaceHolder}</Text>
             </TouchableOpacity>
@@ -113,7 +159,9 @@ class ProfileScreen extends Component {
             <TouchableOpacity
               style={styles.navigationItemGreen}
               onPress={() =>
-                this.props.navigation.navigate("FieldSearchScreen", {fromEvent: false})
+                this.props.navigation.navigate("FieldSearchScreen", {
+                  fromEvent: false
+                })
               }
             >
               <Image
@@ -243,7 +291,8 @@ const styles = StyleSheet.create({
 
   teamIcon: {
     width: 25,
-    height: 25
+    height: 25,
+    marginRight: 4
   },
 
   imageTabContainer: {

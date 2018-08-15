@@ -23,7 +23,10 @@ import {
   team_username,
   save,
   events,
-  pending_players
+  pending_players,
+  leave_team,
+  are_you_sure_to_leave_team,
+  nope
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
@@ -64,7 +67,8 @@ class TeamScreen extends Component {
       events: [],
       infoVisible: false,
       editVisible: false,
-      players: [], // remove text prefix here
+      leaveVisible: false,
+      players: [], 
       teamUsernameEdit: this.props.usersTeamData.tUN,
       teamFullNameEdit: this.props.usersTeamData.tFN
     };
@@ -146,6 +150,10 @@ class TeamScreen extends Component {
     this.setState({ infoVisible: visible });
   }
 
+  setLeaveVisible(visible) {
+    this.setState({ infoVisible: false, leaveVisible: visible });
+  }
+
   setEditVisible(visible) {
     this.setState({ infoVisible: false, editVisible: visible });
   }
@@ -153,6 +161,29 @@ class TeamScreen extends Component {
   usernameHandle = value => {
     const newText = value.replace(/\s/g, "");
     this.setState({ teamUsernameEdit: newText });
+  };
+
+  leaveTeam = () => {
+    firebase
+      .firestore()
+      .collection("Teams")
+      .doc(this.props.userData.uTI)
+      .collection("TU")
+      .doc(firebase.auth().currentUser.uid)
+      .delete()
+      .then(() => {
+        firebase
+          .firestore()
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .update({ uTI: firebase.firestore.FieldValue.delete() });
+      })
+      .then(() => {
+        this.props.getUserData();
+      })
+      .then(() => {
+        this.props.navigation.popToTop();
+      });
   };
 
   render() {
@@ -272,6 +303,61 @@ class TeamScreen extends Component {
 
         <Modal
           transparent={true}
+          visible={this.state.leaveVisible}
+          onRequestClose={() => {}}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              backgroundColor: "#00000080",
+              alignItems: "center"
+            }}
+            onPress={() => {
+              this.setLeaveVisible(!this.state.leaveVisible);
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                paddingHorizontal: 30,
+                paddingVertical: 20
+              }}
+              onPress={() => {
+                this.setLeaveVisible(!this.state.leaveVisible);
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontWeight: "bold",
+                  marginBottom: 8,
+                  marginStart: 4
+                }}
+              >
+                {are_you_sure_to_leave_team}
+              </Text>
+
+              <TouchableOpacity
+                style={styles.leaveTeamButton}
+                onPress={() => this.leaveTeam()}
+              >
+                <Text style={styles.buttonText}>{leave_team}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.editTeamButton}
+                onPress={() => this.openPendingPlayerList()}
+              >
+                <Text style={styles.buttonText}>{nope}</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
+
+        <Modal
+          transparent={true}
           visible={this.state.infoVisible}
           onRequestClose={() => {}}
         >
@@ -315,19 +401,25 @@ class TeamScreen extends Component {
                 <Text style={styles.infoText}>{players}</Text>
               </TouchableOpacity>
 
-                <TouchableOpacity
+              <TouchableOpacity
                 style={styles.playersButton}
                 onPress={() => this.openPendingPlayerList()}
               >
                 <Text style={styles.infoText}>{pending_players}</Text>
               </TouchableOpacity>
 
-
               <TouchableOpacity
                 style={styles.editTeamButton}
                 onPress={() => this.setEditVisible(true)}
               >
                 <Text style={styles.buttonText}>{edit_team}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.leaveTeamButton}
+                onPress={() => this.setLeaveVisible(true)}
+              >
+                <Text style={styles.buttonText}>{leave_team}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -542,6 +634,13 @@ const styles = StyleSheet.create({
 
   editTeamButton: {
     backgroundColor: "#3bd774",
+    padding: 15,
+    marginTop: 12,
+    borderRadius: 10
+  },
+
+  leaveTeamButton: {
+    backgroundColor: "red",
     padding: 15,
     marginTop: 12,
     borderRadius: 10

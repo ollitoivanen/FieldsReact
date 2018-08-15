@@ -73,7 +73,9 @@ class FeedScreen extends React.Component {
       );
     } else {
       teamCard = (
-        <TouchableOpacity style={styles.teamCard}>
+        <TouchableOpacity style={styles.teamCard}
+        onPress={() => this.props.navigation.navigate("NoTeamScreen")}
+        >
           <Text style={styles.teamCardText}>{not_in_a_team}</Text>
         </TouchableOpacity>
       );
@@ -87,7 +89,7 @@ class FeedScreen extends React.Component {
           <TouchableOpacity
             style={styles.infoContainer}
             underlayColor="#bcbcbc"
-            onPress={() => this.props.navigation.navigate("SearchScreen")}
+            onPress={() => this.props.navigation.navigate("SearchScreen", {selectedIndex: 0})}
           >
             <Image
               style={styles.infoIcon}
