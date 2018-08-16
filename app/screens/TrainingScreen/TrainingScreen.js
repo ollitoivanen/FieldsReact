@@ -151,7 +151,7 @@ class TrainingScreen extends Component {
         .doc(firebase.auth().currentUser.uid)
         .update({
           re: newReputation,
-          trainingCount: this.props.userData.tC + 1,
+          tC: this.props.userData.tC + 1,
           cFI: firebase.firestore.FieldValue.delete(),
           cFN: firebase.firestore.FieldValue.delete(),
           ts: firebase.firestore.FieldValue.delete()

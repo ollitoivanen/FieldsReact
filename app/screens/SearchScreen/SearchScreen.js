@@ -34,17 +34,14 @@ const mapDispatchToProps = dispatch => {
 };
 
 class SearchScreen extends Component {
-  componentWillMount(){
+  componentWillMount() {
     var { params } = this.props.navigation.state;
 
-    this.updateIndex(params.selectedIndex)
-
+    this.updateIndex(params.selectedIndex);
   }
   static navigationOptions = {
     header: null
   };
-
-  
 
   constructor(props) {
     super(props);
@@ -84,13 +81,21 @@ class SearchScreen extends Component {
       query.get().then(
         function(doc) {
           doc.forEach(doc => {
-            const { username } = doc.data();
+            const { un, fC, tC, re, cFI, cFN, uTI, ts } = doc.data();
+
             const id = doc.id;
             users.push({
               key: doc.id,
               doc,
               id,
-              username: un
+              username: un,
+              fC,
+              tC,
+              re,
+              cFI,
+              cFN,
+              uTI,
+              ts
             });
           });
           this.setState({
@@ -141,7 +146,16 @@ class SearchScreen extends Component {
             <TouchableOpacity
               style={styles.item}
               onPress={() =>
-                this.props.navigation.navigate("DetailProfileScreen")
+                this.props.navigation.navigate("DetailProfileScreen", {
+                  uTI: item.uTI,
+                  un: item.username,
+                  tC: item.tC,
+                  fC: item.fC,
+                  cFI: item.cFI,
+                  cFN: item.cFN,
+                  ts: item.ts,
+                  id: item.id
+                })
               }
             >
               <SearchItem {...item} />
@@ -216,24 +230,22 @@ class SearchScreen extends Component {
         <View style={styles.searchContainer}>
           <View style={styles.searchRow}>
             <TextInput
-            clearButtonMode={"always"}
+              clearButtonMode={"always"}
               style={styles.searchBar}
               placeholder={this.state.search_placeholder}
               onChangeText={searchTerm => this.setState({ searchTerm })}
               underlineColorAndroid="rgba(0,0,0,0)"
               value={this.state.searchTerm}
-              onSubmitEditing={()=>this.search()}
+              onSubmitEditing={() => this.search()}
               returnKeyType={"search"}
               spellCheck={false}
               autoCapitalize={"none"}
-
             />
 
-            <TouchableOpacity
-              onPress={() => this.search()}
-            >
-            <Image style={styles.button}
-              source={require("FieldsReact/app/images/Forward/forward_white.png")}
+            <TouchableOpacity onPress={() => this.search()}>
+              <Image
+                style={styles.button}
+                source={require("FieldsReact/app/images/Forward/forward_white.png")}
               />
             </TouchableOpacity>
           </View>
@@ -283,7 +295,6 @@ const styles = StyleSheet.create({
   },
 
   searchBar: {
-
     backgroundColor: "white",
     borderWidth: 0.5,
     borderRadius: 5,
@@ -322,7 +333,7 @@ const styles = StyleSheet.create({
 
   searchRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "center"
   },
 
   searchContainer: {

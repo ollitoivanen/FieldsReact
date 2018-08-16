@@ -374,13 +374,11 @@ class DetailFieldScreen extends Component {
     };
 
     const trainingButtonTraining = (
-      <TouchableOpacity style={styles.startTrainingButton}>
-        <Text
-          style={styles.boxTextBlue}
-          onPress={() => this.existingTraining()}
-        >
-          {youre_training_here}
-        </Text>
+      <TouchableOpacity
+        style={styles.startTrainingButton}
+        onPress={() => this.existingTraining()}
+      >
+        <Text style={styles.boxTextBlue}>{youre_training_here}</Text>
       </TouchableOpacity>
     );
 

@@ -8,6 +8,8 @@ import {
   Image
 } from "react-native";
 import { connect } from "react-redux";
+var moment = require("moment");
+
 
 import firebase from "react-native-firebase";
 
@@ -16,8 +18,12 @@ import {
   friends,
   not_in_a_team,
   reputation,
-  not_at_any_field
-} from "FieldsReact/app/strings/strings";
+  not_at_any_field,
+  under_minute,
+  h,
+  min,
+
+} from "../../strings/strings";
 
 const mapStateToProps = state => {
   return {
@@ -32,75 +38,217 @@ const mapDispatchToProps = dispatch => {
 };
 
 class ProfileScreen extends Component {
+  componentWillMount(){
+    this.getTrainingTime()
+  }
   static navigationOptions = {
     header: null
   };
 
+  
+
   constructor(props) {
     super(props);
+    this.state={
+      trainingTime: ""
+    }
+   
   }
 
+  getTrainingTime = () => {
+    const startTime = this.props.userData.ts;
+    const currentTime = moment().format("x");
+    const trainingTime = currentTime - startTime;
+    this.setState({ trainingTime: trainingTime });
+    const seconds = trainingTime / 1000;
+    const minutes = Math.trunc(seconds / 60);
+    const hours = Math.trunc(minutes / 60);
+
+    if (minutes < 1) {
+      this.setState({ trainingTime: [under_minute] });
+    } else if (hours < 1) {
+      this.setState({ trainingTime: minutes + [min] });
+    } else {
+      const minSub = minutes - hours * 60;
+      this.setState({ trainingTime: hours + [h] + " " + minSub + [min] });
+    }
+  };
+
   render() {
-let badge;
+    let badge;
     if (this.props.userData.re < 500) {
-       badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_1.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_1.png")}
+        />
+      );
     } else if (this.props.userData.re < 1500) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_2.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_2.png")}
+        />
+      );
     } else if (this.props.userData.re < 3000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_3.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_3.png")}
+        />
+      );
     } else if (this.props.userData.re < 6000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_4.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_4.png")}
+        />
+      );
     } else if (this.props.userData.re < 10000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_5.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_5.png")}
+        />
+      );
     } else if (this.props.userData.re < 15000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_6.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_6.png")}
+        />
+      );
     } else if (this.props.userData.re < 21000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_7.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_7.png")}
+        />
+      );
     } else if (this.props.userData.re < 28000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_8.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_8.png")}
+        />
+      );
     } else if (this.props.userData.re < 38000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_9.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_9.png")}
+        />
+      );
     } else if (this.props.userData.re < 48000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_10.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_10.png")}
+        />
+      );
     } else if (this.props.userData.re < 58000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_11.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_11.png")}
+        />
+      );
     } else if (this.props.userData.re < 70000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_12.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_12.png")}
+        />
+      );
     } else if (this.props.userData.re < 85000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_13.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_13.png")}
+        />
+      );
     } else if (this.props.userData.re >= 85000) {
-      badge = 
-      <Image style={styles.teamIcon} source={require("FieldsReact/app/images/Badges/badge_14.png")} />
+      badge = (
+        <Image
+          style={styles.teamIcon}
+          source={require("FieldsReact/app/images/Badges/badge_14.png")}
+        />
+      );
     }
 
-    var currentFieldPlaceHolder = not_at_any_field;
+    var currentFieldPlaceHolder = (
+      <TouchableOpacity style={styles.roundTextContainerBordered}>
+        <Text style={styles.boxText}>{not_at_any_field}</Text>
+      </TouchableOpacity>
+    );
     if (this.props.userData.cFI !== "") {
-      currentFieldPlaceHolder = this.props.userData.cFN;
+      var currentFieldPlaceHolder = (
+        <TouchableOpacity
+          style={styles.roundTextContainerBordered}
+          onPress={() =>
+            this.props.navigation.navigate("TrainingScreen", {
+              startTime: this.props.userData.ts,
+              fieldID: this.props.userData.cFI
+            })
+          }
+        >
+          <Text style={styles.boxText}>{this.props.userData.cFN + ", " + this.state.trainingTime}</Text>
+        </TouchableOpacity>
+      );
     }
 
     //This
     if (this.props.userData.uTI !== undefined) {
-      var userTeamPlaceHolder = this.props.usersTeamData.tUN;
-    } else if (this.props.userData.userTeamID === undefined) {
-      var userTeamPlaceHolder = not_in_a_team;
+      var userTeamPlaceHolder = (
+        <TouchableOpacity
+          style={styles.roundTextContainer}
+          onPress={() => this.props.navigation.navigate("TeamScreen")}
+        >
+          <Image
+            style={styles.teamIcon}
+            source={require("FieldsReact/app/images/Team/team.png")}
+          />
+          <Text style={styles.boxText}>{this.props.usersTeamData.tUN} </Text>
+        </TouchableOpacity>
+      );
+    } else if (this.props.userData.uTI === undefined) {
+      var userTeamPlaceHolder = (
+        <TouchableOpacity style={styles.roundTextContainer}>
+          <Image
+            style={styles.teamIcon}
+            source={require("FieldsReact/app/images/Team/team.png")}
+          />
+          <Text style={styles.boxText}>{not_in_a_team} </Text>
+        </TouchableOpacity>
+      );
     }
     return (
       <View style={styles.container}>
         <View style={styles.containerHeader}>
           <View style={styles.backgroundGreen}>
+            <View style={styles.imageTabContainer}>
+              <Image
+                style={styles.profileImage}
+                source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+                borderRadius={35}
+                resizeMode="cover"
+              />
+            </View>
+            <View style={styles.rowCont}>
+              <Text style={styles.username}>{this.props.userData.un}</Text>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("SettingsScreen")}
+              >
+                <Image
+                  style={styles.settingsIcon}
+                  source={require("FieldsReact/app/images/Settings/settings.png")}
+                />
+              </TouchableOpacity>
+            </View>
+            {userTeamPlaceHolder}
+          </View>
+
+          <View style={styles.actionContainer}>
             <View style={styles.imageTabContainer}>
               <TouchableOpacity style={styles.roundTextContainer}>
                 <Text style={styles.boxText}>
@@ -108,39 +256,23 @@ let badge;
                 </Text>
               </TouchableOpacity>
 
-              <Image
-                style={styles.profileImage}
-                source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-                borderRadius={35}
-                resizeMode="cover"
-              />
-
               <TouchableOpacity style={styles.roundTextContainer}>
                 <Text style={styles.boxText}>
                   {this.props.userData.tC} {trainings}
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.username}>{this.props.userData.un}</Text>
-            <TouchableOpacity style={styles.roundTextContainer}>
-              <Image
-                style={styles.teamIcon}
-                source={require("FieldsReact/app/images/Team/team.png")}
-              />
-              <Text style={styles.boxText}>{userTeamPlaceHolder} </Text>
-            </TouchableOpacity>
-          </View>
 
-          <View style={styles.actionContainer}>
-            <TouchableOpacity style={styles.roundTextContainerBordered} onPress={()=>this.props.navigation.navigate("ReputationScreen")}>
-            {badge}
+            {currentFieldPlaceHolder}
+
+            <TouchableOpacity
+              style={styles.roundTextContainerBordered}
+              onPress={() => this.props.navigation.navigate("ReputationScreen")}
+            >
+              {badge}
               <Text style={styles.boxText}>
                 {this.props.userData.re} {reputation}
               </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.roundTextContainerGreen}>
-              <Text style={styles.boxTextWhite}>{currentFieldPlaceHolder}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -190,6 +322,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white"
+  },
+
+  rowCont: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 8,
+    marginLeft: 26
   },
 
   profileGreenBackground: {
@@ -249,7 +388,6 @@ const styles = StyleSheet.create({
     height: 70,
     alignSelf: "center",
     alignItems: "center",
-    marginStart: 8,
     borderWidth: 5,
     padding: 5,
     borderColor: "white",
@@ -258,7 +396,6 @@ const styles = StyleSheet.create({
 
   username: {
     fontWeight: "bold",
-    marginTop: 8,
     fontSize: 22
   },
   roundTextContainer: {
@@ -278,13 +415,13 @@ const styles = StyleSheet.create({
 
   boxTextWhite: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 20,
     color: "white"
   },
 
   boxText: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
     padding: 2,
     color: "#636363"
   },
@@ -294,11 +431,16 @@ const styles = StyleSheet.create({
     height: 25,
     marginRight: 4
   },
+  settingsIcon: {
+    width: 25,
+    height: 25,
+    marginLeft: 4,
+    marginTop: 1
+  },
 
   imageTabContainer: {
     flexDirection: "row",
     flexShrink: 1,
-    width: "100%",
     justifyContent: "space-around",
     alignItems: "center"
   },
@@ -314,7 +456,7 @@ const styles = StyleSheet.create({
     padding: 10,
 
     backgroundColor: "white",
-    borderRadius: 20,
+    borderRadius: 30,
     borderWidth: 2,
     borderColor: "#ededed",
     flexShrink: 1,
@@ -325,10 +467,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "center",
-    padding: 12,
+    padding: 14,
 
     backgroundColor: "#3bd774",
-    borderRadius: 20,
+    borderRadius: 50,
     flexShrink: 1,
     marginTop: 12
   }

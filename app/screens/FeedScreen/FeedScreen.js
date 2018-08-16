@@ -30,9 +30,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 class FeedScreen extends React.Component {
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+  
   static navigationOptions = {
     header: null
   };
@@ -43,12 +41,10 @@ class FeedScreen extends React.Component {
 
     var { params } = this.props.navigation.state;
 
-    this.unsubscribe = null;
 
     this.state = {
       currentUser: null,
       homeArea: "",
-      loading: true
     };
   }
   componentWillMount() {
@@ -98,9 +94,7 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => firebase.auth().signOut()}>
-          <Text>moi</Text>
-        </TouchableOpacity>
+        
 
         <View style={styles.navigationContainer}>
           <TouchableOpacity

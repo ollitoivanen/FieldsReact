@@ -72,11 +72,13 @@ export default class SignUpScreen extends React.Component {
         )
         .then(() =>
           this.ref.doc(firebase.auth().currentUser.uid).set({
-            un: this.state.username1.toLowerCase(),
-           
+            un: this.state.username1.toLowerCase()
           })
         )
-        .then(() => this.props.navigation.navigate("FeedScreen"));
+        .then(() => {
+          this.setState({ loading: false });
+        })
+        .then(() => this.props.navigation.navigate("LoadingScreen"));
     }
   };
   render() {

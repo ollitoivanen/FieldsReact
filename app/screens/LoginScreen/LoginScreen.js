@@ -42,8 +42,10 @@ export default class LoginScreen extends React.Component {
 
       firebase
         .auth()
-        .signInAndRetrieveDataWithEmailAndPassword(email1, password1)
-        .then(() => this.props.navigation.navigate("FeedScreen"))
+        .signInAndRetrieveDataWithEmailAndPassword(email1, password1).then(()=>{
+          this.setState({loading: false})
+        })
+        .then(() => this.props.navigation.navigate("LoadingScreen"))
         .catch(error =>
           this.setState({
             errorMessage: [email_and_password_dont_match_any_users]

@@ -27,7 +27,6 @@ import FieldSearchScreen from "./app/screens/FieldSearchScreen/FieldSearchScreen
 import DetailFieldScreen from "./app/screens/DetailFieldScreen/DetailFieldScreen";
 import TrainingScreen from "./app/screens/TrainingScreen/TrainingScreen";
 import TrainingSummaryScreen from "./app/screens/TrainingSummaryScreen/TrainingSummaryScreen";
-import EditFieldScreen from "./app/screens/EditFieldScreen/EditFieldScreen";
 import CreateNewFieldScreen from "./app/screens/CreateNewFieldScreen/CreateNewFieldScreen";
 import TeamScreen from "./app/screens/TeamScreen/TeamScreen";
 import TeamPlayersScreen from "./app/screens/TeamPlayersScreen/TeamPlayersScreen";
@@ -40,6 +39,10 @@ import TeamPendingPlayersScreen from "./app/screens/TeamPendingPlayersScreen/Tea
 import NoTeamScreen from "./app/screens/NoTeamScreen/NoTeamScreen";
 import CreateTeamScreen from "./app/screens/CreateTeamScreen/CreateTeamScreen";
 import ReputationScreen from "./app/screens/ReputationScreen/ReputationScreen";
+import SettingsScreen from "./app/screens/SettingsScreen/SettingsScreen";
+import EditProfileScreen from "./app/screens/EditProfileScreen/EditProfileScreen";
+
+
 
 
 const transitionConfig = () => ({
@@ -91,9 +94,7 @@ export const StackNavigatorApp = StackNavigator(
       screen: TrainingSummaryScreen
     },
 
-    EditFieldScreen: {
-      screen: EditFieldScreen
-    },
+    
     CreateNewFieldScreen: {
       screen: CreateNewFieldScreen
     },
@@ -135,6 +136,15 @@ export const StackNavigatorApp = StackNavigator(
 
     ReputationScreen: {
       screen: ReputationScreen
+    },
+
+    SettingsScreen:{
+      screen: SettingsScreen
+    },
+
+
+    EditProfileScreen:{
+      screen: EditProfileScreen
     }
   },
 
