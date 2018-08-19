@@ -459,7 +459,7 @@ class CreateEventScreen extends Component {
           style={styles.buttonContainer}
           onPress={() => saveEvent()}
         >
-          <Text style={styles.buttonText}>{this.state.players.length}</Text>
+          <Text style={styles.buttonText}>{save}</Text>
         </TouchableOpacity>
       </View>
     );

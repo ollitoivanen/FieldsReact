@@ -10,7 +10,7 @@ import {
   AsyncStorage
 } from "react-native";
 import { connect } from "react-redux";
-import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+import { getUserData, getUserAndTeamData } from "FieldsReact/app/redux/app-redux.js";
 
 import { info, players, edit_team } from "../../strings/strings";
 import firebase from "react-native-firebase";
@@ -24,7 +24,9 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getUserData: () => dispatch(getUserData())
+    getUserData: () => dispatch(getUserData()),
+    getUserAndTeamData: () => dispatch(getUserAndTeamData())
+
   };
 };
 
@@ -65,7 +67,7 @@ class TeamPlayersScreen extends Component {
         });
       })
       .then(() => {
-        this.props.getUserData();
+        this.props.getUserAndTeamData();
       })
       .then(() => {
         if (players.length !== this.props.usersTeamData.pC) {

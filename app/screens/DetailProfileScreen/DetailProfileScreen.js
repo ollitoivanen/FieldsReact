@@ -5,7 +5,8 @@ import {
   Text,
   Alert,
   TouchableOpacity,
-  Image
+  Image,
+  AsyncStorage
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -25,8 +26,6 @@ import {
 } from "../../strings/strings";
 var moment = require("moment");
 
-
-
 const mapStateToProps = state => {
   return {
     userData: state.userData,
@@ -40,12 +39,87 @@ const mapDispatchToProps = dispatch => {
 };
 
 class DetailProfileScreen extends Component {
-    componentWillMount(){
-        this.getTrainingTime()
-        this.getFriends()
-    }
+  componentWillMount() {
+    this.getTrainingTime();
+  }
   static navigationOptions = {
     header: null
+  };
+
+  loadFriendList() {
+    const ref = firebase.firestore().collection("Friends");
+    var serializedData;
+
+    const friends = [];
+
+    const query = ref.where("aI", "==", firebase.auth().currentUser.uid);
+    query
+      .get()
+      .then(
+        function(doc) {
+          doc.forEach(doc => {
+            const { aI, fI, fN } = doc.data();
+            const id = doc.id;
+            friends.push({
+              key: doc.id,
+              id,
+              aI,
+              fI,
+              fN
+            });
+          });
+        }.bind(this)
+      )
+      .then(() => {
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(friends, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+      })
+
+      .then(() => {
+        this.storeData(serializedData);
+      });
+  }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem("friends", data).then(() => {
+        this.retrieveData();
+      });
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  retrieveData = async () => {
+    var { params } = this.props.navigation.state;
+
+      const value = await AsyncStorage.getItem("friends");
+      if (value !== null) {
+        this.setState({ friends: JSON.parse(value) });
+
+
+        let friendArray = JSON.parse(value);
+        let foundFriend = friendArray.find(friendArray => friendArray.fI === params.id);
+        if (foundFriend === undefined) {
+          this.setState({ friendStatus: false });
+        } else {
+          this.setState({ friendStatus: true });
+        }
+      } else {
+        this.loadFriendList();
+      }
+  
   };
 
   guid = () => {
@@ -68,44 +142,74 @@ class DetailProfileScreen extends Component {
       s4() +
       s4()
     );
-  }
+  };
 
-  getFriends = () => {
-    var { params } = this.props.navigation.state;
-    firebase.firestore().collection("Friends").where("aI", "==", params.id).get().then(function(doc){
-      if(doc.exists){
-        this.setState({friendStatus: true})
+  removeFriend = () => {
+    this.setState({friendStatus: null})
 
-      }else{
-        this.setState({friendStatus: false})
-      }
-    }.bind(this))
-   
-    }
-
-  getUserTeam = () =>{
     var { params } = this.props.navigation.state;
 
-      firebase.firestore().collection("Teams").doc(params.uTI).get().then(
-          function(doc){
-              this.setState({uTN: doc.data().tUN})
-              
-          }.bind(this)
-      )
-  }
-  
+    let friendArray = this.state.friends
+    let friendRemoved = friendArray.find(friendArray=> friendArray.fI === params.id)
+    let friendRemovedID = friendRemoved.id
+
+    firebase
+      .firestore()
+      .collection("Friends")
+      .doc(friendRemovedID).delete()
+      .then(() => {
+        this.loadFriendList();
+      });
+  };
+
+  addFriend = () => {
+    this.setState({friendStatus: null})
+    var { params } = this.props.navigation.state;
+
+    var friendID = this.guid().substring(0, 7);
+
+    firebase
+      .firestore()
+      .collection("Friends")
+      .doc(friendID)
+      .set({
+        aI: firebase.auth().currentUser.uid,
+        fI: params.id,
+        fN: params.un
+      })
+      .then(() => {
+        this.loadFriendList();
+      });
+  };
+
+  getUserTeam = () => {
+    var { params } = this.props.navigation.state;
+
+    firebase
+      .firestore()
+      .collection("Teams")
+      .doc(params.uTI)
+      .get()
+      .then(
+        function(doc) {
+          this.setState({ uTN: doc.data().tUN });
+        }.bind(this)
+      );
+  };
 
   constructor(props) {
     super(props);
+    this.retrieveData();
     var { params } = this.props.navigation.state;
-    if(params.uTI!==undefined){
-        this.getUserTeam()
+    if (params.uTI !== undefined) {
+      this.getUserTeam();
     }
-    this.state={
-        uTN: "",
-        trainingTime: "",
-    }
-
+    this.state = {
+      uTN: "",
+      trainingTime: "",
+      friends: [],
+      friendStatus: null
+    };
   }
 
   getTrainingTime = () => {
@@ -131,20 +235,29 @@ class DetailProfileScreen extends Component {
 
   render() {
     let badge;
-    if(this.state.friendStatus===true){
-      var friendButton = <TouchableOpacity style={styles.roundTextContainer}>
-      <Text style={styles.blueText}>{remove_friend}</Text>
-      </TouchableOpacity>
-    }else{
-      var friendButton = <TouchableOpacity style={styles.roundTextContainer}>
-      <Text style={styles.blueText}>{add_friend}</Text>
-      </TouchableOpacity>
+    if (this.state.friendStatus === true) {
+      var friendButton = (
+        <TouchableOpacity style={styles.roundTextContainer} onPress={()=>this.removeFriend()}>
+          <Text style={styles.blueText}>{remove_friend}</Text>
+        </TouchableOpacity>
+      );
+    }else if(this.state.friendStatus === null){
+      var friendButton = null
+    } else {
+      var friendButton = (
+        <TouchableOpacity
+          style={styles.roundTextContainer}
+          onPress={() => this.addFriend()}
+        >
+          <Text style={styles.blueText}>{add_friend}</Text>
+        </TouchableOpacity>
+      );
     }
     var { params } = this.props.navigation.state;
-    if(params.re=== undefined ){
-        var re = 0
-    }else {
-        var re = params.re
+    if (params.re === undefined) {
+      var re = 0;
+    } else {
+      var re = params.re;
     }
 
     if (re < 500) {
@@ -246,7 +359,6 @@ class DetailProfileScreen extends Component {
         />
       );
     }
-    
 
     var currentFieldPlaceHolder = (
       <TouchableOpacity style={styles.roundTextContainerBordered}>
@@ -255,24 +367,17 @@ class DetailProfileScreen extends Component {
     );
     if (params.cFI !== undefined) {
       var currentFieldPlaceHolder = (
-        <TouchableOpacity
-          style={styles.roundTextContainerBordered}
-         
-        >
-          <Text style={styles.boxText}>{params.cFN + ", " + this.state.trainingTime}</Text>
+        <TouchableOpacity style={styles.roundTextContainerBordered}>
+          <Text style={styles.boxText}>
+            {params.cFN + ", " + this.state.trainingTime}
+          </Text>
         </TouchableOpacity>
       );
     }
 
-
-
-
-    
     if (params.uTI !== undefined) {
       var userTeamPlaceHolder = (
-        <TouchableOpacity
-          style={styles.roundTextContainer}
-        >
+        <TouchableOpacity style={styles.roundTextContainer}>
           <Image
             style={styles.teamIcon}
             source={require("FieldsReact/app/images/Team/team.png")}
@@ -291,63 +396,60 @@ class DetailProfileScreen extends Component {
         </TouchableOpacity>
       );
     }
-    if(params.tC=== undefined ){
-        var tC = 0
-    }else {
-        var tC = params.tC
+    if (params.tC === undefined) {
+      var tC = 0;
+    } else {
+      var tC = params.tC;
     }
 
-    if(params.fC=== undefined ){
-        var fC = 0
-    }else {
-        var fC = params.fC
+    if (params.fC === undefined) {
+      var fC = 0;
+    } else {
+      var fC = params.fC;
     }
-
-    
 
     var navigation = (
-        <View style={styles.navigationContainer}>
-          <View style={styles.navigationContainerIn}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("FeedScreen")}
-              style={styles.navigationItem}
-              underlayColor="#bcbcbc"
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Home/home.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItemGreen}
-              onPress={() =>
-                this.props.navigation.navigate("FieldSearchScreen", {
-                  fromEvent: false
-                })
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Field/field_icon.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItem}
-              onPress={() => this.props.navigation.navigate("ProfileScreen")}
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Profile/profile.png")}
-              />
-            </TouchableOpacity>
-          </View>
+      <View style={styles.navigationContainer}>
+        <View style={styles.navigationContainerIn}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("FeedScreen")}
+            style={styles.navigationItem}
+            underlayColor="#bcbcbc"
+          >
+            <Image
+              style={styles.navigationImage}
+              source={require("FieldsReact/app/images/Home/home.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItemGreen}
+            onPress={() =>
+              this.props.navigation.navigate("FieldSearchScreen", {
+                fromEvent: false
+              })
+            }
+          >
+            <Image
+              style={styles.navigationImage}
+              source={require("FieldsReact/app/images/Field/field_icon.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItem}
+            onPress={() => this.props.navigation.navigate("ProfileScreen")}
+          >
+            <Image
+              style={styles.navigationImage}
+              source={require("FieldsReact/app/images/Profile/profile.png")}
+            />
+          </TouchableOpacity>
         </View>
-      );
-  
+      </View>
+    );
 
     return (
       <View style={styles.container}>
-      <View style={styles.backButtonContainer}>
+        <View style={styles.backButtonContainer}>
           <TouchableOpacity
             style={styles.backButton}
             underlayColor="#bcbcbc"
@@ -359,8 +461,6 @@ class DetailProfileScreen extends Component {
             />
           </TouchableOpacity>
           <Text style={styles.teamName}>{params.un}</Text>
-
-         
         </View>
         <View style={styles.containerHeader}>
           <View style={styles.backgroundGreen}>
@@ -372,9 +472,8 @@ class DetailProfileScreen extends Component {
                 resizeMode="cover"
               />
             </View>
-              <Text style={styles.username}>{params.un}</Text>
-              
-             
+            <Text style={styles.username}>{params.un}</Text>
+
             {userTeamPlaceHolder}
             {friendButton}
           </View>
@@ -396,9 +495,7 @@ class DetailProfileScreen extends Component {
 
             {currentFieldPlaceHolder}
 
-            <TouchableOpacity
-              style={styles.roundTextContainerBordered}
-            >
+            <TouchableOpacity style={styles.roundTextContainerBordered}>
               {badge}
               <Text style={styles.boxText}>
                 {re} {reputation}
@@ -407,7 +504,6 @@ class DetailProfileScreen extends Component {
           </View>
         </View>
         {navigation}
-       
       </View>
     );
   }
@@ -432,7 +528,7 @@ const styles = StyleSheet.create({
 
   blueText: {
     color: "#3facff",
-    fontWeight: 'bold',
+    fontWeight: "bold",
     margin: 4
   },
 
@@ -515,7 +611,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 5,
     padding: 5,
-    borderColor: "white",
+    borderColor: "white"
   },
 
   username: {

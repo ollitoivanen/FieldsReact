@@ -17,7 +17,7 @@ import {
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import { connect } from "react-redux";
-import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+import { getUserData, getUserAndTeamData } from "FieldsReact/app/redux/app-redux.js";
 
 const mapStateToProps = state => {
   return {
@@ -26,7 +26,9 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getUserData: () => dispatch(getUserData())
+    getUserData: () => dispatch(getUserData()),
+    getUserAndTeamData: () => dispatch(getUserAndTeamData())
+
   };
 };
 
@@ -117,7 +119,7 @@ class CreateTeamScreen extends Component {
             });
         }
       }).then(()=>{
-          this.props.getUserData()
+          this.props.getUserAndTeamData()
       }).then(()=>{
           this.props.navigation.popToTop()
       });
