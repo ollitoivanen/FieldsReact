@@ -73,7 +73,7 @@ class TeamPlayersScreen extends Component {
           firebase
             .firestore()
             .collection("Teams")
-            .doc(this.props.usersTeamData.id)
+            .doc(this.props.userData.uTI)
             .update({
               pC: players.length
             });

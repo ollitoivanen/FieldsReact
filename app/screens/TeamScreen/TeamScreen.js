@@ -7,10 +7,14 @@ import {
   Image,
   Modal,
   FlatList,
-  TextInput
+  TextInput,
+  AsyncStorage
 } from "react-native";
 import { connect } from "react-redux";
-import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+import {
+  getUserData,
+  getUserAndTeamData
+} from "FieldsReact/app/redux/app-redux.js";
 
 var moment = require("moment");
 
@@ -40,7 +44,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getUserData: () => dispatch(getUserData())
+    getUserData: () => dispatch(getUserData()),
+    getUserAndTeamData: () => dispatch(getUserAndTeamData())
   };
 };
 
@@ -51,6 +56,7 @@ class TeamScreen extends Component {
 
   loadPlayersList() {
     const ref = firebase.firestore().collection("Teams");
+    var serializedData;
 
     const players = [];
 
@@ -61,28 +67,79 @@ class TeamScreen extends Component {
         function(doc) {
           doc.forEach(doc => {
             const { unM } = doc.data();
+            const id = doc.id;
             players.push({
               key: doc.id,
-              doc,
+              id,
               unM
             });
           });
-          seen = [];
-
-          /* json = JSON.stringify(obj, function(key, val) {
-            if (typeof val == "object") {
-              if (seen.indexOf(val) >= 0) return;
-              seen.push(val);
-            }
-            return val;
-          });*/
-          this.setState({
-            players
-          });
         }.bind(this)
       )
-      .then(() => {});
+      .then(() => {
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(players, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+      })
+      .then(() => {
+        this.props.getUserAndTeamData();
+      })
+      .then(() => {
+        if (players.length !== this.props.usersTeamData.pC) {
+          //If player count differs from list length, update
+          firebase
+            .firestore()
+            .collection("Teams")
+            .doc(this.props.userData.uTI)
+            .update({
+              pC: players.length
+            });
+        }
+      })
+      .then(() => {
+        this.storeData(serializedData);
+      });
   }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem("teamPlayers", data)
+        .then(() => {})
+        .then(this.retrieveData());
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  retrieveData = async () => {
+    this.props.getUserAndTeamData();
+    try {
+      const value = await AsyncStorage.getItem("teamPlayers");
+      if (value !== null) {
+        //If player count changes, this falls out, propably should call getuserdata here
+
+        if (JSON.parse(value).length === this.props.usersTeamData.pC) {
+          this.setState({ players: JSON.parse(value) });
+        } else {
+          this.loadPlayersList();
+        }
+      } else {
+        this.loadPlayersList();
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
 
   componentDidMount() {
     this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
@@ -155,14 +212,16 @@ class TeamScreen extends Component {
       }
 
       events.push({
+        key: doc.id,
         date,
         startTime,
+        eFI,
 
- 
         eFN,
         //How to fetch name
         id,
-        eT
+        eT,
+        eTY
       });
     });
     this.setState({
@@ -215,7 +274,16 @@ class TeamScreen extends Component {
           .update({ uTI: firebase.firestore.FieldValue.delete() });
       })
       .then(() => {
-        this.props.getUserData();
+        this.props.getUserAndTeamData();
+      })
+      .then(() => {
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.userData.uTI)
+          .update({
+            pC: this.props.usersTeamData.pC - 1
+          });
       })
       .then(() => {
         this.props.navigation.popToTop();
@@ -231,53 +299,27 @@ class TeamScreen extends Component {
         firebase
           .firestore()
           .collection("Teams")
-          .doc(this.props.userData.id)
+          .doc(this.props.userData.uTI)
           .update({
-            tUN: this.state.teamFullNameEdit
+            tUN: this.state.teamUsernameEdit
           })
           .then(() => {
-            //Save team users
-            firebase.firestore().collection("Users").do;
+            this.retrieveData();
           })
           .then(() => {
-            this.props.getUserData();
-          })
-
-          .then(() => {
-            this.setEditVisible(false);
-          });
-      } else if (
-        this.state.teamFullNameEdit === this.props.userData.tFN &&
-        this.state.teamUsernameEdit !== this.props.userData.uTN
-      ) {
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(this.props.userData.id)
-          .update({
-            uTN: this.state.teamUsernameEdit
+            let playerList = this.state.players;
+            playerList.forEach(doc => {
+              firebase
+                .firestore()
+                .collection("Users")
+                .doc(doc.id)
+                .update({
+                  uTN: this.state.teamUsernameEdit
+                });
+            });
           })
           .then(() => {
-            this.props.getUserData();
-          })
-
-          .then(() => {
-            this.setEditVisible(false);
-          });
-      } else if (
-        this.state.teamFullNameEdit !== this.props.userData.tFN &&
-        this.state.teamUsernameEdit !== this.props.userData.uTN
-      ) {
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(this.props.userData.id)
-          .update({
-            uTN: this.state.teamUsernameEdit,
-            tFN: this.state.teamFullNameEdit
-          })
-          .then(() => {
-            this.props.getUserData();
+            this.props.getUserAndTeamData();
           })
 
           .then(() => {
@@ -312,18 +354,6 @@ class TeamScreen extends Component {
               placeholder={team_username}
               value={this.state.teamUsernameEdit}
               onChangeText={this.usernameHandle}
-            />
-            <Text style={styles.headerText}>{team_full_name}</Text>
-
-            <TextInput
-              style={styles.textInput}
-              maxLength={30}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder={team_full_name}
-              value={this.state.teamFullNameEdit}
-              onChangeText={teamFullNameEdit =>
-                this.setState({ teamFullNameEdit })
-              }
             />
 
             <TouchableOpacity

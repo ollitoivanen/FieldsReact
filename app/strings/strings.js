@@ -133,4 +133,5 @@ export const edit_profile = "Edit profile"
 export const full_name = "Full name"
 export const add_friend = "Add friend"
 export const remove_friend = "Remove friend"
+export const show_players = "Show players"
 

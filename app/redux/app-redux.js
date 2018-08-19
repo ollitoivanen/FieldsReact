@@ -40,7 +40,7 @@ const setUserTeamData = usersTeamData => {
   };
 };
 
-const getUserData = () => {
+const getUserAndTeamData = () => {
   return function(dispatch) {
     firebase
       .firestore()
@@ -106,6 +106,12 @@ const getUserData = () => {
                 });
               }
 
+              if (doc.data().uTN === undefined) {
+                undefinedOnes.push({
+                  uTN: undefined
+                });
+              }
+
               var userData = Object.assign(...undefinedOnes, doc.data());
 
               var actionSetUserData = setUserData(userData);
@@ -161,6 +167,12 @@ const getUserData = () => {
             });
           }
 
+          if (doc.data().uTN === undefined) {
+            undefinedOnes.push({
+              uTN: undefined
+            });
+          }
+
           if (doc.data().pT === undefined) {
             undefinedOnes.push({
               pT: undefined
@@ -176,4 +188,80 @@ const getUserData = () => {
   };
 };
 
-export { setUserData, getUserData, setUserTeamData };
+const getUserData = () => {
+  return function(dispatch) {
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(firebase.auth().currentUser.uid)
+      .get()
+      .then(function(doc) {
+        //Checking the undefined stuff so no useless data is created. It's all about staying lean!
+
+        var undefinedOnes = [];
+        if (doc.data().fC === undefined) {
+          undefinedOnes.push({
+            fC: 0
+          });
+        }
+        if (doc.data().tC === undefined) {
+          undefinedOnes.push({
+            tC: 0
+          });
+        }
+
+        if (doc.data().cFI === undefined) {
+          undefinedOnes.push({
+            cFI: "",
+            cFN: ""
+          });
+        }
+        if (doc.data().fP === undefined) {
+          undefinedOnes.push({
+            fP: false
+          });
+        }
+        if (doc.data().hA === undefined) {
+          undefinedOnes.push({
+            hA: ""
+          });
+        }
+
+        if (doc.data().re === undefined) {
+          undefinedOnes.push({
+            re: 0
+          });
+        }
+        if (doc.data().ts === undefined) {
+          undefinedOnes.push({
+            ts: null
+          });
+        }
+        if (doc.data().uTI === undefined) {
+          undefinedOnes.push({
+            uTI: undefined
+          });
+        }
+
+        if (doc.data().uTN === undefined) {
+          undefinedOnes.push({
+            uTN: undefined
+          });
+        }
+
+
+        if (doc.data().pT === undefined) {
+          undefinedOnes.push({
+            pT: undefined
+          });
+        }
+
+        var userData = Object.assign(...undefinedOnes, doc.data());
+
+        var actionSetUserData = setUserData(userData);
+        dispatch(actionSetUserData);
+      });
+  };
+};
+
+export { setUserData, getUserData, setUserTeamData, getUserAndTeamData };

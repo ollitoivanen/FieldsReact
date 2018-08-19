@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  Modal
+  Modal,
+  AsyncStorage
 } from "react-native";
 import {
   create_new_event,
@@ -23,7 +24,7 @@ import {
 var moment = require("moment");
 import firebase, { Firebase } from "react-native-firebase";
 import { connect } from "react-redux";
-import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+import { getUserData, getUserAndTeamData } from "FieldsReact/app/redux/app-redux.js";
 
 import DateTimePicker from "react-native-modal-datetime-picker";
 
@@ -35,7 +36,9 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getUserData: () => dispatch(getUserData())
+    getUserData: () => dispatch(getUserData()),
+    getUserAndTeamData: () => dispatch(getUserAndTeamData())
+
   };
 };
 
@@ -136,8 +139,95 @@ class CreateEventScreen extends Component {
     this.setState({ eventTypeModalVisible: visible });
   }
 
+  loadPlayersList() {
+    const ref = firebase.firestore().collection("Teams");
+    var serializedData;
+
+    const players = [];
+
+    const query = ref.doc(this.props.userData.uTI).collection("TU");
+    query
+      .get()
+      .then(
+        function(doc) {
+          doc.forEach(doc => {
+            const { unM } = doc.data();
+            const id = doc.id;
+            players.push({
+              key: doc.id,
+              id,
+              unM
+            });
+          });
+        }.bind(this)
+      )
+      .then(() => {
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(players, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+      })
+      .then(() => {
+        this.props.getUserAndTeamData();
+      })
+      .then(() => {
+        if (players.length !== this.props.usersTeamData.pC) {
+          //If player count differs from list length, update
+          firebase
+            .firestore()
+            .collection("Teams")
+            .doc(this.props.userData.uTI)
+            .update({
+              pC: players.length
+            });
+        }
+      })
+      .then(() => {
+        this.storeData(serializedData);
+      });
+  }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem("teamPlayers", data)
+        .then(() => {})
+        .then(this.retrieveData());
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("teamPlayers");
+      if (value !== null) {
+        //If player count changes, this falls out, propably should call getuserdata here
+        if (JSON.parse(value).length === this.props.usersTeamData.pC) {
+          this.setState({ players: JSON.parse(value) });
+        } else {
+          this.loadPlayersList();
+        }
+      } else {
+        this.loadPlayersList();
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
   constructor(props) {
     super(props);
+
+    this.retrieveData();
 
     this.state = {
       datePickerVisible: false,
@@ -150,7 +240,8 @@ class CreateEventScreen extends Component {
       chosenEventType: 0,
       date: moment().format("ddd D MMM"),
       startTime: moment().format("HH:mm"),
-      endTime: moment().format("HH:mm")
+      endTime: moment().format("HH:mm"),
+      players: []
     };
   }
   render() {
@@ -193,24 +284,22 @@ class CreateEventScreen extends Component {
               tUN: this.props.usersTeamData.tUN
             })
             .then(() => {
-              var ref = firebase.firestore().collection("Teams");
-              var query = ref.doc(this.props.userData.uTI).collection("TU");
-              query.get().then(
-                function(doc) {
-                  doc.forEach(doc => {
-                    firebase
-                      .firestore()
-                      .collection("Events")
-                      .doc(moment(this.state.ogDate).format())
-                      .collection("EU")
-                      .doc(doc.id)
-                      .set({
-                        st: 1,
-                        unE: doc.data().unM
-                      });
+              this.retrieveData();
+            })
+            .then(() => {
+              let eventPlayers = this.state.players;
+              eventPlayers.forEach(doc => {
+                firebase
+                  .firestore()
+                  .collection("Events")
+                  .doc(moment(this.state.ogDate).format())
+                  .collection("EU")
+                  .doc(doc.key)
+                  .set({
+                    st: 1,
+                    unE: doc.unM
                   });
-                }.bind(this)
-              );
+              });
             })
             .then(() => {
               this.props.navigation.navigate("TeamScreen");
@@ -230,27 +319,22 @@ class CreateEventScreen extends Component {
               tUN: this.props.usersTeamData.tUN
             })
             .then(() => {
-              var ref = firebase.firestore().collection("Teams");
-              var query = ref
-                .doc(this.props.userData.uTI)
-                .collection("TU");
-              query.get().then(
-                function(doc) {
-                  doc.forEach(doc => {
-                    firebase
-                      .firestore()
-
-                      .collection("Events")
-                      .doc(moment(this.state.ogDate).format())
-                      .collection("EU")
-                      .doc(doc.id)
-                      .set({
-                        st: 1,
-                        unE: doc.data().unM
-                      });
+              this.retrieveData();
+            })
+            .then(() => {
+              let eventPlayers = this.state.players;
+              eventPlayers.forEach(doc => {
+                firebase
+                  .firestore()
+                  .collection("Events")
+                  .doc(moment(this.state.ogDate).format())
+                  .collection("EU")
+                  .doc(doc.key)
+                  .set({
+                    st: 1,
+                    unE: doc.unM
                   });
-                }.bind(this)
-              );
+              });
             })
             .then(() => {
               this.props.navigation.navigate("TeamScreen");
@@ -375,7 +459,7 @@ class CreateEventScreen extends Component {
           style={styles.buttonContainer}
           onPress={() => saveEvent()}
         >
-          <Text style={styles.buttonText}>{save}</Text>
+          <Text style={styles.buttonText}>{this.state.players.length}</Text>
         </TouchableOpacity>
       </View>
     );

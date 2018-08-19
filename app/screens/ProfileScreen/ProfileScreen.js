@@ -208,7 +208,7 @@ class ProfileScreen extends Component {
             style={styles.teamIcon}
             source={require("FieldsReact/app/images/Team/team.png")}
           />
-          <Text style={styles.boxText}>{this.props.usersTeamData.tUN} </Text>
+          <Text style={styles.boxText}>{this.props.userData.uTN} </Text>
         </TouchableOpacity>
       );
     } else if (this.props.userData.uTI === undefined) {

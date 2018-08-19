@@ -12,7 +12,8 @@ import {
   team_full_name,
   team_username,
   save,
-  create_team
+  create_team,
+  please_enter_username
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import { connect } from "react-redux";
@@ -38,7 +39,6 @@ class CreateTeamScreen extends Component {
     super(props);
     this.state = {
       teamUsername: "",
-      teamFullName: ""
     };
   }
   guid = () => {
@@ -76,8 +76,8 @@ class CreateTeamScreen extends Component {
       .collection("Teams")
       .doc(teamID)
       .set({
-        tFN: this.state.teamFullName.trim(),
-        tUN: this.state.teamUsername.toLowerCase().trim()
+        tUN: this.state.teamUsername.toLowerCase().trim(),
+        pC: 1
       })
       .then(() => {
         firebase
@@ -149,18 +149,9 @@ class CreateTeamScreen extends Component {
           onChangeText={this.usernameHandle}
           autoCapitalize={"none"}
         />
-        <Text style={styles.headerText}>{team_full_name}</Text>
 
-        <TextInput
-          style={styles.textInput}
-          maxLength={30}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={team_full_name}
-          value={this.state.teamFullName}
-          onChangeText={teamFullName => this.setState({ teamFullName })}
-          autoCapitalize={"none"}
-
-        />
+        <Text></Text>
+       
 
         <TouchableOpacity
           style={styles.buttonContainer}

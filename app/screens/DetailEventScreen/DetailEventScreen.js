@@ -16,7 +16,8 @@ import {
   event_open,
   event_out,
   field_not_set,
-  delete_event
+  delete_event,
+  show_players
 } from "../../strings/strings";
 import firebase, { Firebase } from "react-native-firebase";
 
@@ -45,6 +46,23 @@ class DetailEventScreen extends Component {
     this.setState({ infoVisible: visible });
   }
 
+  getUserSelection = () => {
+    var { params } = this.props.navigation.state;
+
+    firebase
+      .firestore()
+      .collection("Events")
+      .doc(params.id)
+      .collection("EU")
+      .doc(firebase.auth().currentUser.uid)
+      .get()
+      .then(
+        function(doc) {
+          this.setState({ selectedIndex: doc.data().st, loading: false });
+        }.bind(this)
+      );
+  };
+
   onCollectionUpdate = querySnapshot => {
     const players = [];
     querySnapshot.forEach(doc => {
@@ -68,16 +86,17 @@ class DetailEventScreen extends Component {
     });
   };
 
-  componentDidMount() {
-    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
-  }
   componentWillUnmount() {
-    this.unsubscribe();
+    if (this.state.subscribed === true) {
+      this.unsubscribe();
+    }
   }
 
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
+
+    this.getUserSelection();
 
     this.ref = firebase
       .firestore()
@@ -91,7 +110,10 @@ class DetailEventScreen extends Component {
     this.state = {
       selectedIndex: 1,
       players: [],
-      infoVisible: false
+      infoVisible: false,
+      playerListVisible: false,
+      subscribed: false,
+      loading: true
     };
   }
   updateIndex = selectedIndex => {
@@ -133,6 +155,11 @@ class DetailEventScreen extends Component {
           });
       }
     });
+  };
+
+  setPlayerListVisible = () => {
+    this.setState({ playerListVisible: true, subscribed: true });
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
   };
   render() {
     var { params } = this.props.navigation.state;
@@ -176,6 +203,33 @@ class DetailEventScreen extends Component {
           innerBorderStyle={{ width: 0 }}
         />
       );
+    }
+
+    if (this.state.playerListVisible === false) {
+      var playerListTab = (
+        <TouchableOpacity onPress={() => this.setPlayerListVisible()}>
+          <Text style={styles.blueText}>{show_players}</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      var playerListTab = (
+        <View>
+          <FlatList
+            data={this.state.players}
+            renderItem={({ item }) => (
+              <TouchableOpacity style={styles.item}>
+                <PlayerListItem {...item} />
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      );
+    }
+
+    if (this.state.loading === false) {
+      var tab = <View style={{ marginTop: 12 }}>{buttonGroup}</View>;
+    } else {
+      var tab = null;
     }
 
     if (params.eventFieldName === undefined) {
@@ -292,16 +346,8 @@ class DetailEventScreen extends Component {
             </Text>
           </View>
         </View>
-        <View style={{ marginTop: 12 }}>{buttonGroup}</View>
-
-        <FlatList
-          data={this.state.players}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.item}>
-              <PlayerListItem {...item} />
-            </TouchableOpacity>
-          )}
-        />
+        {tab}
+        {playerListTab}
       </View>
     );
   }
@@ -401,5 +447,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     height: "100%",
     flex: 1
+  },
+
+  blueText: {
+    color: "#3facff",
+    fontWeight: "bold",
+    marginTop: 8,
+    textAlign: "center"
   }
 });

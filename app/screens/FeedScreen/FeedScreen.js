@@ -63,7 +63,7 @@ class FeedScreen extends React.Component {
           onPress={() => this.props.navigation.navigate("TeamScreen")}
         >
           <Text style={styles.teamCardText}>
-            {this.props.usersTeamData.tUN}
+            {this.props.userData.uTN}
           </Text>
         </TouchableOpacity>
       );

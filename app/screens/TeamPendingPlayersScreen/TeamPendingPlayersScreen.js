@@ -100,6 +100,15 @@ class TeamPendingPlayersScreen extends Component {
       .then(() => {
         firebase
           .firestore()
+          .collection("Teams")
+          .doc(this.props.userData.uTI)
+          .update({
+            pC: this.props.usersTeamData.pC + 1
+          });
+      })
+      .then(() => {
+        firebase
+          .firestore()
           .collection("Users")
           .doc(item.id)
           .update({
