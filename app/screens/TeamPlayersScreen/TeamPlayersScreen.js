@@ -6,7 +6,8 @@ import {
   Text,
   Image,
   Modal,
-  FlatList
+  FlatList,
+  AsyncStorage
 } from "react-native";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
@@ -28,7 +29,88 @@ const mapDispatchToProps = dispatch => {
 };
 
 class TeamPlayersScreen extends Component {
-  
+  loadPlayersList() {
+    const ref = firebase.firestore().collection("Teams");
+    var serializedData;
+
+    const players = [];
+
+    const query = ref.doc(this.props.userData.uTI).collection("TU");
+    query
+      .get()
+      .then(
+        function(doc) {
+          doc.forEach(doc => {
+            const { unM } = doc.data();
+            players.push({
+              key: doc.id,
+              unM
+            });
+          });
+        }.bind(this)
+      )
+      .then(() => {
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(players, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+      })
+      .then(() => {
+        this.props.getUserData();
+      })
+      .then(() => {
+        if (players.length !== this.props.usersTeamData.pC) {
+          //If player count differs from list length, update
+          firebase
+            .firestore()
+            .collection("Teams")
+            .doc(this.props.usersTeamData.id)
+            .update({
+              pC: players.length
+            });
+        }
+      })
+      .then(() => {
+        this.storeData(serializedData);
+      });
+  }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem("teamPlayers", data)
+        .then(() => {})
+        .then(this.retrieveData());
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("teamPlayers");
+      if (value !== null) {
+        //If player count changes, this falls out, propably should call getuserdata here
+        if (JSON.parse(value).length === this.props.usersTeamData.pC) {
+          this.setState({ players: JSON.parse(value) });
+        } else {
+          this.loadPlayersList();
+        }
+      } else {
+        this.loadPlayersList();
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
 
   static navigationOptions = {
     header: null
@@ -36,39 +118,20 @@ class TeamPlayersScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.loadPlayersList()
+    var { params } = this.props.navigation.state;
+
+    this.retrieveData();
 
     this.state = {
-      players: []
+      players: [],
+      myKey: null,
+      gg: "mmm"
     };
   }
 
-  loadPlayersList() {
-    const ref = firebase.firestore().collection("Teams");
-
-    const players = [];
-
-    const query = ref
-      .doc(this.props.userData.uTI)
-      .collection("TU");
-    query.get().then(
-      function(doc) {
-        doc.forEach(doc => {
-          const { unM } = doc.data();
-          players.push({
-            key: doc.id,
-            doc,
-            unM
-          });
-        });
-        this.setState({
-          players
-        });
-      }.bind(this)
-    );
-  }
-
   render() {
+    var { params } = this.props.navigation.state;
+
     return (
       <View style={styles.container}>
         <View style={styles.backButtonContainer}>
@@ -82,14 +145,17 @@ class TeamPlayersScreen extends Component {
               source={require("FieldsReact/app/images/BackButton/back_button.png")}
             />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{players}</Text>
+          <Text style={styles.teamName}>
+            {this.state.players.length + " " + [players]}
+          </Text>
         </View>
+
         <FlatList
           data={this.state.players}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.item}>
+            <View style={styles.item}>
               <TeamPlayerListItem {...item} />
-            </TouchableOpacity>
+            </View>
           )}
         />
       </View>

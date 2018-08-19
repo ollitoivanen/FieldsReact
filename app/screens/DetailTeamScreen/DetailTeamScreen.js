@@ -168,28 +168,28 @@ class DetailTeamScreen extends Component {
 
         .then(() => {
           firebase
-        .firestore()
-        .collection("Teams")
-        .doc(params.teamID)
-        .collection("PTU")
-        .doc(firebase.auth().currentUser.uid)
-        .set({
-          pUN: this.props.userData.un
+            .firestore()
+            .collection("Teams")
+            .doc(params.teamID)
+            .collection("PTU")
+            .doc(firebase.auth().currentUser.uid)
+            .set({
+              pUN: this.props.userData.un
+            });
         })
-        }).then(()=>{
+        .then(() => {
           firebase
-          .firestore()
-          .collection("Users")
-          .doc(firebase.auth().currentUser.uid)
+            .firestore()
+            .collection("Users")
+            .doc(firebase.auth().currentUser.uid)
 
-          .update({
-            pT: params.teamID
-          });
-        }).then(()=>this.props.getUserData())
+            .update({
+              pT: params.teamID
+            });
+        })
+        .then(() => this.props.getUserData())
         .then(this.openRemoveAndSendRequestModal(false));
     };
-
-    
 
     var { params } = this.props.navigation.state;
 
@@ -271,12 +271,7 @@ class DetailTeamScreen extends Component {
           </TouchableOpacity>
         </Modal>
 
-
-
-
-
-
-<Modal
+        <Modal
           transparent={true}
           visible={this.state.removeAndSendRequestVisible}
           onRequestClose={() => {}}
@@ -309,14 +304,13 @@ class DetailTeamScreen extends Component {
                   removeRequestAndSendNewOne();
                 }}
               >
-                <Text style={styles.removeText}>{remove_old_request_and_send_new_request_to_this_team}</Text>
+                <Text style={styles.removeText}>
+                  {remove_old_request_and_send_new_request_to_this_team}
+                </Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
-
-
-
 
         <View style={styles.greenBackground}>
           <View style={styles.greenRowContainer}>
