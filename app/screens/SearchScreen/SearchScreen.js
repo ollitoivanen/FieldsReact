@@ -81,7 +81,7 @@ class SearchScreen extends Component {
       query.get().then(
         function(doc) {
           doc.forEach(doc => {
-            const { un, fC, tC, re, cFI, cFN, uTI, ts } = doc.data();
+            const { un, fC, tC, re, cFI, cFN, uTI, ts, uTN } = doc.data();
 
             const id = doc.id;
             users.push({
@@ -95,6 +95,7 @@ class SearchScreen extends Component {
               cFI,
               cFN,
               uTI,
+              uTN,
               ts
             });
           });
@@ -148,9 +149,9 @@ class SearchScreen extends Component {
               onPress={() =>
                 this.props.navigation.navigate("DetailProfileScreen", {
                   uTI: item.uTI,
+                  uTN: item.uTN,
                   un: item.username,
                   tC: item.tC,
-                  fC: item.fC,
                   cFI: item.cFI,
                   cFN: item.cFN,
                   ts: item.ts,

@@ -71,19 +71,7 @@ class DetailProfileScreen extends Component {
         }.bind(this)
       )
       .then(() => {
-        const alreadyVisited = [];
-        serializedData = JSON.stringify(friends, function(key, value) {
-          if (typeof value == "object") {
-            if (alreadyVisited.indexOf(value.key) >= 0) {
-              // do something other that putting the reference, like
-              // putting some name that you can use to build the
-              // reference again later, for eg.
-              return value.key;
-            }
-            alreadyVisited.push(value.name);
-          }
-          return value;
-        });
+        serializedData = JSON.stringify(friends);
       })
 
       .then(() => {
@@ -104,22 +92,22 @@ class DetailProfileScreen extends Component {
   retrieveData = async () => {
     var { params } = this.props.navigation.state;
 
-      const value = await AsyncStorage.getItem("friends");
-      if (value !== null) {
-        this.setState({ friends: JSON.parse(value) });
+    const value = await AsyncStorage.getItem("friends");
+    if (value !== null) {
+      this.setState({ friends: JSON.parse(value) });
 
-
-        let friendArray = JSON.parse(value);
-        let foundFriend = friendArray.find(friendArray => friendArray.fI === params.id);
-        if (foundFriend === undefined) {
-          this.setState({ friendStatus: false });
-        } else {
-          this.setState({ friendStatus: true });
-        }
+      let friendArray = JSON.parse(value);
+      let foundFriend = friendArray.find(
+        friendArray => friendArray.fI === params.id
+      );
+      if (foundFriend === undefined) {
+        this.setState({ friendStatus: false });
       } else {
-        this.loadFriendList();
+        this.setState({ friendStatus: true });
       }
-  
+    } else {
+      this.loadFriendList();
+    }
   };
 
   guid = () => {
@@ -145,28 +133,48 @@ class DetailProfileScreen extends Component {
   };
 
   removeFriend = () => {
-    this.setState({friendStatus: null})
+    this.setState({ friendStatus: null });
 
     var { params } = this.props.navigation.state;
 
-    let friendArray = this.state.friends
-    let friendRemoved = friendArray.find(friendArray=> friendArray.fI === params.id)
-    let friendRemovedID = friendRemoved.id
+    let friendArray = this.state.friends;
+    let friendRemoved = friendArray.find(
+      friendArray => friendArray.fI === params.id
+    );
+    friendArray.pop(friendRemoved);
+
+    serializedData = JSON.stringify(friendArray);
+    this.storeData(serializedData);
+
+    let friendRemovedID = friendRemoved.id;
 
     firebase
       .firestore()
       .collection("Friends")
-      .doc(friendRemovedID).delete()
-      .then(() => {
-        this.loadFriendList();
-      });
+      .doc(friendRemovedID)
+      .delete();
   };
 
   addFriend = () => {
-    this.setState({friendStatus: null})
+    this.setState({ friendStatus: null });
     var { params } = this.props.navigation.state;
 
     var friendID = this.guid().substring(0, 7);
+    let friendArray = this.state.friends;
+    const id = friendID;
+    const aI = firebase.auth().currentUser.uid;
+    const fI = params.id;
+    const fN = params.un;
+    friendArray.push({
+      key: params.id,
+      id,
+      aI,
+      fI,
+      fN
+    });
+
+    serializedData = JSON.stringify(friendArray);
+    this.storeData(serializedData);
 
     firebase
       .firestore()
@@ -176,36 +184,15 @@ class DetailProfileScreen extends Component {
         aI: firebase.auth().currentUser.uid,
         fI: params.id,
         fN: params.un
-      })
-      .then(() => {
-        this.loadFriendList();
       });
-  };
-
-  getUserTeam = () => {
-    var { params } = this.props.navigation.state;
-
-    firebase
-      .firestore()
-      .collection("Teams")
-      .doc(params.uTI)
-      .get()
-      .then(
-        function(doc) {
-          this.setState({ uTN: doc.data().tUN });
-        }.bind(this)
-      );
   };
 
   constructor(props) {
     super(props);
     this.retrieveData();
     var { params } = this.props.navigation.state;
-    if (params.uTI !== undefined) {
-      this.getUserTeam();
-    }
+    
     this.state = {
-      uTN: "",
       trainingTime: "",
       friends: [],
       friendStatus: null
@@ -237,12 +224,19 @@ class DetailProfileScreen extends Component {
     let badge;
     if (this.state.friendStatus === true) {
       var friendButton = (
-        <TouchableOpacity style={styles.roundTextContainer} onPress={()=>this.removeFriend()}>
+        <TouchableOpacity
+          style={styles.roundTextContainer}
+          onPress={() => this.removeFriend()}
+        >
           <Text style={styles.blueText}>{remove_friend}</Text>
         </TouchableOpacity>
       );
-    }else if(this.state.friendStatus === null){
-      var friendButton = null
+    } else if (this.state.friendStatus === null) {
+      var friendButton = (
+        <View style={styles.roundTextContainer}>
+          <Text style={styles.blueText}>{add_friend}</Text>
+        </View>
+      );
     } else {
       var friendButton = (
         <TouchableOpacity
@@ -382,7 +376,7 @@ class DetailProfileScreen extends Component {
             style={styles.teamIcon}
             source={require("FieldsReact/app/images/Team/team.png")}
           />
-          <Text style={styles.boxText}>{this.state.uTN} </Text>
+          <Text style={styles.boxText}>{params.uTN} </Text>
         </TouchableOpacity>
       );
     } else if (params.uTI === undefined) {
@@ -480,12 +474,6 @@ class DetailProfileScreen extends Component {
 
           <View style={styles.actionContainer}>
             <View style={styles.imageTabContainer}>
-              <TouchableOpacity style={styles.roundTextContainer}>
-                <Text style={styles.boxText}>
-                  {fC} {friends}
-                </Text>
-              </TouchableOpacity>
-
               <TouchableOpacity style={styles.roundTextContainer}>
                 <Text style={styles.boxText}>
                   {tC} {trainings}

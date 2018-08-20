@@ -41,6 +41,8 @@ import CreateTeamScreen from "./app/screens/CreateTeamScreen/CreateTeamScreen";
 import ReputationScreen from "./app/screens/ReputationScreen/ReputationScreen";
 import SettingsScreen from "./app/screens/SettingsScreen/SettingsScreen";
 import EditProfileScreen from "./app/screens/EditProfileScreen/EditProfileScreen";
+import UserFriendListScreen from "./app/screens/UserFriendListScreen/UserFriendListScreen";
+
 
 
 
@@ -145,6 +147,10 @@ export const StackNavigatorApp = StackNavigator(
 
     EditProfileScreen:{
       screen: EditProfileScreen
+    },
+
+    UserFriendListScreen: {
+      screen: UserFriendListScreen
     }
   },
 

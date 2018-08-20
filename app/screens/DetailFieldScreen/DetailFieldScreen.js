@@ -44,18 +44,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-/*const getFieldImage = () => {
-  firebase
-    .storage()
-    .ref("/files/1234")
-    .downloadFile("/path/to/save/file")
-    .then(downloadedFile => {
-      this.setState({ fieldName: downloadedFile.toString() }); //success
-    })
-    .catch(err => {
-      //Error
-    });
-};*/
+ 
 
 class DetailFieldScreen extends Component {
   componentWillMount = () => {
@@ -68,6 +57,28 @@ class DetailFieldScreen extends Component {
   static navigationOptions = {
     header: null
   };
+
+
+  getFieldImage = () => {
+    var { params } = this.props.navigation.state;
+
+
+
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+    storageRef
+      .child("fieldpics/" + "01d0de148ba8" + "/" +"01d0de148ba8"+".jpg")
+      .getDownloadURL()
+      .then(downloadedFile=> {
+
+        this.setState({ fieldImage:downloadedFile.toString()}); //success
+      })
+      
+  };
+
 
   loadEvents = () => {
     var { params } = this.props.navigation.state;
@@ -115,6 +126,7 @@ class DetailFieldScreen extends Component {
         cFN: this.state.fieldName,
         ts: startTime
       })
+      .then(this.props.getUserData())
 
       .then(() => {
         firebase
@@ -132,7 +144,6 @@ class DetailFieldScreen extends Component {
               });
           });
       })
-      .then(this.props.getUserData())
 
       .then(() => {
         this.props.navigation.navigate("TrainingScreen", {
@@ -161,7 +172,9 @@ class DetailFieldScreen extends Component {
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
+
     this.loadEvents();
+    this.getFieldImage()
 
     const userRef = firebase
       .firestore()
@@ -185,7 +198,8 @@ class DetailFieldScreen extends Component {
       editVisible: false,
       fieldNameEdit: params.fieldName,
       fieldAreaEdit: params.fieldArea,
-      fieldAddressEdit: params.fieldAddress
+      fieldAddressEdit: params.fieldAddress,
+      fieldImage: "mmm"
     };
   }
   setModalVisible(visible) {
@@ -551,7 +565,7 @@ class DetailFieldScreen extends Component {
           <View style={styles.greenRowContainer}>
             <Image
               style={styles.fieldImage}
-              source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+              source={{uri: this.state.fieldImage, cache: 'force-cache'}}
               borderRadius={35}
               resizeMode="cover"
             />

@@ -5,11 +5,11 @@ import {
   Text,
   Alert,
   TouchableOpacity,
-  Image
+  Image,
+  AsyncStorage
 } from "react-native";
 import { connect } from "react-redux";
 var moment = require("moment");
-
 
 import firebase from "react-native-firebase";
 
@@ -21,8 +21,7 @@ import {
   not_at_any_field,
   under_minute,
   h,
-  min,
-
+  min
 } from "../../strings/strings";
 
 const mapStateToProps = state => {
@@ -38,22 +37,77 @@ const mapDispatchToProps = dispatch => {
 };
 
 class ProfileScreen extends Component {
-  componentWillMount(){
-    this.getTrainingTime()
+  componentWillMount() {
+    this.getTrainingTime();
   }
   static navigationOptions = {
     header: null
   };
 
-  
-
   constructor(props) {
     super(props);
-    this.state={
-      trainingTime: ""
-    }
-   
+    this.retrieveData();
+
+    this.state = {
+      trainingTime: "",
+      fC: ""
+    };
   }
+
+  loadFriendList() {
+    const ref = firebase.firestore().collection("Friends");
+    var serializedData;
+
+    const friends = [];
+
+    const query = ref.where("aI", "==", firebase.auth().currentUser.uid);
+    query
+      .get()
+      .then(
+        function(doc) {
+          doc.forEach(doc => {
+            const { aI, fI, fN } = doc.data();
+            const id = doc.id;
+            friends.push({
+              key: doc.id,
+              id,
+              aI,
+              fI,
+              fN
+            });
+          });
+        }.bind(this)
+      )
+      .then(() => {
+        serializedData = JSON.stringify(friends);
+      })
+
+      .then(() => {
+        this.storeData(serializedData);
+      });
+  }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem("friends", data).then(() => {
+        this.retrieveData();
+      });
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  retrieveData = async () => {
+    var { params } = this.props.navigation.state;
+
+    const value = await AsyncStorage.getItem("friends");
+    if (value !== null) {
+      let friendArray = JSON.parse(value);
+      this.setState({ fC: friendArray.length });
+    } else {
+      this.loadFriendList();
+    }
+  };
 
   getTrainingTime = () => {
     const startTime = this.props.userData.ts;
@@ -192,7 +246,9 @@ class ProfileScreen extends Component {
             })
           }
         >
-          <Text style={styles.boxText}>{this.props.userData.cFN + ", " + this.state.trainingTime}</Text>
+          <Text style={styles.boxText}>
+            {this.props.userData.cFN + ", " + this.state.trainingTime}
+          </Text>
         </TouchableOpacity>
       );
     }
@@ -229,6 +285,7 @@ class ProfileScreen extends Component {
             <View style={styles.imageTabContainer}>
               <Image
                 style={styles.profileImage}
+              
                 source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
                 borderRadius={35}
                 resizeMode="cover"
@@ -250,9 +307,14 @@ class ProfileScreen extends Component {
 
           <View style={styles.actionContainer}>
             <View style={styles.imageTabContainer}>
-              <TouchableOpacity style={styles.roundTextContainer}>
+              <TouchableOpacity
+                style={styles.roundTextContainer}
+                onPress={() =>
+                  this.props.navigation.navigate("UserFriendListScreen")
+                }
+              >
                 <Text style={styles.boxText}>
-                  {this.props.userData.fC} {friends}
+                  {this.state.fC} {friends}
                 </Text>
               </TouchableOpacity>
 

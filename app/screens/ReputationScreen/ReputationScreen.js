@@ -21,8 +21,8 @@ class ReputationScreen extends Component {
   };
   render() {
     let nextBadge;
-    let tillNextBadge
-    
+    let tillNextBadge;
+
     let badge;
     if (this.props.userData.re < 500) {
       nextBadge = 500;
@@ -151,10 +151,16 @@ class ReputationScreen extends Component {
       );
     }
 
-    if(this.props.userData.re > 85000){
-        tillNextBadge
-    }else{
-    tillNextBadge = nextBadge - this.props.userData.re+ " " + [reputation]+ " " + [to_next_badge]
+    if (this.props.userData.re > 85000) {
+      tillNextBadge;
+    } else {
+      tillNextBadge =
+        nextBadge -
+        this.props.userData.re +
+        " " +
+        [reputation] +
+        " " +
+        [to_next_badge];
     }
     return (
       <View style={styles.container}>
@@ -230,10 +236,10 @@ const styles = StyleSheet.create({
   },
 
   tillText: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginTop: 20,
-      textAlign: 'center',
-      marginHorizontal: 20
+    fontSize: 24,
+    fontWeight: "bold",
+    marginTop: 20,
+    textAlign: "center",
+    marginHorizontal: 20
   }
 });

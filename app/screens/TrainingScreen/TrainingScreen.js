@@ -1,3 +1,5 @@
+
+
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import {
@@ -144,7 +146,7 @@ class TrainingScreen extends Component {
           })
         );
     } else {
-      var currentReputation = this.props.userData.reputation;
+      var currentReputation = this.props.userData.re;
       var trainingReputation = Math.trunc(trainingTime / 60000);
       var newReputation = trainingReputation + currentReputation;
       this.ref

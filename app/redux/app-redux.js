@@ -62,11 +62,7 @@ const getUserAndTeamData = () => {
               );
               var usersTeamData = usersTeamData1;
               var undefinedOnes = [];
-              if (doc.data().fC === undefined) {
-                undefinedOnes.push({
-                  fC: 0
-                });
-              }
+             
               if (doc.data().tC === undefined) {
                 undefinedOnes.push({
                   tC: 0
@@ -123,11 +119,7 @@ const getUserAndTeamData = () => {
             });
         } else {
           var undefinedOnes = [];
-          if (doc.data().fC === undefined) {
-            undefinedOnes.push({
-              fC: 0
-            });
-          }
+          
           if (doc.data().tC === undefined) {
             undefinedOnes.push({
               tC: 0
