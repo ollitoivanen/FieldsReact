@@ -31,6 +31,8 @@ import firebase from "react-native-firebase";
 var moment = require("moment");
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+import FastImage from "react-native-fast-image";
+
 import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
 
 const mapStateToProps = state => {
@@ -44,8 +46,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
- 
-
 class DetailFieldScreen extends Component {
   componentWillMount = () => {
     var { params } = this.props.navigation.state;
@@ -58,27 +58,25 @@ class DetailFieldScreen extends Component {
     header: null
   };
 
-
   getFieldImage = () => {
     var { params } = this.props.navigation.state;
-
-
 
     // Get a reference to the storage service, which is used to create references in your storage bucket
     var storage = firebase.storage();
 
     // Create a storage reference from our storage service
     var storageRef = storage.ref();
+
     storageRef
-      .child("fieldpics/" + "01d0de148ba8" + "/" +"01d0de148ba8"+".jpg")
+      .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg")
       .getDownloadURL()
-      .then(downloadedFile=> {
-
-        this.setState({ fieldImage:downloadedFile.toString()}); //success
+      .then(downloadedFile => {
+        this.setState({ fieldImage: downloadedFile.toString() });
       })
-      
+      .catch(err => {
+        this.setState({ fieldImage: null });
+      });
   };
-
 
   loadEvents = () => {
     var { params } = this.props.navigation.state;
@@ -174,7 +172,7 @@ class DetailFieldScreen extends Component {
     var { params } = this.props.navigation.state;
 
     this.loadEvents();
-    this.getFieldImage()
+    this.getFieldImage();
 
     const userRef = firebase
       .firestore()
@@ -199,7 +197,7 @@ class DetailFieldScreen extends Component {
       fieldNameEdit: params.fieldName,
       fieldAreaEdit: params.fieldArea,
       fieldAddressEdit: params.fieldAddress,
-      fieldImage: "mmm"
+      fieldImage: null
     };
   }
   setModalVisible(visible) {
@@ -430,6 +428,26 @@ class DetailFieldScreen extends Component {
     } else {
       trainingButton = trainingButtonNotTraining;
     }
+    var fieldIm;
+
+    if (this.state.fieldImage === null) {
+      var fieldIm = (
+        <FastImage
+          style={styles.fieldImage}
+          source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var fieldIm = (
+        <FastImage
+          style={styles.fieldImage}
+          source={{ uri: this.state.fieldImage }}
+          resizeMode="cover"
+        />
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Modal visible={this.state.editVisible} onRequestClose={() => {}}>
@@ -447,6 +465,17 @@ class DetailFieldScreen extends Component {
               </TouchableOpacity>
               <Text style={styles.fieldName}>{edit_field}</Text>
             </View>
+
+
+<TouchableOpacity>
+              <Image
+                style={styles.profileImage}
+                source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
+                borderRadius={35}
+                resizeMode="cover"
+              />
+              </TouchableOpacity>
+
 
             <Text style={styles.headerText}>{field_name}</Text>
             <TextInput
@@ -563,12 +592,7 @@ class DetailFieldScreen extends Component {
             <Text style={styles.fieldName}>{this.state.fieldName}</Text>
           </View>
           <View style={styles.greenRowContainer}>
-            <Image
-              style={styles.fieldImage}
-              source={{uri: this.state.fieldImage, cache: 'force-cache'}}
-              borderRadius={35}
-              resizeMode="cover"
-            />
+            {fieldIm}
 
             <View>
               <TouchableOpacity style={styles.peopleHereButton}>
@@ -665,10 +689,11 @@ const styles = StyleSheet.create({
     height: 70,
     alignSelf: "flex-start",
     alignItems: "center",
-    borderWidth: 5,
+    borderWidth: 3,
     padding: 5,
     borderColor: "white",
-    marginTop: 10
+    marginTop: 10,
+    borderRadius: 35
   },
 
   fieldName: {
@@ -687,6 +712,17 @@ const styles = StyleSheet.create({
     height: 48,
     width: 48,
     alignSelf: "center"
+  },
+
+  profileImage: {
+    width: 70,
+    height: 70,
+    alignSelf: "center",
+    alignItems: "center",
+    borderWidth: 5,
+    padding: 5,
+    borderColor: "white",
+    marginTop: 16
   },
 
   startTrainingButton: {

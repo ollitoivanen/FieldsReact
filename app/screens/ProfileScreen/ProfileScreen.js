@@ -285,8 +285,7 @@ class ProfileScreen extends Component {
             <View style={styles.imageTabContainer}>
               <Image
                 style={styles.profileImage}
-              
-                source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+                source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
                 borderRadius={35}
                 resizeMode="cover"
               />
