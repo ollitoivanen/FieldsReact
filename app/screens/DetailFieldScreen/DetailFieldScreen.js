@@ -32,6 +32,8 @@ var moment = require("moment");
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import FastImage from "react-native-fast-image";
+var ImagePicker = require('react-native-image-picker');
+
 
 import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
 
@@ -57,6 +59,45 @@ class DetailFieldScreen extends Component {
   static navigationOptions = {
     header: null
   };
+
+  
+
+  showPicker = () =>{
+    var options = {
+      title: 'Select Image',
+      
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+    
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        let source = { uri: response.uri };
+        let clearPath = response.uri
+    
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+    
+        this.setState({
+
+          avatarSource: clearPath
+        });
+      }
+    });
+    
+  }
 
   getFieldImage = () => {
     var { params } = this.props.navigation.state;
@@ -197,7 +238,8 @@ class DetailFieldScreen extends Component {
       fieldNameEdit: params.fieldName,
       fieldAreaEdit: params.fieldArea,
       fieldAddressEdit: params.fieldAddress,
-      fieldImage: null
+      fieldImage: null,
+      avatarSource: ""
     };
   }
   setModalVisible(visible) {
@@ -214,6 +256,21 @@ class DetailFieldScreen extends Component {
     //Small problem: if data is changed back to the param values, it wont be updated 31.7.2018
     const saveFieldData = () => {
       var { params } = this.props.navigation.state;
+
+      if(this.state.avatarSource!==undefined){
+        firebase.storage
+        var storage = firebase.storage();
+
+        // Create a storage reference from our storage service
+        var storageRef = storage.ref();
+
+        let imagePath =this.state.avatarSource
+        let imagePathLength = this.state.avatarSource.length
+        let shortenedImagePath = imagePath.substring(0, imagePathLength - 1)
+    
+        storageRef
+          .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg").putFile(imagePath)
+      }
 
       if (
         this.state.fieldNameEdit === params.fieldName &&
@@ -448,6 +505,27 @@ class DetailFieldScreen extends Component {
       );
     }
 
+
+
+    if(this.state.avatarSource===undefined){
+     var editFieldImage = <TouchableOpacity onPress={()=>this.showPicker()}>
+              <FastImage
+                style={styles.profileImage}
+                source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
+                borderRadius={35}
+                resizeMode="cover"
+              />
+              </TouchableOpacity>
+    }else{
+    var editFieldImage = <TouchableOpacity onPress={()=>this.showPicker()}>
+              <FastImage
+                style={styles.profileImage}
+                source={this.state.avatarSource}
+                borderRadius={35}
+                resizeMode="cover"
+              />
+              </TouchableOpacity>
+    }
     return (
       <View style={styles.container}>
         <Modal visible={this.state.editVisible} onRequestClose={() => {}}>
@@ -463,18 +541,11 @@ class DetailFieldScreen extends Component {
                   source={require("FieldsReact/app/images/BackButton/back_button.png")}
                 />
               </TouchableOpacity>
-              <Text style={styles.fieldName}>{edit_field}</Text>
+              <Text style={styles.fieldName}>{JSON.stringify( this.state.avatarSource).substring(8)}</Text>
             </View>
 
+{editFieldImage}
 
-<TouchableOpacity>
-              <Image
-                style={styles.profileImage}
-                source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
-                borderRadius={35}
-                resizeMode="cover"
-              />
-              </TouchableOpacity>
 
 
             <Text style={styles.headerText}>{field_name}</Text>
