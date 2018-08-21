@@ -122,6 +122,8 @@ PODS:
     - React
     - SDWebImage/Core
     - SDWebImage/GIF
+  - react-native-image-resizer (1.0.0):
+    - React
   - React/Core (0.11.0)
   - RNVectorIcons (5.0.0):
     - React
@@ -143,6 +145,7 @@ DEPENDENCIES:
   - Lock/SMS
   - Lock/TouchID
   - react-native-fast-image (from `../node_modules/react-native-fast-image`)
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
 
 SPEC REPOS:
@@ -176,6 +179,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   react-native-fast-image:
     :path: "../node_modules/react-native-fast-image"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
 
@@ -203,11 +208,12 @@ SPEC CHECKSUMS:
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   React: ab1a2e21deb34965c38328d5ec40cc7d12c6050a
   react-native-fast-image: cba3d9bf9c2cf8ddb643d887a686c53a5dd90a2c
+  react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   SimpleKeychain: e2485c28d82fcece35e9e41faeac42ebfe614815
   TouchIDAuth: 0cf861f58a2cacfc1c12cb02de4850729d943c81
 
-PODFILE CHECKSUM: 9afb78b09c471b75493c0c44380f478af0611033
+PODFILE CHECKSUM: 34cea7c336f29b29fa79fdc94f2808fc36d59681
 
 COCOAPODS: 1.5.3

@@ -21,6 +21,8 @@ pod 'Firebase/Storage', '~> 5.3.0'
 
   pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
 
+  pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
+
 end
 
 # Auth0 Lock

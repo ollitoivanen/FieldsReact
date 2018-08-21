@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  FlatList
+  FlatList,
+  Alert
 } from "react-native";
 import {
   goals,
@@ -32,8 +33,8 @@ var moment = require("moment");
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import FastImage from "react-native-fast-image";
-var ImagePicker = require('react-native-image-picker');
-
+var ImagePicker = require("react-native-image-picker");
+import ImageResizer from "react-native-image-resizer";
 
 import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
 
@@ -60,44 +61,62 @@ class DetailFieldScreen extends Component {
     header: null
   };
 
-  
-
-  showPicker = () =>{
+  showPicker = () => {
     var options = {
-      title: 'Select Image',
-      
+      title: "Select Image",
+
       storageOptions: {
         skipBackup: true,
-        path: 'images'
+        path: "images"
       }
     };
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-    
+    ImagePicker.showImagePicker(options, response => {
+
       if (response.didCancel) {
-        console.log('User cancelled image picker');
-      }
-      else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      }
-      else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      }
-      else {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
         let source = { uri: response.uri };
-        let clearPath = response.uri
-    
+        let clearPath = 'file:'+response.uri;
+
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-    
-        this.setState({
+        let imagePathLength = clearPath.length;
+        let shortenedImagePath = clearPath.substring(5);
 
-          avatarSource: clearPath
+
+
+        ImageResizer.createResizedImage(
+          clearPath,
+          10,
+          10,
+          "JPEG",
+          50
+        ).then((response) => {
+          console.warn("ir acrually works")
+         // storageRef
+          //  .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg")
+        //    .putFile(response.uri);
+          // response.uri is the URI of the new image that can now be displayed, uploaded...
+          // response.path is the path of the new image
+          // response.name is the name of the new image with the extension
+          // response.size is the size of the new image
+        }).catch(err => {
+          console.warn(err);
+  
+        });
+
+
+        this.setState({
+          
+          avatarSource:source
         });
       }
     });
-    
-  }
+  };
 
   getFieldImage = () => {
     var { params } = this.props.navigation.state;
@@ -255,22 +274,37 @@ class DetailFieldScreen extends Component {
 
     //Small problem: if data is changed back to the param values, it wont be updated 31.7.2018
     const saveFieldData = () => {
+      
       var { params } = this.props.navigation.state;
 
-      if(this.state.avatarSource!==undefined){
-        firebase.storage
-        var storage = firebase.storage();
+      firebase.storage;
+      var storage = firebase.storage();
 
-        // Create a storage reference from our storage service
-        var storageRef = storage.ref();
+      // Create a storage reference from our storage service
+      var storageRef = storage.ref();
 
-        let imagePath =this.state.avatarSource
-        let imagePathLength = this.state.avatarSource.length
-        let shortenedImagePath = imagePath.substring(0, imagePathLength - 1)
-    
+      let imagePath = this.state.avatarSource;
+      let imagePathLength = this.state.avatarSource.length;
+      let shortenedImagePath = imagePath.substring(5, imagePathLength - 1);
+
+      ImageResizer.createResizedImage(
+        10,
+        10,
+        "JPEG",
+        50
+      ).then((response) => {
+        this.setState({avatarSource: "uri"})
         storageRef
-          .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg").putFile(imagePath)
-      }
+          .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg")
+          .putFile(response.uri);
+        // response.uri is the URI of the new image that can now be displayed, uploaded...
+        // response.path is the path of the new image
+        // response.name is the name of the new image with the extension
+        // response.size is the size of the new image
+      }).catch(err => {
+        console.warn(err);
+
+      });
 
       if (
         this.state.fieldNameEdit === params.fieldName &&
@@ -505,26 +539,28 @@ class DetailFieldScreen extends Component {
       );
     }
 
-
-
-    if(this.state.avatarSource===undefined){
-     var editFieldImage = <TouchableOpacity onPress={()=>this.showPicker()}>
-              <FastImage
-                style={styles.profileImage}
-                source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
-                borderRadius={35}
-                resizeMode="cover"
-              />
-              </TouchableOpacity>
-    }else{
-    var editFieldImage = <TouchableOpacity onPress={()=>this.showPicker()}>
-              <FastImage
-                style={styles.profileImage}
-                source={this.state.avatarSource}
-                borderRadius={35}
-                resizeMode="cover"
-              />
-              </TouchableOpacity>
+    if (this.state.avatarSource === "") {
+      var editFieldImage = (
+        <TouchableOpacity onPress={() => this.showPicker()}>
+          <FastImage
+            style={styles.profileImage}
+            source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
+            borderRadius={35}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+      );
+    } else {
+      var editFieldImage = (
+        <TouchableOpacity onPress={() => this.showPicker()}>
+          <FastImage
+            style={styles.profileImage}
+            source={this.state.avatarSource}
+            borderRadius={35}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+      );
     }
     return (
       <View style={styles.container}>
@@ -541,12 +577,14 @@ class DetailFieldScreen extends Component {
                   source={require("FieldsReact/app/images/BackButton/back_button.png")}
                 />
               </TouchableOpacity>
-              <Text style={styles.fieldName}>{JSON.stringify( this.state.avatarSource).substring(8)}</Text>
+              
             </View>
 
-{editFieldImage}
+            <Text style={styles.fieldName}>
+                {JSON.stringify(this.state.avatarSource)}
+              </Text>
 
-
+            {editFieldImage}
 
             <Text style={styles.headerText}>{field_name}</Text>
             <TextInput
@@ -771,7 +809,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     alignSelf: "center",
-    marginStart: 12
+    marginStart: 12,
+    flexWrap: "wrap"
   },
 
   greenRowContainer: {
