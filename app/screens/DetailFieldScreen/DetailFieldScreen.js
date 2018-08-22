@@ -8,7 +8,8 @@ import {
   Modal,
   TextInput,
   FlatList,
-  Alert
+  Alert,
+  ScrollView
 } from "react-native";
 import {
   goals,
@@ -67,47 +68,51 @@ class DetailFieldScreen extends Component {
 
       storageOptions: {
         skipBackup: true,
-        path: "images"
+        path: "images",
+        
       }
     };
-    ImagePicker.showImagePicker(options, response => {
+    ImagePicker.launchImageLibrary(options, response => {
 
       if (response.didCancel) {
-        console.log("User cancelled image picker");
+        console.warn("User cancelled image picker");
       } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
+        console.warn("ImagePicker Error: ", response.error);
       } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
+        console.warn("User tapped custom button: ", response.customButton);
       } else {
         let source = { uri: response.uri };
-        let clearPath = 'file:'+response.uri;
+        let clearPath = response.uri;
 
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         let imagePathLength = clearPath.length;
-        let shortenedImagePath = clearPath.substring(5);
+        let shortenedImagePath = clearPath.substring(8);
 
-
+        firebase.storage;
+        var storage = firebase.storage();
+  
+        // Create a storage reference from our storage service
+        var storageRef = storage.ref();
 
         ImageResizer.createResizedImage(
-          clearPath,
-          10,
-          10,
+        clearPath,
+          200,
+          200,
           "JPEG",
-          50
-        ).then((response) => {
-          console.warn("ir acrually works")
-         // storageRef
-          //  .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg")
-        //    .putFile(response.uri);
+          100
+        ).then(({uri}) => {
+          console.warn("ir acrually works: " ,uri)
+          var { params } = this.props.navigation.state;
+
+         storageRef
+            .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg")
+            .putFile(uri);
           // response.uri is the URI of the new image that can now be displayed, uploaded...
           // response.path is the path of the new image
           // response.name is the name of the new image with the extension
           // response.size is the size of the new image
-        }).catch(err => {
-          console.warn(err);
-  
-        });
+        })
 
 
         this.setState({
@@ -524,17 +529,20 @@ class DetailFieldScreen extends Component {
     if (this.state.fieldImage === null) {
       var fieldIm = (
         <FastImage
-          style={styles.fieldImage}
+          style={styles.profileImage}
           source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
           resizeMode="cover"
+          borderRadius={50}
+
         />
       );
     } else {
       var fieldIm = (
         <FastImage
-          style={styles.fieldImage}
+          style={styles.profileImage}
           source={{ uri: this.state.fieldImage }}
           resizeMode="cover"
+          borderRadius={50}
         />
       );
     }
@@ -545,7 +553,7 @@ class DetailFieldScreen extends Component {
           <FastImage
             style={styles.profileImage}
             source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
-            borderRadius={35}
+            borderRadius={50}
             resizeMode="cover"
           />
         </TouchableOpacity>
@@ -565,7 +573,7 @@ class DetailFieldScreen extends Component {
     return (
       <View style={styles.container}>
         <Modal visible={this.state.editVisible} onRequestClose={() => {}}>
-          <View style={styles.editContainer}>
+          <ScrollView style={styles.editContainer}>
             <View style={styles.greenRowContainer}>
               <TouchableOpacity
                 style={styles.backButton}
@@ -624,7 +632,7 @@ class DetailFieldScreen extends Component {
             >
               <Text style={styles.buttonText}>{save}</Text>
             </TouchableOpacity>
-          </View>
+          </ScrollView>
         </Modal>
 
         <Modal
@@ -825,14 +833,15 @@ const styles = StyleSheet.create({
   },
 
   profileImage: {
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
     alignSelf: "center",
     alignItems: "center",
-    borderWidth: 5,
+    borderWidth: 3,
     padding: 5,
     borderColor: "white",
-    marginTop: 16
+    marginTop: 16,
+    borderRadius: 40
   },
 
   startTrainingButton: {
