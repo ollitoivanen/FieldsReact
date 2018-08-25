@@ -191,7 +191,7 @@ class DetailProfileScreen extends Component {
     super(props);
     this.retrieveData();
     var { params } = this.props.navigation.state;
-    
+
     this.state = {
       trainingTime: "",
       friends: [],

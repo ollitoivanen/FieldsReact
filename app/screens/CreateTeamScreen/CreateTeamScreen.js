@@ -131,7 +131,7 @@ class CreateTeamScreen extends Component {
           <TouchableOpacity
             style={styles.backButton}
             underlayColor="#bcbcbc"
-            onPress={() => this.setEditVisible(false)}
+            onPress={() => this.props.navigation.goBack()}
           >
             <Image
               style={styles.backButton}
