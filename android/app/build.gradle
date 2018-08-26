@@ -143,6 +143,8 @@ dependencies {
     compile project(':react-native-image-picker')
     compile project(':react-native-fast-image')
     compile project(':react-native-vector-icons')
+    compile project(':react-native-maps')
+
     compile(project(':react-native-firebase')) {
         transitive = false
     }
@@ -156,6 +158,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.0.2'
     implementation "com.google.firebase:firebase-firestore:17.0.4"
     implementation "com.google.firebase:firebase-storage:16.0.1"
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
 
 
 }
