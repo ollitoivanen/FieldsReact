@@ -12,16 +12,18 @@ target 'FieldsReact' do
 pod 'Firebase/Storage', '~> 5.3.0'
 
 
+  # See http://facebook.github.io/react-native/docs/integration-with-existing-apps.html#configuring-cocoapods-dependencies
+ 
 
 
 
 
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
 
-  pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
+
+
+
 
 end
 

@@ -60,7 +60,6 @@ PODS:
   - FirebaseStorage (3.0.0):
     - FirebaseCore (~> 5.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FLAnimatedImage (1.0.12)
   - GoogleToolboxForMac/Defines (2.1.4)
   - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
     - GoogleToolboxForMac/Defines (= 2.1.4)
@@ -115,22 +114,6 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.6.1)
-  - React (0.11.0):
-    - React/Core (= 0.11.0)
-  - react-native-fast-image (4.0.14):
-    - FLAnimatedImage
-    - React
-    - SDWebImage/Core
-    - SDWebImage/GIF
-  - react-native-image-resizer (1.0.0):
-    - React
-  - React/Core (0.11.0)
-  - RNVectorIcons (5.0.0):
-    - React
-  - SDWebImage/Core (4.4.2)
-  - SDWebImage/GIF (4.4.2):
-    - FLAnimatedImage (~> 1.0)
-    - SDWebImage/Core
   - SimpleKeychain (0.8.1)
   - TouchIDAuth (0.2.0):
     - SimpleKeychain (~> 0.3)
@@ -144,9 +127,6 @@ DEPENDENCIES:
   - Lock/Email
   - Lock/SMS
   - Lock/TouchID
-  - react-native-fast-image (from `../node_modules/react-native-fast-image`)
-  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
-  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -159,7 +139,6 @@ SPEC REPOS:
     - FirebaseFirestore
     - FirebaseInstanceID
     - FirebaseStorage
-    - FLAnimatedImage
     - GoogleToolboxForMac
     - gRPC
     - gRPC-Core
@@ -171,18 +150,8 @@ SPEC REPOS:
     - Masonry
     - nanopb
     - Protobuf
-    - React
-    - SDWebImage
     - SimpleKeychain
     - TouchIDAuth
-
-EXTERNAL SOURCES:
-  react-native-fast-image:
-    :path: "../node_modules/react-native-fast-image"
-  react-native-image-resizer:
-    :path: "../node_modules/react-native-image-resizer"
-  RNVectorIcons:
-    :path: "../node_modules/react-native-vector-icons"
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
@@ -194,7 +163,6 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 53f6fe858494c39dbfd5237655e0641152a88c89
   FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
   FirebaseStorage: 7ca4bb7b58a25fa647b04f524033fc7cb7eb272b
-  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   gRPC: 65fa2a50c4fd61940b76f4962d75c239c92c6a8d
   gRPC-Core: e3ace1e1161e75903135de8d8231bb69c9d35721
@@ -206,14 +174,9 @@ SPEC CHECKSUMS:
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  React: ab1a2e21deb34965c38328d5ec40cc7d12c6050a
-  react-native-fast-image: cba3d9bf9c2cf8ddb643d887a686c53a5dd90a2c
-  react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
-  RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
-  SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   SimpleKeychain: e2485c28d82fcece35e9e41faeac42ebfe614815
   TouchIDAuth: 0cf861f58a2cacfc1c12cb02de4850729d943c81
 
-PODFILE CHECKSUM: 34cea7c336f29b29fa79fdc94f2808fc36d59681
+PODFILE CHECKSUM: ab43ac1f5f60ec69605fe46a6eb4f2e6491f1d50
 
 COCOAPODS: 1.5.3
