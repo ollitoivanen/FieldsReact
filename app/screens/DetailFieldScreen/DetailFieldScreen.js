@@ -68,12 +68,10 @@ class DetailFieldScreen extends Component {
 
       storageOptions: {
         skipBackup: true,
-        path: "images",
-        
+        path: "images"
       }
     };
     ImagePicker.launchImageLibrary(options, response => {
-
       if (response.didCancel) {
         console.warn("User cancelled image picker");
       } else if (response.error) {
@@ -81,43 +79,12 @@ class DetailFieldScreen extends Component {
       } else if (response.customButton) {
         console.warn("User tapped custom button: ", response.customButton);
       } else {
-        let source = { uri: response.uri };
+        let source = response.uri;
         let clearPath = response.uri;
 
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        let imagePathLength = clearPath.length;
-        let shortenedImagePath = clearPath.substring(8);
-
-        firebase.storage;
-        var storage = firebase.storage();
-  
-        // Create a storage reference from our storage service
-        var storageRef = storage.ref();
-
-        ImageResizer.createResizedImage(
-        clearPath,
-          200,
-          200,
-          "JPEG",
-          100
-        ).then(({uri}) => {
-          console.warn("ir acrually works: " ,uri)
-          var { params } = this.props.navigation.state;
-
-         storageRef
-            .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg")
-            .putFile(uri);
-          // response.uri is the URI of the new image that can now be displayed, uploaded...
-          // response.path is the path of the new image
-          // response.name is the name of the new image with the extension
-          // response.size is the size of the new image
-        })
-
-
         this.setState({
-          
-          avatarSource:source
+          avatarSource: source,
+          editImageClearPath: clearPath
         });
       }
     });
@@ -259,11 +226,14 @@ class DetailFieldScreen extends Component {
       peopleHere: params.peopleHere,
       infoVisible: false,
       editVisible: false,
+      expandeImageVisible: false,
       fieldNameEdit: params.fieldName,
       fieldAreaEdit: params.fieldArea,
       fieldAddressEdit: params.fieldAddress,
       fieldImage: null,
-      avatarSource: ""
+      avatarSource: "",
+      editFieldImage: null,
+      editImageClearPath: null
     };
   }
   setModalVisible(visible) {
@@ -271,7 +241,15 @@ class DetailFieldScreen extends Component {
   }
 
   setEditVisible(visible) {
-    this.setState({ infoVisible: false, editVisible: visible });
+    this.setState({
+      infoVisible: false,
+      editVisible: visible,
+      avatarSource: this.state.fieldImage
+    });
+  }
+
+  setExpandedImageVisible(visible) {
+    this.setState({ expandeImageVisible: visible });
   }
 
   render() {
@@ -279,7 +257,6 @@ class DetailFieldScreen extends Component {
 
     //Small problem: if data is changed back to the param values, it wont be updated 31.7.2018
     const saveFieldData = () => {
-      
       var { params } = this.props.navigation.state;
 
       firebase.storage;
@@ -289,27 +266,21 @@ class DetailFieldScreen extends Component {
       var storageRef = storage.ref();
 
       let imagePath = this.state.avatarSource;
-      let imagePathLength = this.state.avatarSource.length;
-      let shortenedImagePath = imagePath.substring(5, imagePathLength - 1);
+      let clearPath = this.state.editImageClearPath;
 
-      ImageResizer.createResizedImage(
-        10,
-        10,
-        "JPEG",
-        50
-      ).then((response) => {
-        this.setState({avatarSource: "uri"})
-        storageRef
-          .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg")
-          .putFile(response.uri);
-        // response.uri is the URI of the new image that can now be displayed, uploaded...
-        // response.path is the path of the new image
-        // response.name is the name of the new image with the extension
-        // response.size is the size of the new image
-      }).catch(err => {
-        console.warn(err);
+      if (clearPath !== null) {
+        ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
+          ({ uri }) => {
+            var { params } = this.props.navigation.state;
 
-      });
+            storageRef
+              .child(
+                "fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg"
+              )
+              .putFile(uri);
+          }
+        );
+      }
 
       if (
         this.state.fieldNameEdit === params.fieldName &&
@@ -532,18 +503,18 @@ class DetailFieldScreen extends Component {
           style={styles.profileImage}
           source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
           resizeMode="cover"
-          borderRadius={50}
-
         />
       );
     } else {
       var fieldIm = (
-        <FastImage
-          style={styles.profileImage}
-          source={{ uri: this.state.fieldImage }}
-          resizeMode="cover"
-          borderRadius={50}
-        />
+        <TouchableOpacity onPress={() => this.setExpandedImageVisible(true)}>
+          <FastImage
+            style={styles.profileImage}
+            source={{ uri: this.state.fieldImage ,      priority: FastImage.priority.high,
+            }}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
       );
     }
 
@@ -551,7 +522,7 @@ class DetailFieldScreen extends Component {
       var editFieldImage = (
         <TouchableOpacity onPress={() => this.showPicker()}>
           <FastImage
-            style={styles.profileImage}
+            style={styles.profileImageEdit}
             source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
             borderRadius={50}
             resizeMode="cover"
@@ -562,8 +533,8 @@ class DetailFieldScreen extends Component {
       var editFieldImage = (
         <TouchableOpacity onPress={() => this.showPicker()}>
           <FastImage
-            style={styles.profileImage}
-            source={this.state.avatarSource}
+            style={styles.profileImageEdit}
+            source={{ uri: this.state.avatarSource }}
             borderRadius={35}
             resizeMode="cover"
           />
@@ -585,12 +556,7 @@ class DetailFieldScreen extends Component {
                   source={require("FieldsReact/app/images/BackButton/back_button.png")}
                 />
               </TouchableOpacity>
-              
             </View>
-
-            <Text style={styles.fieldName}>
-                {JSON.stringify(this.state.avatarSource)}
-              </Text>
 
             {editFieldImage}
 
@@ -694,6 +660,38 @@ class DetailFieldScreen extends Component {
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
+
+        <Modal
+          transparent={true}
+          visible={this.state.expandeImageVisible}
+          onRequestClose={() => {}}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              backgroundColor: "#00000080",
+              alignItems: "center"
+            }}
+            onPress={() => this.setExpandedImageVisible(false)}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                padding: 20
+              }}
+              onPress={() => this.setExpandedImageVisible(false)}
+            >
+              <FastImage
+                source={{ uri: this.state.fieldImage }}
+                resizeMode="cover"
+                style={{ width: 200, height: 200 }}
+              />
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
+
         <View style={styles.greenBackground}>
           <View style={styles.greenRowContainer}>
             <TouchableOpacity
@@ -840,6 +838,18 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     padding: 5,
     borderColor: "white",
+    marginTop: 16,
+    borderRadius: 40
+  },
+
+  profileImageEdit: {
+    width: 80,
+    height: 80,
+    alignSelf: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    padding: 5,
+    borderColor: "#e0e0e0",
     marginTop: 16,
     borderRadius: 40
   },

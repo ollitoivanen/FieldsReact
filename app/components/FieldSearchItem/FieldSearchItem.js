@@ -1,15 +1,46 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
+import FastImage from "react-native-fast-image";
+import firebase from "react-native-firebase";
+
 export default class FieldSearchitem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      fieldImagePath:require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
+    };
+    if (this.props.fieldImage === true) {
+      this.getImage();
+    }
+  }
+
+  getImage = () => {
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+
+    storageRef
+      .child("fieldpics/" + this.props.id + "/" + this.props.id + ".jpg")
+      .getDownloadURL()
+      .then(downloadedFile => {
+        var fieldImagePath = downloadedFile;
+        this.setState({ fieldImagePath: { uri: fieldImagePath } });
+      })
+      .catch(err => {});
+  };
+
   render() {
+    var fieldImagePath;
+    var fieldImage;
+
     return (
       <View style={styles.item}>
-        <Image
+        <FastImage
           style={styles.fieldImage}
-          source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-          borderRadius={25}
+          source={this.state.fieldImagePath}
           resizeMode="cover"
         />
         <Text style={styles.text} numberOfLines={2}>
@@ -20,6 +51,7 @@ export default class FieldSearchitem extends React.PureComponent {
     );
   }
 }
+
 const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
@@ -40,17 +72,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    marginStart: 8
   },
 
   fieldImage: {
     width: 50,
     height: 50,
-
+    borderRadius: 25,
     marginStart: 8,
-    borderWidth: 5,
-    borderColor: "white",
+    borderWidth: 3,
+    borderColor: "#e0e0e0",
     margin: 5
-  },
-  
+  }
 });

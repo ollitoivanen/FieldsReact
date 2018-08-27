@@ -54,20 +54,54 @@ class FieldSearchScreen extends Component {
   };
 
   initialFetch = () => {
-    if (this.state.selectedIndex === 0) {
-      const ref = firebase.firestore().collection("Fields");
-      var { params } = this.props.navigation.state;
-      const fields = [];
-      const homeAreaConst = this.state.homeAreaConst;
+    const ref = firebase.firestore().collection("Fields");
+    var { params } = this.props.navigation.state;
+    const fields = [];
+    const homeAreaConst = this.state.homeAreaConst;
+    var fieldImage
 
-      const query = ref.where("fARL", "==", this.state.homeAreaConst).limit(50);
+    const query = ref.where("fARL", "==", this.state.homeAreaConst).limit(50);
 
-      query.get().then(
-        function(doc) {
-          doc.forEach(doc => {
-            const id = doc.id;
-            const { fN, fAR, fI, fNL, fARL, fT, gG, fAT, fA, pH } = doc.data();
-            fields.push({
+    query.get().then(
+      function(doc) {
+        doc.forEach(doc => {
+          const id = doc.id;
+          const {
+            fN,
+            fAR,
+            fI,
+            fNL,
+            fARL,
+            fT,
+            gG,
+            fAT,
+            fA,
+            pH,
+            fIm
+          } = doc.data();
+          if (fIm === true) {
+            fieldImage = true
+                fields.push({
+                  key: doc.id,
+                  doc,
+                  id,
+                  fN,
+                  fAR,
+                  fI,
+                  fNL,
+                  fARL,
+                  fT,
+                  gG,
+                  fAT,
+                  fA,
+                  pH,
+                  fIm,
+                  fieldImage
+                });
+                
+          } else {
+             fieldImage = false;
+             fields.push({
               key: doc.id,
               doc,
               id,
@@ -80,16 +114,20 @@ class FieldSearchScreen extends Component {
               gG,
               fAT,
               fA,
-              pH
+              pH,
+              fIm,
+              fieldImage
             });
-          });
+          }
           this.setState({
             fields,
             search_placeholder: search_fields_near
-          });
-        }.bind(this)
-      );
-    }
+          })
+          
+        });
+       
+      }.bind(this)
+    );
   };
 
   constructor(props) {
@@ -159,67 +197,11 @@ class FieldSearchScreen extends Component {
         "==",
         this.state.fieldSearchTerm.toLowerCase().trim()
       );
-
-      query.get().then(
-        function(doc) {
-          doc.forEach(doc => {
-            const id = doc.id;
-
-            const { fN, fAR, fI, fNL, fARL, fT, gG, fAT, fA, pH } = doc.data();
-            fields.push({
-              key: doc.id,
-              doc,
-              id,
-              fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH
-            });
-          });
-          this.setState({
-            fields
-          });
-        }.bind(this)
-      );
     } else if (this.state.selectedIndex === 2) {
       const query = ref.where(
         "fARL",
         "==",
         this.state.fieldSearchTerm.toLowerCase().trim()
-      );
-
-      query.get().then(
-        function(doc) {
-          doc.forEach(doc => {
-            const id = doc.id;
-
-            const { fN, fAR, fI, fNL, fARL, fT, gG, fAT, fA, pH } = doc.data();
-            fields.push({
-              key: doc.id,
-              doc,
-              id,
-              fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH
-            });
-          });
-          this.setState({
-            fields
-          });
-        }.bind(this)
       );
     } else if (this.state.selectedIndex === 0) {
       var { params } = this.props.navigation.state;
@@ -227,78 +209,12 @@ class FieldSearchScreen extends Component {
         const query = ref
           .where("fARL", "==", this.state.homeAreaConst)
           .limit(50);
+      } else {
+        const query = ref
+          .where("fARL", "==", this.state.homeAreaConst)
 
-        query.get().then(
-          function(doc) {
-            doc.forEach(doc => {
-              const id = doc.id;
-
-              const {
-                fN,
-                fAR,
-                fI,
-                fNL,
-                fARL,
-                fT,
-                gG,
-                fAT,
-                fA,
-                pH
-              } = doc.data();
-              fields.push({
-                key: doc.id,
-                doc,
-                id,
-                fN,
-                fAR,
-                fI,
-                fNL,
-                fARL,
-                fT,
-                gG,
-                fAT,
-                fA,
-                pH
-              });
-            });
-            this.setState({
-              fields
-            });
-          }.bind(this)
-        );
+          .where("fNL", "==", this.state.fieldSearchTerm.toLowerCase().trim());
       }
-
-      const query = ref
-        .where("fARL", "==", this.state.homeAreaConst)
-        .where("fNL", "==", this.state.fieldSearchTerm.toLowerCase().trim());
-
-      query.get().then(
-        function(doc) {
-          doc.forEach(doc => {
-            const id = doc.id;
-
-            const { fN, fAR, fI, fNL, fARL, fT, gG, fAT, fA, pH } = doc.data();
-            fields.push({
-              key: doc.id,
-              doc,
-              id,
-              fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH
-            });
-          });
-          this.setState({
-            fields
-          });
-        }.bind(this)
-      );
     }
   };
 
