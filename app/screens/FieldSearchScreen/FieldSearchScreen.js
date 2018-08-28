@@ -58,7 +58,7 @@ class FieldSearchScreen extends Component {
     var { params } = this.props.navigation.state;
     const fields = [];
     const homeAreaConst = this.state.homeAreaConst;
-    var fieldImage
+    var fieldImage;
 
     const query = ref.where("fARL", "==", this.state.homeAreaConst).limit(50);
 
@@ -80,28 +80,27 @@ class FieldSearchScreen extends Component {
             fIm
           } = doc.data();
           if (fIm === true) {
-            fieldImage = true
-                fields.push({
-                  key: doc.id,
-                  doc,
-                  id,
-                  fN,
-                  fAR,
-                  fI,
-                  fNL,
-                  fARL,
-                  fT,
-                  gG,
-                  fAT,
-                  fA,
-                  pH,
-                  fIm,
-                  fieldImage
-                });
-                
+            fieldImage = true;
+            fields.push({
+              key: doc.id,
+              doc,
+              id,
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH,
+              fIm,
+              fieldImage
+            });
           } else {
-             fieldImage = false;
-             fields.push({
+            fieldImage = false;
+            fields.push({
               key: doc.id,
               doc,
               id,
@@ -122,10 +121,8 @@ class FieldSearchScreen extends Component {
           this.setState({
             fields,
             search_placeholder: search_fields_near
-          })
-          
+          });
         });
-       
       }.bind(this)
     );
   };

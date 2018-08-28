@@ -510,7 +510,9 @@ class DetailFieldScreen extends Component {
         <TouchableOpacity onPress={() => this.setExpandedImageVisible(true)}>
           <FastImage
             style={styles.profileImage}
-            source={{ uri: this.state.fieldImage ,      priority: FastImage.priority.high,
+            source={{
+              uri: this.state.fieldImage,
+              priority: FastImage.priority.high
             }}
             resizeMode="cover"
           />

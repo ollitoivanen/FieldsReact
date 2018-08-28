@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 var moment = require("moment");
+import FastImage from "react-native-fast-image";
 
 import firebase from "react-native-firebase";
 
@@ -47,12 +48,39 @@ class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.retrieveData();
+    if (this.props.userData.uIm === true) {
+      this.getProfileImage();
+    }
 
     this.state = {
       trainingTime: "",
-      fC: ""
+      fC: "",
+      profileImage: null
     };
   }
+
+  getProfileImage = () => {
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+
+    storageRef
+      .child(
+        "profilepics/" +
+          firebase.auth().currentUser.uid +
+          "/" +
+          firebase.auth().currentUser.uid +
+          ".jpg"
+      )
+      .getDownloadURL()
+      .then(downloadedFile => {
+        this.setState({ profileImage: downloadedFile.toString() });
+      })
+      .catch(err => {
+      });
+  };
 
   loadFriendList() {
     const ref = firebase.firestore().collection("Friends");
@@ -278,17 +306,28 @@ class ProfileScreen extends Component {
         </TouchableOpacity>
       );
     }
+
+    if(this.state.profileImage!==null){
+      var profileImage = <FastImage
+      style={styles.profileImage}
+      source={{uri:this.state.profileImage, priority: FastImage.priority.high}}
+      resizeMode="cover"
+      
+    />
+    }else{
+      var profileImage = <FastImage
+      style={styles.profileImage}
+      source={require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")}
+      resizeMode="cover"
+      />
+    
+  }
     return (
       <View style={styles.container}>
         <View style={styles.containerHeader}>
           <View style={styles.backgroundGreen}>
             <View style={styles.imageTabContainer}>
-              <Image
-                style={styles.profileImage}
-                source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
-                borderRadius={35}
-                resizeMode="cover"
-              />
+              {profileImage}
             </View>
             <View style={styles.rowCont}>
               <Text style={styles.username}>{this.props.userData.un}</Text>
@@ -445,11 +484,12 @@ const styles = StyleSheet.create({
   },
 
   profileImage: {
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
     alignSelf: "center",
     alignItems: "center",
-    borderWidth: 5,
+    borderWidth: 3,
+    borderRadius: 40,
     padding: 5,
     borderColor: "white",
     marginTop: 16

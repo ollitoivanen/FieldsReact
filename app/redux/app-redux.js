@@ -137,6 +137,11 @@ const getUserAndTeamData = () => {
               fP: false
             });
           }
+          if (doc.data().uIm === undefined) {
+            undefinedOnes.push({
+              uIm: false
+            });
+          }
           if (doc.data().hA === undefined) {
             undefinedOnes.push({
               hA: ""

@@ -11,6 +11,9 @@ import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import { edit_profile, username, full_name, save } from "../../strings/strings";
 import firebase from "react-native-firebase";
+import FastImage from "react-native-fast-image";
+var ImagePicker = require("react-native-image-picker");
+import ImageResizer from "react-native-image-resizer";
 const mapStateToProps = state => {
   return {
     userData: state.userData
@@ -28,39 +31,137 @@ class EditProfileScreen extends Component {
   };
   constructor(props) {
     super(props);
-    this.getImage()
+    if (this.props.userData.uIm === true) {
+      this.getProfileImage();
+    }
     this.state = {
-      username: this.props.userData.un
+      username: this.props.userData.un,
+      profileImage: null,
+      profileImageInitial: null
     };
   }
-  getImage = () => {
-    var { params } = this.props.navigation.state;
 
+  showPicker = () => {
+    var options = {
+      title: "Select Image",
 
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.warn("User cancelled image picker");
+      } else if (response.error) {
+        console.warn("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.warn("User tapped custom button: ", response.customButton);
+      } else {
+        let source = response.uri;
+        let clearPath = response.uri;
 
+        this.setState({
+          profileImage: source,
+          profileImageInitial: source
+        });
+      }
+    });
+  };
+  getProfileImage = () => {
     // Get a reference to the storage service, which is used to create references in your storage bucket
     var storage = firebase.storage();
 
     // Create a storage reference from our storage service
     var storageRef = storage.ref();
-    storageRef
-      .child("fieldpics/" + "01d0de148ba8" + "/" +"01d0de148ba8"+".jpg")
-      .getDownloadURL()
-      .then(downloadedFile=> {
 
-        this.setState({ fieldImage:downloadedFile.toString()}); //success
+    storageRef
+      .child(
+        "profilepics/" +
+          firebase.auth().currentUser.uid +
+          "/" +
+          firebase.auth().currentUser.uid +
+          ".jpg"
+      )
+      .getDownloadURL()
+      .then(downloadedFile => {
+        this.setState({ profileImage: downloadedFile.toString() });
       })
-      
+      .catch(err => {});
   };
+
   usernameHandle = value => {
     const newText = value.replace(/\s/g, "");
     this.setState({ username: newText });
   };
 
   saveProfile = () => {
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+
+    let imagePath = this.state.profileImage;
+    let clearPath = this.state.profileImageInitial;
+
+    if (clearPath !== null) {
+      ImageResizer.createResizedImage(imagePath, 200, 200, "JPEG", 100).then(
+        ({ uri }) => {
+          var { params } = this.props.navigation.state;
+
+          storageRef
+            .child(
+              "profilepics/" +
+                firebase.auth().currentUser.uid +
+                "/" +
+                firebase.auth().currentUser.uid +
+                ".jpg"
+            )
+            .putFile(uri);
+        }
+      );
+    }
+
     if (this.state.username === this.props.userData.un) {
-      this.props.navigation.goBack();
-    } else if (this.state.username !== this.props.userData.un) {
+      if (clearPath !== null) {
+        firebase
+          .firestore()
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .update({
+            uIm: true
+          })
+          .then(() => {
+            this.props.getUserData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
+      } else {
+        this.props.navigation.goBack();
+      }
+    } else if (
+      this.state.username !== this.props.userData.un &&
+      clearPath !== null
+    ) {
+      firebase
+        .firestore()
+        .collection("Users")
+        .doc(firebase.auth().currentUser.uid)
+        .update({
+          un: this.state.username,
+          uIm: true
+        })
+        .then(() => {
+          this.props.getUserData();
+        })
+        .then(() => {
+          this.props.navigation.goBack();
+        });
+    } else if (
+      this.state.username !== this.props.userData.un &&
+      clearPath === null
+    ) {
       firebase
         .firestore()
         .collection("Users")
@@ -76,8 +177,25 @@ class EditProfileScreen extends Component {
         });
     }
   };
-
   render() {
+    if (this.state.profileImage === null) {
+      var profileImage = (
+        <FastImage
+          style={styles.profileImage}
+          source={require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var profileImage = (
+        <FastImage
+          style={styles.profileImage}
+          source={{ uri: this.state.profileImage }}
+          resizeMode="cover"
+        />
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.backButtonContainer}>
@@ -93,14 +211,12 @@ class EditProfileScreen extends Component {
           </TouchableOpacity>
           <Text style={styles.teamName}>{edit_profile}</Text>
         </View>
-        <View style={styles.imageTabContainer}>
-          <Image
-            style={styles.profileImage}
-            source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-            borderRadius={35}
-            resizeMode="cover"
-          />
-        </View>
+        <TouchableOpacity
+          style={styles.imageTabContainer}
+          onPress={() => this.showPicker()}
+        >
+          {profileImage}
+        </TouchableOpacity>
 
         <Text style={styles.headerText}>{username}</Text>
         <TextInput
@@ -179,13 +295,14 @@ const styles = StyleSheet.create({
   },
 
   profileImage: {
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
     alignSelf: "center",
     alignItems: "center",
-    borderWidth: 5,
+    borderWidth: 3,
     padding: 5,
-    borderColor: "white",
+    borderRadius: 40,
+    borderColor: "#e0e0e0",
     marginTop: 16
   },
 
