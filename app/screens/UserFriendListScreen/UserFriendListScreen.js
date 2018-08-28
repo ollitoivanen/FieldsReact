@@ -49,9 +49,10 @@ export default class UserFriendListScreen extends Component {
           cFI: doc.data().cFI,
           cFN: doc.data().cFN,
           ts: doc.data().ts,
+          uIm: doc.data().uIm,
           id: id
         });
-      })
+      });
   };
 
   render() {

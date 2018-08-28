@@ -78,8 +78,7 @@ class ProfileScreen extends Component {
       .then(downloadedFile => {
         this.setState({ profileImage: downloadedFile.toString() });
       })
-      .catch(err => {
-      });
+      .catch(err => {});
   };
 
   loadFriendList() {
@@ -307,28 +306,31 @@ class ProfileScreen extends Component {
       );
     }
 
-    if(this.state.profileImage!==null){
-      var profileImage = <FastImage
-      style={styles.profileImage}
-      source={{uri:this.state.profileImage, priority: FastImage.priority.high}}
-      resizeMode="cover"
-      
-    />
-    }else{
-      var profileImage = <FastImage
-      style={styles.profileImage}
-      source={require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")}
-      resizeMode="cover"
-      />
-    
-  }
+    if (this.state.profileImage !== null) {
+      var profileImage = (
+        <FastImage
+          style={styles.profileImage}
+          source={{
+            uri: this.state.profileImage,
+            priority: FastImage.priority.high
+          }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var profileImage = (
+        <FastImage
+          style={styles.profileImage}
+          source={require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")}
+          resizeMode="cover"
+        />
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.containerHeader}>
           <View style={styles.backgroundGreen}>
-            <View style={styles.imageTabContainer}>
-              {profileImage}
-            </View>
+            <View style={styles.imageTabContainer}>{profileImage}</View>
             <View style={styles.rowCont}>
               <Text style={styles.username}>{this.props.userData.un}</Text>
               <TouchableOpacity
@@ -497,7 +499,8 @@ const styles = StyleSheet.create({
 
   username: {
     fontWeight: "bold",
-    fontSize: 22
+    fontSize: 22,
+    color: 'black'
   },
   roundTextContainer: {
     flexDirection: "row",

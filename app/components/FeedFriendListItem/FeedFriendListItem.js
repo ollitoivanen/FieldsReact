@@ -1,8 +1,34 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
+import FastImage from "react-native-fast-image";
+import firebase from "react-native-firebase";
 
 export default class FeedFriendListItem extends React.PureComponent {
-  // toggle a todo as completed or not via update()
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+    };
+    if (this.props.uIm === true) {
+      this.getImage();
+    }
+  }
+  getImage = () => {
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+
+    storageRef
+      .child("profilepics/" + this.props.id + "/" + this.props.id + ".jpg")
+      .getDownloadURL()
+      .then(downloadedFile => {
+        var fieldImagePath = downloadedFile;
+        this.setState({ profileImagePath: { uri: fieldImagePath } });
+      })
+      .catch(err => {});
+  };
 
   render() {
     if (this.props.trainingTime !== undefined) {
@@ -17,10 +43,9 @@ export default class FeedFriendListItem extends React.PureComponent {
     return (
       <View>
         <View style={styles.item}>
-          <Image
+          <FastImage
             style={styles.fieldImage}
-            source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-            borderRadius={25}
+            source={this.state.profileImagePath}
             resizeMode="cover"
           />
           <Text style={styles.text} numberOfLines={2}>
@@ -65,7 +90,8 @@ const styles = StyleSheet.create({
     marginStart: 8,
     borderWidth: 3,
     borderColor: "#e0e0e0",
-    margin: 5
+    margin: 5,
+    borderRadius: 25
   },
 
   fieldText: {

@@ -10,6 +10,9 @@ import {
   ScrollView
 } from "react-native";
 import firebase from "react-native-firebase";
+import FastImage from "react-native-fast-image";
+var ImagePicker = require("react-native-image-picker");
+import ImageResizer from "react-native-image-resizer";
 
 import {
   field_name,
@@ -58,9 +61,38 @@ class CreateNewFieldScreen extends Component {
       fieldGoalCountModalVisible: false,
       chosenFieldType: 0,
       chosenAccessType: 2,
-      goalCount: 1
+      goalCount: 1,
+      fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
+      fieldImageInitial: null
     };
   }
+  showPicker = () => {
+    var options = {
+      title: "Select Image",
+
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.warn("User cancelled image picker");
+      } else if (response.error) {
+        console.warn("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.warn("User tapped custom button: ", response.customButton);
+      } else {
+        let source = response.uri;
+        let clearPath = response.uri;
+
+        this.setState({
+          fieldImage: {uri: source},
+          fieldImageInitial: source
+        });
+      }
+    });
+  };
 
   setFieldTypeModal(visible) {
     this.setState({ fieldTypeModalVisible: visible });
@@ -110,13 +142,36 @@ class CreateNewFieldScreen extends Component {
     }
     var { params } = this.props.navigation.state;
     const saveFieldData = () => {
+      firebase.storage;
+      var storage = firebase.storage();
+
+      // Create a storage reference from our storage service
+      var storageRef = storage.ref();
+
+      let imagePath = this.state.fieldImage;
+      let clearPath = this.state.fieldImageInitial
+      var fieldID = guid().substring(0, 7);
+
+      if (clearPath !== null) {
+        ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
+          ({ uri }) => {
+            var { params } = this.props.navigation.state;
+
+            storageRef
+              .child(
+                "fieldpics/" + fieldID + "/" +fieldID + ".jpg"
+              )
+              .putFile(uri);
+          }
+        );
+      }
       if (
         this.state.fieldName !== "" &&
         this.state.fieldAddress !== "" &&
         this.state.fieldArea !== ""
       ) {
-        var fieldID = guid().substring(0, 7);
-        firebase
+        if(clearPath!==null){
+          firebase
           .firestore()
           .collection("Fields")
           .doc(fieldID)
@@ -129,7 +184,8 @@ class CreateNewFieldScreen extends Component {
             fT: this.state.chosenFieldType,
             fAT: this.state.chosenAccessType,
             pH: 0,
-            gG: this.state.goalCount
+            gG: this.state.goalCount,
+            fIm: true
             //Goal count
           })
           .then(() => {
@@ -149,9 +205,52 @@ class CreateNewFieldScreen extends Component {
               currentFieldName: this.props.userData.cFN,
               timestamp: this.props.userData.ts,
               trainingCount: this.props.userData.tC,
-              reputation: this.props.userData.re
+              reputation: this.props.userData.re,
+              fIm: true
+              
             });
           });
+        }else{
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(fieldID)
+          .set({
+            fN: this.state.fieldName,
+            fAR: this.state.fieldArea,
+            fA: this.state.fieldAddress,
+            fARL: this.state.fieldArea.toLowerCase(),
+            fNL: this.state.fieldName.toLowerCase(),
+            fT: this.state.chosenFieldType,
+            fAT: this.state.chosenAccessType,
+            pH: 0,
+            gG: this.state.goalCount,
+            fIm: false
+            //Goal count
+          })
+          .then(() => {
+            this.props.navigation.replace("DetailFieldScreen", {
+              fieldName: this.state.fieldName,
+              fieldArea: this.state.fieldArea,
+              fieldAddress: this.state.fieldAddress,
+              fieldAreaLowerCase: this.state.fieldArea.toLowerCase(),
+              fieldNameLowerCase: this.state.fieldName.toLowerCase(),
+              fieldID: fieldID,
+              fieldType: this.state.chosenFieldType,
+              fieldAccessType: this.state.chosenAccessType,
+              peopleHere: 0,
+              goalCount: this.state.goalCount,
+
+              currentFieldID: this.props.userData.cFI,
+              currentFieldName: this.props.userData.cFN,
+              timestamp: this.props.userData.ts,
+              trainingCount: this.props.userData.tC,
+              reputation: this.props.userData.re,
+              fIm: false
+              
+            });
+          });
+        }
       } else {
         this.setState({ errorMessage: [please_fill_all_fields] });
       }
@@ -172,6 +271,15 @@ class CreateNewFieldScreen extends Component {
           </TouchableOpacity>
           <Text style={styles.fieldName}>{add_new_field}</Text>
         </View>
+
+<TouchableOpacity onPress={()=>this.showPicker()}>
+        <FastImage
+          style={styles.profileImageEdit}
+          source={this.state.fieldImage}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+        </TouchableOpacity>
 
         <Text style={styles.headerText}>{field_name}</Text>
         <TextInput
@@ -424,6 +532,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#3bd774",
     padding: 15,
     marginTop: 20,
+    marginBottom: 30,
     borderRadius: 10
   },
 
@@ -442,6 +551,17 @@ const styles = StyleSheet.create({
   greenRowContainer: {
     flexDirection: "row",
     alignItems: "center"
+  },
+  profileImageEdit: {
+    width: 80,
+    height: 80,
+    alignSelf: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    padding: 5,
+    borderColor: "#e0e0e0",
+    marginTop: 16,
+    borderRadius: 40
   },
 
   backButton: {

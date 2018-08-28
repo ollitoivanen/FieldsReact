@@ -69,6 +69,8 @@ const getUserAndTeamData = () => {
                 });
               }
 
+             
+
               if (doc.data().cFI === undefined) {
                 undefinedOnes.push({
                   cFI: "",
@@ -119,6 +121,8 @@ const getUserAndTeamData = () => {
             });
         } else {
           var undefinedOnes = [];
+
+          
           
           if (doc.data().tC === undefined) {
             undefinedOnes.push({

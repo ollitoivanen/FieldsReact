@@ -4,6 +4,7 @@ import firebase from "react-native-firebase";
 import { NavigationActions, StackActions } from "react-navigation";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+import { getUserAndTeamData } from "../../redux/app-redux";
 
 const mapStateToProps = state => {
   return {
@@ -13,7 +14,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getUserData: () => dispatch(getUserData())
+    getUserData: () => dispatch(getUserData()),
+    getUserAndTeamData: ()=> dispatch(getUserAndTeamData())
   };
 };
 

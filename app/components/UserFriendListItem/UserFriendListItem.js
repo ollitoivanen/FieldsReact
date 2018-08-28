@@ -1,17 +1,14 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
+import FastImage from "react-native-fast-image";
+import firebase from "react-native-firebase";
 export default class Searchitem extends React.PureComponent {
   // toggle a todo as completed or not via update()
-
+ 
   render() {
     return (
       <View style={styles.item}>
-        <Image
-          style={styles.fieldImage}
-          source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-          borderRadius={25}
-          resizeMode="cover"
-        />
+       
         <Text style={styles.text} numberOfLines={2}>
           {this.props.fN}
         </Text>
@@ -40,7 +37,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    margin: 20
   },
 
   fieldImage: {

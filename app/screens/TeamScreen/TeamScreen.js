@@ -11,6 +11,10 @@ import {
   AsyncStorage
 } from "react-native";
 import { connect } from "react-redux";
+import FastImage from "react-native-fast-image";
+var ImagePicker = require("react-native-image-picker");
+import ImageResizer from "react-native-image-resizer";
+
 import {
   getUserData,
   getUserAndTeamData
@@ -52,6 +56,33 @@ const mapDispatchToProps = dispatch => {
 class TeamScreen extends Component {
   static navigationOptions = {
     header: null
+  };
+  showPicker = () => {
+    var options = {
+      title: "Select Image",
+
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.warn("User cancelled image picker");
+      } else if (response.error) {
+        console.warn("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.warn("User tapped custom button: ", response.customButton);
+      } else {
+        let source = response.uri;
+        let clearPath = response.uri;
+
+        this.setState({
+          avatarSource: { uri: source },
+          editImageClearPath: clearPath
+        });
+      }
+    });
   };
 
   loadPlayersList() {
@@ -150,7 +181,7 @@ class TeamScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.loadPlayersList();
+    this.getProfileImage();
 
     this.ref = firebase
       .firestore()
@@ -164,9 +195,37 @@ class TeamScreen extends Component {
       editVisible: false,
       leaveVisible: false,
       players: [],
-      teamUsernameEdit: this.props.userData.uTN
+      teamUsernameEdit: this.props.userData.uTN,
+      profileImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
+      avatarSource: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
+      editImageClearPath: null
     };
   }
+
+  getProfileImage = () => {
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+
+    storageRef
+      .child(
+        "teampics/" +
+          this.props.userData.uTI +
+          "/" +
+          this.props.userData.uTI +
+          ".jpg"
+      )
+      .getDownloadURL()
+      .then(downloadedFile => {
+        this.setState({
+          profileImage: { uri: downloadedFile.toString() },
+          avatarSource: { uri: downloadedFile.toString() }
+        });
+      })
+      .catch(err => {});
+  };
 
   deleteEvent = id => {
     firebase
@@ -292,8 +351,34 @@ class TeamScreen extends Component {
 
   render() {
     const saveTeamData = () => {
+      var storage = firebase.storage();
+
+      // Create a storage reference from our storage service
+      var storageRef = storage.ref();
+
+      let imagePath = this.state.avatarSource;
+      let clearPath = this.state.editImageClearPath;
+
+      if (clearPath !== null) {
+        ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
+          ({ uri }) => {
+            var { params } = this.props.navigation.state;
+
+            storageRef
+              .child(
+                "teampics/" +
+                  this.props.userData.uTI +
+                  "/" +
+                  this.props.userData.uTI +
+                  ".jpg"
+              )
+              .putFile(uri);
+          }
+        );
+      }
       if (this.state.teamUsernameEdit === this.props.userData.uTN) {
         this.setEditVisible(false);
+
         //Only saving the changed
       } else if (this.state.teamUsernameEdit !== this.props.userData.uTN) {
         firebase
@@ -343,8 +428,17 @@ class TeamScreen extends Component {
                   source={require("FieldsReact/app/images/BackButton/back_button.png")}
                 />
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.showPicker()} />
               <Text style={styles.teamName}>{edit_team}</Text>
             </View>
+
+            <TouchableOpacity onPress={() => this.showPicker()}>
+              <FastImage
+                style={styles.profileImageEdit}
+                source={this.state.avatarSource}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
 
             <Text style={styles.headerText}>{team_username}</Text>
             <TextInput
@@ -503,10 +597,9 @@ class TeamScreen extends Component {
             <Text style={styles.teamName}>{this.props.userData.uTN}</Text>
           </View>
           <View style={styles.greenRowContainer}>
-            <Image
-              style={styles.fieldImage}
-              source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-              borderRadius={35}
+            <FastImage
+              style={styles.teamImage}
+              source={this.state.profileImage}
               resizeMode="cover"
             />
 
@@ -614,6 +707,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white"
   },
+  profileImageEdit: {
+    width: 80,
+    height: 80,
+    alignSelf: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    padding: 5,
+    borderColor: "#e0e0e0",
+    marginTop: 16,
+    borderRadius: 40
+  },
 
   greenBackground: {
     backgroundColor: "#3bd774",
@@ -626,16 +730,18 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
 
-  fieldImage: {
-    width: 70,
-    height: 70,
+  teamImage: {
+    width: 80,
+    height: 80,
     alignSelf: "flex-start",
     alignItems: "center",
-    borderWidth: 5,
+    borderWidth: 3,
     padding: 5,
     borderColor: "white",
     marginTop: 10,
-    marginStart: 6
+    marginStart: 6,
+
+    borderRadius: 40
   },
 
   teamName: {

@@ -143,7 +143,8 @@ class FeedScreen extends React.Component {
               tC: doc.data().tC,
               cFI: doc.data().cFI,
               ts: doc.data().ts,
-              id: doc.id
+              id: doc.id,
+              uIm: doc.data().uIm
             });
           } else {
             const startTime = doc.data().ts;
@@ -176,6 +177,8 @@ class FeedScreen extends React.Component {
               un: doc.data().un,
               tC: doc.data().tC,
               cFI: doc.data().cFI,
+              uIm: doc.data().uIm,
+
               id: doc.id
             });
           }
@@ -188,17 +191,41 @@ class FeedScreen extends React.Component {
     });
   };
 
+  getProfileImage = () => {
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+
+    storageRef
+      .child(
+        "teampics/" +
+          this.props.userData.uTI +
+          "/" +
+          this.props.userData.uTI +
+          ".jpg"
+      )
+      .getDownloadURL()
+      .then(downloadedFile => {
+        this.setState({ teamImage: { uri: downloadedFile.toString() } });
+      })
+      .catch(err => {});
+  };
+
   constructor(props) {
     super(props);
     // this.props.getUserData();
     this.retrieveData();
+    this.getProfileImage()
 
     var { params } = this.props.navigation.state;
 
     this.state = {
       currentUser: null,
       homeArea: "",
-      friends: []
+      friends: [],
+      teamImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png")
     };
   }
   componentWillMount() {
@@ -219,9 +246,8 @@ class FeedScreen extends React.Component {
         >
           <FastImage
             style={styles.profileImage}
-            source={require("FieldsReact/app/images/TeamImageDefault/team_image_default.png")}
+            source={this.state.teamImage}
             resizeMode="cover"
-            borderRadius={50}
           />
           <Text style={styles.teamCardText}>{this.props.userData.uTN}</Text>
         </TouchableOpacity>

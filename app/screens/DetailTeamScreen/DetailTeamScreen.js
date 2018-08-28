@@ -31,6 +31,7 @@ import {
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
+import FastImage from "react-native-fast-image";
 
 const mapStateToProps = state => {
   return {
@@ -53,6 +54,7 @@ class DetailTeamScreen extends Component {
     super(props);
     var { params } = this.props.navigation.state;
     this.loadEvents();
+    this.getProfileImage()
 
     this.state = {
       events: [],
@@ -60,9 +62,35 @@ class DetailTeamScreen extends Component {
       editVisible: false,
       removeRequestVisible: false,
       removeAndSendRequestVisible: false,
-      players: [] // remove text prefix here
+      players: [],
+      profileImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png")
     };
   }
+
+  getProfileImage = () => {
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+    var { params } = this.props.navigation.state;
+
+    storageRef
+      .child(
+        "teampics/" +
+          params.teamID +
+          "/" +
+          params.teamID +
+          ".jpg"
+      )
+      .getDownloadURL()
+      .then(downloadedFile => {
+        this.setState({
+          profileImage: { uri: downloadedFile.toString() },
+        });
+      })
+    }
+  
 
   loadEvents = () => {
     var { params } = this.props.navigation.state;
@@ -327,14 +355,13 @@ class DetailTeamScreen extends Component {
             <Text style={styles.teamName}>{params.teamUsername}</Text>
           </View>
           <View style={styles.greenRowContainer}>
-            <Image
+            <FastImage
               style={styles.fieldImage}
-              source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-              borderRadius={35}
+              source={this.state.profileImage}
               resizeMode="cover"
             />
 
-            <Text style={styles.teamFullName}>{params.teamFullName}</Text>
+            <Text style={styles.teamFullName}>{params.teamUsername}</Text>
           </View>
 
           {joinTeam}
@@ -453,11 +480,12 @@ const styles = StyleSheet.create({
     height: 70,
     alignSelf: "flex-start",
     alignItems: "center",
-    borderWidth: 5,
+    borderWidth: 3,
     padding: 5,
     borderColor: "white",
     marginTop: 10,
-    marginStart: 6
+    marginStart: 6,
+    borderRadius: 35
   },
 
   teamName: {

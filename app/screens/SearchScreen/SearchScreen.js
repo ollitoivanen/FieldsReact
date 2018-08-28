@@ -81,7 +81,7 @@ class SearchScreen extends Component {
       query.get().then(
         function(doc) {
           doc.forEach(doc => {
-            const { un, fC, tC, re, cFI, cFN, uTI, ts, uTN } = doc.data();
+            const { un, fC, tC, re, cFI, cFN, uTI, ts, uTN, uIm } = doc.data();
 
             const id = doc.id;
             users.push({
@@ -96,7 +96,9 @@ class SearchScreen extends Component {
               cFN,
               uTI,
               uTN,
-              ts
+              ts,
+              uIm,
+              index: 0
             });
           });
           this.setState({
@@ -120,7 +122,8 @@ class SearchScreen extends Component {
               doc,
               id,
               username: tUN,
-              teamFullName: tFN
+              teamFullName: tFN,
+              index: 1
             });
           });
           this.setState({
@@ -155,7 +158,8 @@ class SearchScreen extends Component {
                   cFI: item.cFI,
                   cFN: item.cFN,
                   ts: item.ts,
-                  id: item.id
+                  id: item.id,
+                  uIm: item.uIm
                 })
               }
             >

@@ -24,6 +24,7 @@ import {
   remove_friend,
   add_friend
 } from "../../strings/strings";
+import FastImage from "react-native-fast-image";
 var moment = require("moment");
 
 const mapStateToProps = state => {
@@ -44,6 +45,23 @@ class DetailProfileScreen extends Component {
   }
   static navigationOptions = {
     header: null
+  };
+
+  getProfileImage = () => {
+    var { params } = this.props.navigation.state;
+
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+    storageRef
+      .child("profilepics/" + params.id + "/" + params.id + ".jpg")
+      .getDownloadURL()
+      .then(downloadedFile => {
+        this.setState({ profileImagePath: { uri: downloadedFile } });
+      })
+      .catch(err => {});
   };
 
   loadFriendList() {
@@ -189,13 +207,17 @@ class DetailProfileScreen extends Component {
 
   constructor(props) {
     super(props);
+
     this.retrieveData();
     var { params } = this.props.navigation.state;
+
+    this.getProfileImage();
 
     this.state = {
       trainingTime: "",
       friends: [],
-      friendStatus: null
+      friendStatus: null,
+      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
     };
   }
 
@@ -459,10 +481,9 @@ class DetailProfileScreen extends Component {
         <View style={styles.containerHeader}>
           <View style={styles.backgroundGreen}>
             <View style={styles.imageTabContainer}>
-              <Image
+              <FastImage
                 style={styles.profileImage}
-                source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-                borderRadius={35}
+                source={this.state.profileImagePath}
                 resizeMode="cover"
               />
             </View>
@@ -593,12 +614,13 @@ const styles = StyleSheet.create({
   },
 
   profileImage: {
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
     alignSelf: "center",
     alignItems: "center",
-    borderWidth: 5,
+    borderWidth: 3,
     padding: 5,
+    borderRadius: 40,
     borderColor: "white"
   },
 

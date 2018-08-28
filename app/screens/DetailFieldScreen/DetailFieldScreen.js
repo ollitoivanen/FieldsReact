@@ -83,7 +83,7 @@ class DetailFieldScreen extends Component {
         let clearPath = response.uri;
 
         this.setState({
-          avatarSource: source,
+          avatarSource: { uri: source },
           editImageClearPath: clearPath
         });
       }
@@ -103,11 +103,9 @@ class DetailFieldScreen extends Component {
       .child("fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg")
       .getDownloadURL()
       .then(downloadedFile => {
-        this.setState({ fieldImage: downloadedFile.toString() });
+        this.setState({ fieldImage: { uri: downloadedFile.toString() } });
       })
-      .catch(err => {
-        this.setState({ fieldImage: null });
-      });
+      .catch(err => {});
   };
 
   loadEvents = () => {
@@ -204,7 +202,6 @@ class DetailFieldScreen extends Component {
     var { params } = this.props.navigation.state;
 
     this.loadEvents();
-    this.getFieldImage();
 
     const userRef = firebase
       .firestore()
@@ -230,11 +227,14 @@ class DetailFieldScreen extends Component {
       fieldNameEdit: params.fieldName,
       fieldAreaEdit: params.fieldArea,
       fieldAddressEdit: params.fieldAddress,
-      fieldImage: null,
-      avatarSource: "",
+      fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
+      avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
       editFieldImage: null,
       editImageClearPath: null
     };
+    if (params.fIm === true) {
+      this.getFieldImage();
+    }
   }
   setModalVisible(visible) {
     this.setState({ infoVisible: visible });
@@ -259,7 +259,6 @@ class DetailFieldScreen extends Component {
     const saveFieldData = () => {
       var { params } = this.props.navigation.state;
 
-      firebase.storage;
       var storage = firebase.storage();
 
       // Create a storage reference from our storage service
@@ -277,7 +276,18 @@ class DetailFieldScreen extends Component {
               .child(
                 "fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg"
               )
-              .putFile(uri);
+              .putFile(uri)
+              .then(() => {
+                if (params.fIm === false) {
+                  firebase
+                    .firestore()
+                    .collection("Fields")
+                    .doc(params.fieldID)
+                    .update({
+                      fIm: true
+                    });
+                }
+              });
           }
         );
       }
@@ -495,54 +505,28 @@ class DetailFieldScreen extends Component {
     } else {
       trainingButton = trainingButtonNotTraining;
     }
-    var fieldIm;
 
-    if (this.state.fieldImage === null) {
-      var fieldIm = (
+    var fieldIm = (
+      <TouchableOpacity onPress={() => this.setExpandedImageVisible()}>
         <FastImage
           style={styles.profileImage}
-          source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
+          source={this.state.fieldImage}
           resizeMode="cover"
         />
-      );
-    } else {
-      var fieldIm = (
-        <TouchableOpacity onPress={() => this.setExpandedImageVisible(true)}>
-          <FastImage
-            style={styles.profileImage}
-            source={{
-              uri: this.state.fieldImage,
-              priority: FastImage.priority.high
-            }}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
-      );
-    }
+      </TouchableOpacity>
+    );
 
-    if (this.state.avatarSource === "") {
-      var editFieldImage = (
-        <TouchableOpacity onPress={() => this.showPicker()}>
-          <FastImage
-            style={styles.profileImageEdit}
-            source={require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")}
-            borderRadius={50}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
-      );
-    } else {
-      var editFieldImage = (
-        <TouchableOpacity onPress={() => this.showPicker()}>
-          <FastImage
-            style={styles.profileImageEdit}
-            source={{ uri: this.state.avatarSource }}
-            borderRadius={35}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
-      );
-    }
+    var editFieldImage = (
+      <TouchableOpacity onPress={() => this.showPicker()}>
+        <FastImage
+          style={styles.profileImageEdit}
+          source={this.state.avatarSource}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      </TouchableOpacity>
+    );
+
     return (
       <View style={styles.container}>
         <Modal visible={this.state.editVisible} onRequestClose={() => {}}>
@@ -686,7 +670,7 @@ class DetailFieldScreen extends Component {
               onPress={() => this.setExpandedImageVisible(false)}
             >
               <FastImage
-                source={{ uri: this.state.fieldImage }}
+                source={this.state.fieldImage}
                 resizeMode="cover"
                 style={{ width: 200, height: 200 }}
               />

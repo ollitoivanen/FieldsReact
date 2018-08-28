@@ -11,7 +11,7 @@ export default class FieldSearchitem extends React.PureComponent {
     this.state = {
       fieldImagePath:require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
     };
-    if (this.props.fieldImage === true) {
+    if (this.props.fIm === true) {
       this.getImage();
     }
   }

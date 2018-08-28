@@ -80,7 +80,6 @@ class FieldSearchScreen extends Component {
             fIm
           } = doc.data();
           if (fIm === true) {
-            fieldImage = true;
             fields.push({
               key: doc.id,
               doc,
@@ -96,10 +95,10 @@ class FieldSearchScreen extends Component {
               fA,
               pH,
               fIm,
-              fieldImage
+              
+              
             });
           } else {
-            fieldImage = false;
             fields.push({
               key: doc.id,
               doc,
@@ -115,7 +114,7 @@ class FieldSearchScreen extends Component {
               fA,
               pH,
               fIm,
-              fieldImage
+              
             });
           }
           this.setState({
@@ -212,6 +211,67 @@ class FieldSearchScreen extends Component {
 
           .where("fNL", "==", this.state.fieldSearchTerm.toLowerCase().trim());
       }
+      query.get().then(
+        function(doc) {
+          doc.forEach(doc => {
+            const id = doc.id;
+            const {
+              fN,
+              fAR,
+              fI,
+              fNL,
+              fARL,
+              fT,
+              gG,
+              fAT,
+              fA,
+              pH,
+              fIm
+            } = doc.data();
+            if (fIm === true) {
+              fields.push({
+                key: doc.id,
+                doc,
+                id,
+                fN,
+                fAR,
+                fI,
+                fNL,
+                fARL,
+                fT,
+                gG,
+                fAT,
+                fA,
+                pH,
+                fIm,
+                
+              });
+            } else {
+              fields.push({
+                key: doc.id,
+                doc,
+                id,
+                fN,
+                fAR,
+                fI,
+                fNL,
+                fARL,
+                fT,
+                gG,
+                fAT,
+                fA,
+                pH,
+                fIm,
+                
+              });
+            }
+            this.setState({
+              fields,
+              search_placeholder: search_fields_near
+            });
+          });
+        }.bind(this)
+      );
     }
   };
 
@@ -268,7 +328,8 @@ class FieldSearchScreen extends Component {
           currentFieldName: this.props.userData.cFN,
           timestamp: this.props.userData.ts,
           trainingCount: this.props.userData.tC,
-          reputation: this.props.userData.re
+          reputation: this.props.userData.re,
+          fIm: item.fIm
         });
       } else {
         this.props.navigation.navigate("CreateEventScreen", {

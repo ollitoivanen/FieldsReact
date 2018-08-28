@@ -5,7 +5,8 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  TextInput
+  TextInput,
+  Platform
 } from "react-native";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
@@ -107,6 +108,13 @@ class EditProfileScreen extends Component {
     if (clearPath !== null) {
       ImageResizer.createResizedImage(imagePath, 200, 200, "JPEG", 100).then(
         ({ uri }) => {
+          console.warn;
+          let imageString;
+          if (Platform.OS === "android") {
+            imageString = uri.replace("file://", "");
+          } else {
+            imageString = uri;
+          }
           var { params } = this.props.navigation.state;
 
           storageRef
@@ -117,13 +125,13 @@ class EditProfileScreen extends Component {
                 firebase.auth().currentUser.uid +
                 ".jpg"
             )
-            .putFile(uri);
+            .putFile(imageString);
         }
       );
     }
 
     if (this.state.username === this.props.userData.un) {
-      if (clearPath !== null) {
+      if (clearPath !== null && this.props.userData.uIm === false) {
         firebase
           .firestore()
           .collection("Users")
@@ -142,7 +150,8 @@ class EditProfileScreen extends Component {
       }
     } else if (
       this.state.username !== this.props.userData.un &&
-      clearPath !== null
+      clearPath !== null &&
+      this.props.userData.uIm === false
     ) {
       firebase
         .firestore()
