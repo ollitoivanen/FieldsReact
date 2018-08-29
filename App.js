@@ -42,6 +42,8 @@ import ReputationScreen from "./app/screens/ReputationScreen/ReputationScreen";
 import SettingsScreen from "./app/screens/SettingsScreen/SettingsScreen";
 import EditProfileScreen from "./app/screens/EditProfileScreen/EditProfileScreen";
 import UserFriendListScreen from "./app/screens/UserFriendListScreen/UserFriendListScreen";
+import Testing from "./app/screens/Testing/Testing";
+
 
 
 
@@ -151,11 +153,14 @@ export const StackNavigatorApp = StackNavigator(
 
     UserFriendListScreen: {
       screen: UserFriendListScreen
+    },
+    Testing:{
+      screen: Testing
     }
   },
 
   {
-    initialRouteName: "LoadingScreen",
+    initialRouteName: "Testing",
     transitionConfig
   }
 );
