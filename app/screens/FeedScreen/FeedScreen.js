@@ -217,7 +217,7 @@ class FeedScreen extends React.Component {
     super(props);
     // this.props.getUserData();
     this.retrieveData();
-    this.getProfileImage()
+    this.getProfileImage();
 
     var { params } = this.props.navigation.state;
 

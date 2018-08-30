@@ -16,8 +16,6 @@ import ImageResizer from "react-native-image-resizer";
 
 import {
   field_name,
-  field_address,
-  field_city,
   save,
   edit_field,
   please_fill_all_fields,
@@ -27,7 +25,9 @@ import {
   field_access_type,
   field_field_type,
   field_goal_count,
-  field_type
+  field_type,
+  get_field_location,
+  field_location_set
 } from "../../strings/strings";
 
 import { connect } from "react-redux";
@@ -87,7 +87,7 @@ class CreateNewFieldScreen extends Component {
         let clearPath = response.uri;
 
         this.setState({
-          fieldImage: {uri: source},
+          fieldImage: { uri: source },
           fieldImageInitial: source
         });
       }
@@ -142,6 +142,8 @@ class CreateNewFieldScreen extends Component {
     }
     var { params } = this.props.navigation.state;
     const saveFieldData = () => {
+      var { params } = this.props.navigation.state;
+
       firebase.storage;
       var storage = firebase.storage();
 
@@ -149,112 +151,124 @@ class CreateNewFieldScreen extends Component {
       var storageRef = storage.ref();
 
       let imagePath = this.state.fieldImage;
-      let clearPath = this.state.fieldImageInitial
+      let clearPath = this.state.fieldImageInitial;
       var fieldID = guid().substring(0, 7);
 
-      if (clearPath !== null) {
-        ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
-          ({ uri }) => {
+      if (this.state.fieldName !== "" && params.ltLn !== null) {
+        if (clearPath !== null) {
+          ImageResizer.createResizedImage(
+            clearPath,
+            200,
+            200,
+            "JPEG",
+            100
+          ).then(({ uri }) => {
             var { params } = this.props.navigation.state;
 
             storageRef
-              .child(
-                "fieldpics/" + fieldID + "/" +fieldID + ".jpg"
-              )
+              .child("fieldpics/" + fieldID + "/" + fieldID + ".jpg")
               .putFile(uri);
-          }
-        );
-      }
-      if (
-        this.state.fieldName !== "" &&
-        this.state.fieldAddress !== "" &&
-        this.state.fieldArea !== ""
-      ) {
-        if(clearPath!==null){
+          });
           firebase
-          .firestore()
-          .collection("Fields")
-          .doc(fieldID)
-          .set({
-            fN: this.state.fieldName,
-            fAR: this.state.fieldArea,
-            fA: this.state.fieldAddress,
-            fARL: this.state.fieldArea.toLowerCase(),
-            fNL: this.state.fieldName.toLowerCase(),
-            fT: this.state.chosenFieldType,
-            fAT: this.state.chosenAccessType,
-            pH: 0,
-            gG: this.state.goalCount,
-            fIm: true
-            //Goal count
-          })
-          .then(() => {
-            this.props.navigation.replace("DetailFieldScreen", {
-              fieldName: this.state.fieldName,
-              fieldArea: this.state.fieldArea,
-              fieldAddress: this.state.fieldAddress,
-              fieldAreaLowerCase: this.state.fieldArea.toLowerCase(),
-              fieldNameLowerCase: this.state.fieldName.toLowerCase(),
-              fieldID: fieldID,
-              fieldType: this.state.chosenFieldType,
-              fieldAccessType: this.state.chosenAccessType,
-              peopleHere: 0,
-              goalCount: this.state.goalCount,
+            .firestore()
+            .collection("Fields")
+            .doc(fieldID)
+            .set({
+              fN: this.state.fieldName,
+              fT: this.state.chosenFieldType,
+              fAT: this.state.chosenAccessType,
+              ltC: Math.round(params.lt),
+              lnC: Math.round(params.ln),
 
-              currentFieldID: this.props.userData.cFI,
-              currentFieldName: this.props.userData.cFN,
-              timestamp: this.props.userData.ts,
-              trainingCount: this.props.userData.tC,
-              reputation: this.props.userData.re,
+              lt: Math.round(params.lt * 10000000) / 10000000,
+              ln: Math.round(params.ln * 10000000) / 10000000,
+              pH: 0,
+              gG: this.state.goalCount,
               fIm: true
-              
-            });
-          });
-        }else{
-        firebase
-          .firestore()
-          .collection("Fields")
-          .doc(fieldID)
-          .set({
-            fN: this.state.fieldName,
-            fAR: this.state.fieldArea,
-            fA: this.state.fieldAddress,
-            fARL: this.state.fieldArea.toLowerCase(),
-            fNL: this.state.fieldName.toLowerCase(),
-            fT: this.state.chosenFieldType,
-            fAT: this.state.chosenAccessType,
-            pH: 0,
-            gG: this.state.goalCount,
-            fIm: false
-            //Goal count
-          })
-          .then(() => {
-            this.props.navigation.replace("DetailFieldScreen", {
-              fieldName: this.state.fieldName,
-              fieldArea: this.state.fieldArea,
-              fieldAddress: this.state.fieldAddress,
-              fieldAreaLowerCase: this.state.fieldArea.toLowerCase(),
-              fieldNameLowerCase: this.state.fieldName.toLowerCase(),
-              fieldID: fieldID,
-              fieldType: this.state.chosenFieldType,
-              fieldAccessType: this.state.chosenAccessType,
-              peopleHere: 0,
-              goalCount: this.state.goalCount,
+              //Goal count
+            })
+            .then(() => {
+              this.props.navigation.replace("DetailFieldScreen", {
+                fieldName: this.state.fieldName,
 
-              currentFieldID: this.props.userData.cFI,
-              currentFieldName: this.props.userData.cFN,
-              timestamp: this.props.userData.ts,
-              trainingCount: this.props.userData.tC,
-              reputation: this.props.userData.re,
-              fIm: false
-              
+                fieldID: fieldID,
+                fieldType: this.state.chosenFieldType,
+                fieldAccessType: this.state.chosenAccessType,
+                peopleHere: 0,
+                goalCount: this.state.goalCount,
+
+                currentFieldID: this.props.userData.cFI,
+                currentFieldName: this.props.userData.cFN,
+                timestamp: this.props.userData.ts,
+                trainingCount: this.props.userData.tC,
+                reputation: this.props.userData.re,
+                fIm: true
+              });
             });
-          });
+        } else {
+          const co = new firebase.firestore.GeoPoint( Math.round(params.lt),  Math.round(params.ln));
+
+          firebase
+            .firestore()
+            .collection("Fields")
+            .doc(fieldID)
+            .set({
+              fN: this.state.fieldName,
+              fT: this.state.chosenFieldType,
+              fAT: this.state.chosenAccessType,
+              pH: 0,
+              gG: this.state.goalCount,
+              fIm: false,
+             co,
+
+              lt: Math.round(params.lt * 10000000) / 10000000,
+              ln: Math.round(params.ln * 10000000) / 10000000
+              //Goal count
+            })
+            .then(() => {
+              this.props.navigation.replace("DetailFieldScreen", {
+                fieldName: this.state.fieldName,
+
+                fieldID: fieldID,
+                fieldType: this.state.chosenFieldType,
+                fieldAccessType: this.state.chosenAccessType,
+                peopleHere: 0,
+                goalCount: this.state.goalCount,
+
+                currentFieldID: this.props.userData.cFI,
+                currentFieldName: this.props.userData.cFN,
+                timestamp: this.props.userData.ts,
+                trainingCount: this.props.userData.tC,
+                reputation: this.props.userData.re,
+                fIm: false
+              });
+            });
         }
       } else {
         this.setState({ errorMessage: [please_fill_all_fields] });
       }
     };
+    var { params } = this.props.navigation.state;
+
+    if (params.lt === null) {
+      var getFieldLocationBox = (
+        <TouchableOpacity
+          style={styles.getLocationBox}
+          onPress={() => this.props.navigation.navigate("MapScreen")}
+        >
+          <Text style={styles.getLocationText}>{get_field_location}</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      var getFieldLocationBox = (
+        <TouchableOpacity
+          style={styles.getLocationBox}
+          onPress={() => this.props.navigation.navigate("MapScreen")}
+        >
+          <Text style={styles.getLocationText}>{field_location_set}</Text>
+        </TouchableOpacity>
+      );
+    }
 
     return (
       <ScrollView style={styles.container}>
@@ -272,13 +286,13 @@ class CreateNewFieldScreen extends Component {
           <Text style={styles.fieldName}>{add_new_field}</Text>
         </View>
 
-<TouchableOpacity onPress={()=>this.showPicker()}>
-        <FastImage
-          style={styles.profileImageEdit}
-          source={this.state.fieldImage}
-          borderRadius={35}
-          resizeMode="cover"
-        />
+        <TouchableOpacity onPress={() => this.showPicker()}>
+          <FastImage
+            style={styles.profileImageEdit}
+            source={this.state.fieldImage}
+            borderRadius={35}
+            resizeMode="cover"
+          />
         </TouchableOpacity>
 
         <Text style={styles.headerText}>{field_name}</Text>
@@ -290,26 +304,8 @@ class CreateNewFieldScreen extends Component {
           value={this.state.fieldName}
           onChangeText={fieldName => this.setState({ fieldName })}
         />
-        <Text style={styles.headerText}>{field_city}</Text>
 
-        <TextInput
-          style={styles.textInput}
-          maxLength={30}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={field_city}
-          value={this.state.fieldArea}
-          onChangeText={fieldArea => this.setState({ fieldArea })}
-        />
-        <Text style={styles.headerText}>{field_address}</Text>
-
-        <TextInput
-          style={styles.textInput}
-          maxLength={30}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={field_address}
-          value={this.state.fieldAddress}
-          onChangeText={fieldAddress => this.setState({ fieldAddress })}
-        />
+        {getFieldLocationBox}
 
         <Text style={styles.headerText}>{field_field_type}</Text>
 
@@ -595,5 +591,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     margin: 8
+  },
+
+  getLocationBox: {
+    marginTop: 20,
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: "#e0e0e0"
+  },
+
+  getLocationText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#3bd774"
   }
 });

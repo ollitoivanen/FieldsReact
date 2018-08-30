@@ -137,3 +137,5 @@ export const add_friend = "Add friend";
 export const remove_friend = "Remove friend";
 export const show_players = "Show players";
 export const add_friends_from_search = "Add friends from search!"
+export const get_field_location = "Get field location"
+export const field_location_set = "Field location set"

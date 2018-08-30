@@ -24,7 +24,10 @@ import {
 var moment = require("moment");
 import firebase, { Firebase } from "react-native-firebase";
 import { connect } from "react-redux";
-import { getUserData, getUserAndTeamData } from "FieldsReact/app/redux/app-redux.js";
+import {
+  getUserData,
+  getUserAndTeamData
+} from "FieldsReact/app/redux/app-redux.js";
 
 import DateTimePicker from "react-native-modal-datetime-picker";
 
@@ -38,7 +41,6 @@ const mapDispatchToProps = dispatch => {
   return {
     getUserData: () => dispatch(getUserData()),
     getUserAndTeamData: () => dispatch(getUserAndTeamData())
-
   };
 };
 

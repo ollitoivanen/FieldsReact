@@ -9,7 +9,8 @@ import {
   TextInput,
   FlatList,
   Alert,
-  ScrollView
+  ScrollView,
+  Geolocation
 } from "react-native";
 import {
   goals,
@@ -197,6 +198,57 @@ class DetailFieldScreen extends Component {
     });
   };
 
+  getLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          userLatitude: position.coords.latitude,
+          userLongitude: position.coords.longitude,
+
+          error: null
+        });
+
+        // ,this.getDistanceFromLatLonInKm();
+      },
+
+      error => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+  };
+
+  getDistanceFromLatLonInKm = () => {
+    deg2rad = deg => {
+      return deg * (Math.PI / 180);
+    };
+
+    var { params } = this.props.navigation.state;
+
+    var lat1 = params.lt;
+    var lon1 = params.ln;
+
+    var lat2 = this.state.userLatitude;
+    var lon2 = this.state.userLongitude;
+
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    console.warn(lon1);
+
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+
+    this.setState({
+      distance: Math.round(d * 100) / 100
+    });
+    //console.warn(d)
+  };
+
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
@@ -230,8 +282,13 @@ class DetailFieldScreen extends Component {
       fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
       avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
       editFieldImage: null,
-      editImageClearPath: null
+      editImageClearPath: null,
+      userLatitude: 12,
+      userLongitude: 12,
+      distance: 0,
+      locationGot: false
     };
+    this.getLocation();
     if (params.fIm === true) {
       this.getFieldImage();
     }
@@ -253,11 +310,12 @@ class DetailFieldScreen extends Component {
   }
 
   render() {
+    var { params } = this.props.navigation.state;
+
     let imageUrl;
 
     //Small problem: if data is changed back to the param values, it wont be updated 31.7.2018
     const saveFieldData = () => {
-      var { params } = this.props.navigation.state;
 
       var storage = firebase.storage();
 
@@ -690,7 +748,7 @@ class DetailFieldScreen extends Component {
                 source={require("FieldsReact/app/images/BackButton/back_button.png")}
               />
             </TouchableOpacity>
-            <Text style={styles.fieldName}>{this.state.fieldName}</Text>
+            <Text style={styles.fieldName}>{this.state.fieldName + " " + params.d}</Text>
           </View>
           <View style={styles.greenRowContainer}>
             {fieldIm}

@@ -6,7 +6,8 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-  Image
+  Image,
+  Geolocation
 } from "react-native";
 import firebase from "react-native-firebase";
 import { ButtonGroup } from "react-native-elements";
@@ -21,8 +22,7 @@ import {
   set,
   enter_home_city,
   add_home_city_placeholder,
-  search_fields_by_city,
-  search_fields_by_name,
+
   search_fields_near,
   add_new_field
 } from "../../strings/strings";
@@ -41,16 +41,56 @@ const mapDispatchToProps = dispatch => {
 };
 
 class FieldSearchScreen extends Component {
-  componentWillMount = () => {
-    this.unsubscribe = this.initialFetch();
-  };
+  componentWillMount = () => {};
 
   componentWillUnmount() {
-    this.unsubscribe();
     //Some problems with this
   }
   static navigationOptions = {
     header: null
+  };
+
+  getLocation = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      this.setState({
+        userLatitude: position.coords.latitude,
+        userLongitude: position.coords.longitude,
+
+        error: null
+      }), //, this.getDistanceFromLatLonInKm()
+        this.initialFetch();
+    });
+  };
+
+  getDistanceFromLatLonInKm = (lat, lng) => {
+    deg2rad = deg => {
+      return deg * (Math.PI / 180);
+    };
+
+    var { params } = this.props.navigation.state;
+
+    var lat1 = lat;
+    var lon1 = lng;
+
+    var lat2 = this.state.userLatitude;
+    var lon2 = this.state.userLongitude;
+
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = Math.round( R * c * 10) / 10 + " km"; // Distance in km
+    return d;
+
+   
+    //console.warn(d)
   };
 
   initialFetch = () => {
@@ -60,7 +100,13 @@ class FieldSearchScreen extends Component {
     const homeAreaConst = this.state.homeAreaConst;
     var fieldImage;
 
-    const query = ref.where("fARL", "==", this.state.homeAreaConst).limit(50);
+    const southWest=new firebase.firestore.GeoPoint( Math.round(this.state.userLatitude)-1,  Math.round(this.state.userLongitude)-1);
+    const northEast=new firebase.firestore.GeoPoint( Math.round(this.state.userLatitude)+1, Math.round(this.state.userLatitude)+1);
+
+    //Having a query distance of 50km
+    const query = ref
+      .where("co", ">=", southWest).where("co", "<=", northEast)
+      .limit(50);
 
     query.get().then(
       function(doc) {
@@ -77,8 +123,11 @@ class FieldSearchScreen extends Component {
             fAT,
             fA,
             pH,
-            fIm
+            fIm,
+            lt,
+            ln
           } = doc.data();
+         var d = this.getDistanceFromLatLonInKm(lt, ln);
           if (fIm === true) {
             fields.push({
               key: doc.id,
@@ -95,8 +144,9 @@ class FieldSearchScreen extends Component {
               fA,
               pH,
               fIm,
-              
-              
+              lt,
+              ln,
+              d
             });
           } else {
             fields.push({
@@ -114,9 +164,13 @@ class FieldSearchScreen extends Component {
               fA,
               pH,
               fIm,
-              
+              lt,
+              ln,
+              d
             });
           }
+          //Sorting the results! cool 2018
+          fields.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
           this.setState({
             fields,
             search_placeholder: search_fields_near
@@ -132,147 +186,30 @@ class FieldSearchScreen extends Component {
     var { params } = this.props.navigation.state;
 
     this.state = {
-      selectedIndex: 0,
       fieldSearchTerm: "",
       fields: [],
-      homeCityText: "",
       search_placeholder: search_fields_near,
+      userLatitude: 0,
+      userLongitude: 0,
 
-      homeAreaConst: this.props.userData.hA
     };
+
+    this.getLocation();
     this.ref = firebase
       .firestore()
       .collection("Users")
       .doc(firebase.auth().currentUser.uid);
   }
 
-  addHomeCity = () => {
-    const homeCityText = this.state.homeCityText;
-    if (homeCityText.length !== 0) {
-      this.ref
-        .update({
-          hA: homeCityText.toLowerCase().trim()
-        })
-        .then(this.getHomeAreaAfterSetting());
-    }
-  };
+  
 
-  getHomeAreaAfterSetting = () => {
-    this.props.getUserData();
-
-    var { params } = this.props.navigation.state;
-
-    this.setState({
-      homeAreaConst: this.state.homeCityText.toLowerCase().trim(),
-      selectedIndex: 0
-    });
-    this.updateIndex(this.state.selectedIndex);
-  };
-
-  updateIndex = selectedIndex => {
-    this.setState({ selectedIndex }, () => {
-      if (selectedIndex === 1) {
-        this.unsubscribe = this.searchFields(this.state.fieldSearchTerm);
-        this.setState({ search_placeholder: search_fields_by_name });
-      } else if (selectedIndex === 2) {
-        this.unsubscribe = this.searchFields(this.state.fieldSearchTerm);
-        this.setState({ search_placeholder: search_fields_by_city });
-      } else if (selectedIndex === 0) {
-        this.unsubscribe = this.searchFields(this.state.fieldSearchTerm);
-        this.setState({ search_placeholder: search_fields_near });
-      }
-    });
-  };
+  
+  
 
   searchAfterSetState = () => {
     const fields = [];
     const ref = firebase.firestore().collection("Fields");
-    if (this.state.selectedIndex === 1) {
-      const query = ref.where(
-        "fNL",
-        "==",
-        this.state.fieldSearchTerm.toLowerCase().trim()
-      );
-    } else if (this.state.selectedIndex === 2) {
-      const query = ref.where(
-        "fARL",
-        "==",
-        this.state.fieldSearchTerm.toLowerCase().trim()
-      );
-    } else if (this.state.selectedIndex === 0) {
-      var { params } = this.props.navigation.state;
-      if (this.state.fieldSearchTerm.trim().length === 0) {
-        const query = ref
-          .where("fARL", "==", this.state.homeAreaConst)
-          .limit(50);
-      } else {
-        const query = ref
-          .where("fARL", "==", this.state.homeAreaConst)
-
-          .where("fNL", "==", this.state.fieldSearchTerm.toLowerCase().trim());
-      }
-      query.get().then(
-        function(doc) {
-          doc.forEach(doc => {
-            const id = doc.id;
-            const {
-              fN,
-              fAR,
-              fI,
-              fNL,
-              fARL,
-              fT,
-              gG,
-              fAT,
-              fA,
-              pH,
-              fIm
-            } = doc.data();
-            if (fIm === true) {
-              fields.push({
-                key: doc.id,
-                doc,
-                id,
-                fN,
-                fAR,
-                fI,
-                fNL,
-                fARL,
-                fT,
-                gG,
-                fAT,
-                fA,
-                pH,
-                fIm,
-                
-              });
-            } else {
-              fields.push({
-                key: doc.id,
-                doc,
-                id,
-                fN,
-                fAR,
-                fI,
-                fNL,
-                fARL,
-                fT,
-                gG,
-                fAT,
-                fA,
-                pH,
-                fIm,
-                
-              });
-            }
-            this.setState({
-              fields,
-              search_placeholder: search_fields_near
-            });
-          });
-        }.bind(this)
-      );
-    }
+    
   };
 
   searchFields = typedText => {
@@ -282,32 +219,11 @@ class FieldSearchScreen extends Component {
   render() {
     var { params } = this.props.navigation.state;
 
-    homeCityAddInput = (
-      <View style={styles.homeAddContainer}>
-        <Text style={styles.blackText}>{enter_home_city}</Text>
-        <TextInput
-          style={styles.searchBar}
-          placeholder={add_home_city_placeholder}
-          onChangeText={homeCityText => this.setState({ homeCityText })}
-        />
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => this.addHomeCity()}
-        >
-          <Text style={styles.buttonText}>{set}</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    
 
-    const buttons = [[near_me], [field_name_cap], [field_city_cap]];
-    const { selectedIndex } = this.state;
-    let input;
+    
 
-    if (this.state.homeAreaConst == "" && selectedIndex == 0) {
-      input = homeCityAddInput;
-    } else {
-      input = null;
-    }
+    
 
     const openFieldDetail = item => {
       var { params } = this.props.navigation.state;
@@ -329,7 +245,10 @@ class FieldSearchScreen extends Component {
           timestamp: this.props.userData.ts,
           trainingCount: this.props.userData.tC,
           reputation: this.props.userData.re,
-          fIm: item.fIm
+          fIm: item.fIm,
+          lt: item.lt,
+          ln: item.ln,
+          d: item.d
         });
       } else {
         this.props.navigation.navigate("CreateEventScreen", {
@@ -348,7 +267,6 @@ class FieldSearchScreen extends Component {
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("FeedScreen", {
-                  homeCityAdded: this.state.home
                 })
               }
               style={styles.navigationItem}
@@ -394,26 +312,20 @@ class FieldSearchScreen extends Component {
             value={this.state.fieldSearchTerm}
           />
 
-          <ButtonGroup
-            onPress={this.updateIndex}
-            selectedIndex={selectedIndex}
-            buttons={buttons}
-            buttonStyle={{ height: 40 }}
-            selectedTextStyle={{ color: "#3bd774", fontWeight: "bold" }}
-            textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
-            innerBorderStyle={{ width: 0 }}
-          />
+          
 
           <TouchableOpacity
             style={styles.addNewFieldBox}
             onPress={() =>
-              this.props.navigation.navigate("CreateNewFieldScreen")
+              this.props.navigation.navigate("CreateNewFieldScreen", {
+                lt: null,
+                ln: null
+              })
             }
           >
             <Text style={styles.addNewFieldText}>{add_new_field}</Text>
           </TouchableOpacity>
         </View>
-        {input}
 
         <FlatList
           style={{ marginBottom: 50 }}

@@ -9,7 +9,7 @@ export default class FieldSearchitem extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      fieldImagePath:require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
+      fieldImagePath: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
     };
     if (this.props.fIm === true) {
       this.getImage();
@@ -44,7 +44,7 @@ export default class FieldSearchitem extends React.PureComponent {
           resizeMode="cover"
         />
         <Text style={styles.text} numberOfLines={2}>
-          {this.props.fN}
+          {this.props.fN + " " +this.props.d}
         </Text>
         <View style={styles.div} />
       </View>

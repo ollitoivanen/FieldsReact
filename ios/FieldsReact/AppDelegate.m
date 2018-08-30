@@ -17,7 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [GMSServices provideAPIKey:@"AIzaSyCizXJ6H_1-ZBlgPFHQoMDiK__j2K9LOsw"]; // add this line using the api key obtained from Google Console
+  [GMSServices provideAPIKey:@"AIzaSyDTZgovHbFEnfft4Jm78hKqKZJVxc5T-vg"]; // add this line using the api key obtained from Google Console
 
     [FIRApp configure];
   NSURL *jsCodeLocation;

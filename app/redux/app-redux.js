@@ -82,11 +82,7 @@ const getUserAndTeamData = () => {
                   fP: false
                 });
               }
-              if (doc.data().hA === undefined) {
-                undefinedOnes.push({
-                  hA: ""
-                });
-              }
+              
 
               if (doc.data().re === undefined) {
                 undefinedOnes.push({
@@ -146,11 +142,7 @@ const getUserAndTeamData = () => {
               uIm: false
             });
           }
-          if (doc.data().hA === undefined) {
-            undefinedOnes.push({
-              hA: ""
-            });
-          }
+          
 
           if (doc.data().re === undefined) {
             undefinedOnes.push({
@@ -222,11 +214,7 @@ const getUserData = () => {
             fP: false
           });
         }
-        if (doc.data().hA === undefined) {
-          undefinedOnes.push({
-            hA: ""
-          });
-        }
+        
 
         if (doc.data().re === undefined) {
           undefinedOnes.push({

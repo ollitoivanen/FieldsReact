@@ -22,6 +22,8 @@ import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
+import com.airbnb.android.react.maps.MapsPackage;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
