@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
-import { edit_profile, username, full_name, save } from "../../strings/strings";
+import { edit_profile, username, full_name, save, please_fill_all_fields } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import FastImage from "react-native-fast-image";
 var ImagePicker = require("react-native-image-picker");
@@ -38,7 +38,8 @@ class EditProfileScreen extends Component {
     this.state = {
       username: this.props.userData.un,
       profileImage: null,
-      profileImageInitial: null
+      profileImageInitial: null,
+      errorMessage: ""
     };
   }
 
@@ -105,38 +106,55 @@ class EditProfileScreen extends Component {
     let imagePath = this.state.profileImage;
     let clearPath = this.state.profileImageInitial;
 
-    if (clearPath !== null) {
-      ImageResizer.createResizedImage(imagePath, 200, 200, "JPEG", 100).then(
-        ({ uri }) => {
-          console.warn;
-          let imageString;
-          if (Platform.OS === "android") {
-            imageString = uri.replace("file://", "");
-          } else {
-            imageString = uri;
+   
+    if (this.state.username !== "") {
+      if (clearPath !== null) {
+        ImageResizer.createResizedImage(imagePath, 200, 200, "JPEG", 100).then(
+          ({ uri }) => {
+            
+            var { params } = this.props.navigation.state;
+  
+            storageRef
+              .child(
+                "profilepics/" +
+                  firebase.auth().currentUser.uid +
+                  "/" +
+                  firebase.auth().currentUser.uid +
+                  ".jpg"
+              )
+              .putFile(uri);
           }
-          var { params } = this.props.navigation.state;
-
-          storageRef
-            .child(
-              "profilepics/" +
-                firebase.auth().currentUser.uid +
-                "/" +
-                firebase.auth().currentUser.uid +
-                ".jpg"
-            )
-            .putFile(imageString);
+        );
+      }
+      if (this.state.username === this.props.userData.un) {
+        if (clearPath !== null && this.props.userData.uIm === false) {
+          firebase
+            .firestore()
+            .collection("Users")
+            .doc(firebase.auth().currentUser.uid)
+            .update({
+              uIm: true
+            })
+            .then(() => {
+              this.props.getUserData();
+            })
+            .then(() => {
+              this.props.navigation.goBack();
+            });
+        } else {
+          this.props.navigation.goBack();
         }
-      );
-    }
-
-    if (this.state.username === this.props.userData.un) {
-      if (clearPath !== null && this.props.userData.uIm === false) {
+      } else if (
+        this.state.username !== this.props.userData.un &&
+        clearPath !== null &&
+        this.props.userData.uIm === false
+      ) {
         firebase
           .firestore()
           .collection("Users")
           .doc(firebase.auth().currentUser.uid)
           .update({
+            un: this.state.username.toLowerCase().trim(),
             uIm: true
           })
           .then(() => {
@@ -145,45 +163,26 @@ class EditProfileScreen extends Component {
           .then(() => {
             this.props.navigation.goBack();
           });
-      } else {
-        this.props.navigation.goBack();
+      } else if (
+        this.state.username !== this.props.userData.un &&
+        clearPath === null
+      ) {
+        firebase
+          .firestore()
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .update({
+            un: this.state.username.toLowerCase().trim()
+          })
+          .then(() => {
+            this.props.getUserData();
+          })
+          .then(() => {
+            this.props.navigation.goBack();
+          });
       }
-    } else if (
-      this.state.username !== this.props.userData.un &&
-      clearPath !== null &&
-      this.props.userData.uIm === false
-    ) {
-      firebase
-        .firestore()
-        .collection("Users")
-        .doc(firebase.auth().currentUser.uid)
-        .update({
-          un: this.state.username,
-          uIm: true
-        })
-        .then(() => {
-          this.props.getUserData();
-        })
-        .then(() => {
-          this.props.navigation.goBack();
-        });
-    } else if (
-      this.state.username !== this.props.userData.un &&
-      clearPath === null
-    ) {
-      firebase
-        .firestore()
-        .collection("Users")
-        .doc(firebase.auth().currentUser.uid)
-        .update({
-          un: this.state.username
-        })
-        .then(() => {
-          this.props.getUserData();
-        })
-        .then(() => {
-          this.props.navigation.goBack();
-        });
+    } else {
+      this.setState({ errorMessage: [please_fill_all_fields] });
     }
   };
   render() {
@@ -243,6 +242,8 @@ class EditProfileScreen extends Component {
         >
           <Text style={styles.buttonText}>{save}</Text>
         </TouchableOpacity>
+          <Text style={styles.error}>{this.state.errorMessage}</Text>
+        
       </View>
     );
   }
@@ -320,5 +321,11 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     justifyContent: "space-around",
     alignItems: "center"
+  },
+  error: {
+    marginTop: 8,
+    color: "red",
+    fontWeight: "bold",
+    marginStart: 8
   }
 });

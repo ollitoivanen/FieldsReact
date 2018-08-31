@@ -22,9 +22,9 @@ import {
   set,
   enter_home_city,
   add_home_city_placeholder,
-
   search_fields_near,
-  add_new_field
+  add_new_field,
+  start_training
 } from "../../strings/strings";
 import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem"; // we'll create this next
 
@@ -51,15 +51,19 @@ class FieldSearchScreen extends Component {
   };
 
   getLocation = () => {
-    navigator.geolocation.getCurrentPosition(position => {
-      this.setState({
-        userLatitude: position.coords.latitude,
-        userLongitude: position.coords.longitude,
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          userLatitude: position.coords.latitude,
+          userLongitude: position.coords.longitude,
 
-        error: null
-      }), //, this.getDistanceFromLatLonInKm()
-        this.initialFetch();
-    });
+          error: null
+        }),
+          //, this.getDistanceFromLatLonInKm()
+          this.initialFetch();
+      },
+      error => this.setState({ error: error.message })
+    );
   };
 
   getDistanceFromLatLonInKm = (lat, lng) => {
@@ -86,10 +90,9 @@ class FieldSearchScreen extends Component {
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = Math.round( R * c * 10) / 10 + " km"; // Distance in km
+    var d = Math.round(R * c * 10) / 10 + " km"; // Distance in km
     return d;
 
-   
     //console.warn(d)
   };
 
@@ -100,13 +103,20 @@ class FieldSearchScreen extends Component {
     const homeAreaConst = this.state.homeAreaConst;
     var fieldImage;
 
-    const southWest=new firebase.firestore.GeoPoint( Math.round(this.state.userLatitude)-1,  Math.round(this.state.userLongitude)-1);
-    const northEast=new firebase.firestore.GeoPoint( Math.round(this.state.userLatitude)+1, Math.round(this.state.userLatitude)+1);
+    const southWest = new firebase.firestore.GeoPoint(
+      Math.round(this.state.userLatitude) - 1,
+      Math.round(this.state.userLongitude) - 1
+    );
+    const northEast = new firebase.firestore.GeoPoint(
+      Math.round(this.state.userLatitude) + 1,
+      Math.round(this.state.userLatitude) + 1
+    );
 
     //Having a query distance of 50km
     const query = ref
-      .where("co", ">=", southWest).where("co", "<=", northEast)
-      .limit(50);
+      .where("co", ">=", southWest)
+      .where("co", "<=", northEast)
+      .limit(10);
 
     query.get().then(
       function(doc) {
@@ -114,34 +124,27 @@ class FieldSearchScreen extends Component {
           const id = doc.id;
           const {
             fN,
-            fAR,
             fI,
-            fNL,
-            fARL,
             fT,
-            gG,
+            gC,
             fAT,
-            fA,
             pH,
             fIm,
             lt,
             ln
           } = doc.data();
-         var d = this.getDistanceFromLatLonInKm(lt, ln);
+          var d = this.getDistanceFromLatLonInKm(lt, ln);
           if (fIm === true) {
             fields.push({
               key: doc.id,
               doc,
               id,
               fN,
-              fAR,
               fI,
-              fNL,
-              fARL,
+           
               fT,
-              gG,
+              gC,
               fAT,
-              fA,
               pH,
               fIm,
               lt,
@@ -154,14 +157,11 @@ class FieldSearchScreen extends Component {
               doc,
               id,
               fN,
-              fAR,
               fI,
-              fNL,
-              fARL,
+           
               fT,
-              gG,
+              gC,
               fAT,
-              fA,
               pH,
               fIm,
               lt,
@@ -182,16 +182,12 @@ class FieldSearchScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.unsubscribe = null;
     var { params } = this.props.navigation.state;
 
     this.state = {
-      fieldSearchTerm: "",
       fields: [],
-      search_placeholder: search_fields_near,
       userLatitude: 0,
-      userLongitude: 0,
-
+      userLongitude: 0
     };
 
     this.getLocation();
@@ -201,29 +197,12 @@ class FieldSearchScreen extends Component {
       .doc(firebase.auth().currentUser.uid);
   }
 
-  
+ 
 
-  
-  
-
-  searchAfterSetState = () => {
-    const fields = [];
-    const ref = firebase.firestore().collection("Fields");
-    
-  };
-
-  searchFields = typedText => {
-    this.setState({ fieldSearchTerm: typedText }, this.searchAfterSetState);
-  };
+ 
 
   render() {
     var { params } = this.props.navigation.state;
-
-    
-
-    
-
-    
 
     const openFieldDetail = item => {
       var { params } = this.props.navigation.state;
@@ -231,14 +210,10 @@ class FieldSearchScreen extends Component {
       if (params.fromEvent === false) {
         this.props.navigation.navigate("DetailFieldScreen", {
           fieldName: item.fN,
-          fieldAreaLowerCase: item.fARL,
-          fieldNameLowerCase: item.fNL,
-          fieldArea: item.fAR,
           fieldID: item.id,
           fieldType: item.fT,
-          goalCount: item.gG,
+          goalCount: item.gC,
           accessType: item.fAT,
-          fieldAddress: item.fA,
           peopleHere: item.pH,
           currentFieldID: this.props.userData.cFI,
           currentFieldName: this.props.userData.cFN,
@@ -248,7 +223,7 @@ class FieldSearchScreen extends Component {
           fIm: item.fIm,
           lt: item.lt,
           ln: item.ln,
-          d: item.d
+          d: item.d,
         });
       } else {
         this.props.navigation.navigate("CreateEventScreen", {
@@ -265,10 +240,7 @@ class FieldSearchScreen extends Component {
         <View style={styles.navigationContainer}>
           <View style={styles.navigationContainerIn}>
             <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("FeedScreen", {
-                })
-              }
+              onPress={() => this.props.navigation.navigate("FeedScreen", {})}
               style={styles.navigationItem}
               underlayColor="#bcbcbc"
             >
@@ -304,16 +276,7 @@ class FieldSearchScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchBar}
-            placeholder={this.state.search_placeholder}
-            onChangeText={(this.unsubscribe = this.searchFields)}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            value={this.state.fieldSearchTerm}
-          />
-
-          
-
+         <Text style={styles.bigText}>{start_training}</Text>
           <TouchableOpacity
             style={styles.addNewFieldBox}
             onPress={() =>
@@ -456,7 +419,7 @@ const styles = StyleSheet.create({
   addNewFieldBox: {
     backgroundColor: "white",
     padding: 10,
-    marginTop: 8,
+    marginTop: 0,
     marginHorizontal: 10,
     borderWidth: 0.5,
     borderRadius: 5,
@@ -467,5 +430,11 @@ const styles = StyleSheet.create({
     color: "#3facff",
     fontWeight: "bold",
     textAlign: "center"
+  },
+  bigText:{
+    color:'black',
+    margin: 24,
+    fontSize: 22,
+    fontWeight: 'bold'
   }
 });

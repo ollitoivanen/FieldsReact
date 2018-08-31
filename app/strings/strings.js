@@ -139,3 +139,5 @@ export const show_players = "Show players";
 export const add_friends_from_search = "Add friends from search!"
 export const get_field_location = "Get field location"
 export const field_location_set = "Field location set"
+export const start_training = "Start training"
+export const change_field_location = "Change field location"

@@ -113,7 +113,8 @@ class TeamPendingPlayersScreen extends Component {
           .doc(item.id)
           .update({
             pT: firebase.firestore.FieldValue.delete(),
-            uTI: this.props.userData.uTI
+            uTI: this.props.userData.uTI,
+            uTN: this.props.userData.uTN
           });
       });
   };

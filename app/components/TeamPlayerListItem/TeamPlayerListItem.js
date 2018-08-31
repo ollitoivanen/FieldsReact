@@ -12,12 +12,7 @@ export default class TeamPlayerListItem extends React.PureComponent {
    
     return (
       <View style={styles.item}>
-        <Image
-          style={styles.fieldImage}
-          source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-          borderRadius={25}
-          resizeMode="cover"
-        />
+       
 {usernameText}
         <View style={styles.div} />
       </View>
@@ -44,6 +39,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
+    margin: 20,
     flexWrap: "wrap"
   },
   

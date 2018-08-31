@@ -62,14 +62,12 @@ const getUserAndTeamData = () => {
               );
               var usersTeamData = usersTeamData1;
               var undefinedOnes = [];
-             
+
               if (doc.data().tC === undefined) {
                 undefinedOnes.push({
                   tC: 0
                 });
               }
-
-             
 
               if (doc.data().cFI === undefined) {
                 undefinedOnes.push({
@@ -82,7 +80,6 @@ const getUserAndTeamData = () => {
                   fP: false
                 });
               }
-              
 
               if (doc.data().re === undefined) {
                 undefinedOnes.push({
@@ -105,6 +102,11 @@ const getUserAndTeamData = () => {
                   uTN: undefined
                 });
               }
+              if (doc.data().uIm === undefined) {
+                undefinedOnes.push({
+                  uIm: false
+                });
+              }
 
               var userData = Object.assign(...undefinedOnes, doc.data());
 
@@ -118,8 +120,6 @@ const getUserAndTeamData = () => {
         } else {
           var undefinedOnes = [];
 
-          
-          
           if (doc.data().tC === undefined) {
             undefinedOnes.push({
               tC: 0
@@ -142,7 +142,6 @@ const getUserAndTeamData = () => {
               uIm: false
             });
           }
-          
 
           if (doc.data().re === undefined) {
             undefinedOnes.push({
@@ -214,7 +213,6 @@ const getUserData = () => {
             fP: false
           });
         }
-        
 
         if (doc.data().re === undefined) {
           undefinedOnes.push({
@@ -237,7 +235,11 @@ const getUserData = () => {
             uTN: undefined
           });
         }
-
+        if (doc.data().uIm === undefined) {
+          undefinedOnes.push({
+            uIm: false
+          });
+        }
 
         if (doc.data().pT === undefined) {
           undefinedOnes.push({

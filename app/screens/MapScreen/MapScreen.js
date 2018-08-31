@@ -28,7 +28,15 @@ export default class MapScreen extends Component {
     };
   }
   componentDidMount() {
+    /*if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+      if (!granted) {
+        return;
+      }
+    }*/
+    
     navigator.geolocation.getCurrentPosition(
+      
       position => {
         this.setState({
           coordinates: {
@@ -43,10 +51,20 @@ export default class MapScreen extends Component {
           markerSet: true
         });
       },
-      error => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      error => this.setState({ error: error.message }), 
     );
   }
+
+goBack = () =>{
+  var { params } = this.props.navigation.state;
+
+  if(params.fromEdit === true){
+    this.props.navigation.navigate("DetailFieldScreen", {editVisible: true})
+  }else{
+    this.props.navigation.goBack()
+  }
+}
+
   setMarker = coordinates => {
     this.setState({
       coordinates: coordinates,
@@ -87,7 +105,7 @@ export default class MapScreen extends Component {
           <TouchableOpacity
             style={styles.backButton}
             underlayColor="#bcbcbc"
-            onPress={() => this.props.navigation.goBack()}
+            onPress={() => this.goBack()}
           >
             <Image
               style={styles.backButton}

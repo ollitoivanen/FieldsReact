@@ -57,33 +57,6 @@ class TeamScreen extends Component {
   static navigationOptions = {
     header: null
   };
-  showPicker = () => {
-    var options = {
-      title: "Select Image",
-
-      storageOptions: {
-        skipBackup: true,
-        path: "images"
-      }
-    };
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.warn("User cancelled image picker");
-      } else if (response.error) {
-        console.warn("ImagePicker Error: ", response.error);
-      } else if (response.customButton) {
-        console.warn("User tapped custom button: ", response.customButton);
-      } else {
-        let source = response.uri;
-        let clearPath = response.uri;
-
-        this.setState({
-          avatarSource: { uri: source },
-          editImageClearPath: clearPath
-        });
-      }
-    });
-  };
 
   loadPlayersList() {
     const ref = firebase.firestore().collection("Teams");
@@ -195,9 +168,7 @@ class TeamScreen extends Component {
       editVisible: false,
       leaveVisible: false,
       players: [],
-      teamUsernameEdit: this.props.userData.uTN,
-      profileImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
-      avatarSource: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
+      teamImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
       editImageClearPath: null
     };
   }
@@ -220,8 +191,7 @@ class TeamScreen extends Component {
       .getDownloadURL()
       .then(downloadedFile => {
         this.setState({
-          profileImage: { uri: downloadedFile.toString() },
-          avatarSource: { uri: downloadedFile.toString() }
+          teamImage: { uri: downloadedFile.toString() }
         });
       })
       .catch(err => {});
@@ -309,13 +279,12 @@ class TeamScreen extends Component {
   }
 
   setEditVisible(visible) {
-    this.setState({ infoVisible: false, editVisible: visible });
+    this.setState({ infoVisible: false }),
+      this.props.navigation.navigate("EditTeamScreen", {
+        teamUsername: this.props.userData.uTN,
+        teamImage: this.state.teamImage
+      });
   }
-
-  usernameHandle = value => {
-    const newText = value.replace(/\s/g, "");
-    this.setState({ teamUsernameEdit: newText });
-  };
 
   leaveTeam = () => {
     firebase
@@ -328,137 +297,48 @@ class TeamScreen extends Component {
       .then(() => {
         firebase
           .firestore()
-          .collection("Users")
-          .doc(firebase.auth().currentUser.uid)
-          .update({ uTI: firebase.firestore.FieldValue.delete() });
-      })
-      .then(() => {
-        this.props.getUserAndTeamData();
-      })
-      .then(() => {
-        firebase
-          .firestore()
           .collection("Teams")
           .doc(this.props.userData.uTI)
-          .update({
-            pC: this.props.usersTeamData.pC - 1
-          });
+          .get()
+          .then(doc => {
+            if (doc.data().pC === 1) {
+              firebase
+                .firestore()
+                .collection("Teams")
+                .doc(this.props.userData.uTI)
+                .delete();
+            } else {
+              firebase
+                .firestore()
+                .collection("Teams")
+                .doc(this.props.userData.uTI)
+                .update({
+                  pC: doc.data().pC - 1
+                });
+            }
+          }).then(() => {
+            firebase
+              .firestore()
+              .collection("Users")
+              .doc(firebase.auth().currentUser.uid)
+              .update({
+                uTI: firebase.firestore.FieldValue.delete(),
+                uTN: firebase.firestore.FieldValue.delete()
+              });
+          }).then(()=>{
+            this.props.getUserAndTeamData()
+          })
       })
+      
+
       .then(() => {
         this.props.navigation.popToTop();
       });
   };
 
   render() {
-    const saveTeamData = () => {
-      var storage = firebase.storage();
-
-      // Create a storage reference from our storage service
-      var storageRef = storage.ref();
-
-      let imagePath = this.state.avatarSource;
-      let clearPath = this.state.editImageClearPath;
-
-      if (clearPath !== null) {
-        ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
-          ({ uri }) => {
-            var { params } = this.props.navigation.state;
-
-            storageRef
-              .child(
-                "teampics/" +
-                  this.props.userData.uTI +
-                  "/" +
-                  this.props.userData.uTI +
-                  ".jpg"
-              )
-              .putFile(uri);
-          }
-        );
-      }
-      if (this.state.teamUsernameEdit === this.props.userData.uTN) {
-        this.setEditVisible(false);
-
-        //Only saving the changed
-      } else if (this.state.teamUsernameEdit !== this.props.userData.uTN) {
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(this.props.userData.uTI)
-          .update({
-            tUN: this.state.teamUsernameEdit
-          })
-          .then(() => {
-            this.retrieveData();
-          })
-          .then(() => {
-            let playerList = this.state.players;
-            playerList.forEach(doc => {
-              firebase
-                .firestore()
-                .collection("Users")
-                .doc(doc.id)
-                .update({
-                  uTN: this.state.teamUsernameEdit
-                });
-            });
-          })
-          .then(() => {
-            this.props.getUserAndTeamData();
-          })
-
-          .then(() => {
-            this.setEditVisible(false);
-          });
-      }
-    };
-
     return (
       <View style={styles.container}>
-        <Modal visible={this.state.editVisible} onRequestClose={() => {}}>
-          <View style={styles.editContainer}>
-            <View style={styles.greenRowContainer}>
-              <TouchableOpacity
-                style={styles.backButton}
-                underlayColor="#bcbcbc"
-                onPress={() => this.setEditVisible(false)}
-              >
-                <Image
-                  style={styles.backButton}
-                  source={require("FieldsReact/app/images/BackButton/back_button.png")}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.showPicker()} />
-              <Text style={styles.teamName}>{edit_team}</Text>
-            </View>
-
-            <TouchableOpacity onPress={() => this.showPicker()}>
-              <FastImage
-                style={styles.profileImageEdit}
-                source={this.state.avatarSource}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
-
-            <Text style={styles.headerText}>{team_username}</Text>
-            <TextInput
-              style={styles.textInput}
-              maxLength={30}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder={team_username}
-              value={this.state.teamUsernameEdit}
-              onChangeText={this.usernameHandle}
-            />
-
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => saveTeamData()}
-            >
-              <Text style={styles.buttonText}>{save}</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-
         <Modal
           transparent={true}
           visible={this.state.leaveVisible}
@@ -599,7 +479,7 @@ class TeamScreen extends Component {
           <View style={styles.greenRowContainer}>
             <FastImage
               style={styles.teamImage}
-              source={this.state.profileImage}
+              source={this.state.teamImage}
               resizeMode="cover"
             />
 

@@ -2,70 +2,63 @@ import React, { Component } from "react";
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
+  ScrollView,
   Text,
-  TextInput,
   Image,
-  Modal,
-  ScrollView
+  TouchableOpacity,
+  TextInput,
+  Modal
 } from "react-native";
-import firebase from "react-native-firebase";
 import FastImage from "react-native-fast-image";
 var ImagePicker = require("react-native-image-picker");
 import ImageResizer from "react-native-image-resizer";
+import firebase from "react-native-firebase";
 
 import {
-  field_name,
-  save,
-  edit_field,
-  please_fill_all_fields,
-  add_new_field,
+  goals,
+  address,
+  access_type,
+  info,
+  field_type,
   field_type_array,
   field_access_type_array,
-  field_access_type,
+  people_here,
+  start_training_here,
+  youre_training_here,
+  youre_training_elsewhere,
+  edit_field,
+  field_name,
+  field_city,
+  field_address,
+  save,
   field_field_type,
+  field_access_type,
   field_goal_count,
-  field_type,
-  get_field_location,
-  field_location_set
+  please_fill_all_fields,
+  change_field_location
 } from "../../strings/strings";
-
-import { connect } from "react-redux";
-import { getUserData } from "FieldsReact/app/redux/app-redux.js";
-
-const mapStateToProps = state => {
-  return {
-    userData: state.userData
-  };
-};
-const mapDispatchToProps = dispatch => {
-  return {
-    getUserData: () => dispatch(getUserData())
-  };
-};
-
-class CreateNewFieldScreen extends Component {
+export default class EditFieldScreen extends Component {
   static navigationOptions = {
     header: null
   };
-
   constructor(props) {
     super(props);
+    var { params } = this.props.navigation.state;
+
     this.state = {
-      fieldName: "",
-      fieldArea: "",
-      fieldAddress: "",
-      errorMessage: null,
       fieldTypeModalVisible: false,
       fieldAccessTypeModalVisible: false,
       fieldGoalCountModalVisible: false,
-      chosenFieldType: 0,
-      chosenAccessType: 2,
-      goalCount: 1,
-      fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
-      fieldImageInitial: null
+      chosenFieldType: params.fieldType,
+      chosenAccessType: params.accessType,
+      goalCount: params.goalCount,
+      accessType: params.accessType,
+      fieldImage: params.fieldImage,
+      clearPath: null,
+      fieldName: params.fieldName
     };
   }
+
   showPicker = () => {
     var options = {
       title: "Select Image",
@@ -77,35 +70,161 @@ class CreateNewFieldScreen extends Component {
     };
     ImagePicker.launchImageLibrary(options, response => {
       if (response.didCancel) {
-        console.warn("User cancelled image picker");
       } else if (response.error) {
-        console.warn("ImagePicker Error: ", response.error);
       } else if (response.customButton) {
-        console.warn("User tapped custom button: ", response.customButton);
       } else {
         let source = response.uri;
         let clearPath = response.uri;
 
         this.setState({
           fieldImage: { uri: source },
-          fieldImageInitial: source
+          clearPath: clearPath
         });
       }
     });
   };
-
   setFieldTypeModal(visible) {
     this.setState({ fieldTypeModalVisible: visible });
   }
 
   setFieldAccessTypeModal(visible) {
-    this.setState({ fieldAccessTypeModalVisible: visible });
+    this.setState({
+      fieldAccessTypeModalVisible: visible
+    });
   }
   setGoalCountModal(visible) {
-    this.setState({ fieldGoalCountModalVisible: visible });
+    this.setState({
+      fieldGoalCountModalVisible: visible
+    });
   }
 
   render() {
+    const saveFieldData = () => {
+      var { params } = this.props.navigation.state;
+
+      var storage = firebase.storage();
+
+      // Create a storage reference from our storage service
+      var storageRef = storage.ref();
+
+      let imagePath = this.state.avatarSource;
+      let clearPath = this.state.clearPath;
+
+      if (this.state.chosenAccessType !== params.accessType) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(params.fieldID)
+          .update({
+            fAT: this.state.access_type
+          });
+      }
+      if (this.state.chosenFieldType !== params.fieldType) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(params.fieldID)
+          .update({
+            fT: this.state.chosenFieldType
+          });
+      }
+      if (this.state.goalCount !== params.goalCount) {
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(params.fieldID)
+          .update({
+            gC: this.state.goalCount
+          });
+      }
+
+      if (this.state.fieldName !== "") {
+        if (this.state.fieldName === params.fieldName) {
+          if (clearPath !== null) {
+            ImageResizer.createResizedImage(
+              clearPath,
+              200,
+              200,
+              "JPEG",
+              100
+            ).then(({ uri }) => {
+              var { params } = this.props.navigation.state;
+
+              storageRef
+                .child(
+                  "fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg"
+                )
+                .putFile(uri)
+                .then(() => {
+                  if (params.fIm === false) {
+                    firebase
+                      .firestore()
+                      .collection("Fields")
+                      .doc(params.fieldID)
+                      .update({
+                        fIm: true
+                      });
+                  }
+                }).then(()=>{
+                    this.props.navigation.goBack()
+                })
+            });
+          } else {
+            this.props.navigation.goBack();
+        }
+
+          //Only saving the changed
+        } else if (this.state.fieldName !== params.fieldName) {
+          if (clearPath !== null) {
+            ImageResizer.createResizedImage(
+              clearPath,
+              200,
+              200,
+              "JPEG",
+              100
+            ).then(({ uri }) => {
+              var { params } = this.props.navigation.state;
+
+              storageRef
+                .child(
+                  "fieldpics/" + params.fieldID + "/" + params.fieldID + ".jpg"
+                )
+                .putFile(uri)
+                .then(() => {
+                  if (params.fIm === false) {
+                    firebase
+                      .firestore()
+                      .collection("Fields")
+                      .doc(params.fieldID)
+                      .update({
+                        fIm: true,
+                        fN: this.state.fieldName
+                      })
+
+                      .then(() => {
+                        this.props.navigation.navigate("DetailFieldScreen", {fieldName: this.state.fieldName});
+                    });
+                  }
+                });
+            });
+          } else {
+            firebase
+              .firestore()
+              .collection("Fields")
+              .doc(params.fieldID)
+              .update({
+                fN: this.state.fieldName
+              })
+
+              .then(() => {
+                this.props.navigation.navigate("DetailFieldScreen", {fieldName: this.state.fieldName});
+              });
+          }
+        }
+      } else {
+        this.setState({ errorMessage: [please_fill_all_fields] });
+      }
+    };
     const changeFieldType = index => {
       this.setState({ chosenFieldType: index });
       this.setFieldTypeModal(false);
@@ -119,161 +238,6 @@ class CreateNewFieldScreen extends Component {
       this.setState({ goalCount: index });
       this.setGoalCountModal(false);
     };
-    function guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return (
-        s4() +
-        s4() +
-        "-" +
-        s4() +
-        "-" +
-        s4() +
-        "-" +
-        s4() +
-        "-" +
-        s4() +
-        s4() +
-        s4()
-      );
-    }
-    var { params } = this.props.navigation.state;
-    const saveFieldData = () => {
-      var { params } = this.props.navigation.state;
-
-      firebase.storage;
-      var storage = firebase.storage();
-
-      // Create a storage reference from our storage service
-      var storageRef = storage.ref();
-
-      let imagePath = this.state.fieldImage;
-      let clearPath = this.state.fieldImageInitial;
-      var fieldID = guid().substring(0, 7);
-
-      if (this.state.fieldName !== "" && params.ltLn !== null) {
-        if (clearPath !== null) {
-          ImageResizer.createResizedImage(
-            clearPath,
-            200,
-            200,
-            "JPEG",
-            100
-          ).then(({ uri }) => {
-            var { params } = this.props.navigation.state;
-
-            storageRef
-              .child("fieldpics/" + fieldID + "/" + fieldID + ".jpg")
-              .putFile(uri);
-          });
-          firebase
-            .firestore()
-            .collection("Fields")
-            .doc(fieldID)
-            .set({
-              fN: this.state.fieldName,
-              fT: this.state.chosenFieldType,
-              fAT: this.state.chosenAccessType,
-              ltC: Math.round(params.lt),
-              lnC: Math.round(params.ln),
-
-              lt: Math.round(params.lt * 10000000) / 10000000,
-              ln: Math.round(params.ln * 10000000) / 10000000,
-              pH: 0,
-              gG: this.state.goalCount,
-              fIm: true
-              //Goal count
-            })
-            .then(() => {
-              this.props.navigation.replace("DetailFieldScreen", {
-                fieldName: this.state.fieldName,
-
-                fieldID: fieldID,
-                fieldType: this.state.chosenFieldType,
-                fieldAccessType: this.state.chosenAccessType,
-                peopleHere: 0,
-                goalCount: this.state.goalCount,
-
-                currentFieldID: this.props.userData.cFI,
-                currentFieldName: this.props.userData.cFN,
-                timestamp: this.props.userData.ts,
-                trainingCount: this.props.userData.tC,
-                reputation: this.props.userData.re,
-                fIm: true,
-                
-              });
-            });
-        } else {
-          const co = new firebase.firestore.GeoPoint(
-            Math.round(params.lt),
-            Math.round(params.ln)
-          );
-
-          firebase
-            .firestore()
-            .collection("Fields")
-            .doc(fieldID)
-            .set({
-              fN: this.state.fieldName,
-              fT: this.state.chosenFieldType,
-              fAT: this.state.chosenAccessType,
-              pH: 0,
-              gC: this.state.goalCount,
-              fIm: false,
-              co,
-
-              lt: Math.round(params.lt * 10000000) / 10000000,
-              ln: Math.round(params.ln * 10000000) / 10000000
-              //Goal count
-            })
-            .then(() => {
-              this.props.navigation.replace("DetailFieldScreen", {
-                fieldName: this.state.fieldName,
-
-                fieldID: fieldID,
-                fieldType: this.state.chosenFieldType,
-                fieldAccessType: this.state.chosenAccessType,
-                peopleHere: 0,
-                goalCount: this.state.goalCount,
-
-                currentFieldID: this.props.userData.cFI,
-                currentFieldName: this.props.userData.cFN,
-                timestamp: this.props.userData.ts,
-                trainingCount: this.props.userData.tC,
-                reputation: this.props.userData.re,
-                fIm: false
-              });
-            });
-        }
-      } else {
-        this.setState({ errorMessage: [please_fill_all_fields] });
-      }
-    };
-    var { params } = this.props.navigation.state;
-
-    if (params.lt === null) {
-      var getFieldLocationBox = (
-        <TouchableOpacity
-          style={styles.getLocationBox}
-          onPress={() => this.props.navigation.navigate("MapScreen", {fromEdit: false})}
-        >
-          <Text style={styles.getLocationText}>{get_field_location}</Text>
-        </TouchableOpacity>
-      );
-    } else {
-      var getFieldLocationBox = (
-        <TouchableOpacity
-          style={styles.getLocationBox}
-          onPress={() => this.props.navigation.navigate("MapScreen", {fromEdit: false})}
-        >
-          <Text style={styles.getLocationText}>{field_location_set}</Text>
-        </TouchableOpacity>
-      );
-    }
-
     return (
       <ScrollView style={styles.container}>
         <View style={styles.greenRowContainer}>
@@ -287,7 +251,9 @@ class CreateNewFieldScreen extends Component {
               source={require("FieldsReact/app/images/BackButton/back_button.png")}
             />
           </TouchableOpacity>
-          <Text style={styles.fieldName}>{add_new_field}</Text>
+          <View style={{ flexDirection: "column" }}>
+            <Text style={styles.fieldName}>{edit_field}</Text>
+          </View>
         </View>
 
         <TouchableOpacity onPress={() => this.showPicker()}>
@@ -298,7 +264,6 @@ class CreateNewFieldScreen extends Component {
             resizeMode="cover"
           />
         </TouchableOpacity>
-
         <Text style={styles.headerText}>{field_name}</Text>
         <TextInput
           style={styles.textInput}
@@ -308,9 +273,12 @@ class CreateNewFieldScreen extends Component {
           value={this.state.fieldName}
           onChangeText={fieldName => this.setState({ fieldName })}
         />
-
-        {getFieldLocationBox}
-
+        <TouchableOpacity
+          style={styles.getLocationBox}
+          onPress={() => this.openMaps()}
+        >
+          <Text style={styles.getLocationText}>{change_field_location}</Text>
+        </TouchableOpacity>
         <Text style={styles.headerText}>{field_field_type}</Text>
 
         <TouchableOpacity onPress={() => this.setFieldTypeModal(true)}>
@@ -332,6 +300,15 @@ class CreateNewFieldScreen extends Component {
           <Text style={styles.pickerText}>{this.state.goalCount}</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => saveFieldData()}
+        >
+          <Text style={styles.buttonText}>{save}</Text>
+        </TouchableOpacity>
+        {this.state.errorMessage && (
+          <Text style={styles.error}>{this.state.errorMessage}</Text>
+        )}
         <Modal
           transparent={true}
           visible={this.state.fieldTypeModalVisible}
@@ -490,67 +467,16 @@ class CreateNewFieldScreen extends Component {
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
-
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => saveFieldData()}
-        >
-          <Text style={styles.buttonText}>{save}</Text>
-        </TouchableOpacity>
-        {this.state.errorMessage && (
-          <Text style={styles.error}>{this.state.errorMessage}</Text>
-        )}
       </ScrollView>
     );
   }
 }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateNewFieldScreen);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 20,
     paddingHorizontal: 10,
     backgroundColor: "white"
-  },
-
-  textInput: {
-    height: 60,
-    marginTop: 12,
-    paddingHorizontal: 8,
-    backgroundColor: "#efeded",
-    borderRadius: 10,
-    fontWeight: "bold",
-    fontSize: 20
-  },
-
-  buttonContainer: {
-    backgroundColor: "#3bd774",
-    padding: 15,
-    marginTop: 20,
-    marginBottom: 30,
-    borderRadius: 10
-  },
-
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    fontWeight: "bold"
-  },
-
-  headerText: {
-    fontWeight: "bold",
-    marginStart: 8,
-    marginTop: 12
-  },
-
-  greenRowContainer: {
-    flexDirection: "row",
-    alignItems: "center"
   },
   profileImageEdit: {
     width: 80,
@@ -564,26 +490,19 @@ const styles = StyleSheet.create({
     borderRadius: 40
   },
 
-  backButton: {
-    height: 48,
-    width: 48,
-    alignSelf: "center"
-  },
-
   fieldName: {
     fontWeight: "bold",
     fontSize: 20,
     alignSelf: "center",
-    marginStart: 12
+    marginStart: 12,
+    marginEnd: 40,
+    flexWrap: "wrap"
   },
 
-  error: {
-    marginTop: 8,
-    color: "red",
-    fontWeight: "bold",
-    marginStart: 8
+  greenRowContainer: {
+    flexDirection: "row",
+    alignItems: "center"
   },
-
   pickerText: {
     fontWeight: "bold",
     fontSize: 20,
@@ -591,11 +510,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginStart: 8
   },
-
   dialogText: {
     fontWeight: "bold",
     fontSize: 18,
     margin: 8
+  },
+  textInput: {
+    height: 60,
+    marginTop: 12,
+    paddingHorizontal: 8,
+    backgroundColor: "#efeded",
+    borderRadius: 10,
+    fontWeight: "bold",
+    fontSize: 20
   },
 
   getLocationBox: {
@@ -611,5 +538,29 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#3bd774"
+  },
+  headerText: {
+    fontWeight: "bold",
+    marginStart: 8,
+    marginTop: 12
+  },
+
+  buttonContainer: {
+    backgroundColor: "#3bd774",
+    padding: 15,
+    marginTop: 12,
+    borderRadius: 10
+  },
+
+  buttonText: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold"
+  },
+  error: {
+    marginTop: 8,
+    color: "red",
+    fontWeight: "bold",
+    marginStart: 8
   }
 });

@@ -43,9 +43,14 @@ export default class FieldSearchitem extends React.PureComponent {
           source={this.state.fieldImagePath}
           resizeMode="cover"
         />
+        <View style={{flexDirection: 'column'}}>
         <Text style={styles.text} numberOfLines={2}>
-          {this.props.fN + " " +this.props.d}
+          {this.props.fN}
         </Text>
+        <Text style={styles.distanceText} numberOfLines={2}>
+          {this.props.d}
+        </Text>
+        </View>
         <View style={styles.div} />
       </View>
     );
@@ -73,7 +78,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     flex: 1,
     flexWrap: "wrap",
-    marginStart: 8
+    marginStart: 8,
+    margin: 4,
+    marginTop: 8,
+    color: 'black'
+  },
+
+  distanceText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    flex: 1,
+    flexWrap: "wrap",
+    marginStart: 8,
+    marginBottom: 8,
   },
 
   fieldImage: {

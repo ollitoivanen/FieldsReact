@@ -13,11 +13,17 @@ import {
   team_username,
   save,
   create_team,
-  please_enter_username
+  please_fill_all_fields,
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import { connect } from "react-redux";
-import { getUserData, getUserAndTeamData } from "FieldsReact/app/redux/app-redux.js";
+import {
+  getUserData,
+  getUserAndTeamData
+} from "FieldsReact/app/redux/app-redux.js";
+import FastImage from "react-native-fast-image";
+var ImagePicker = require("react-native-image-picker");
+import ImageResizer from "react-native-image-resizer";
 
 const mapStateToProps = state => {
   return {
@@ -28,7 +34,6 @@ const mapDispatchToProps = dispatch => {
   return {
     getUserData: () => dispatch(getUserData()),
     getUserAndTeamData: () => dispatch(getUserAndTeamData())
-
   };
 };
 
@@ -41,8 +46,36 @@ class CreateTeamScreen extends Component {
     super(props);
     this.state = {
       teamUsername: "",
+      errorMessage:"",
+      teamImage:  require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
+      clearPath: null
     };
   }
+  showPicker = () => {
+    var options = {
+      title: "Select Image",
+
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        let source = response.uri;
+        let clearPath = response.uri;
+
+        this.setState({
+          teamImage: { uri: source },
+          clearPath: clearPath
+        });
+      }
+    });
+  };
+
   guid = () => {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -63,7 +96,7 @@ class CreateTeamScreen extends Component {
       s4() +
       s4()
     );
-  }
+  };
   usernameHandle = value => {
     const newText = value.replace(/\s/g, "");
     this.setState({ teamUsername: newText });
@@ -72,7 +105,32 @@ class CreateTeamScreen extends Component {
   createTeam = () => {
     var userID = firebase.auth().currentUser.uid;
     var teamID = this.guid().substring(0, 7);
+    var teamName = this.state.teamUsername
+    let clearPath = this.state.clearPath;
 
+    var storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    var storageRef = storage.ref();
+
+    if(this.state.teamUsername!==""){
+      if (clearPath !== null) {
+        ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
+          ({ uri }) => {
+            var { params } = this.props.navigation.state;
+
+            storageRef
+              .child(
+                "teampics/" +
+                  teamID+
+                  "/" +
+                  teamID+
+                  ".jpg"
+              )
+              .putFile(uri);
+          }
+        );
+    }
     firebase
       .firestore()
       .collection("Teams")
@@ -107,7 +165,8 @@ class CreateTeamScreen extends Component {
             .doc(userID)
             .update({
               pT: firebase.firestore.FieldValue.delete(),
-              uTI: teamID
+              uTI: teamID,
+              uTN: teamName
             });
         } else {
           firebase
@@ -115,15 +174,21 @@ class CreateTeamScreen extends Component {
             .collection("Users")
             .doc(userID)
             .update({
-              uTI: teamID
+              uTI: teamID,
+              uTN: teamName,
             });
         }
-      }).then(()=>{
-          this.props.getUserAndTeamData()
-      }).then(()=>{
-          this.props.navigation.popToTop()
+      })
+      .then(() => {
+        this.props.getUserAndTeamData();
+      })
+      .then(() => {
+        this.props.navigation.popToTop();
       });
-  };
+  }else{
+    this.setState({errorMessage: please_fill_all_fields})
+  }
+}
   render() {
     return (
       <View style={styles.editContainer}>
@@ -141,6 +206,15 @@ class CreateTeamScreen extends Component {
           <Text style={styles.teamName}>{create_team}</Text>
         </View>
 
+         <TouchableOpacity onPress={() => this.showPicker()}>
+          <FastImage
+            style={styles.profileImageEdit}
+            source={this.state.teamImage}
+            borderRadius={35}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+
         <Text style={styles.headerText}>{team_username}</Text>
         <TextInput
           style={styles.textInput}
@@ -152,8 +226,7 @@ class CreateTeamScreen extends Component {
           autoCapitalize={"none"}
         />
 
-        <Text></Text>
-       
+        <Text />
 
         <TouchableOpacity
           style={styles.buttonContainer}
@@ -161,6 +234,8 @@ class CreateTeamScreen extends Component {
         >
           <Text style={styles.buttonText}>{create_team}</Text>
         </TouchableOpacity>
+        <Text style={styles.error}>{this.state.errorMessage}</Text>
+
       </View>
     );
   }
@@ -227,5 +302,22 @@ const styles = StyleSheet.create({
   greenRowContainer: {
     flexDirection: "row",
     alignItems: "center"
-  }
+  },
+  error: {
+    marginTop: 8,
+    color: "red",
+    fontWeight: "bold",
+    marginStart: 8
+  },
+  profileImageEdit: {
+    width: 80,
+    height: 80,
+    alignSelf: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    padding: 5,
+    borderColor: "#e0e0e0",
+    marginTop: 16,
+    borderRadius: 40
+  },
 });

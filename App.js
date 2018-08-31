@@ -43,6 +43,10 @@ import SettingsScreen from "./app/screens/SettingsScreen/SettingsScreen";
 import EditProfileScreen from "./app/screens/EditProfileScreen/EditProfileScreen";
 import UserFriendListScreen from "./app/screens/UserFriendListScreen/UserFriendListScreen";
 import MapScreen from "./app/screens/MapScreen/MapScreen";
+import EditFieldScreen from "./app/screens/EditFieldScreen/EditFieldScreen";
+import EditTeamScreen from "./app/screens/EditTeamScreen/EditTeamScreen";
+
+
 
 
 
@@ -156,8 +160,18 @@ export const StackNavigatorApp = StackNavigator(
     },
     MapScreen:{
       screen: MapScreen
+    },
+    EditFieldScreen:{
+      screen: EditFieldScreen
+    },
+
+    EditTeamScreen:{
+      screen: EditTeamScreen
     }
   },
+
+    
+  
 
   {
     initialRouteName: "LoadingScreen",
