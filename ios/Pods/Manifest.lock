@@ -195,6 +195,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - ReactNativePermissions (1.1.1):
+    - React
   - SimpleKeychain (0.8.1)
   - TouchIDAuth (0.2.0):
     - SimpleKeychain (~> 0.3)
@@ -229,6 +231,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
 SPEC REPOS:
@@ -272,6 +275,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  ReactNativePermissions:
+    :path: "../node_modules/react-native-permissions"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
@@ -305,10 +310,11 @@ SPEC CHECKSUMS:
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
   react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
+  ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
   SimpleKeychain: e2485c28d82fcece35e9e41faeac42ebfe614815
   TouchIDAuth: 0cf861f58a2cacfc1c12cb02de4850729d943c81
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: cf1af63a5cc4b9cb03e8310c0c6cddd9a78bcafd
+PODFILE CHECKSUM: a80a4d7cfcec445f7fd616547072bffa29bdbda8
 
 COCOAPODS: 1.5.3

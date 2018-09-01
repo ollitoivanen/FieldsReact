@@ -7,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Geolocation
+  Geolocation,
+  Platform
 } from "react-native";
 import firebase from "react-native-firebase";
 import { ButtonGroup } from "react-native-elements";
@@ -24,9 +25,11 @@ import {
   add_home_city_placeholder,
   search_fields_near,
   add_new_field,
-  start_training
+  start_training, enable_location_to_find_nearest_fields
 } from "../../strings/strings";
 import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem"; // we'll create this next
+import Permissions from 'react-native-permissions'
+
 
 const mapStateToProps = state => {
   return {
@@ -41,11 +44,29 @@ const mapDispatchToProps = dispatch => {
 };
 
 class FieldSearchScreen extends Component {
-  componentWillMount = () => {};
+ 
+  componentDidMount(){
+    Permissions.check('location').then(response => {
+      if(response === "denied"){
+        this.setState({locationIOS: "denied"})
+        console.warn("denied")
+      }else if(response === "authorized"){
+        this.getLocation()
+        console.warn("authorizeeed")
 
-  componentWillUnmount() {
-    //Some problems with this
+      }else if(response==="undetermined"){
+        this.setState({locationIOS: "denied"})
+
+      }else if(response==="restricted"){
+        this.setState({locationIOS: "denied"})
+        console.warn("denied")
+      }
+      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+
+    })
   }
+
+ 
   static navigationOptions = {
     header: null
   };
@@ -53,16 +74,20 @@ class FieldSearchScreen extends Component {
   getLocation = () => {
     navigator.geolocation.getCurrentPosition(
       position => {
+
         this.setState({
           userLatitude: position.coords.latitude,
           userLongitude: position.coords.longitude,
-
+          locationIOS: "authorized",
           error: null
         }),
-          //, this.getDistanceFromLatLonInKm()
           this.initialFetch();
       },
-      error => this.setState({ error: error.message })
+      error => {
+        this.setState({locationIOS: "denied"})
+        console.warn("denied")
+
+      }
     );
   };
 
@@ -177,10 +202,10 @@ class FieldSearchScreen extends Component {
     this.state = {
       fields: [],
       userLatitude: 0,
-      userLongitude: 0
+      userLongitude: 0,
+      locationIOS: null
     };
 
-    this.getLocation();
     this.ref = firebase
       .firestore()
       .collection("Users")
@@ -221,6 +246,7 @@ class FieldSearchScreen extends Component {
       }
     };
 
+
     if (params.fromEvent !== true) {
       var navigation = (
         <View style={styles.navigationContainer}>
@@ -259,6 +285,38 @@ class FieldSearchScreen extends Component {
       var navigation = null;
     }
 
+    if(this.state.locationIOS===null){
+      var list = <View></View>
+    }else if(this.state.locationIOS==="authorized"){
+      var list = <FlatList
+      style={{ marginBottom: 50 }}
+      data={this.state.fields}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          style={styles.item}
+          onPress={() => openFieldDetail(item)}
+        >
+          <FieldSearchItem {...item} />
+        </TouchableOpacity>
+      )}
+    />
+    }else if(this.state.locationIOS==="denied"){
+      if(Platform.OS == 'android'){
+        var list = <View style={styles.locationBox}>
+        <TouchableOpacity onPress={()=>this.getLocation()}>
+        <Text style={styles.locationText}>{enable_location_to_find_nearest_fields}</Text>
+        </TouchableOpacity>
+      </View>
+      }else{
+      var list = <View style={styles.locationBox}>
+        <TouchableOpacity onPress={()=>Permissions.openSettings()}>
+        <Text style={styles.locationText}>{enable_location_to_find_nearest_fields}</Text>
+        </TouchableOpacity>
+      </View>
+      }
+    }
+
+
     return (
       <View style={styles.container}>
         <View style={styles.searchContainer}>
@@ -275,19 +333,8 @@ class FieldSearchScreen extends Component {
             <Text style={styles.addNewFieldText}>{add_new_field}</Text>
           </TouchableOpacity>
         </View>
-
-        <FlatList
-          style={{ marginBottom: 50 }}
-          data={this.state.fields}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.item}
-              onPress={() => openFieldDetail(item)}
-            >
-              <FieldSearchItem {...item} />
-            </TouchableOpacity>
-          )}
-        />
+{list}
+        
         {navigation}
       </View>
     );
@@ -303,6 +350,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white"
+  },
+
+  locationBox: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1
+  },
+
+  locationText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "center",
+    color: "#e0e0e0"
   },
 
   navigationContainer: {
