@@ -275,7 +275,10 @@ class DetailFieldScreen extends Component {
         fieldImage: this.state.fieldImage,
         fieldName: this.state.fieldName,
         fieldID: this.state.fieldID,
-        fIm: params.fIm
+        fIm: params.fIm,
+        lt: params.lt,
+        ln: params.ln, 
+        ogLt : params.lt
       });
   }
 
@@ -394,7 +397,6 @@ class DetailFieldScreen extends Component {
               <Text style={styles.infoText}>
                 {access_type} {field_access_type_array[[this.state.accessType]]}
               </Text>
-             
 
               <TouchableOpacity
                 style={styles.editFieldButton}
@@ -571,8 +573,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
-
-  
 
   backButton: {
     height: 48,

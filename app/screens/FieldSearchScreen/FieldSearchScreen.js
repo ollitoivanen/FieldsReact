@@ -122,17 +122,7 @@ class FieldSearchScreen extends Component {
       function(doc) {
         doc.forEach(doc => {
           const id = doc.id;
-          const {
-            fN,
-            fI,
-            fT,
-            gC,
-            fAT,
-            pH,
-            fIm,
-            lt,
-            ln
-          } = doc.data();
+          const { fN, fI, fT, gC, fAT, pH, fIm, lt, ln } = doc.data();
           var d = this.getDistanceFromLatLonInKm(lt, ln);
           if (fIm === true) {
             fields.push({
@@ -141,7 +131,7 @@ class FieldSearchScreen extends Component {
               id,
               fN,
               fI,
-           
+
               fT,
               gC,
               fAT,
@@ -158,7 +148,7 @@ class FieldSearchScreen extends Component {
               id,
               fN,
               fI,
-           
+
               fT,
               gC,
               fAT,
@@ -197,10 +187,6 @@ class FieldSearchScreen extends Component {
       .doc(firebase.auth().currentUser.uid);
   }
 
- 
-
- 
-
   render() {
     var { params } = this.props.navigation.state;
 
@@ -223,7 +209,7 @@ class FieldSearchScreen extends Component {
           fIm: item.fIm,
           lt: item.lt,
           ln: item.ln,
-          d: item.d,
+          d: item.d
         });
       } else {
         this.props.navigation.navigate("CreateEventScreen", {
@@ -276,7 +262,7 @@ class FieldSearchScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-         <Text style={styles.bigText}>{start_training}</Text>
+          <Text style={styles.bigText}>{start_training}</Text>
           <TouchableOpacity
             style={styles.addNewFieldBox}
             onPress={() =>
@@ -431,10 +417,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
-  bigText:{
-    color:'black',
+  bigText: {
+    color: "black",
     margin: 24,
     fontSize: 22,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   }
 });

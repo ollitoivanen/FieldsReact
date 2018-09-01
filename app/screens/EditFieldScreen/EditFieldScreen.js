@@ -55,7 +55,10 @@ export default class EditFieldScreen extends Component {
       accessType: params.accessType,
       fieldImage: params.fieldImage,
       clearPath: null,
-      fieldName: params.fieldName
+      fieldName: params.fieldName,
+      lt: params.lt,
+      ln: params.ln,
+      
     };
   }
 
@@ -99,6 +102,8 @@ export default class EditFieldScreen extends Component {
   }
 
   render() {
+    var { params } = this.props.navigation.state;
+
     const saveFieldData = () => {
       var { params } = this.props.navigation.state;
 
@@ -109,6 +114,16 @@ export default class EditFieldScreen extends Component {
 
       let imagePath = this.state.avatarSource;
       let clearPath = this.state.clearPath;
+
+      if(params.ogLt !== params.lt){
+        firebase.firestore().collection("Fields").doc(params.fieldID).update({
+          ltC: Math.round(params.lt),
+          lnC: Math.round(params.ln),
+
+          lt: Math.round(params.lt * 10000000) / 10000000,
+          ln: Math.round(params.ln * 10000000) / 10000000,
+        })
+      }
 
       if (this.state.chosenAccessType !== params.accessType) {
         firebase
@@ -165,13 +180,14 @@ export default class EditFieldScreen extends Component {
                         fIm: true
                       });
                   }
-                }).then(()=>{
-                    this.props.navigation.goBack()
                 })
+                .then(() => {
+                  this.props.navigation.goBack();
+                });
             });
           } else {
             this.props.navigation.goBack();
-        }
+          }
 
           //Only saving the changed
         } else if (this.state.fieldName !== params.fieldName) {
@@ -202,8 +218,10 @@ export default class EditFieldScreen extends Component {
                       })
 
                       .then(() => {
-                        this.props.navigation.navigate("DetailFieldScreen", {fieldName: this.state.fieldName});
-                    });
+                        this.props.navigation.navigate("DetailFieldScreen", {
+                          fieldName: this.state.fieldName
+                        });
+                      });
                   }
                 });
             });
@@ -217,7 +235,9 @@ export default class EditFieldScreen extends Component {
               })
 
               .then(() => {
-                this.props.navigation.navigate("DetailFieldScreen", {fieldName: this.state.fieldName});
+                this.props.navigation.navigate("DetailFieldScreen", {
+                  fieldName: this.state.fieldName
+                });
               });
           }
         }
@@ -275,7 +295,8 @@ export default class EditFieldScreen extends Component {
         />
         <TouchableOpacity
           style={styles.getLocationBox}
-          onPress={() => this.openMaps()}
+          onPress={() => this.props.navigation.navigate("MapScreen", {markerSet: true, lt: params.lt, ln: params.ln, latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421, fromCreate: false})}
         >
           <Text style={styles.getLocationText}>{change_field_location}</Text>
         </TouchableOpacity>

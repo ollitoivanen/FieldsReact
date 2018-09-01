@@ -18,25 +18,28 @@ export default class MapScreen extends Component {
 
   constructor(props) {
     super(props);
+    var { params } = this.props.navigation.state;
+
     this.state = {
-      latitude: 0,
-      longitude: 0,
-      coordinates: { latitude: 17.78825, longitude: -122.4324 },
-      markerSet: false,
-      latitudeDelta: 10000,
-      longitudeDelta: 10000
+      latitude: params.lt,
+      longitude: params.ln,
+      coordinates: { latitude: params.lt, longitude: params.ln},
+      markerSet: params.markerSet,
+      latitudeDelta: params.latitudeDelta,
+      longitudeDelta: params.longitudeDelta
     };
   }
   componentDidMount() {
+    var { params } = this.props.navigation.state;
     /*if (Platform.OS === 'android') {
       const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
       if (!granted) {
         return;
       }
     }*/
-    
+    if(params.markerSet!==true){
+
     navigator.geolocation.getCurrentPosition(
-      
       position => {
         this.setState({
           coordinates: {
@@ -51,19 +54,12 @@ export default class MapScreen extends Component {
           markerSet: true
         });
       },
-      error => this.setState({ error: error.message }), 
+      error => this.setState({ error: error.message })
     );
   }
-
-goBack = () =>{
-  var { params } = this.props.navigation.state;
-
-  if(params.fromEdit === true){
-    this.props.navigation.navigate("DetailFieldScreen", {editVisible: true})
-  }else{
-    this.props.navigation.goBack()
   }
-}
+
+ 
 
   setMarker = coordinates => {
     this.setState({
@@ -77,12 +73,16 @@ goBack = () =>{
   };
 
   render() {
-    if (this.state.markerSet === true) {
+    var { params } = this.props.navigation.state;
+
+    if (this.state.markerSet === true ) {
+      if(params.fromCreate===true){
       var doneButton = (
         <TouchableOpacity
           style={styles.doneBox}
           onPress={() =>
             this.props.navigation.navigate("CreateNewFieldScreen", {
+              markerSet: true,
               lt: this.state.latitude,
               ln: this.state.longitude
             })
@@ -91,6 +91,22 @@ goBack = () =>{
           <Text style={styles.doneText}>{done}</Text>
         </TouchableOpacity>
       );
+    }else{
+      var doneButton = (
+        <TouchableOpacity
+          style={styles.doneBox}
+          onPress={() =>
+            this.props.navigation.navigate("EditFieldScreen", {
+              markerSet: true,
+              lt: this.state.latitude,
+              ln: this.state.longitude
+            })
+          }
+        >
+          <Text style={styles.doneText}>{done}</Text>
+        </TouchableOpacity>
+      );
+    }
     } else {
       var doneButton = (
         <TouchableOpacity style={styles.notDoneBox}>
@@ -105,7 +121,7 @@ goBack = () =>{
           <TouchableOpacity
             style={styles.backButton}
             underlayColor="#bcbcbc"
-            onPress={() => this.goBack()}
+            onPress={() => this.props.navigation.goBack()}
           >
             <Image
               style={styles.backButton}

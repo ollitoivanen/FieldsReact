@@ -202,8 +202,7 @@ class CreateNewFieldScreen extends Component {
                 timestamp: this.props.userData.ts,
                 trainingCount: this.props.userData.tC,
                 reputation: this.props.userData.re,
-                fIm: true,
-                
+                fIm: true
               });
             });
         } else {
@@ -258,7 +257,10 @@ class CreateNewFieldScreen extends Component {
       var getFieldLocationBox = (
         <TouchableOpacity
           style={styles.getLocationBox}
-          onPress={() => this.props.navigation.navigate("MapScreen", {fromEdit: false})}
+          onPress={() =>
+            this.props.navigation.navigate("MapScreen", {markerSet: false, lt: 0, ln:0, latitudeDelta: 10000,
+              longitudeDelta: 10000, fromCreate: true })
+          }
         >
           <Text style={styles.getLocationText}>{get_field_location}</Text>
         </TouchableOpacity>
@@ -267,7 +269,10 @@ class CreateNewFieldScreen extends Component {
       var getFieldLocationBox = (
         <TouchableOpacity
           style={styles.getLocationBox}
-          onPress={() => this.props.navigation.navigate("MapScreen", {fromEdit: false})}
+          onPress={() =>
+            this.props.navigation.navigate("MapScreen", {markerSet: true, lt: params.lt, ln:params.ln,  latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421, fromCreate: true})
+          }
         >
           <Text style={styles.getLocationText}>{field_location_set}</Text>
         </TouchableOpacity>
