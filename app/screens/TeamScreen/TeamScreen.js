@@ -316,7 +316,8 @@ class TeamScreen extends Component {
                   pC: doc.data().pC - 1
                 });
             }
-          }).then(() => {
+          })
+          .then(() => {
             firebase
               .firestore()
               .collection("Users")
@@ -325,11 +326,11 @@ class TeamScreen extends Component {
                 uTI: firebase.firestore.FieldValue.delete(),
                 uTN: firebase.firestore.FieldValue.delete()
               });
-          }).then(()=>{
-            this.props.getUserAndTeamData()
           })
+          .then(() => {
+            this.props.getUserAndTeamData();
+          });
       })
-      
 
       .then(() => {
         this.props.navigation.popToTop();

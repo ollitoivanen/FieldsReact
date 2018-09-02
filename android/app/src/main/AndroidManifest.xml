@@ -18,17 +18,26 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
         <meta-data
-            android:name="com.google.android.geo.API_KEY"            android:value="AIzaSyDTZgovHbFEnfft4Jm78hKqKZJVxc5T-vg"/>
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDTZgovHbFEnfft4Jm78hKqKZJVxc5T-vg"/>
+
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-        android:windowSoftInputMode="adjustNothing">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-     <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
-        </intent-filter>
+        android:windowSoftInputMode="adjustNothing"
+          android:exported="true"
+          >
+
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>

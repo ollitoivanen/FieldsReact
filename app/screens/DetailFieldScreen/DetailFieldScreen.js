@@ -210,7 +210,6 @@ class DetailFieldScreen extends Component {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1); // deg2rad below
     var dLon = deg2rad(lon2 - lon1);
-    console.warn(lon1);
 
     var a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -277,8 +276,8 @@ class DetailFieldScreen extends Component {
         fieldID: this.state.fieldID,
         fIm: params.fIm,
         lt: params.lt,
-        ln: params.ln, 
-        ogLt : params.lt
+        ln: params.ln,
+        ogLt: params.lt
       });
   }
 

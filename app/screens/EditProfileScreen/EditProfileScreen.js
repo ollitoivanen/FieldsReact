@@ -10,7 +10,13 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
-import { edit_profile, username, full_name, save, please_fill_all_fields } from "../../strings/strings";
+import {
+  edit_profile,
+  username,
+  full_name,
+  save,
+  please_fill_all_fields
+} from "../../strings/strings";
 import firebase from "react-native-firebase";
 import FastImage from "react-native-fast-image";
 var ImagePicker = require("react-native-image-picker");
@@ -106,14 +112,12 @@ class EditProfileScreen extends Component {
     let imagePath = this.state.profileImage;
     let clearPath = this.state.profileImageInitial;
 
-   
     if (this.state.username !== "") {
       if (clearPath !== null) {
         ImageResizer.createResizedImage(imagePath, 200, 200, "JPEG", 100).then(
           ({ uri }) => {
-            
             var { params } = this.props.navigation.state;
-  
+
             storageRef
               .child(
                 "profilepics/" +
@@ -242,8 +246,7 @@ class EditProfileScreen extends Component {
         >
           <Text style={styles.buttonText}>{save}</Text>
         </TouchableOpacity>
-          <Text style={styles.error}>{this.state.errorMessage}</Text>
-        
+        <Text style={styles.error}>{this.state.errorMessage}</Text>
       </View>
     );
   }

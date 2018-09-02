@@ -11,7 +11,8 @@ import {
   Linking,
   Modal,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from "react-native";
 import {
   email,
@@ -84,7 +85,7 @@ export default class SignUpScreen extends React.Component {
   render() {
     const { username1 } = this.state;
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.logoContainer}>
           <Image
             style={styles.logo}
@@ -159,7 +160,7 @@ export default class SignUpScreen extends React.Component {
             {already_have_an_account}
           </Text>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -167,17 +168,17 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     backgroundColor: "white",
-    justifyContent: "flex-start",
 
     flex: 1
   },
   textInput: {
-    height: 40,
+    height: 60,
     marginTop: 12,
     paddingHorizontal: 8,
     backgroundColor: "#efeded",
     borderRadius: 10,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontSize: 20
   },
   buttonContainer: {
     backgroundColor: "#3bd774",

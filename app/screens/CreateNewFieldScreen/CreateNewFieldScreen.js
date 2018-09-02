@@ -155,6 +155,7 @@ class CreateNewFieldScreen extends Component {
       var fieldID = guid().substring(0, 7);
 
       if (this.state.fieldName !== "" && params.ltLn !== null) {
+       
         if (clearPath !== null) {
           ImageResizer.createResizedImage(
             clearPath,
@@ -164,6 +165,10 @@ class CreateNewFieldScreen extends Component {
             100
           ).then(({ uri }) => {
             var { params } = this.props.navigation.state;
+            const co = new firebase.firestore.GeoPoint(
+              Math.round(params.lt * 10000000) / 10000000,
+              Math.round(params.ln * 10000000) / 10000000,
+           );
 
             storageRef
               .child("fieldpics/" + fieldID + "/" + fieldID + ".jpg")
@@ -171,19 +176,16 @@ class CreateNewFieldScreen extends Component {
           });
           firebase
             .firestore()
-            .collection("Fields")
             .doc(fieldID)
             .set({
               fN: this.state.fieldName,
               fT: this.state.chosenFieldType,
               fAT: this.state.chosenAccessType,
-              ltC: Math.round(params.lt),
-              lnC: Math.round(params.ln),
+             
 
-              lt: Math.round(params.lt * 10000000) / 10000000,
-              ln: Math.round(params.ln * 10000000) / 10000000,
+            
               pH: 0,
-              gG: this.state.goalCount,
+              gC: this.state.goalCount,
               fIm: true
               //Goal count
             })
@@ -202,13 +204,14 @@ class CreateNewFieldScreen extends Component {
                 timestamp: this.props.userData.ts,
                 trainingCount: this.props.userData.tC,
                 reputation: this.props.userData.re,
-                fIm: true
+                fIm: true,
+                d: ""
               });
             });
         } else {
           const co = new firebase.firestore.GeoPoint(
-            Math.round(params.lt),
-            Math.round(params.ln)
+            Math.round(params.lt * 10000000) / 10000000,
+            Math.round(params.ln * 10000000) / 10000000,
           );
 
           firebase
@@ -224,9 +227,7 @@ class CreateNewFieldScreen extends Component {
               fIm: false,
               co,
 
-              lt: Math.round(params.lt * 10000000) / 10000000,
-              ln: Math.round(params.ln * 10000000) / 10000000
-              //Goal count
+              
             })
             .then(() => {
               this.props.navigation.replace("DetailFieldScreen", {
@@ -237,6 +238,7 @@ class CreateNewFieldScreen extends Component {
                 fieldAccessType: this.state.chosenAccessType,
                 peopleHere: 0,
                 goalCount: this.state.goalCount,
+                d: "",
 
                 currentFieldID: this.props.userData.cFI,
                 currentFieldName: this.props.userData.cFN,
@@ -258,8 +260,14 @@ class CreateNewFieldScreen extends Component {
         <TouchableOpacity
           style={styles.getLocationBox}
           onPress={() =>
-            this.props.navigation.navigate("MapScreen", {markerSet: false, lt: 0, ln:0, latitudeDelta: 10000,
-              longitudeDelta: 10000, fromCreate: true })
+            this.props.navigation.navigate("MapScreen", {
+              markerSet: false,
+              lt: 0,
+              ln: 0,
+              latitudeDelta: 10000,
+              longitudeDelta: 10000,
+              fromCreate: true
+            })
           }
         >
           <Text style={styles.getLocationText}>{get_field_location}</Text>
@@ -270,8 +278,14 @@ class CreateNewFieldScreen extends Component {
         <TouchableOpacity
           style={styles.getLocationBox}
           onPress={() =>
-            this.props.navigation.navigate("MapScreen", {markerSet: true, lt: params.lt, ln:params.ln,  latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421, fromCreate: true})
+            this.props.navigation.navigate("MapScreen", {
+              markerSet: true,
+              lt: params.lt,
+              ln: params.ln,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+              fromCreate: true
+            })
           }
         >
           <Text style={styles.getLocationText}>{field_location_set}</Text>

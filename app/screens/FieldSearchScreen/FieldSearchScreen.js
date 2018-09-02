@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
   Geolocation,
-  Platform
+  Platform,
+  AsyncStorage
 } from "react-native";
 import firebase from "react-native-firebase";
 import { ButtonGroup } from "react-native-elements";
@@ -25,11 +26,14 @@ import {
   add_home_city_placeholder,
   search_fields_near,
   add_new_field,
-  start_training, enable_location_to_find_nearest_fields
+  start_training,
+  enable_location_to_find_nearest_fields,
+  load_other,
+  no_fields_found_nearby
 } from "../../strings/strings";
 import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem"; // we'll create this next
-import Permissions from 'react-native-permissions'
-
+import Permissions from "react-native-permissions";
+import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 
 const mapStateToProps = state => {
   return {
@@ -44,29 +48,171 @@ const mapDispatchToProps = dispatch => {
 };
 
 class FieldSearchScreen extends Component {
- 
-  componentDidMount(){
-    Permissions.check('location').then(response => {
-      if(response === "denied"){
-        this.setState({locationIOS: "denied"})
-        console.warn("denied")
-      }else if(response === "authorized"){
-        this.getLocation()
-        console.warn("authorizeeed")
+  loadNearFields() {
+    const ref = firebase.firestore().collection("Fields");
+    var { params } = this.props.navigation.state;
+    const fields = [];
 
-      }else if(response==="undetermined"){
-        this.setState({locationIOS: "denied"})
+    var serializedData;
 
-      }else if(response==="restricted"){
-        this.setState({locationIOS: "denied"})
-        console.warn("denied")
-      }
-      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+    const southWest = new firebase.firestore.GeoPoint(
+      this.state.userLatitude - 0.2,
+      this.state.userLongitude - 0.2
+    );
+    const northEast = new firebase.firestore.GeoPoint(
+      this.state.userLatitude + 0.2,
+      this.state.userLongitude + 0.2
+    );
 
-    })
+    const query = ref
+      .where("co", ">=", southWest)
+      .where("co", "<=", northEast)
+      .limit(10);
+
+    query
+      .get()
+      .then(
+        function(doc) {
+          doc.forEach(doc => {
+            const id = doc.id;
+            const { fN, fI, fT, gC, fAT, pH, fIm, co } = doc.data();
+            var d = this.getDistanceFromLatLonInKm(co.latitude, co.longitude);
+            if (d < 50) {
+              d = d + "km";
+
+              if (fIm === true) {
+                fields.push({
+                  key: doc.id,
+                  doc,
+                  id,
+                  fN,
+                  fI,
+
+                  fT,
+                  gC,
+                  fAT,
+                  pH,
+                  fIm,
+                  lt: co.latitude,
+                  ln: co.longitude,
+                  d
+                });
+              } else {
+                fields.push({
+                  key: doc.id,
+                  doc,
+                  id,
+                  fN,
+                  fI,
+
+                  fT,
+                  gC,
+                  fAT,
+                  pH,
+                  fIm,
+                  lt: co.latitude,
+                  ln: co.longitude,
+                  d
+                });
+              }
+            }
+            //Sorting the results! cool 2018
+            fields.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
+          });
+        }.bind(this)
+      )
+      .then(() => {
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(fields, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+      })
+
+      .then(() => {
+        this.storeData(serializedData);
+        this.setState({ refreshing: false });
+      });
   }
 
- 
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem("nearFields", data).then(this.retrieveData());
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("nearFields");
+      if (value !== null) {
+        this.setState({ fields: JSON.parse(value) });
+        if (JSON.parse(value).length === 0) {
+          this.setState({ empty: true });
+        }
+      } else {
+        this.loadNearFields();
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+  componentDidMount() {
+    Permissions.check("location").then(response => {
+      if (response === "denied") {
+        this.setState({ locationIOS: "denied" });
+      } else if (response === "authorized") {
+        this.getLocation();
+      } else if (response === "undetermined") {
+        if(Platform.OS == 'android'){
+        this.setState({ locationIOS: "denied" });
+        }else{
+          this.setState({locationIOS: "undetermined"})
+        }
+      } else if (response === "restricted") {
+        //Write the logic to open permission
+        this.setState({ locationIOS: "restricted" });
+      }
+      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+    });
+  }
+
+  showdialog = () => {
+    if (Platform.OS == "android") {
+      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+        interval: 10000,
+        fastInterval: 5000
+      })
+        .then(data => {
+          if (data == "enabled") {
+            this.setState({ locationIOS: "authorized" });
+            this.getLocation();
+          }
+          // The user has accepted to enable the location services
+          // data can be :
+          //  - "already-enabled" if the location services has been already enabled
+          //  - "enabled" if user has clicked on OK button in the popup
+        })
+        .catch(err => {
+          // The user has not accepted to enable the location services or something went wrong during the process
+          // "err" : { "code" : "ERR00|ERR01|ERR02", "message" : "message"}
+          // codes :
+          //  - ERR00 : The user has clicked on Cancel button in the popup
+          //  - ERR01 : If the Settings change are unavailable
+          //  - ERR02 : If the popup has failed to open
+        });
+    }
+  };
+
   static navigationOptions = {
     header: null
   };
@@ -74,20 +220,18 @@ class FieldSearchScreen extends Component {
   getLocation = () => {
     navigator.geolocation.getCurrentPosition(
       position => {
-
         this.setState({
           userLatitude: position.coords.latitude,
           userLongitude: position.coords.longitude,
           locationIOS: "authorized",
           error: null
         }),
-          this.initialFetch();
+          this.retrieveData();
       },
       error => {
-        this.setState({locationIOS: "denied"})
-        console.warn("denied")
-
-      }
+        this.setState({ locationIOS: "disabled" });
+      },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 0 }
     );
   };
 
@@ -115,85 +259,32 @@ class FieldSearchScreen extends Component {
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = Math.round(R * c * 10) / 10 + " km"; // Distance in km
+    var d = Math.round(R * c * 10) / 10; // Distance in km
     return d;
 
     //console.warn(d)
   };
 
-  initialFetch = () => {
-    const ref = firebase.firestore().collection("Fields");
-    var { params } = this.props.navigation.state;
-    const fields = [];
-    const homeAreaConst = this.state.homeAreaConst;
-    var fieldImage;
-
-    const southWest = new firebase.firestore.GeoPoint(
-      Math.round(this.state.userLatitude) - 1,
-      Math.round(this.state.userLongitude) - 1
-    );
-    const northEast = new firebase.firestore.GeoPoint(
-      Math.round(this.state.userLatitude) + 1,
-      Math.round(this.state.userLatitude) + 1
-    );
-
-    //Having a query distance of 50km
-    const query = ref
-      .where("co", ">=", southWest)
-      .where("co", "<=", northEast)
-      .limit(10);
-
-    query.get().then(
-      function(doc) {
-        doc.forEach(doc => {
-          const id = doc.id;
-          const { fN, fI, fT, gC, fAT, pH, fIm, lt, ln } = doc.data();
-          var d = this.getDistanceFromLatLonInKm(lt, ln);
-          if (fIm === true) {
-            fields.push({
-              key: doc.id,
-              doc,
-              id,
-              fN,
-              fI,
-
-              fT,
-              gC,
-              fAT,
-              pH,
-              fIm,
-              lt,
-              ln,
-              d
-            });
-          } else {
-            fields.push({
-              key: doc.id,
-              doc,
-              id,
-              fN,
-              fI,
-
-              fT,
-              gC,
-              fAT,
-              pH,
-              fIm,
-              lt,
-              ln,
-              d
-            });
-          }
-          //Sorting the results! cool 2018
-          fields.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
-          this.setState({
-            fields,
-            search_placeholder: search_fields_near
-          });
-        });
-      }.bind(this)
-    );
+  handleRefresh = () => {
+    this.setState({ refreshing: true }, () => {
+      this.loadNearFields();
+    });
   };
+
+  //Needed when there's hella fields ;)
+  /*renderFooter = () => {
+
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+         
+        }}
+      >
+      <Text style={styles.addNewFieldText}>{load_other}</Text>
+      </View>
+    );
+  };*/
 
   constructor(props) {
     super(props);
@@ -203,7 +294,9 @@ class FieldSearchScreen extends Component {
       fields: [],
       userLatitude: 0,
       userLongitude: 0,
-      locationIOS: null
+      locationIOS: null,
+      refreshing: false,
+      empty: false
     };
 
     this.ref = firebase
@@ -246,7 +339,6 @@ class FieldSearchScreen extends Component {
       }
     };
 
-
     if (params.fromEvent !== true) {
       var navigation = (
         <View style={styles.navigationContainer}>
@@ -285,37 +377,85 @@ class FieldSearchScreen extends Component {
       var navigation = null;
     }
 
-    if(this.state.locationIOS===null){
-      var list = <View></View>
-    }else if(this.state.locationIOS==="authorized"){
-      var list = <FlatList
-      style={{ marginBottom: 50 }}
-      data={this.state.fields}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() => openFieldDetail(item)}
-        >
-          <FieldSearchItem {...item} />
-        </TouchableOpacity>
-      )}
-    />
-    }else if(this.state.locationIOS==="denied"){
-      if(Platform.OS == 'android'){
-        var list = <View style={styles.locationBox}>
-        <TouchableOpacity onPress={()=>this.getLocation()}>
-        <Text style={styles.locationText}>{enable_location_to_find_nearest_fields}</Text>
-        </TouchableOpacity>
-      </View>
-      }else{
-      var list = <View style={styles.locationBox}>
-        <TouchableOpacity onPress={()=>Permissions.openSettings()}>
-        <Text style={styles.locationText}>{enable_location_to_find_nearest_fields}</Text>
-        </TouchableOpacity>
-      </View>
+    if (this.state.locationIOS === null) {
+      var list = <View />;
+    } else if (this.state.locationIOS === "authorized") {
+      if (this.state.empty === false) {
+        var list = (
+          <FlatList
+            onRefresh={this.handleRefresh}
+            refreshing={this.state.refreshing}
+            style={{ marginBottom: 50 }}
+            data={this.state.fields}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() => openFieldDetail(item)}
+              >
+                <FieldSearchItem {...item} />
+              </TouchableOpacity>
+            )}
+          />
+        );
+      } else {
+        var list = (
+          <TouchableOpacity
+            style={styles.locationBox}
+            onPress={() =>
+              this.props.navigation.navigate("CreateNewFieldScreen", {
+                lt: null,
+                ln: null
+              })
+            }
+          >
+            <Text style={styles.locationText}>{no_fields_found_nearby}</Text>
+          </TouchableOpacity>
+        );
       }
+    } else if (this.state.locationIOS === "denied") {
+      if (Platform.OS == "android") {
+        var list = (
+          <View style={styles.locationBox}>
+            <TouchableOpacity onPress={() => this.getLocation()}>
+              <Text style={styles.locationText}>
+                {enable_location_to_find_nearest_fields}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      } else {
+        var list = (
+          <View style={styles.locationBox}>
+            <TouchableOpacity onPress={() => Permissions.openSettings()}>
+              <Text style={styles.locationText}>
+                {enable_location_to_find_nearest_fields}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
+    }else if(this.state.locationIOS === "undetermined"){
+      var list = (
+        <View style={styles.locationBox}>
+          <TouchableOpacity onPress={() => this.getLocation()}>
+            <Text style={styles.locationText}>
+              {enable_location_to_find_nearest_fields}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )
+    } 
+    else if (this.state.locationIOS === "disabled") {
+      var list = (
+        <View style={styles.locationBox}>
+          <TouchableOpacity onPress={() => this.showdialog()}>
+            <Text style={styles.locationText}>
+              {enable_location_to_find_nearest_fields}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
     }
-
 
     return (
       <View style={styles.container}>
@@ -333,8 +473,8 @@ class FieldSearchScreen extends Component {
             <Text style={styles.addNewFieldText}>{add_new_field}</Text>
           </TouchableOpacity>
         </View>
-{list}
-        
+        {list}
+
         {navigation}
       </View>
     );
@@ -362,7 +502,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
-    color: "#e0e0e0"
+    color: "#e0e0e0",
+    margin: 20
   },
 
   navigationContainer: {

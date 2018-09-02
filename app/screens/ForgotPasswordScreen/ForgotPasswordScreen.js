@@ -89,12 +89,13 @@ const styles = StyleSheet.create({
     color: "#919191"
   },
   textInput: {
-    height: 40,
-    marginTop: 24,
-    backgroundColor: "#efeded",
+    height: 60,
+    marginTop: 12,
     paddingHorizontal: 8,
+    backgroundColor: "#efeded",
     borderRadius: 10,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontSize: 20
   },
 
   buttonText: {

@@ -15,17 +15,13 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getUserData: () => dispatch(getUserData()),
-    getUserAndTeamData: ()=> dispatch(getUserAndTeamData())
+    getUserAndTeamData: () => dispatch(getUserAndTeamData())
   };
 };
 
 const gg = () => {
-    startFeedScreen();
-  
-}
-
-
-
+  startFeedScreen();
+};
 
 class LoadingScreen extends Component {
   static navigationOptions = {
@@ -37,8 +33,6 @@ class LoadingScreen extends Component {
     this.state = {};
   }
 
-  
-  
   componentWillMount() {
     const startFeed = StackActions.reset({
       index: 0,
@@ -50,41 +44,28 @@ class LoadingScreen extends Component {
       actions: [NavigationActions.navigate({ routeName: "SignUpScreen" })]
     });
 
-    const loadData = ()=> {
-        this.props.getUserData();
-       
-      
-    }
-   
+    const loadData = () => {
+      this.props.getUserData();
+    };
 
-    
-
-   
     firebase.auth().onAuthStateChanged(user => {
-      user
-        ? loadData()
-        : this.props.navigation.dispatch(startSignUp);
+      user ? loadData() : this.props.navigation.dispatch(startSignUp);
     });
   }
 
-
-
-
-componentWillReceiveProps(){
-  const startFeed = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: "FeedScreen" })]
-  });
+  componentWillReceiveProps() {
+    const startFeed = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: "FeedScreen" })]
+    });
     this.props.navigation.dispatch(startFeed);
-  
-}
-
-
+  }
 
   render() {
-    return <View style={styles.container}>
-   <Text>Loading</Text>
-    </View>;
+    return (
+      <View style={styles.container}>
+      </View>
+    );
   }
 }
 
@@ -92,7 +73,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: 'white'
   },
   logo: {
     width: 200,

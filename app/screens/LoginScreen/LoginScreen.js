@@ -124,14 +124,14 @@ const styles = StyleSheet.create({
     flex: 1
   },
   textInput: {
-    height: 40,
+    height: 60,
     marginTop: 12,
-    backgroundColor: "#efeded",
     paddingHorizontal: 8,
+    backgroundColor: "#efeded",
     borderRadius: 10,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontSize: 20
   },
-
   buttonText: {
     textAlign: "center",
     color: "white",

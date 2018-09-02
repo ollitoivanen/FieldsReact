@@ -57,8 +57,7 @@ export default class EditFieldScreen extends Component {
       clearPath: null,
       fieldName: params.fieldName,
       lt: params.lt,
-      ln: params.ln,
-      
+      ln: params.ln
     };
   }
 
@@ -115,14 +114,18 @@ export default class EditFieldScreen extends Component {
       let imagePath = this.state.avatarSource;
       let clearPath = this.state.clearPath;
 
-      if(params.ogLt !== params.lt){
-        firebase.firestore().collection("Fields").doc(params.fieldID).update({
-          ltC: Math.round(params.lt),
-          lnC: Math.round(params.ln),
-
-          lt: Math.round(params.lt * 10000000) / 10000000,
-          ln: Math.round(params.ln * 10000000) / 10000000,
-        })
+      if (params.ogLt !== params.lt) {
+        const co = new firebase.firestore.GeoPoint(
+          Math.round(params.lt * 10000000) / 10000000,
+          Math.round(params.ln * 10000000) / 10000000,
+        );
+        firebase
+          .firestore()
+          .collection("Fields")
+          .doc(params.fieldID)
+          .update({
+            co
+          });
       }
 
       if (this.state.chosenAccessType !== params.accessType) {
@@ -295,8 +298,16 @@ export default class EditFieldScreen extends Component {
         />
         <TouchableOpacity
           style={styles.getLocationBox}
-          onPress={() => this.props.navigation.navigate("MapScreen", {markerSet: true, lt: params.lt, ln: params.ln, latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421, fromCreate: false})}
+          onPress={() =>
+            this.props.navigation.navigate("MapScreen", {
+              markerSet: true,
+              lt: params.lt,
+              ln: params.ln,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+              fromCreate: false
+            })
+          }
         >
           <Text style={styles.getLocationText}>{change_field_location}</Text>
         </TouchableOpacity>
