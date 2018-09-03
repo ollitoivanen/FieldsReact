@@ -10,10 +10,7 @@ import {
   Easing
 } from "react-native";
 import {
-  StackNavigator,
-  SwitchNavigator,
-  TabNavigator,
-  DrawerNavigator
+ createStackNavigator
 } from "react-navigation";
 // import the different screens
 import LoadingScreen from "FieldsReact/app/screens/LoadingScreen/LoadingScreen";
@@ -62,7 +59,7 @@ const transitionConfig = () => ({
 });
 
 // create our app's navigation stack
-export const StackNavigatorApp = StackNavigator(
+export const StackNavigatorApp = createStackNavigator(
   {
     SignUpScreen: {
       screen: SignUpScreen

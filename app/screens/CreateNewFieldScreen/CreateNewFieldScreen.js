@@ -155,7 +155,6 @@ class CreateNewFieldScreen extends Component {
       var fieldID = guid().substring(0, 7);
 
       if (this.state.fieldName !== "" && params.ltLn !== null) {
-       
         if (clearPath !== null) {
           ImageResizer.createResizedImage(
             clearPath,
@@ -167,8 +166,8 @@ class CreateNewFieldScreen extends Component {
             var { params } = this.props.navigation.state;
             const co = new firebase.firestore.GeoPoint(
               Math.round(params.lt * 10000000) / 10000000,
-              Math.round(params.ln * 10000000) / 10000000,
-           );
+              Math.round(params.ln * 10000000) / 10000000
+            );
 
             storageRef
               .child("fieldpics/" + fieldID + "/" + fieldID + ".jpg")
@@ -181,9 +180,7 @@ class CreateNewFieldScreen extends Component {
               fN: this.state.fieldName,
               fT: this.state.chosenFieldType,
               fAT: this.state.chosenAccessType,
-             
 
-            
               pH: 0,
               gC: this.state.goalCount,
               fIm: true
@@ -211,7 +208,7 @@ class CreateNewFieldScreen extends Component {
         } else {
           const co = new firebase.firestore.GeoPoint(
             Math.round(params.lt * 10000000) / 10000000,
-            Math.round(params.ln * 10000000) / 10000000,
+            Math.round(params.ln * 10000000) / 10000000
           );
 
           firebase
@@ -225,9 +222,7 @@ class CreateNewFieldScreen extends Component {
               pH: 0,
               gC: this.state.goalCount,
               fIm: false,
-              co,
-
-              
+              co
             })
             .then(() => {
               this.props.navigation.replace("DetailFieldScreen", {
@@ -266,7 +261,7 @@ class CreateNewFieldScreen extends Component {
               ln: 0,
               latitudeDelta: 10000,
               longitudeDelta: 10000,
-              fromCreate: true
+              from: "createField"
             })
           }
         >
@@ -284,7 +279,7 @@ class CreateNewFieldScreen extends Component {
               ln: params.ln,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
-              fromCreate: true
+              from: "createField"
             })
           }
         >

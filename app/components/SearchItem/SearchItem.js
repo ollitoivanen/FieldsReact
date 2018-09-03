@@ -9,7 +9,7 @@ export default class Searchitem extends React.PureComponent {
 
     if (this.props.index === 0) {
       this.state = {
-        profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+        profileImagePath: {uri: 'profile_image_default'}
       };
       if (this.props.uIm === true) {
         this.getUserImage();

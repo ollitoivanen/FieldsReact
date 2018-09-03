@@ -194,7 +194,7 @@ class EditProfileScreen extends Component {
       var profileImage = (
         <FastImage
           style={styles.profileImage}
-          source={require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")}
+          source={{uri: 'profile_image_default'}}
           resizeMode="cover"
         />
       );

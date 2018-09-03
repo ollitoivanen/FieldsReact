@@ -249,6 +249,7 @@ class FeedScreen extends React.Component {
             source={this.state.teamImage}
             resizeMode="cover"
           />
+
           <Text style={styles.teamCardText}>{this.props.userData.uTN}</Text>
         </TouchableOpacity>
       );
@@ -332,7 +333,7 @@ class FeedScreen extends React.Component {
           >
             <Image
               style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Home/home_green.png")}
+              source={{ uri: "home_green" }}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -345,17 +346,14 @@ class FeedScreen extends React.Component {
           >
             <Image
               style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Field/field_icon.png")}
+              source={{ uri: "field_icon" }}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navigationItem}
             onPress={() => this.props.navigation.navigate("ProfileScreen")}
           >
-            <Image
-              style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Profile/profile.png")}
-            />
+            <Image style={styles.navigationImage} source={{ uri: "profile" }} />
           </TouchableOpacity>
         </View>
       </View>
@@ -411,16 +409,27 @@ const styles = StyleSheet.create({
     marginTop: 60
   },
   navigationContainer: {
-    backgroundColor: "white",
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "flex-end"
+    ...Platform.select({
+      ios: {
+        backgroundColor: "white",
+        flexDirection: "row",
+        shadowOffset: { width: 0, height: -1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3
+      },
+      android: {
+        backgroundColor: "white",
+        flexDirection: "row",
+        alignItems: "flex-end",
+        elevation: 10
+      }
+    })
   },
 
   navigationItem: {
     flex: 1,
     height: 50,
-    backgroundColor: "#f4fff8",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center"
   },

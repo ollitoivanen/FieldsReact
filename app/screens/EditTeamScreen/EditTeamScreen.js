@@ -25,7 +25,8 @@ import {
   please_fill_all_fields,
   team_username,
   edit_team,
-  save
+  save,
+  change_team_location
 } from "../../strings/strings";
 
 const mapStateToProps = state => {
@@ -55,7 +56,9 @@ class EditTeamScreen extends Component {
       teamImage: params.teamImage,
       clearPath: null,
       players: [],
-      errorMessage: ""
+      errorMessage: "",
+      
+      ogLt: null
     };
   }
   loadPlayersList() {
@@ -171,7 +174,36 @@ class EditTeamScreen extends Component {
     });
   };
 
+  openMap = () =>{
+    var { params } = this.props.navigation.state;
+
+    if(params.lt===null){
+      firebase.firestore().collection("Teams").doc(this.props.userData.uTI).get().then(doc=>{
+        this.setState({ogLt: doc.data().co.latitude})
+        this.props.navigation.navigate("MapScreen", {
+          markerSet: true,
+          lt: doc.data().co.latitude,
+          ln: doc.data().co.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+          from: "editTeam"
+        })
+      })
+    }else{
+      this.props.navigation.navigate("MapScreen", {
+        markerSet: true,
+        lt: params.lt,
+        ln: params.ln,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+        from: "editTeam"
+      })
+    }
+  }
+
   render() {
+    var { params } = this.props.navigation.state;
+
     const saveTeamData = () => {
       var { params } = this.props.navigation.state;
 
@@ -183,64 +215,113 @@ class EditTeamScreen extends Component {
       let imagePath = this.state.teamImage;
       let clearPath = this.state.clearPath;
 
-     
-      if(this.state.teamUsername!==""){
+      if (this.state.teamUsername !== "") {
         if (clearPath !== null) {
-            ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
-              ({ uri }) => {
-                var { params } = this.props.navigation.state;
-    
-                storageRef
-                  .child(
-                    "teampics/" +
-                      this.props.userData.uTI +
-                      "/" +
-                      this.props.userData.uTI +
-                      ".jpg"
-                  )
-                  .putFile(uri);
-              }
-            );
-        }
-      if (this.state.teamUsername === this.props.userData.uTN) {
-        
-          
-        this.props.navigation.goBack();
-          
-        //Only saving the changed
-      } else if (this.state.teamUsername !== this.props.userData.uTN) {
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(this.props.userData.uTI)
-          .update({
-            tUN: this.state.teamUsername
-          })
+          ImageResizer.createResizedImage(
+            clearPath,
+            200,
+            200,
+            "JPEG",
+            100
+          ).then(({ uri }) => {
+            var { params } = this.props.navigation.state;
 
-          .then(() => {
-            let playerList = this.state.players;
-            playerList.forEach(doc => {
-              firebase
-                .firestore()
-                .collection("Users")
-                .doc(doc.id)
-                .update({
-                  uTN: this.state.teamUsername.toLowerCase().trim()
-                });
-            });
-          })
-          .then(() => {
-            this.props.getUserAndTeamData();
-          })
-
-          .then(() => {
-            this.props.navigation.navigate("TeamScreen");
+            storageRef
+              .child(
+                "teampics/" +
+                  this.props.userData.uTI +
+                  "/" +
+                  this.props.userData.uTI +
+                  ".jpg"
+              )
+              .putFile(uri);
           });
+        }
+        if (this.state.teamUsername === this.props.userData.uTN) {
+          if(this.state.ogLt === null || this.state.ogLt === params.lt){
+          this.props.navigation.goBack();
+          }else{
+            const co = new firebase.firestore.GeoPoint(
+              Math.round(params.lt * 10000000) / 10000000,
+              Math.round(params.ln * 10000000) / 10000000)
+            firebase
+            .firestore()
+            .collection("Teams")
+            .doc(this.props.userData.uTI).update({
+              co
+            }).then(()=>{
+              this.props.navigation.goBack()
+            })          }
+          //Only saving the changed
+        } else if (this.state.teamUsername !== this.props.userData.uTN) {
+          if(this.state.ogLt !== null && this.state.ogLt !== params.lt){
+            const co = new firebase.firestore.GeoPoint(
+              Math.round(params.lt * 10000000) / 10000000,
+              Math.round(params.ln * 10000000) / 10000000)
+            firebase
+            .firestore()
+            .collection("Teams")
+            .doc(this.props.userData.uTI)
+            .update({
+              tUN: this.state.teamUsername.toLowerCase().trim(),
+              co
+            })
+
+            .then(() => {
+              let playerList = this.state.players;
+              playerList.forEach(doc => {
+                firebase
+                  .firestore()
+                  .collection("Users")
+                  .doc(doc.id)
+                  .update({
+                    uTN: this.state.teamUsername.toLowerCase().trim()
+                  });
+              });
+            })
+            .then(() => {
+              this.props.getUserAndTeamData();
+            })
+
+            .then(() => {
+              this.props.navigation.navigate("TeamScreen");
+            });
+          }else {
+            firebase
+            .firestore()
+            .collection("Teams")
+            .doc(this.props.userData.uTI)
+            .update({
+              tUN: this.state.teamUsername,
+              
+            })
+
+            .then(() => {
+              let playerList = this.state.players;
+              playerList.forEach(doc => {
+                firebase
+                  .firestore()
+                  .collection("Users")
+                  .doc(doc.id)
+                  .update({
+                    uTN: this.state.teamUsername.toLowerCase().trim()
+                  });
+              });
+            })
+            .then(() => {
+              this.props.getUserAndTeamData();
+            })
+
+            .then(() => {
+              this.props.navigation.navigate("TeamScreen");
+            });
+          }
+         
+        }
+      } else {
+        this.setState({ errorMessage: please_fill_all_fields });
       }
-    }else{
-        this.setState({errorMessage: please_fill_all_fields})
-    }
-}
+    };
 
     return (
       <ScrollView style={styles.container}>
@@ -277,6 +358,15 @@ class EditTeamScreen extends Component {
           value={this.state.teamUsername}
           onChangeText={this.usernameHandle}
         />
+
+            <TouchableOpacity
+          style={styles.getLocationBox}
+          onPress={() =>
+            this.openMap()
+          }
+        >
+          <Text style={styles.getLocationText}>{change_team_location}</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.buttonContainer}
@@ -361,6 +451,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#3bd774"
+  },
+  getLocationBox: {
+    marginTop: 20,
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: "#e0e0e0"
   },
   headerText: {
     fontWeight: "bold",

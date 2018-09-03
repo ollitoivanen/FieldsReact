@@ -10,7 +10,8 @@ import {
   FlatList,
   Alert,
   ScrollView,
-  Geolocation
+  Geolocation,
+  Platform
 } from "react-native";
 import {
   goals,
@@ -339,7 +340,12 @@ class DetailFieldScreen extends Component {
     }
 
     var fieldIm = (
-      <TouchableOpacity onPress={() => this.setExpandedImageVisible()}>
+      <TouchableOpacity
+        style={{
+        
+        }}
+        onPress={() => this.setExpandedImageVisible()}
+      >
         <FastImage
           style={styles.profileImage}
           source={this.state.fieldImage}
@@ -491,39 +497,25 @@ class DetailFieldScreen extends Component {
         />
 
         <View style={styles.navigationContainer}>
-          <View style={styles.navigationContainerIn}>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("FeedScreen", {
-                  homeCityAdded: this.state.home
-                })
-              }
-              style={styles.navigationItem}
-              underlayColor="#bcbcbc"
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Home/home.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navigationItemBlue}>
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Field/field_icon.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItem}
-              onPress={() =>
-                this.props.navigation.navigate("ProfileScreen", {})
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Profile/profile.png")}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("FeedScreen", {})}
+            style={styles.navigationItem}
+            underlayColor="#bcbcbc"
+          >
+            <Image style={styles.navigationImage} source={{ uri: "home" }} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navigationItemBlue}>
+            <Image
+              style={styles.navigationImage}
+              source={{ uri: "field_icon" }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItem}
+            onPress={() => this.props.navigation.navigate("ProfileScreen", {})}
+          >
+            <Image style={styles.navigationImage} source={{ uri: "profile" }} />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -603,7 +595,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flexShrink: 1,
     marginTop: 20,
-    marginStart: 8
+    marginStart: 8,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2
   },
 
   peopleHereButton: {
@@ -617,7 +613,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     flexShrink: 1,
-    marginStart: 18
+    marginStart: 18,
+   
   },
 
   boxTextBlack: {
@@ -642,7 +639,8 @@ const styles = StyleSheet.create({
 
   infoIcon: {
     height: 36,
-    width: 36
+    width: 36,
+   
   },
   infoBox: {},
 
@@ -689,7 +687,11 @@ const styles = StyleSheet.create({
 
   greenRowContainer: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    elevation: 3
   },
 
   backButton: {
@@ -705,20 +707,36 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   navigationContainer: {
-    bottom: 0,
-    position: "absolute",
-    width: "100%",
-    flex: 1
+    ...Platform.select({
+      ios: {
+        bottom: 0,
+        position: "absolute",
+        width: "100%",
+        flex: 1,
+        backgroundColor: "white",
+        flexDirection: "row",
+        elevation: 3,
+        shadowOffset: { width: 0, height: -1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3
+      },
+      android: {
+        bottom: 0,
+        position: "absolute",
+        width: "100%",
+        flex: 1,
+        backgroundColor: "white",
+        flexDirection: "row",
+        alignItems: "flex-end",
+        elevation: 10
+      }
+    })
   },
-  navigationContainerIn: {
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "flex-end"
-  },
+
   navigationItem: {
     flex: 1,
     height: 50,
-    backgroundColor: "#f4fff8",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center"
   },

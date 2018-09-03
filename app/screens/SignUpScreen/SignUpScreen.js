@@ -12,7 +12,9 @@ import {
   Modal,
   ActivityIndicator,
   Dimensions,
-  ScrollView
+  ScrollView,
+  AsyncStorage,
+  Platform
 } from "react-native";
 import {
   email,
@@ -25,12 +27,25 @@ import {
   name,
   terms,
   by_signing_up_you,
-  please_enter_username
-} from "FieldsReact/app/strings/strings";
+  please_enter_username,
+  welcome_to_fields,
+  lets_see,
+  football_fields,
+  see_where,
+  manage_your_team,
+  set_team_events,
+  earn_reputation,
+  earn_reputation_by_training,
+  sounds_awesome_right,
+  lets_go,
+  see_whos_coming_to_events
+} from "../../strings/strings";
 import firebase from "react-native-firebase";
 import validator from "validator";
 import { username } from "../../strings/strings";
 import Loader from "FieldsReact/app/components/Loader/Loader.js";
+import Swiper from "react-native-swiper";
+import { colors } from "react-native-elements";
 
 export default class SignUpScreen extends React.Component {
   static navigationOptions = {
@@ -39,15 +54,31 @@ export default class SignUpScreen extends React.Component {
   constructor(props) {
     super(props);
     this.ref = firebase.firestore().collection("Users");
-    this.unsubscribe = null;
     this.state = {
       email1: "",
       password1: "",
       username1: "",
       errorMessage: null,
-      loading: false
+      loading: false,
+      firstLaunch: false
     };
   }
+
+  getLaunch = () => {
+    AsyncStorage.getItem("firstLaunch", (err, result) => {
+      if (err) {
+      } else {
+        if (result === null) {
+          this.setState({ firstLaunch: true });
+        }
+      }
+    });
+    AsyncStorage.setItem(
+      "firstLaunch",
+      JSON.stringify({ firstLaunch: true }),
+      (err, result) => {}
+    );
+  };
 
   usernameHandle = value => {
     const newText = value.replace(/\s/g, "");
@@ -82,6 +113,7 @@ export default class SignUpScreen extends React.Component {
         .then(() => this.props.navigation.navigate("LoadingScreen"));
     }
   };
+
   render() {
     const { username1 } = this.state;
     return (
@@ -160,6 +192,69 @@ export default class SignUpScreen extends React.Component {
             {already_have_an_account}
           </Text>
         </View>
+
+        <Modal visible={this.state.firstLaunch} onRequestClose={()=>{}}>
+          <Swiper
+            style={styles.wrapper}
+            showsButtons={false}
+            loop={false}
+            showsPagination={true}
+            activeDotColor={"#646665"}
+            dotColor={"#f4f4f4"}
+          >
+            <View style={styles.slide1}>
+              <Text style={styles.headerTextBigGray}>{welcome_to_fields}</Text>
+
+              <Image
+                style={styles.logo}
+                source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+              />
+              <Text style={styles.headerTextGray}>{lets_see}</Text>
+            </View>
+            <View style={styles.slide2}>
+            <Text style={styles.headerTextBig}>{football_fields}</Text>
+
+              <Image
+                style={styles.logo}
+                source={require("../../images/FootballFieldArt/FootballFieldArt.png")}
+                resizeMode={"contain"}
+              />
+
+              <Text style={styles.headerText}>{see_where}</Text>
+            </View>
+            <View style={styles.slide3}>
+            <Text style={styles.headerTextBig}>{manage_your_team}</Text>
+
+              <Image
+                style={styles.logo}
+                source={require("../../images/FieldsPlayArt/FieldsPlayArt.png")}
+                resizeMode={"contain"}
+              />
+              <Text style={styles.headerText}>{set_team_events}</Text>
+            </View>
+            <View style={styles.slide2}>
+            <Text style={styles.headerTextBig}>{earn_reputation}</Text>
+
+              <Image
+                style={styles.logo}
+                source={require("../../images/FieldsUpArt/FieldsUpArt.png")}
+                resizeMode={"contain"}
+              />
+              <Text style={styles.headerText}>{earn_reputation_by_training}</Text>
+            </View>
+            <View style={styles.slide1}>
+            <Text style={styles.headerTextBigGray}>{sounds_awesome_right}</Text>
+
+              <Image
+                style={styles.logo}
+                source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+              />
+              <TouchableOpacity style={styles.letsgo} onPress={()=>this.setState({firstLaunch: false})}>
+              <Text style={styles.headerText}>{lets_go}</Text>
+              </TouchableOpacity>
+            </View>
+          </Swiper>
+        </Modal>
       </ScrollView>
     );
   }
@@ -180,11 +275,34 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20
   },
+  letsgo:{
+    ...Platform.select({
+      ios:{
+      backgroundColor: "#3bd774",
+      padding: 2,
+      marginTop: 20,
+      borderRadius: 100,
+      shadowColor: colors.richBlackDefault, 
+      shadowOffset: {width: 0, height: 10},
+      shadowOpacity: 0.2,
+      shadowRadius: 10
+      },
+      android:{
+        backgroundColor: "#3bd774",
+        padding: 2,
+        marginTop: 20,
+        borderRadius: 100,
+        elevation: 2
+      }
+    })
+   
+  },
   buttonContainer: {
     backgroundColor: "#3bd774",
     padding: 15,
     marginTop: 12,
-    borderRadius: 10
+    borderRadius: 10,
+   
   },
 
   buttonText: {
@@ -234,5 +352,57 @@ const styles = StyleSheet.create({
   indicatorContainer: {
     alignItems: "center",
     justifyContent: "center"
+  },
+
+  wrapper: {},
+  slide1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white"
+  },
+  slide2: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3bd774"
+  },
+  slide3: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3facff"
+  },
+
+  headerTextBigGray: {
+    fontWeight: "bold",
+    fontSize: 26,
+    textAlign: "center",
+    color: "#a5a5a5",
+    margin: 20
+  },
+
+  headerTextGray: {
+    fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "center",
+    color: "#a5a5a5",
+    margin: 20
+  },
+
+  headerTextBig: {
+    fontWeight: "bold",
+    fontSize: 26,
+    textAlign: "center",
+    color: "white",
+    margin: 20
+  },
+
+  headerText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "center",
+    color: "white",
+    margin: 20
   }
 });

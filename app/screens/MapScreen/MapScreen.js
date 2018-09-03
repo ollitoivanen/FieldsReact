@@ -19,6 +19,7 @@ export default class MapScreen extends Component {
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
+    this.setMarker = this.setMarker.bind(this);
 
     this.state = {
       latitude: params.lt,
@@ -61,8 +62,9 @@ export default class MapScreen extends Component {
 
  
 
-  setMarker = coordinates => {
-    this.setState({
+  setMarker = (coordinates) => {
+    
+        this.setState({
       coordinates: coordinates,
       markerSet: true,
       latitudeDelta: 0.0922,
@@ -71,12 +73,14 @@ export default class MapScreen extends Component {
       longitudeDelta: 0.0421
     });
   };
+  
 
   render() {
+
     var { params } = this.props.navigation.state;
 
     if (this.state.markerSet === true ) {
-      if(params.fromCreate===true){
+      if(params.from==="createField"){
       var doneButton = (
         <TouchableOpacity
           style={styles.doneBox}
@@ -91,12 +95,42 @@ export default class MapScreen extends Component {
           <Text style={styles.doneText}>{done}</Text>
         </TouchableOpacity>
       );
-    }else{
+    }else if(params.from==="createTeam"){
+      var doneButton = (
+        <TouchableOpacity
+          style={styles.doneBox}
+          onPress={() =>
+            this.props.navigation.navigate("CreateTeamScreen", {
+              markerSet: true,
+              lt: this.state.latitude,
+              ln: this.state.longitude
+            })
+          }
+        >
+          <Text style={styles.doneText}>{done}</Text>
+        </TouchableOpacity>
+      );
+    }else if(params.from==="editField"){
       var doneButton = (
         <TouchableOpacity
           style={styles.doneBox}
           onPress={() =>
             this.props.navigation.navigate("EditFieldScreen", {
+              markerSet: true,
+              lt: this.state.latitude,
+              ln: this.state.longitude
+            })
+          }
+        >
+          <Text style={styles.doneText}>{done}</Text>
+        </TouchableOpacity>
+      );
+    }else if(params.from==="editTeam"){
+      var doneButton = (
+        <TouchableOpacity
+          style={styles.doneBox}
+          onPress={() =>
+            this.props.navigation.navigate("EditTeamScreen", {
               markerSet: true,
               lt: this.state.latitude,
               ln: this.state.longitude
@@ -132,9 +166,12 @@ export default class MapScreen extends Component {
         </View>
         <View style={styles.mapBox}>
           <MapView
+          cacheEnabled={true}
             style={styles.map}
-            onPress={event => this.setMarker(event.nativeEvent.coordinate)}
+            
+            onLongPress={(event)=>this.setMarker(event.nativeEvent.coordinate)}
             showsPointsOfInterest={false}
+
             provider={PROVIDER_GOOGLE}
             region={{
               latitude: this.state.latitude,
@@ -143,7 +180,7 @@ export default class MapScreen extends Component {
               longitudeDelta: this.state.longitudeDelta
             }}
           >
-            <Marker coordinate={this.state.coordinates} />
+            <Marker coordinate={this.state.coordinates} pinColor={"#3bd774"} />
           </MapView>
         </View>
         {doneButton}

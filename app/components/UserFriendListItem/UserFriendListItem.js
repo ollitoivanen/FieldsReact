@@ -4,11 +4,10 @@ import FastImage from "react-native-fast-image";
 import firebase from "react-native-firebase";
 export default class Searchitem extends React.PureComponent {
   // toggle a todo as completed or not via update()
- 
+
   render() {
     return (
       <View style={styles.item}>
-       
         <Text style={styles.text} numberOfLines={2}>
           {this.props.fN}
         </Text>

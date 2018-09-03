@@ -8,7 +8,7 @@ export default class FeedFriendListItem extends React.PureComponent {
     super(props);
 
     this.state = {
-      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+      profileImagePath: {uri: 'profile_image_default'}
     };
     if (this.props.uIm === true) {
       this.getImage();

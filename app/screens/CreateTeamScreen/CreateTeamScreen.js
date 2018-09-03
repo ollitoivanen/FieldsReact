@@ -14,6 +14,8 @@ import {
   save,
   create_team,
   please_fill_all_fields,
+  get_team_location,
+  team_location_set
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import { connect } from "react-redux";
@@ -46,8 +48,8 @@ class CreateTeamScreen extends Component {
     super(props);
     this.state = {
       teamUsername: "",
-      errorMessage:"",
-      teamImage:  require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
+      errorMessage: "",
+      teamImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
       clearPath: null
     };
   }
@@ -103,9 +105,11 @@ class CreateTeamScreen extends Component {
   };
 
   createTeam = () => {
+    var { params } = this.props.navigation.state;
+
     var userID = firebase.auth().currentUser.uid;
     var teamID = this.guid().substring(0, 7);
-    var teamName = this.state.teamUsername
+    var teamName = this.state.teamUsername;
     let clearPath = this.state.clearPath;
 
     var storage = firebase.storage();
@@ -113,83 +117,121 @@ class CreateTeamScreen extends Component {
     // Create a storage reference from our storage service
     var storageRef = storage.ref();
 
-    if(this.state.teamUsername!==""){
+    if (this.state.teamUsername !== "" && params.markerSet===true) {
+      const co = new firebase.firestore.GeoPoint(
+        Math.round(params.lt * 10000000) / 10000000,
+        Math.round(params.ln * 10000000) / 10000000
+      );
       if (clearPath !== null) {
         ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
           ({ uri }) => {
             var { params } = this.props.navigation.state;
 
             storageRef
-              .child(
-                "teampics/" +
-                  teamID+
-                  "/" +
-                  teamID+
-                  ".jpg"
-              )
+              .child("teampics/" + teamID + "/" + teamID + ".jpg")
               .putFile(uri);
           }
         );
-    }
-    firebase
-      .firestore()
-      .collection("Teams")
-      .doc(teamID)
-      .set({
-        tUN: this.state.teamUsername.toLowerCase().trim(),
-        pC: 1
-      })
-      .then(() => {
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(teamID)
-          .collection("TU")
-          .doc(userID)
-          .set({
-            unM: this.props.userData.un
-          });
-      })
-      .then(() => {
-        if (this.props.userData.pT !== undefined) {
+      }
+      firebase
+        .firestore()
+        .collection("Teams")
+        .doc(teamID)
+        .set({
+          tUN: this.state.teamUsername.toLowerCase().trim(),
+          pC: 1,
+          co
+        })
+        .then(() => {
           firebase
             .firestore()
             .collection("Teams")
-            .doc(this.props.userData.pT)
-            .collection("PTU")
+            .doc(teamID)
+            .collection("TU")
             .doc(userID)
-            .delete();
-          firebase
-            .firestore()
-            .collection("Users")
-            .doc(userID)
-            .update({
-              pT: firebase.firestore.FieldValue.delete(),
-              uTI: teamID,
-              uTN: teamName
+            .set({
+              unM: this.props.userData.un
             });
-        } else {
-          firebase
-            .firestore()
-            .collection("Users")
-            .doc(userID)
-            .update({
-              uTI: teamID,
-              uTN: teamName,
-            });
-        }
-      })
-      .then(() => {
-        this.props.getUserAndTeamData();
-      })
-      .then(() => {
-        this.props.navigation.popToTop();
-      });
-  }else{
-    this.setState({errorMessage: please_fill_all_fields})
-  }
-}
+        })
+        .then(() => {
+          if (this.props.userData.pT !== undefined) {
+            firebase
+              .firestore()
+              .collection("Teams")
+              .doc(this.props.userData.pT)
+              .collection("PTU")
+              .doc(userID)
+              .delete();
+            firebase
+              .firestore()
+              .collection("Users")
+              .doc(userID)
+              .update({
+                pT: firebase.firestore.FieldValue.delete(),
+                uTI: teamID,
+                uTN: teamName
+              });
+          } else {
+            firebase
+              .firestore()
+              .collection("Users")
+              .doc(userID)
+              .update({
+                uTI: teamID,
+                uTN: teamName
+              });
+          }
+        })
+        .then(() => {
+          this.props.getUserAndTeamData();
+        })
+        .then(() => {
+          this.props.navigation.popToTop();
+        });
+    } else {
+      this.setState({ errorMessage: please_fill_all_fields });
+    }
+  };
   render() {
+    var { params } = this.props.navigation.state;
+
+    if (params.lt === null) {
+      var getTeamLocationBox = (
+        <TouchableOpacity
+          style={styles.getLocationBox}
+          onPress={() =>
+            this.props.navigation.navigate("MapScreen", {
+              markerSet: false,
+              lt: 0,
+              ln: 0,
+              latitudeDelta: 10000,
+              longitudeDelta: 10000,
+              from: "createTeam"
+            })
+          }
+        >
+          <Text style={styles.getLocationText}>{get_team_location}</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      var getTeamLocationBox = (
+        <TouchableOpacity
+          style={styles.getLocationBox}
+          onPress={() =>
+            this.props.navigation.navigate("MapScreen", {
+              markerSet: true,
+              lt: params.lt,
+              ln: params.ln,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+              from: "createTeam"
+            })
+          }
+        >
+          <Text style={styles.getLocationText}>{team_location_set}</Text>
+        </TouchableOpacity>
+      );
+    }
     return (
       <View style={styles.editContainer}>
         <View style={styles.greenRowContainer}>
@@ -206,7 +248,7 @@ class CreateTeamScreen extends Component {
           <Text style={styles.teamName}>{create_team}</Text>
         </View>
 
-         <TouchableOpacity onPress={() => this.showPicker()}>
+        <TouchableOpacity onPress={() => this.showPicker()}>
           <FastImage
             style={styles.profileImageEdit}
             source={this.state.teamImage}
@@ -214,6 +256,7 @@ class CreateTeamScreen extends Component {
             resizeMode="cover"
           />
         </TouchableOpacity>
+
 
         <Text style={styles.headerText}>{team_username}</Text>
         <TextInput
@@ -226,7 +269,7 @@ class CreateTeamScreen extends Component {
           autoCapitalize={"none"}
         />
 
-        <Text />
+        {getTeamLocationBox}
 
         <TouchableOpacity
           style={styles.buttonContainer}
@@ -235,7 +278,6 @@ class CreateTeamScreen extends Component {
           <Text style={styles.buttonText}>{create_team}</Text>
         </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
-
       </View>
     );
   }
@@ -320,4 +362,19 @@ const styles = StyleSheet.create({
     marginTop: 16,
     borderRadius: 40
   },
+
+  getLocationBox: {
+    marginTop: 20,
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: "#e0e0e0"
+  },
+
+  getLocationText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#3bd774"
+  }
 });

@@ -1,23 +1,23 @@
 import React, { Component } from "react";
-import { StyleSheet, View,  TouchableOpacity, Image, Text } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image, Text } from "react-native";
 import {
-   join_team_to_get_best_out_of_fields,
-   add_team_events,
-   see_whos_coming_to_events,
-   message_your_squad,
-   join_team,
-   create_team
-  } from "../../strings/strings";
+  join_team_to_get_best_out_of_fields,
+  add_team_events,
+  see_whos_coming_to_events,
+  message_your_squad,
+  join_team,
+  create_team
+} from "../../strings/strings";
 
 export default class NoTeamScreen extends Component {
-    static navigationOptions = {
-        header: null
-      };
+  static navigationOptions = {
+    header: null
+  };
 
-     
   render() {
-    return <View style={styles.container}>
-      <View style={styles.backButtonContainer}>
+    return (
+      <View style={styles.container}>
+        <View style={styles.backButtonContainer}>
           <TouchableOpacity
             style={styles.backButton}
             underlayColor="#bcbcbc"
@@ -29,29 +29,38 @@ export default class NoTeamScreen extends Component {
             />
           </TouchableOpacity>
         </View>
-    <Text style={styles.headerText}>{join_team_to_get_best_out_of_fields}</Text>
-    <View style={styles.roundCont}>
+        <Text style={styles.headerText}>
+          {join_team_to_get_best_out_of_fields}
+        </Text>
+        <View style={styles.roundCont}>
+          <Text style={styles.subText}>{add_team_events}</Text>
+          <Text style={styles.subText}>{see_whos_coming_to_events}</Text>
+          <Text style={styles.subText}>{message_your_squad}</Text>
+        </View>
 
-    <Text style={styles.subText}>{add_team_events}</Text>
-    <Text style={styles.subText}>{see_whos_coming_to_events}</Text>
-    <Text style={styles.subText}>{message_your_squad}</Text>
-    </View>
+        <TouchableOpacity
+          style={styles.createTeamButton}
+          onPress={() => this.props.navigation.navigate("CreateTeamScreen", {lt: null, ln: null})}
+        >
+          <Text style={styles.blackText}>{create_team}</Text>
+        </TouchableOpacity>
 
-    <TouchableOpacity style={styles.createTeamButton} onPress={()=>this.props.navigation.navigate("CreateTeamScreen")}>
-    <Text style={styles.blackText}>{create_team}</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity style={styles.joinTeamButton} onPress={()=>this.props.navigation.navigate("SearchScreen", {selectedIndex: 1})}>
-    <Text style={styles.whiteText}>{join_team}</Text>
-    </TouchableOpacity>
-
-    </View>
+        <TouchableOpacity
+          style={styles.joinTeamButton}
+          onPress={() =>
+            this.props.navigation.navigate("SearchScreen", { selectedIndex: 1 })
+          }
+        >
+          <Text style={styles.whiteText}>{join_team}</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 }
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      backgroundColor:'white'
+    flex: 1,
+    backgroundColor: "white"
   },
 
   backButtonContainer: {
@@ -85,26 +94,26 @@ const styles = StyleSheet.create({
   },
 
   headerText: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: 26,
-      margin: 30,
-      textAlign: 'center'
+    color: "black",
+    fontWeight: "bold",
+    fontSize: 26,
+    margin: 30,
+    textAlign: "center"
   },
 
   subText: {
-    color: 'black',
-    fontWeight: 'bold',
+    color: "black",
+    fontWeight: "bold",
     fontSize: 22,
     margin: 10,
-    textAlign: 'center'
+    textAlign: "center"
   },
   roundCont: {
-      borderRadius: 10,
-      borderWidth: 3,
-      borderColor: "#e0e0e0",
-      margin: 20,
-      padding: 10
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: "#e0e0e0",
+    margin: 20,
+    padding: 10
   },
 
   whiteText: {
@@ -117,8 +126,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "black",
     fontWeight: "bold"
-  },
-
-
-  
+  }
 });

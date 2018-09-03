@@ -173,10 +173,10 @@ class FieldSearchScreen extends Component {
       } else if (response === "authorized") {
         this.getLocation();
       } else if (response === "undetermined") {
-        if(Platform.OS == 'android'){
-        this.setState({ locationIOS: "denied" });
-        }else{
-          this.setState({locationIOS: "undetermined"})
+        if (Platform.OS == "android") {
+          this.setState({ locationIOS: "denied" });
+        } else {
+          this.setState({ locationIOS: "undetermined" });
         }
       } else if (response === "restricted") {
         //Write the logic to open permission
@@ -342,7 +342,6 @@ class FieldSearchScreen extends Component {
     if (params.fromEvent !== true) {
       var navigation = (
         <View style={styles.navigationContainer}>
-          <View style={styles.navigationContainerIn}>
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate("FeedScreen", {})}
               style={styles.navigationItem}
@@ -350,13 +349,13 @@ class FieldSearchScreen extends Component {
             >
               <Image
                 style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Home/home.png")}
+                source={{uri: 'home'}}
               />
             </TouchableOpacity>
             <TouchableOpacity style={styles.navigationItemBlue}>
               <Image
                 style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Field/field_icon.png")}
+                source={{uri: 'field_icon'}}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -367,10 +366,9 @@ class FieldSearchScreen extends Component {
             >
               <Image
                 style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Profile/profile.png")}
+                source={{uri: 'profile'}}
               />
             </TouchableOpacity>
-          </View>
         </View>
       );
     } else {
@@ -399,17 +397,33 @@ class FieldSearchScreen extends Component {
         );
       } else {
         var list = (
-          <TouchableOpacity
-            style={styles.locationBox}
-            onPress={() =>
-              this.props.navigation.navigate("CreateNewFieldScreen", {
-                lt: null,
-                ln: null
-              })
-            }
-          >
-            <Text style={styles.locationText}>{no_fields_found_nearby}</Text>
-          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <FlatList
+              onRefresh={this.handleRefresh}
+              refreshing={this.state.refreshing}
+              style={{ marginBottom: 50 }}
+              data={this.state.fields}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.item}
+                  onPress={() => openFieldDetail(item)}
+                >
+                  <FieldSearchItem {...item} />
+                </TouchableOpacity>
+              )}
+            />
+            <TouchableOpacity
+              style={styles.locationBox}
+              onPress={() =>
+                this.props.navigation.navigate("CreateNewFieldScreen", {
+                  lt: null,
+                  ln: null
+                })
+              }
+            >
+              <Text style={styles.locationText}>{no_fields_found_nearby}</Text>
+            </TouchableOpacity>
+          </View>
         );
       }
     } else if (this.state.locationIOS === "denied") {
@@ -434,7 +448,7 @@ class FieldSearchScreen extends Component {
           </View>
         );
       }
-    }else if(this.state.locationIOS === "undetermined"){
+    } else if (this.state.locationIOS === "undetermined") {
       var list = (
         <View style={styles.locationBox}>
           <TouchableOpacity onPress={() => this.getLocation()}>
@@ -443,9 +457,8 @@ class FieldSearchScreen extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-      )
-    } 
-    else if (this.state.locationIOS === "disabled") {
+      );
+    } else if (this.state.locationIOS === "disabled") {
       var list = (
         <View style={styles.locationBox}>
           <TouchableOpacity onPress={() => this.showdialog()}>
@@ -506,12 +519,34 @@ const styles = StyleSheet.create({
     margin: 20
   },
 
-  navigationContainer: {
-    bottom: 0,
+    
+
+    navigationContainer: {
+      ...Platform.select({
+        ios: {
+          bottom: 0,
     position: "absolute",
     width: "100%",
-    flex: 1
-  },
+    flex: 1,
+          backgroundColor: "white",
+          flexDirection: "row",
+          shadowOffset: { width: 0, height: -1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 3
+        },
+        android: {
+          bottom: 0,
+    position: "absolute",
+    width: "100%",
+    flex: 1,
+          backgroundColor: "white",
+          flexDirection: "row",
+          alignItems: "flex-end",
+          elevation: 10
+        }
+      })
+    },
+  
 
   searchBar: {
     backgroundColor: "white",
@@ -572,16 +607,12 @@ const styles = StyleSheet.create({
     padding: 20
   },
 
-  navigationContainerIn: {
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "flex-end"
-  },
+ 
 
   navigationItem: {
     flex: 1,
     height: 50,
-    backgroundColor: "#f4fff8",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center"
   },

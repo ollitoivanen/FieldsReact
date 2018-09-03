@@ -35,7 +35,8 @@ import {
   field_access_type,
   field_goal_count,
   please_fill_all_fields,
-  change_field_location
+  change_field_location,
+  
 } from "../../strings/strings";
 export default class EditFieldScreen extends Component {
   static navigationOptions = {
@@ -117,7 +118,7 @@ export default class EditFieldScreen extends Component {
       if (params.ogLt !== params.lt) {
         const co = new firebase.firestore.GeoPoint(
           Math.round(params.lt * 10000000) / 10000000,
-          Math.round(params.ln * 10000000) / 10000000,
+          Math.round(params.ln * 10000000) / 10000000
         );
         firebase
           .firestore()
@@ -305,7 +306,7 @@ export default class EditFieldScreen extends Component {
               ln: params.ln,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
-              fromCreate: false
+              from: "editField"
             })
           }
         >

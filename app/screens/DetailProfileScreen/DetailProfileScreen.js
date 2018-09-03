@@ -217,7 +217,8 @@ class DetailProfileScreen extends Component {
       trainingTime: "",
       friends: [],
       friendStatus: null,
-      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+      //Karinainen perkele
+      profileImagePath: { uri: "profile_image_default" }
     };
   }
 
@@ -426,40 +427,32 @@ class DetailProfileScreen extends Component {
 
     var navigation = (
       <View style={styles.navigationContainer}>
-        <View style={styles.navigationContainerIn}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("FeedScreen")}
-            style={styles.navigationItem}
-            underlayColor="#bcbcbc"
-          >
-            <Image
-              style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Home/home.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navigationItemGreen}
-            onPress={() =>
-              this.props.navigation.navigate("FieldSearchScreen", {
-                fromEvent: false
-              })
-            }
-          >
-            <Image
-              style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Field/field_icon.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navigationItem}
-            onPress={() => this.props.navigation.navigate("ProfileScreen")}
-          >
-            <Image
-              style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Profile/profile.png")}
-            />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate("FeedScreen", {})}
+          style={styles.navigationItem}
+          underlayColor="#bcbcbc"
+        >
+          <Image style={styles.navigationImage} source={{ uri: "home" }} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.navigationItemGreen}
+          onPress={() =>
+            this.props.navigation.navigate("FieldSearchScreen", {
+              fromEvent: false
+            })
+          }
+        >
+          <Image
+            style={styles.navigationImage}
+            source={{ uri: "field_icon" }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.navigationItem}
+          onPress={() => this.props.navigation.navigate("ProfileScreen", {})}
+        >
+          <Image style={styles.navigationImage} source={{ uri: "profile" }} />
+        </TouchableOpacity>
       </View>
     );
 
@@ -495,7 +488,7 @@ class DetailProfileScreen extends Component {
 
           <View style={styles.actionContainer}>
             <View style={styles.imageTabContainer}>
-              <TouchableOpacity style={styles.roundTextContainer}>
+              <TouchableOpacity style={styles.textContainer}>
                 <Text style={styles.boxText}>
                   {tC} {trainings}
                 </Text>
@@ -570,19 +563,20 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: "absolute",
     width: "100%",
-    flex: 1
-  },
-
-  navigationContainerIn: {
+    flex: 1,
     backgroundColor: "white",
     flexDirection: "row",
-    alignItems: "flex-end"
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+
+    elevation: 10
   },
 
   navigationItem: {
     flex: 1,
     height: 50,
-    backgroundColor: "#f4fff8",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center"
   },
@@ -610,7 +604,11 @@ const styles = StyleSheet.create({
 
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingBottom: 20
+    paddingBottom: 20,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1
   },
 
   profileImage: {
@@ -640,6 +638,24 @@ const styles = StyleSheet.create({
 
     backgroundColor: "white",
     borderRadius: 20,
+    flexShrink: 1,
+    marginTop: 8,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1
+  },
+
+  textContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    paddingStart: 8,
+    paddingEnd: 8,
+    paddingTop: 6,
+    paddingBottom: 6,
+
+    backgroundColor: "white",
     flexShrink: 1,
     marginTop: 8
   },

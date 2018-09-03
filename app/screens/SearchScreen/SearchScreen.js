@@ -193,41 +193,41 @@ class SearchScreen extends Component {
 
     var navigation = (
       <View style={styles.navigationContainer}>
-        <View style={styles.navigationContainerIn}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("FeedScreen")}
-            style={styles.navigationItem}
-            underlayColor="#bcbcbc"
-          >
-            <Image
-              style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Home/home.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navigationItemGreen}
-            onPress={() =>
-              this.props.navigation.navigate("FieldSearchScreen", {
-                fromEvent: false
-              })
-            }
-          >
-            <Image
-              style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Field/field_icon.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navigationItem}
-            onPress={() => this.props.navigation.navigate("ProfileScreen")}
-          >
-            <Image
-              style={styles.navigationImage}
-              source={require("FieldsReact/app/images/Profile/profile.png")}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate("FeedScreen", {})}
+              style={styles.navigationItem}
+              underlayColor="#bcbcbc"
+            >
+              <Image
+                style={styles.navigationImage}
+                source={{uri:'home'}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navigationItemGreen}
+              onPress={() =>
+                this.props.navigation.navigate("FieldSearchScreen", {
+                  fromEvent: false
+                })
+              }
+            >
+              <Image
+                style={styles.navigationImage}
+                source={{uri: 'field_icon'}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navigationItem}
+              onPress={() =>
+                this.props.navigation.navigate("ProfileScreen", {})
+              }
+            >
+              <Image
+                style={styles.navigationImage}
+                source={{uri: 'profile'}}
+              />
+            </TouchableOpacity>
+          </View>
     );
 
     return (
@@ -296,7 +296,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: "absolute",
     width: "100%",
-    flex: 1
+    flex: 1,
+    backgroundColor: "white",
+    flexDirection: "row",
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+
+    elevation: 10
   },
 
   searchBar: {
@@ -384,16 +391,12 @@ const styles = StyleSheet.create({
     padding: 20
   },
 
-  navigationContainerIn: {
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "flex-end"
-  },
+ 
 
   navigationItem: {
     flex: 1,
     height: 50,
-    backgroundColor: "#f4fff8",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center"
   },

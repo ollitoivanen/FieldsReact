@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ActivityIndicator } from "react-native";
 import firebase from "react-native-firebase";
 import { NavigationActions, StackActions } from "react-navigation";
 import { connect } from "react-redux";
@@ -64,6 +64,9 @@ class LoadingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+      <ActivityIndicator>
+        
+      </ActivityIndicator>
       </View>
     );
   }

@@ -54,7 +54,7 @@ class DetailTeamScreen extends Component {
     super(props);
     var { params } = this.props.navigation.state;
     this.loadEvents();
-    this.getProfileImage()
+    this.getProfileImage();
 
     this.state = {
       events: [],
@@ -76,21 +76,14 @@ class DetailTeamScreen extends Component {
     var { params } = this.props.navigation.state;
 
     storageRef
-      .child(
-        "teampics/" +
-          params.teamID +
-          "/" +
-          params.teamID +
-          ".jpg"
-      )
+      .child("teampics/" + params.teamID + "/" + params.teamID + ".jpg")
       .getDownloadURL()
       .then(downloadedFile => {
         this.setState({
-          profileImage: { uri: downloadedFile.toString() },
+          profileImage: { uri: downloadedFile.toString() }
         });
-      })
-    }
-  
+      });
+  };
 
   loadEvents = () => {
     var { params } = this.props.navigation.state;
@@ -381,42 +374,32 @@ class DetailTeamScreen extends Component {
         />
 
         <View style={styles.navigationContainer}>
-          <View style={styles.navigationContainerIn}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("FeedScreen", {})}
-              style={styles.navigationItem}
-              underlayColor="#bcbcbc"
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Home/home.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItemGreen}
-              onPress={() =>
-                this.props.navigation.navigate("FieldSearchScreen", {
-                  fromEvent: false
-                })
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Field/field_icon.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItem}
-              onPress={() =>
-                this.props.navigation.navigate("ProfileScreen", {})
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Profile/profile.png")}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("FeedScreen", {})}
+            style={styles.navigationItem}
+            underlayColor="#bcbcbc"
+          >
+            <Image style={styles.navigationImage} source={{ uri: "home" }} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItemGreen}
+            onPress={() =>
+              this.props.navigation.navigate("FieldSearchScreen", {
+                fromEvent: false
+              })
+            }
+          >
+            <Image
+              style={styles.navigationImage}
+              source={{ uri: "field_icon" }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItem}
+            onPress={() => this.props.navigation.navigate("ProfileScreen", {})}
+          >
+            <Image style={styles.navigationImage} source={{ uri: "profile" }} />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -436,7 +419,9 @@ const styles = StyleSheet.create({
   removeButton: {
     backgroundColor: "red",
     padding: 15,
-    borderRadius: 10
+    borderRadius: 10,
+    elevation: 3,
+    
   },
 
   removeText: {
@@ -458,7 +443,10 @@ const styles = StyleSheet.create({
     paddingEnd: 8,
     paddingTop: 6,
     paddingBottom: 6,
-
+    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
     backgroundColor: "white",
     borderRadius: 20,
     marginTop: 8
@@ -467,7 +455,11 @@ const styles = StyleSheet.create({
   greenBackground: {
     backgroundColor: "#3bd774",
     paddingVertical: 20,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1
   },
   playerListContainer: {
     flex: 1,
@@ -607,17 +599,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: "absolute",
     width: "100%",
-    flex: 1
-  },
-  navigationContainerIn: {
+    flex: 1,
     backgroundColor: "white",
     flexDirection: "row",
-    alignItems: "flex-end"
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+
+    elevation: 10
   },
   navigationItem: {
     flex: 1,
     height: 50,
-    backgroundColor: "#f4fff8",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center"
   },

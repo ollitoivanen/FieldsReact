@@ -42,12 +42,14 @@ export default class LoginScreen extends React.Component {
 
       firebase
         .auth()
-        .signInAndRetrieveDataWithEmailAndPassword(email1, password1).then(()=>{
-          this.setState({loading: false})
+        .signInAndRetrieveDataWithEmailAndPassword(email1, password1)
+        .then(() => {
+          this.setState({ loading: false });
         })
         .then(() => this.props.navigation.navigate("LoadingScreen"))
         .catch(error =>
           this.setState({
+            loading: false,
             errorMessage: [email_and_password_dont_match_any_users]
           })
         );
@@ -98,20 +100,18 @@ export default class LoginScreen extends React.Component {
 
         <Loader loading={this.state.loading} />
 
-          <Text
-            style={styles.text}
-            onPress={() =>
-              this.props.navigation.navigate("ForgotPasswordScreen")
-            }
-          >
-            {forgot_password}
-          </Text>
-          <Text
-            style={styles.text3}
-            onPress={() => this.props.navigation.navigate("SignUpScreen")}
-          >
-            {dont_have_an_account}
-          </Text>
+        <Text
+          style={styles.text}
+          onPress={() => this.props.navigation.navigate("ForgotPasswordScreen")}
+        >
+          {forgot_password}
+        </Text>
+        <Text
+          style={styles.text3}
+          onPress={() => this.props.navigation.navigate("SignUpScreen")}
+        >
+          {dont_have_an_account}
+        </Text>
       </View>
     );
   }
@@ -153,24 +153,21 @@ const styles = StyleSheet.create({
     color: "#bcbcbc",
     textAlign: "center",
     flex: 1,
-    justifyContent: 'flex-start',
-
-    
+    justifyContent: "flex-start"
   },
   text2: {
     marginTop: 16,
     color: "#919191",
     marginBottom: 16,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "center"
   },
 
   text3: {
     marginTop: 16,
     color: "#bcbcbc",
     textAlign: "center",
-    justifyContent: 'flex-end'
-    
+    justifyContent: "flex-end"
   },
 
   buttonContainer: {

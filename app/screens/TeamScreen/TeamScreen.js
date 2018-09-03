@@ -8,7 +8,8 @@ import {
   Modal,
   FlatList,
   TextInput,
-  AsyncStorage
+  AsyncStorage,
+  Platform
 } from "react-native";
 import { connect } from "react-redux";
 import FastImage from "react-native-fast-image";
@@ -282,7 +283,9 @@ class TeamScreen extends Component {
     this.setState({ infoVisible: false }),
       this.props.navigation.navigate("EditTeamScreen", {
         teamUsername: this.props.userData.uTN,
-        teamImage: this.state.teamImage
+        teamImage: this.state.teamImage,
+        lt:null,
+        ln:null 
       });
   }
 
@@ -495,6 +498,7 @@ class TeamScreen extends Component {
             <Image
               style={styles.infoIcon}
               source={require("FieldsReact/app/images/Info/info.png")}
+              resizeMode="cover"
             />
           </TouchableOpacity>
         </View>
@@ -537,42 +541,32 @@ class TeamScreen extends Component {
         />
 
         <View style={styles.navigationContainer}>
-          <View style={styles.navigationContainerIn}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("FeedScreen", {})}
-              style={styles.navigationItem}
-              underlayColor="#bcbcbc"
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Home/home.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItemGreen}
-              onPress={() =>
-                this.props.navigation.navigate("FieldSearchScreen", {
-                  fromEvent: false
-                })
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Field/field_icon.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItem}
-              onPress={() =>
-                this.props.navigation.navigate("ProfileScreen", {})
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={require("FieldsReact/app/images/Profile/profile.png")}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("FeedScreen", {})}
+            style={styles.navigationItem}
+            underlayColor="#bcbcbc"
+          >
+            <Image style={styles.navigationImage} source={{ uri: "home" }} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItemGreen}
+            onPress={() =>
+              this.props.navigation.navigate("FieldSearchScreen", {
+                fromEvent: false
+              })
+            }
+          >
+            <Image
+              style={styles.navigationImage}
+              source={{ uri: "field_icon" }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItem}
+            onPress={() => this.props.navigation.navigate("ProfileScreen", {})}
+          >
+            <Image style={styles.navigationImage} source={{ uri: "profile" }} />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -603,7 +597,11 @@ const styles = StyleSheet.create({
   greenBackground: {
     backgroundColor: "#3bd774",
     paddingVertical: 20,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1
   },
   playerListContainer: {
     flex: 1,
@@ -622,7 +620,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginStart: 6,
 
-    borderRadius: 40
+    borderRadius: 40,
+    
   },
 
   teamName: {
@@ -667,7 +666,8 @@ const styles = StyleSheet.create({
     bottom: 18,
     end: 12,
     height: 36,
-    width: 36
+    width: 36,
+    elevation: 10
   },
 
   infoIcon: {
@@ -747,21 +747,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "white"
   },
+
   navigationContainer: {
     bottom: 0,
     position: "absolute",
     width: "100%",
-    flex: 1
-  },
-  navigationContainerIn: {
+    flex: 1,
     backgroundColor: "white",
     flexDirection: "row",
-    alignItems: "flex-end"
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+
+    elevation: 10
   },
+
   navigationItem: {
     flex: 1,
     height: 50,
-    backgroundColor: "#f4fff8",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center"
   },

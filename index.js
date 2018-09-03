@@ -3,7 +3,7 @@ import { AppRegistry, View, StyleSheet } from "react-native";
 import { StackNavigatorApp } from "FieldsReact/App";
 import { YellowBox } from "react-native";
 import { Provider } from "react-redux";
-import {store} from "FieldsReact/app/redux/app-redux.js"; //Import the store
+import { store } from "FieldsReact/app/redux/app-redux.js"; //Import the store
 
 export default class FieldsApp extends Component {
   render() {
