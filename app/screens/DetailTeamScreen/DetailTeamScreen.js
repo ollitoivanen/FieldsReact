@@ -27,7 +27,8 @@ import {
   request_pending_on_other_team,
   join_team,
   remove_old_request_and_send_new_request_to_this_team,
-  remove_request
+  remove_request,
+  no_upcoming_events
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
@@ -251,6 +252,35 @@ class DetailTeamScreen extends Component {
       }
     }
 
+    if(this.state.events.length!==0){
+      var eventList =   <FlatList
+      style={{ marginBottom: 50 }}
+      data={this.state.events}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          style={styles.item}
+          onPress={() =>
+            this.props.navigation.navigate("DetailEventScreen", {
+              eventFieldName: item.eFN,
+              eventType: item.eTY,
+              startTime: item.startTime,
+              endTime: item.eT,
+              date: item.date,
+              id: item.id
+            })
+          }
+        >
+          <EventListItem {...item} />
+        </TouchableOpacity>
+      )}
+    />
+    }else{
+      var eventList =
+      <View style={styles.locationBox}>
+         <Text style={styles.locationText}>{no_upcoming_events}</Text>
+       </View>
+    }
+
     return (
       <View style={styles.container}>
         <Modal
@@ -363,15 +393,7 @@ class DetailTeamScreen extends Component {
         <View style={styles.eventRowContainer}>
           <Text style={styles.teamName}>{events}</Text>
         </View>
-        <FlatList
-          style={{ marginBottom: 50 }}
-          data={this.state.events}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.item}>
-              <EventListItem {...item} />
-            </TouchableOpacity>
-          )}
-        />
+        {eventList}
 
         <View style={styles.navigationContainer}>
           <TouchableOpacity
@@ -385,6 +407,8 @@ class DetailTeamScreen extends Component {
             style={styles.navigationItemGreen}
             onPress={() =>
               this.props.navigation.navigate("FieldSearchScreen", {
+                selectedIndex: 0,
+
                 fromEvent: false
               })
             }
@@ -416,12 +440,26 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
 
+  locationBox: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1
+  },
+
+  locationText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "center",
+    color: "#e0e0e0",
+    margin: 20
+  },
+
+
   removeButton: {
     backgroundColor: "red",
     padding: 15,
     borderRadius: 10,
-    elevation: 3,
-    
+    elevation: 3
   },
 
   removeText: {

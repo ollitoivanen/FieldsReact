@@ -12,14 +12,11 @@ import {
   AsyncStorage
 } from "react-native";
 import firebase from "react-native-firebase";
-import { ButtonGroup } from "react-native-elements";
 
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
 import {
-  field_city_cap,
-  field_name_cap,
   near_me,
   set,
   enter_home_city,
@@ -29,9 +26,20 @@ import {
   start_training,
   enable_location_to_find_nearest_fields,
   load_other,
-  no_fields_found_nearby
+  no_fields_found_nearby,
+  fields,
+  teams,
+  users,
+  search_teams,
+  search_users,
+  searchHeaders,
+  no_teams_found_nearby,
+  location_access_blocked
 } from "../../strings/strings";
-import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem"; // we'll create this next
+import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem";
+import TeamSearchItem from "FieldsReact/app/components/TeamSearchItem/TeamSearchItem";
+import UserSearchItem from "FieldsReact/app/components/UserSearchItem/UserSearchItem";
+
 import Permissions from "react-native-permissions";
 import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 
@@ -138,53 +146,151 @@ class FieldSearchScreen extends Component {
       })
 
       .then(() => {
-        this.storeData(serializedData);
+        this.storeData(serializedData, "nearFields");
+        this.setState({ refreshing: false });
+      });
+  }
+  loadNearTeams() {
+    const ref = firebase.firestore().collection("Teams");
+    var { params } = this.props.navigation.state;
+    const teams = [];
+
+    var serializedData;
+
+    const southWest = new firebase.firestore.GeoPoint(
+      this.state.userLatitude - 0.2,
+      this.state.userLongitude - 0.2
+    );
+    const northEast = new firebase.firestore.GeoPoint(
+      this.state.userLatitude + 0.2,
+      this.state.userLongitude + 0.2
+    );
+
+    const query = ref
+      .where("co", ">=", southWest)
+      .where("co", "<=", northEast)
+      .limit(10);
+
+    query
+      .get()
+      .then(
+        function(doc) {
+          doc.forEach(doc => {
+            const id = doc.id;
+            const { tUN, co } = doc.data();
+            var d = this.getDistanceFromLatLonInKm(co.latitude, co.longitude);
+            if (d < 50) {
+              d = d + "km";
+
+              teams.push({
+                key: doc.id,
+                doc,
+                id,
+                username: tUN,
+                co
+              });
+            }
+            //Sorting the results! cool 2018
+            teams.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
+          });
+        }.bind(this)
+      )
+      .then(() => {
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(teams, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+      })
+
+      .then(() => {
+        this.storeData(serializedData, "nearTeams");
         this.setState({ refreshing: false });
       });
   }
 
-  storeData = async data => {
+  search = () => {
+    const users = [];
+
+    const userRef = firebase.firestore().collection("Users");
+
+    const query = userRef.where(
+      "un",
+      "==",
+      this.state.searchTerm.toLowerCase().trim()
+    );
+    query.get().then(
+      function(doc) {
+        doc.forEach(doc => {
+          const { un, fC, tC, re, cFI, cFN, uTI, ts, uTN, uIm } = doc.data();
+
+          const id = doc.id;
+          users.push({
+            key: doc.id,
+            doc,
+            id,
+            username: un,
+            fC,
+            tC,
+            re,
+            cFI,
+            cFN,
+            uTI,
+            uTN,
+            ts,
+            uIm,
+            index: 0
+          });
+        });
+        this.setState({
+          users
+        });
+      }.bind(this)
+    );
+  };
+
+  storeData = async (data, name) => {
     try {
-      await AsyncStorage.setItem("nearFields", data).then(this.retrieveData());
+      await AsyncStorage.setItem(name, data).then(this.retrieveData(name));
     } catch (error) {
       // Error saving data
     }
   };
 
-  retrieveData = async () => {
+  retrieveData = async name => {
     try {
-      const value = await AsyncStorage.getItem("nearFields");
+      const value = await AsyncStorage.getItem(name);
       if (value !== null) {
-        this.setState({ fields: JSON.parse(value) });
-        if (JSON.parse(value).length === 0) {
-          this.setState({ empty: true });
+        if (name === "nearFields") {
+          this.setState({ fields: JSON.parse(value) });
+          if (JSON.parse(value).length === 0) {
+            this.setState({ fieldsEmpty: true });
+          }
+        } else if (name === "nearTeams") {
+          this.setState({ teams: JSON.parse(value) });
+          if (JSON.parse(value).length === 0) {
+            this.setState({ teamsEmpty: true });
+          }
         }
       } else {
-        this.loadNearFields();
+        if (name === "nearFields") {
+          this.loadNearFields();
+        } else if (name === "nearTeams") {
+          this.loadNearTeams();
+        }
       }
     } catch (error) {
       // Error retrieving data
     }
   };
-  componentDidMount() {
-    Permissions.check("location").then(response => {
-      if (response === "denied") {
-        this.setState({ locationIOS: "denied" });
-      } else if (response === "authorized") {
-        this.getLocation();
-      } else if (response === "undetermined") {
-        if (Platform.OS == "android") {
-          this.setState({ locationIOS: "denied" });
-        } else {
-          this.setState({ locationIOS: "undetermined" });
-        }
-      } else if (response === "restricted") {
-        //Write the logic to open permission
-        this.setState({ locationIOS: "restricted" });
-      }
-      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-    });
-  }
 
   showdialog = () => {
     if (Platform.OS == "android") {
@@ -217,7 +323,16 @@ class FieldSearchScreen extends Component {
     header: null
   };
 
-  getLocation = () => {
+  changeIndex = index => {
+    this.setState({ selectedIndex: index });
+    if (index === 0) {
+      this.retrieveData("nearFields");
+    } else if (index === 1) {
+      this.retrieveData("nearTeams");
+    }
+  };
+
+  getLocationPure = () => {
     navigator.geolocation.getCurrentPosition(
       position => {
         this.setState({
@@ -225,14 +340,60 @@ class FieldSearchScreen extends Component {
           userLongitude: position.coords.longitude,
           locationIOS: "authorized",
           error: null
-        }),
-          this.retrieveData();
+        });
+        if (this.state.selectedIndex === 0) {
+          this.loadNearFields();
+        } else if (this.state.selectedIndex === 1) {
+          this.loadNearTeams();
+        }
       },
       error => {
         this.setState({ locationIOS: "disabled" });
       },
       { enableHighAccuracy: false, timeout: 20000, maximumAge: 0 }
     );
+  };
+
+  getLocation = () => {
+    Permissions.check("location").then(response => {
+      if (response === "denied") {
+        this.setState({ locationIOS: "denied" });
+      } else if (response === "authorized") {
+        //
+        //
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            this.setState({
+              userLatitude: position.coords.latitude,
+              userLongitude: position.coords.longitude,
+              locationIOS: "authorized",
+              error: null
+            });
+            if (this.state.selectedIndex === 0) {
+              this.loadNearFields();
+            } else if (this.state.selectedIndex === 1) {
+              this.loadNearTeams();
+            }
+          },
+          error => {
+            this.setState({ locationIOS: "disabled" });
+          },
+          { enableHighAccuracy: false, timeout: 20000, maximumAge: 0 }
+          //
+          //
+        );
+      } else if (response === "undetermined") {
+        if (Platform.OS == "android") {
+          this.setState({ locationIOS: "denied" });
+        } else {
+          this.setState({ locationIOS: "undetermined" });
+        }
+      } else if (response === "restricted") {
+        //Write the logic to open permission
+        this.setState({ locationIOS: "restricted" });
+      }
+      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+    });
   };
 
   getDistanceFromLatLonInKm = (lat, lng) => {
@@ -261,13 +422,11 @@ class FieldSearchScreen extends Component {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = Math.round(R * c * 10) / 10; // Distance in km
     return d;
-
-    //console.warn(d)
   };
 
   handleRefresh = () => {
     this.setState({ refreshing: true }, () => {
-      this.loadNearFields();
+      this.getLocation();
     });
   };
 
@@ -292,12 +451,22 @@ class FieldSearchScreen extends Component {
 
     this.state = {
       fields: [],
+      teams: [],
+      users: [],
       userLatitude: 0,
       userLongitude: 0,
-      locationIOS: null,
+      locationIOS: "authorized",
       refreshing: false,
-      empty: false
+      fieldsEmpty: false,
+      teamsEmpty: false,
+      selectedIndex: params.selectedIndex
     };
+
+    if (params.selectedIndex === 0) {
+      this.retrieveData("nearFields");
+    } else if (params.selectedIndex === 1) {
+      this.retrieveData("nearTeams");
+    }
 
     this.ref = firebase
       .firestore()
@@ -339,65 +508,142 @@ class FieldSearchScreen extends Component {
       }
     };
 
+    if (this.state.selectedIndex === 0) {
+      var filterBox = (
+        <View>
+          <Text style={styles.bigText}>
+            {searchHeaders[this.state.selectedIndex]}
+          </Text>
+          <View style={styles.filterBox}>
+            <TouchableOpacity style={styles.filterItem}>
+              <Text style={styles.filterTextSelected}>{fields}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.filterItem}
+              onPress={() => this.changeIndex(1)}
+            >
+              <Text style={styles.filterText}>{teams}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.filterItem}
+              onPress={() => this.changeIndex(2)}
+            >
+              <Text style={styles.filterText}>{users}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    } else if (this.state.selectedIndex === 1) {
+      var filterBox = (
+        <View>
+          <Text style={styles.bigText}>
+            {searchHeaders[this.state.selectedIndex]}
+          </Text>
+          <View style={styles.filterBox}>
+            <TouchableOpacity
+              style={styles.filterItem}
+              onPress={() => this.changeIndex(0)}
+            >
+              <Text style={styles.filterText}>{fields}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.filterItem}>
+              <Text style={styles.filterTextSelected}>{teams}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.filterItem}
+              onPress={() => this.changeIndex(2)}
+            >
+              <Text style={styles.filterText}>{users}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    } else if (this.state.selectedIndex === 2) {
+      var filterBox = (
+        <View>
+          <TextInput
+            clearButtonMode={"always"}
+            style={styles.searchBar}
+            placeholder={search_users}
+            onChangeText={searchTerm => this.setState({ searchTerm })}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            value={this.state.searchTerm}
+            onSubmitEditing={() => this.search()}
+            returnKeyType={"search"}
+            spellCheck={false}
+            autoCapitalize={"none"}
+          />
+          <View style={styles.filterBox}>
+            <TouchableOpacity
+              style={styles.filterItem}
+              onPress={() => this.changeIndex(0)}
+            >
+              <Text style={styles.filterText}>{fields}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.filterItem}
+              onPress={() => this.changeIndex(1)}
+            >
+              <Text style={styles.filterText}>{teams}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.filterItem}>
+              <Text style={styles.filterTextSelected}>{users}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
+
     if (params.fromEvent !== true) {
       var navigation = (
         <View style={styles.navigationContainer}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("FeedScreen", {})}
-              style={styles.navigationItem}
-              underlayColor="#bcbcbc"
-            >
-              <Image
-                style={styles.navigationImage}
-                source={{uri: 'home'}}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navigationItemBlue}>
-              <Image
-                style={styles.navigationImage}
-                source={{uri: 'field_icon'}}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.navigationItem}
-              onPress={() =>
-                this.props.navigation.navigate("ProfileScreen", {})
-              }
-            >
-              <Image
-                style={styles.navigationImage}
-                source={{uri: 'profile'}}
-              />
-            </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("FeedScreen", {})}
+            style={styles.navigationItem}
+            underlayColor="#bcbcbc"
+          >
+            <Image style={styles.navigationImage} source={{ uri: "home" }} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navigationItemBlue}>
+            <Image
+              style={styles.navigationImage}
+              source={{ uri: "field_icon" }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigationItem}
+            onPress={() => this.props.navigation.navigate("ProfileScreen", {})}
+          >
+            <Image style={styles.navigationImage} source={{ uri: "profile" }} />
+          </TouchableOpacity>
         </View>
       );
     } else {
       var navigation = null;
     }
 
-    if (this.state.locationIOS === null) {
-      var list = <View />;
-    } else if (this.state.locationIOS === "authorized") {
-      if (this.state.empty === false) {
-        var list = (
-          <FlatList
-            onRefresh={this.handleRefresh}
-            refreshing={this.state.refreshing}
-            style={{ marginBottom: 50 }}
-            data={this.state.fields}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.item}
-                onPress={() => openFieldDetail(item)}
-              >
-                <FieldSearchItem {...item} />
-              </TouchableOpacity>
-            )}
-          />
-        );
-      } else {
-        var list = (
-          <View style={{ flex: 1 }}>
+    addNewFieldBox = null;
+
+    if (this.state.selectedIndex === 0) {
+      var addNewFieldBox = (
+        <TouchableOpacity
+          style={styles.addNewFieldBox}
+          onPress={() =>
+            this.props.navigation.navigate("CreateNewFieldScreen", {
+              lt: null,
+              ln: null
+            })
+          }
+        >
+          <Text style={styles.addNewFieldText}>{add_new_field}</Text>
+        </TouchableOpacity>
+      );
+
+      if (this.state.locationIOS === null) {
+        var list = <View />;
+      } else if (this.state.locationIOS === "authorized") {
+        if (this.state.fieldsEmpty === false) {
+          var list = (
             <FlatList
               onRefresh={this.handleRefresh}
               refreshing={this.state.refreshing}
@@ -412,22 +658,63 @@ class FieldSearchScreen extends Component {
                 </TouchableOpacity>
               )}
             />
-            <TouchableOpacity
-              style={styles.locationBox}
-              onPress={() =>
-                this.props.navigation.navigate("CreateNewFieldScreen", {
-                  lt: null,
-                  ln: null
-                })
-              }
-            >
-              <Text style={styles.locationText}>{no_fields_found_nearby}</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      }
-    } else if (this.state.locationIOS === "denied") {
-      if (Platform.OS == "android") {
+          );
+        } else {
+          var list = (
+            <View style={{ flex: 1 }}>
+              <FlatList
+                onRefresh={this.handleRefresh}
+                refreshing={this.state.refreshing}
+                style={{ marginBottom: 50 }}
+                data={this.state.fields}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.item}
+                    onPress={() => openFieldDetail(item)}
+                  >
+                    <FieldSearchItem {...item} />
+                  </TouchableOpacity>
+                )}
+              />
+              <TouchableOpacity
+                style={styles.locationBox}
+                onPress={() =>
+                  this.props.navigation.navigate("CreateNewFieldScreen", {
+                    lt: null,
+                    ln: null
+                  })
+                }
+              >
+                <Text style={styles.locationText}>
+                  {no_fields_found_nearby}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }
+      } else if (this.state.locationIOS === "denied") {
+        if (Platform.OS == "android") {
+          var list = (
+            <View style={styles.locationBox}>
+              <TouchableOpacity onPress={() => this.getLocationPure()}>
+                <Text style={styles.locationText}>
+                  {enable_location_to_find_nearest_fields}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        } else {
+          var list = (
+            <View style={styles.locationBox}>
+              <TouchableOpacity onPress={() => Permissions.openSettings()}>
+                <Text style={styles.locationText}>
+                  {enable_location_to_find_nearest_fields}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }
+      } else if (this.state.locationIOS === "undetermined") {
         var list = (
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.getLocation()}>
@@ -437,54 +724,161 @@ class FieldSearchScreen extends Component {
             </TouchableOpacity>
           </View>
         );
-      } else {
+      } else if (this.state.locationIOS === "disabled") {
         var list = (
           <View style={styles.locationBox}>
-            <TouchableOpacity onPress={() => Permissions.openSettings()}>
+            <TouchableOpacity onPress={() => this.showdialog()}>
               <Text style={styles.locationText}>
                 {enable_location_to_find_nearest_fields}
               </Text>
             </TouchableOpacity>
           </View>
         );
+      } else if (this.state.locationIOS === "restricted") {
+        var list = (
+          <View style={styles.locationBox}>
+            <TouchableOpacity onPress={() => this.showdialog()}>
+              <Text style={styles.locationText}>{location_access_blocked}</Text>
+            </TouchableOpacity>
+          </View>
+        );
       }
-    } else if (this.state.locationIOS === "undetermined") {
+    } else if (this.state.selectedIndex === 1) {
+      if (this.state.locationIOS === null) {
+        var list = <View />;
+      } else if (this.state.locationIOS === "authorized") {
+        if (this.state.teamsEmpty === false) {
+          var list = (
+            <FlatList
+              onRefresh={this.handleRefresh}
+              refreshing={this.state.refreshing}
+              style={{ marginBottom: 50 }}
+              data={this.state.teams}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.item}
+                  onPress={() =>
+                    this.props.navigation.navigate("DetailTeamScreen", {
+                      teamUsername: item.username,
+                      teamFullName: item.teamFullName,
+                      teamID: item.id
+                    })
+                  }
+                >
+                  <TeamSearchItem {...item} />
+                </TouchableOpacity>
+              )}
+            />
+          );
+        } else {
+          var list = (
+            <View style={{ flex: 1 }}>
+              <FlatList
+                onRefresh={this.handleRefresh}
+                refreshing={this.state.refreshing}
+                style={{ marginBottom: 50 }}
+                data={this.state.teams}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.item}
+                    onPress={() => openFieldDetail(item)}
+                  >
+                    <TeamSearchItem {...item} />
+                  </TouchableOpacity>
+                )}
+              />
+              <TouchableOpacity style={styles.locationBox}>
+                <Text style={styles.locationText}>{no_teams_found_nearby}</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }
+      } else if (this.state.locationIOS === "denied") {
+        if (Platform.OS == "android") {
+          var list = (
+            <View style={styles.locationBox}>
+              <TouchableOpacity onPress={() => this.getLocationPure()}>
+                <Text style={styles.locationText}>
+                  {enable_location_to_find_nearest_fields}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        } else {
+          var list = (
+            <View style={styles.locationBox}>
+              <TouchableOpacity onPress={() => Permissions.openSettings()}>
+                <Text style={styles.locationText}>
+                  {enable_location_to_find_nearest_fields}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }
+      } else if (this.state.locationIOS === "undetermined") {
+        var list = (
+          <View style={styles.locationBox}>
+            <TouchableOpacity onPress={() => this.getLocation()}>
+              <Text style={styles.locationText}>
+                {enable_location_to_find_nearest_fields}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      } else if (this.state.locationIOS === "disabled") {
+        var list = (
+          <View style={styles.locationBox}>
+            <TouchableOpacity onPress={() => this.showdialog()}>
+              <Text style={styles.locationText}>
+                {enable_location_to_find_nearest_fields}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      } else if (this.state.locationIOS === "restricted") {
+        var list = (
+          <View style={styles.locationBox}>
+            <TouchableOpacity onPress={() => this.showdialog()}>
+              <Text style={styles.locationText}>{location_access_blocked}</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
+    } else if (this.state.selectedIndex === 2) {
       var list = (
-        <View style={styles.locationBox}>
-          <TouchableOpacity onPress={() => this.getLocation()}>
-            <Text style={styles.locationText}>
-              {enable_location_to_find_nearest_fields}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (this.state.locationIOS === "disabled") {
-      var list = (
-        <View style={styles.locationBox}>
-          <TouchableOpacity onPress={() => this.showdialog()}>
-            <Text style={styles.locationText}>
-              {enable_location_to_find_nearest_fields}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <FlatList
+          style={{ marginBottom: 50 }}
+          data={this.state.users}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() =>
+                this.props.navigation.navigate("DetailProfileScreen", {
+                  uTI: item.uTI,
+                  uTN: item.uTN,
+                  un: item.username,
+                  tC: item.tC,
+                  cFI: item.cFI,
+                  cFN: item.cFN,
+                  ts: item.ts,
+                  id: item.id,
+                  uIm: item.uIm
+                })
+              }
+            >
+              <UserSearchItem {...item} />
+            </TouchableOpacity>
+          )}
+        />
       );
     }
 
     return (
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          <Text style={styles.bigText}>{start_training}</Text>
-          <TouchableOpacity
-            style={styles.addNewFieldBox}
-            onPress={() =>
-              this.props.navigation.navigate("CreateNewFieldScreen", {
-                lt: null,
-                ln: null
-              })
-            }
-          >
-            <Text style={styles.addNewFieldText}>{add_new_field}</Text>
-          </TouchableOpacity>
+          {filterBox}
+
+          {addNewFieldBox}
         </View>
         {list}
 
@@ -505,6 +899,35 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
 
+  filterBox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    borderColor: "#e0e0e0"
+  },
+
+  filterItem: {
+    flexGrow: 1,
+    alignItems: "center",
+    textAlign: "center",
+    flex: 1,
+    padding: 10
+  },
+
+  filterText: {
+    fontWeight: "bold",
+    color: "#e0e0e0"
+  },
+
+  filterTextSelected: {
+    fontWeight: "bold",
+    color: "#3bd774"
+  },
+
   locationBox: {
     justifyContent: "center",
     alignItems: "center",
@@ -519,34 +942,31 @@ const styles = StyleSheet.create({
     margin: 20
   },
 
-    
-
-    navigationContainer: {
-      ...Platform.select({
-        ios: {
-          bottom: 0,
-    position: "absolute",
-    width: "100%",
-    flex: 1,
-          backgroundColor: "white",
-          flexDirection: "row",
-          shadowOffset: { width: 0, height: -1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 3
-        },
-        android: {
-          bottom: 0,
-    position: "absolute",
-    width: "100%",
-    flex: 1,
-          backgroundColor: "white",
-          flexDirection: "row",
-          alignItems: "flex-end",
-          elevation: 10
-        }
-      })
-    },
-  
+  navigationContainer: {
+    ...Platform.select({
+      ios: {
+        bottom: 0,
+        position: "absolute",
+        width: "100%",
+        flex: 1,
+        backgroundColor: "white",
+        flexDirection: "row",
+        shadowOffset: { width: 0, height: -1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3
+      },
+      android: {
+        bottom: 0,
+        position: "absolute",
+        width: "100%",
+        flex: 1,
+        backgroundColor: "white",
+        flexDirection: "row",
+        alignItems: "flex-end",
+        elevation: 10
+      }
+    })
+  },
 
   searchBar: {
     backgroundColor: "white",
@@ -607,8 +1027,6 @@ const styles = StyleSheet.create({
     padding: 20
   },
 
- 
-
   navigationItem: {
     flex: 1,
     height: 50,
@@ -651,7 +1069,7 @@ const styles = StyleSheet.create({
   },
   bigText: {
     color: "black",
-    margin: 24,
+    margin: 29,
     fontSize: 22,
     fontWeight: "bold"
   }

@@ -57,7 +57,7 @@ class EditTeamScreen extends Component {
       clearPath: null,
       players: [],
       errorMessage: "",
-      
+
       ogLt: null
     };
   }
@@ -174,22 +174,27 @@ class EditTeamScreen extends Component {
     });
   };
 
-  openMap = () =>{
+  openMap = () => {
     var { params } = this.props.navigation.state;
 
-    if(params.lt===null){
-      firebase.firestore().collection("Teams").doc(this.props.userData.uTI).get().then(doc=>{
-        this.setState({ogLt: doc.data().co.latitude})
-        this.props.navigation.navigate("MapScreen", {
-          markerSet: true,
-          lt: doc.data().co.latitude,
-          ln: doc.data().co.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-          from: "editTeam"
-        })
-      })
-    }else{
+    if (params.lt === null) {
+      firebase
+        .firestore()
+        .collection("Teams")
+        .doc(this.props.userData.uTI)
+        .get()
+        .then(doc => {
+          this.setState({ ogLt: doc.data().co.latitude });
+          this.props.navigation.navigate("MapScreen", {
+            markerSet: true,
+            lt: doc.data().co.latitude,
+            ln: doc.data().co.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+            from: "editTeam"
+          });
+        });
+    } else {
       this.props.navigation.navigate("MapScreen", {
         markerSet: true,
         lt: params.lt,
@@ -197,9 +202,9 @@ class EditTeamScreen extends Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
         from: "editTeam"
-      })
+      });
     }
-  }
+  };
 
   render() {
     var { params } = this.props.navigation.state;
@@ -238,85 +243,88 @@ class EditTeamScreen extends Component {
           });
         }
         if (this.state.teamUsername === this.props.userData.uTN) {
-          if(this.state.ogLt === null || this.state.ogLt === params.lt){
-          this.props.navigation.goBack();
-          }else{
+          if (this.state.ogLt === null || this.state.ogLt === params.lt) {
+            this.props.navigation.goBack();
+          } else {
             const co = new firebase.firestore.GeoPoint(
               Math.round(params.lt * 10000000) / 10000000,
-              Math.round(params.ln * 10000000) / 10000000)
+              Math.round(params.ln * 10000000) / 10000000
+            );
             firebase
-            .firestore()
-            .collection("Teams")
-            .doc(this.props.userData.uTI).update({
-              co
-            }).then(()=>{
-              this.props.navigation.goBack()
-            })          }
+              .firestore()
+              .collection("Teams")
+              .doc(this.props.userData.uTI)
+              .update({
+                co
+              })
+              .then(() => {
+                this.props.navigation.goBack();
+              });
+          }
           //Only saving the changed
         } else if (this.state.teamUsername !== this.props.userData.uTN) {
-          if(this.state.ogLt !== null && this.state.ogLt !== params.lt){
+          if (this.state.ogLt !== null && this.state.ogLt !== params.lt) {
             const co = new firebase.firestore.GeoPoint(
               Math.round(params.lt * 10000000) / 10000000,
-              Math.round(params.ln * 10000000) / 10000000)
+              Math.round(params.ln * 10000000) / 10000000
+            );
             firebase
-            .firestore()
-            .collection("Teams")
-            .doc(this.props.userData.uTI)
-            .update({
-              tUN: this.state.teamUsername.toLowerCase().trim(),
-              co
-            })
+              .firestore()
+              .collection("Teams")
+              .doc(this.props.userData.uTI)
+              .update({
+                tUN: this.state.teamUsername.toLowerCase().trim(),
+                co
+              })
 
-            .then(() => {
-              let playerList = this.state.players;
-              playerList.forEach(doc => {
-                firebase
-                  .firestore()
-                  .collection("Users")
-                  .doc(doc.id)
-                  .update({
-                    uTN: this.state.teamUsername.toLowerCase().trim()
-                  });
+              .then(() => {
+                let playerList = this.state.players;
+                playerList.forEach(doc => {
+                  firebase
+                    .firestore()
+                    .collection("Users")
+                    .doc(doc.id)
+                    .update({
+                      uTN: this.state.teamUsername.toLowerCase().trim()
+                    });
+                });
+              })
+              .then(() => {
+                this.props.getUserAndTeamData();
+              })
+
+              .then(() => {
+                this.props.navigation.navigate("TeamScreen");
               });
-            })
-            .then(() => {
-              this.props.getUserAndTeamData();
-            })
-
-            .then(() => {
-              this.props.navigation.navigate("TeamScreen");
-            });
-          }else {
+          } else {
             firebase
-            .firestore()
-            .collection("Teams")
-            .doc(this.props.userData.uTI)
-            .update({
-              tUN: this.state.teamUsername,
-              
-            })
+              .firestore()
+              .collection("Teams")
+              .doc(this.props.userData.uTI)
+              .update({
+                tUN: this.state.teamUsername.toLowerCase().trim()
+              })
 
-            .then(() => {
-              let playerList = this.state.players;
-              playerList.forEach(doc => {
-                firebase
-                  .firestore()
-                  .collection("Users")
-                  .doc(doc.id)
-                  .update({
-                    uTN: this.state.teamUsername.toLowerCase().trim()
-                  });
+              .then(() => {
+                let playerList = this.state.players;
+                playerList.forEach(doc => {
+                  firebase
+                    .firestore()
+                    .collection("Users")
+                    .doc(doc.id)
+                    .update({
+                      uTN: this.state.teamUsername.toLowerCase().trim()
+                    });
+                });
+              })
+              .then(() => {
+                this.props.getUserAndTeamData();
+              })
+
+              .then(() => {
+                this.props.navigation.navigate("TeamScreen");
               });
-            })
-            .then(() => {
-              this.props.getUserAndTeamData();
-            })
-
-            .then(() => {
-              this.props.navigation.navigate("TeamScreen");
-            });
           }
-         
         }
       } else {
         this.setState({ errorMessage: please_fill_all_fields });
@@ -359,11 +367,9 @@ class EditTeamScreen extends Component {
           onChangeText={this.usernameHandle}
         />
 
-            <TouchableOpacity
+        <TouchableOpacity
           style={styles.getLocationBox}
-          onPress={() =>
-            this.openMap()
-          }
+          onPress={() => this.openMap()}
         >
           <Text style={styles.getLocationText}>{change_team_location}</Text>
         </TouchableOpacity>

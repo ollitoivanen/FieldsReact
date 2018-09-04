@@ -56,7 +56,7 @@ class ProfileScreen extends Component {
     this.state = {
       trainingTime: "",
       fC: "",
-      profileImage: "profile_image_default"
+      profileImage:require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
     };
   }
 
@@ -77,9 +77,10 @@ class ProfileScreen extends Component {
       )
       .getDownloadURL()
       .then(downloadedFile => {
-        this.setState({ profileImage: downloadedFile.toString() });
+        this.setState({ profileImage: {uri: downloadedFile.toString() }});
       })
-      .catch(err => {});
+      .catch(err => {
+      });
   };
 
   loadFriendList() {
@@ -311,10 +312,9 @@ class ProfileScreen extends Component {
       var profileImage = (
         <FastImage
           style={styles.profileImage}
-          source={{
-            uri: this.state.profileImage,
-            priority: FastImage.priority.high
-          }}
+          source={
+            this.state.profileImage
+          }
           resizeMode="cover"
         />
       );
@@ -382,6 +382,8 @@ class ProfileScreen extends Component {
             style={styles.navigationItemGreen}
             onPress={() =>
               this.props.navigation.navigate("FieldSearchScreen", {
+                selectedIndex: 0,
+
                 fromEvent: false
               })
             }

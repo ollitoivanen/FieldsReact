@@ -108,6 +108,7 @@ export const field_not_set = "Field not set";
 export const delete_event = "Delete event";
 export const users = "Users";
 export const teams = "Teams";
+export const fields = "Fields";
 export const search_teams = "Search teams";
 export const search_users = "Search users";
 export const request_pending = "Request pending";
@@ -136,24 +137,34 @@ export const full_name = "Full name";
 export const add_friend = "Add friend";
 export const remove_friend = "Remove friend";
 export const show_players = "Show players";
-export const add_friends_from_search = "Add friends from search!"
-export const get_field_location = "Get field location"
-export const field_location_set = "Field location set"
-export const start_training = "Start training"
-export const change_field_location = "Change field location"
-export const enable_location_to_find_nearest_fields = "Enable location by pressing here and find the closest fields!"
-export const load_other = "Load other"
-export const no_fields_found_nearby = "No fields found nearby. Time to get it started and create a new field! Pull to refresh"
-export const welcome_to_fields = "Welcome to Fields!"
-export const lets_see = "Let's see what makes Fields special"
-export const football_fields = "Football Fields"
-export const see_where = "See where your friends and other people are training so you can find the best space and time to play!"
-export const manage_your_team = "Manage your team"
-export const set_team_events = "Set team events and see who's coming"
-export const earn_reputation = "Earn Reputation"
-export const earn_reputation_by_training = "Earn reputation by training and compete with your friends!"
-export const sounds_awesome_right = "Sounds awesome, right?"
-export const lets_go = "Let's Go"
-export const get_team_location = "Get team location"
-export const team_location_set = "Team location set"
-export const change_team_location  = "Change team location"
+export const add_friends_from_search = "Add friends from search!";
+export const get_field_location = "Get field location";
+export const field_location_set = "Field location set";
+
+export const change_field_location = "Change field location";
+export const enable_location_to_find_nearest_fields =
+  "Enable location by pressing here and find the closest fields!";
+export const load_other = "Load other";
+export const no_fields_found_nearby =
+  "No fields found nearby. Time to get it started and create a new field! Pull to refresh";
+export const no_teams_found_nearby = "No tems found nearby. Pull to refresh";
+
+export const welcome_to_fields = "Welcome to Fields!";
+export const lets_see = "Let's see what makes Fields special";
+export const football_fields = "Football Fields";
+export const see_where =
+  "See where your friends and other people are training so you can find the best space and time to play!";
+export const manage_your_team = "Manage your team";
+export const set_team_events = "Set team events and see who's coming";
+export const earn_reputation = "Earn Reputation";
+export const earn_reputation_by_training =
+  "Earn reputation by training and compete with your friends!";
+export const sounds_awesome_right = "Sounds awesome, right?";
+export const lets_go = "Let's Go";
+export const get_team_location = "Get team location";
+export const team_location_set = "Team location set";
+export const change_team_location = "Change team location";
+export const start_training = "Start training";
+export const searchHeaders = [start_training, search_teams, search_users];
+export const no_upcoming_events = "No upcoming events";
+export const location_access_blocked = "Location access blocked. Turn it back on from settings to find nearest fields!"

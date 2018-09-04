@@ -307,20 +307,7 @@ class FeedScreen extends React.Component {
         <View style={styles.rowCont}>
           {teamCard}
 
-          <TouchableOpacity
-            style={styles.infoContainer}
-            underlayColor="#bcbcbc"
-            onPress={() =>
-              this.props.navigation.navigate("SearchScreen", {
-                selectedIndex: 0
-              })
-            }
-          >
-            <Image
-              style={styles.infoIcon}
-              source={require("FieldsReact/app/images/Search/search.png")}
-            />
-          </TouchableOpacity>
+         
         </View>
 
         <Text style={styles.friendsText}>{friends}</Text>
@@ -340,6 +327,7 @@ class FeedScreen extends React.Component {
             style={styles.navigationItemGreen}
             onPress={() =>
               this.props.navigation.navigate("FieldSearchScreen", {
+                selectedIndex: 0,
                 fromEvent: false
               })
             }

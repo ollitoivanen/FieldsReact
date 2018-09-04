@@ -438,6 +438,8 @@ class DetailProfileScreen extends Component {
           style={styles.navigationItemGreen}
           onPress={() =>
             this.props.navigation.navigate("FieldSearchScreen", {
+              selectedIndex: 0,
+
               fromEvent: false
             })
           }

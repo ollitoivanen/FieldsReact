@@ -536,7 +536,11 @@ const styles = StyleSheet.create({
   greenBackground: {
     backgroundColor: "#3bd774",
     paddingVertical: 20,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    elevation: 3
   },
 
   fieldImage: {
@@ -688,10 +692,7 @@ const styles = StyleSheet.create({
   greenRowContainer: {
     flexDirection: "row",
     alignItems: "center",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 3
+    
   },
 
   backButton: {

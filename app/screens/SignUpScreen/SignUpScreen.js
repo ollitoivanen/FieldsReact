@@ -54,6 +54,7 @@ export default class SignUpScreen extends React.Component {
   constructor(props) {
     super(props);
     this.ref = firebase.firestore().collection("Users");
+    this.getLaunch()
     this.state = {
       email1: "",
       password1: "",
@@ -193,7 +194,7 @@ export default class SignUpScreen extends React.Component {
           </Text>
         </View>
 
-        <Modal visible={this.state.firstLaunch} onRequestClose={()=>{}}>
+        <Modal visible={this.state.firstLaunch} onRequestClose={() => {}}>
           <Swiper
             style={styles.wrapper}
             showsButtons={false}
@@ -212,7 +213,7 @@ export default class SignUpScreen extends React.Component {
               <Text style={styles.headerTextGray}>{lets_see}</Text>
             </View>
             <View style={styles.slide2}>
-            <Text style={styles.headerTextBig}>{football_fields}</Text>
+              <Text style={styles.headerTextBig}>{football_fields}</Text>
 
               <Image
                 style={styles.logo}
@@ -223,7 +224,7 @@ export default class SignUpScreen extends React.Component {
               <Text style={styles.headerText}>{see_where}</Text>
             </View>
             <View style={styles.slide3}>
-            <Text style={styles.headerTextBig}>{manage_your_team}</Text>
+              <Text style={styles.headerTextBig}>{manage_your_team}</Text>
 
               <Image
                 style={styles.logo}
@@ -233,24 +234,31 @@ export default class SignUpScreen extends React.Component {
               <Text style={styles.headerText}>{set_team_events}</Text>
             </View>
             <View style={styles.slide2}>
-            <Text style={styles.headerTextBig}>{earn_reputation}</Text>
+              <Text style={styles.headerTextBig}>{earn_reputation}</Text>
 
               <Image
                 style={styles.logo}
                 source={require("../../images/FieldsUpArt/FieldsUpArt.png")}
                 resizeMode={"contain"}
               />
-              <Text style={styles.headerText}>{earn_reputation_by_training}</Text>
+              <Text style={styles.headerText}>
+                {earn_reputation_by_training}
+              </Text>
             </View>
             <View style={styles.slide1}>
-            <Text style={styles.headerTextBigGray}>{sounds_awesome_right}</Text>
+              <Text style={styles.headerTextBigGray}>
+                {sounds_awesome_right}
+              </Text>
 
               <Image
                 style={styles.logo}
                 source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
               />
-              <TouchableOpacity style={styles.letsgo} onPress={()=>this.setState({firstLaunch: false})}>
-              <Text style={styles.headerText}>{lets_go}</Text>
+              <TouchableOpacity
+                style={styles.letsgo}
+                onPress={() => this.setState({ firstLaunch: false })}
+              >
+                <Text style={styles.headerText}>{lets_go}</Text>
               </TouchableOpacity>
             </View>
           </Swiper>
@@ -275,19 +283,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20
   },
-  letsgo:{
+  letsgo: {
     ...Platform.select({
-      ios:{
-      backgroundColor: "#3bd774",
-      padding: 2,
-      marginTop: 20,
-      borderRadius: 100,
-      shadowColor: colors.richBlackDefault, 
-      shadowOffset: {width: 0, height: 10},
-      shadowOpacity: 0.2,
-      shadowRadius: 10
+      ios: {
+        backgroundColor: "#3bd774",
+        padding: 2,
+        marginTop: 20,
+        borderRadius: 100,
+        shadowColor: colors.richBlackDefault,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10
       },
-      android:{
+      android: {
         backgroundColor: "#3bd774",
         padding: 2,
         marginTop: 20,
@@ -295,14 +303,12 @@ const styles = StyleSheet.create({
         elevation: 2
       }
     })
-   
   },
   buttonContainer: {
     backgroundColor: "#3bd774",
     padding: 15,
     marginTop: 12,
-    borderRadius: 10,
-   
+    borderRadius: 10
   },
 
   buttonText: {
