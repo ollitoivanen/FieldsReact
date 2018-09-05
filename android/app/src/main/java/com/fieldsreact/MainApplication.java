@@ -8,7 +8,6 @@ import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnabler
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -42,7 +41,6 @@ public class MainApplication extends Application implements ReactApplication {
             new ImageResizerPackage(),
             new ImagePickerPackage(),
             new FastImageViewPackage(),
-            new VectorIconsPackage(),
               new MapsPackage(),
 
             new RNFirebasePackage(),

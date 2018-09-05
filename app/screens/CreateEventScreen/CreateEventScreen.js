@@ -212,12 +212,18 @@ class CreateEventScreen extends Component {
     try {
       const value = await AsyncStorage.getItem("teamPlayers");
       if (value !== null) {
-        //If player count changes, this falls out, propably should call getuserdata here
-        if (JSON.parse(value).length === this.props.usersTeamData.pC) {
-          this.setState({ players: JSON.parse(value) });
-        } else {
-          this.loadPlayersList();
-        }
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.userData.uTI)
+          .get()
+          .then(doc => {
+            if (JSON.parse(value).length === doc.data().pC) {
+              this.setState({ players: JSON.parse(value) });
+            } else {
+              this.loadPlayersList();
+            }
+          });
       } else {
         this.loadPlayersList();
       }
@@ -283,7 +289,7 @@ class CreateEventScreen extends Component {
               eTY: this.state.chosenEventType,
               eT: this.state.endTime,
               tI: this.props.userData.uTI,
-              tUN: this.props.usersTeamData.tUN
+              tUN: this.props.userData.uTN
             })
             .then(() => {
               this.retrieveData();

@@ -10,7 +10,10 @@ import {
   AsyncStorage
 } from "react-native";
 import { connect } from "react-redux";
-import { getUserData, getUserAndTeamData } from "FieldsReact/app/redux/app-redux.js";
+import {
+  getUserData,
+  getUserAndTeamData
+} from "FieldsReact/app/redux/app-redux.js";
 
 import { info, players, edit_team } from "../../strings/strings";
 import firebase from "react-native-firebase";
@@ -26,7 +29,6 @@ const mapDispatchToProps = dispatch => {
   return {
     getUserData: () => dispatch(getUserData()),
     getUserAndTeamData: () => dispatch(getUserAndTeamData())
-
   };
 };
 
@@ -100,12 +102,16 @@ class TeamPlayersScreen extends Component {
     try {
       const value = await AsyncStorage.getItem("teamPlayers");
       if (value !== null) {
-        //If player count changes, this falls out, propably should call getuserdata here
-        if (JSON.parse(value).length === this.props.usersTeamData.pC) {
-          this.setState({ players: JSON.parse(value) });
-        } else {
-          this.loadPlayersList();
-        }
+//Usre team data redux is pretty uselsess
+        firebase.firestore().collection("Teams").doc(this.props.userData.uTI).get().then(doc=>{
+          if (JSON.parse(value).length === doc.data().pC) {
+            console.warn("toimii")
+            this.setState({ players: JSON.parse(value) });
+          } else {
+            this.loadPlayersList();
+          }
+        })
+        
       } else {
         this.loadPlayersList();
       }

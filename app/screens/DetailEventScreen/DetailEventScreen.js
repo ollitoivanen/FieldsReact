@@ -23,7 +23,6 @@ import firebase, { Firebase } from "react-native-firebase";
 
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
-import { ButtonGroup } from "react-native-elements";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
 
 const mapStateToProps = state => {
@@ -168,40 +167,64 @@ class DetailEventScreen extends Component {
     const { selectedIndex } = this.state;
 
     if (this.state.selectedIndex === 0) {
-      var buttonGroup = (
-        <ButtonGroup
-          onPress={this.updateIndex}
-          selectedIndex={selectedIndex}
-          buttons={buttons}
-          buttonStyle={{ height: 40 }}
-          selectedTextStyle={{ color: "#3bd774", fontWeight: "bold" }}
-          textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
-          innerBorderStyle={{ width: 0 }}
-        />
+      var filterBox = (
+        <View style={styles.filterBox}>
+          <TouchableOpacity style={styles.filterItem}>
+            <Text style={styles.filterTextGreen}>{event_in}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.filterItem}
+            onPress={() => this.updateIndex(1)}
+          >
+            <Text style={styles.filterText}>{event_open}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.filterItem}
+            onPress={() => this.updateIndex(2)}
+          >
+            <Text style={styles.filterText}>{event_out}</Text>
+          </TouchableOpacity>
+        </View>
       );
     } else if (this.state.selectedIndex === 1) {
-      var buttonGroup = (
-        <ButtonGroup
-          onPress={this.updateIndex}
-          selectedIndex={selectedIndex}
-          buttons={buttons}
-          buttonStyle={{ height: 40 }}
-          selectedTextStyle={{ color: "grey", fontWeight: "bold" }}
-          textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
-          innerBorderStyle={{ width: 0 }}
-        />
+      var filterBox = (
+        <View style={styles.filterBox}>
+          <TouchableOpacity
+            style={styles.filterItem}
+            onPress={() => this.updateIndex(0)}
+          >
+            <Text style={styles.filterText}>{event_in}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterItem}>
+            <Text style={styles.filterTextGray}>{event_open}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.filterItem}
+            onPress={() => this.updateIndex(2)}
+          >
+            <Text style={styles.filterText}>{event_out}</Text>
+          </TouchableOpacity>
+        </View>
       );
     } else if (this.state.selectedIndex === 2) {
-      var buttonGroup = (
-        <ButtonGroup
-          onPress={this.updateIndex}
-          selectedIndex={selectedIndex}
-          buttons={buttons}
-          buttonStyle={{ height: 40 }}
-          selectedTextStyle={{ color: "red", fontWeight: "bold" }}
-          textStyle={{ color: "#c4c4c4", fontWeight: "bold" }}
-          innerBorderStyle={{ width: 0 }}
-        />
+      var filterBox = (
+        <View style={styles.filterBox}>
+          <TouchableOpacity
+            style={styles.filterItem}
+            onPress={() => this.updateIndex(0)}
+          >
+            <Text style={styles.filterText}>{event_in}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.filterItem}
+            onPress={() => this.updateIndex(1)}
+          >
+            <Text style={styles.filterText}>{event_open}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterItem}>
+            <Text style={styles.filterTextRed}>{event_out}</Text>
+          </TouchableOpacity>
+        </View>
       );
     }
 
@@ -227,7 +250,7 @@ class DetailEventScreen extends Component {
     }
 
     if (this.state.loading === false) {
-      var tab = <View style={{ marginTop: 12 }}>{buttonGroup}</View>;
+      var tab = <View style={{ marginTop: 12 }}>{filterBox}</View>;
     } else {
       var tab = null;
     }
@@ -361,6 +384,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white"
+  },
+
+  filterBox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    borderColor: "#e0e0e0"
+  },
+
+  filterItem: {
+    flexGrow: 1,
+    alignItems: "center",
+    textAlign: "center",
+    flex: 1,
+    padding: 10
+  },
+
+  filterText: {
+    fontWeight: "bold",
+    color: "#e0e0e0"
+  },
+
+  filterTextGreen: {
+    fontWeight: "bold",
+    color: "#3bd774"
+  },
+  filterTextRed: {
+    fontWeight: "bold",
+    color: "red"
+  },
+  filterTextGray: {
+    fontWeight: "bold",
+    color: "gray"
   },
 
   buttonGroup: {

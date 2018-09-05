@@ -86,12 +86,12 @@ apply from: "../../node_modules/react-native/react.gradle"
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-def enableSeparateBuildPerCPUArchitecture = false
+def enableSeparateBuildPerCPUArchitecture = true
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion 27
@@ -105,9 +105,7 @@ android {
         versionName "1.0"
         multiDexEnabled true
 
-        ndk {
-            abiFilters "armeabi-v7a", "x86"
-        }
+
     }
     splits {
         abi {
@@ -143,7 +141,6 @@ dependencies {
     compile project(':react-native-image-resizer')
     compile project(':react-native-image-picker')
     compile project(':react-native-fast-image')
-    compile project(':react-native-vector-icons')
     implementation project(':react-native-maps')
 
 
@@ -156,10 +153,10 @@ dependencies {
     implementation "com.android.support:appcompat-v7:27.1.1"
     implementation "com.facebook.react:react-native:+"// From node_modules
     implementation "com.google.android.gms:play-services-base:15.0.1"
-    implementation "com.google.firebase:firebase-core:16.0.1"
-    implementation 'com.google.firebase:firebase-auth:16.0.2'
-    implementation "com.google.firebase:firebase-firestore:17.0.4"
-    implementation "com.google.firebase:firebase-storage:15.0.2"
+    implementation "com.google.firebase:firebase-core:16.0.3"
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
+    implementation "com.google.firebase:firebase-firestore:17.1.0"
+    implementation "com.google.firebase:firebase-storage:16.0.1"
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
 
 

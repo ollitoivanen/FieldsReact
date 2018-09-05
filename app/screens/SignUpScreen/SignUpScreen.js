@@ -45,7 +45,6 @@ import validator from "validator";
 import { username } from "../../strings/strings";
 import Loader from "FieldsReact/app/components/Loader/Loader.js";
 import Swiper from "react-native-swiper";
-import { colors } from "react-native-elements";
 
 export default class SignUpScreen extends React.Component {
   static navigationOptions = {
@@ -290,7 +289,6 @@ const styles = StyleSheet.create({
         padding: 2,
         marginTop: 20,
         borderRadius: 100,
-        shadowColor: colors.richBlackDefault,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.2,
         shadowRadius: 10
