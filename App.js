@@ -41,6 +41,8 @@ import UserFriendListScreen from "./app/screens/UserFriendListScreen/UserFriendL
 import MapScreen from "./app/screens/MapScreen/MapScreen";
 import EditFieldScreen from "./app/screens/EditFieldScreen/EditFieldScreen";
 import EditTeamScreen from "./app/screens/EditTeamScreen/EditTeamScreen";
+import AllTrainingsScreen from "./app/screens/AllTrainingsScreen/AllTrainingsScreen";
+
 
 
 
@@ -161,6 +163,9 @@ export const StackNavigatorApp = createStackNavigator(
 
     EditTeamScreen:{
       screen: EditTeamScreen
+    },
+    AllTrainingsScreen:{
+      screen: AllTrainingsScreen
     }
   },
 

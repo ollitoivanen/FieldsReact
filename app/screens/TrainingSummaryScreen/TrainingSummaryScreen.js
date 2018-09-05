@@ -24,20 +24,19 @@ export default class TrainingSummaryScreen extends Component {
           </Text>
         </View>
 
-        <TouchableOpacity style={styles.roundBackgroundEnd}>
+        <TouchableOpacity style={styles.roundBackgroundEnd}            onPress={() => this.props.navigation.goBack()}
+>
           <Text
             style={styles.endText}
-            onPress={() => this.props.navigation.goBack()}
           >
             {done}
           </Text>
         </TouchableOpacity>
       </View>
     );
- 
   }
 }
-  
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#3bd774",
@@ -65,7 +64,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flexShrink: 1,
     marginTop: 20,
-    marginStart: 8
+    marginStart: 8,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2
   },
 
   roundBackgroundEnd: {
@@ -81,7 +84,11 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     marginStart: 8,
     position: "absolute",
-    bottom: 16
+    bottom: 16,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2
   },
 
   endText: {
@@ -90,5 +97,4 @@ const styles = StyleSheet.create({
     color: "black",
     textAlign: "center"
   }
-  
 });

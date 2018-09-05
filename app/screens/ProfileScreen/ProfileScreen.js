@@ -56,7 +56,7 @@ class ProfileScreen extends Component {
     this.state = {
       trainingTime: "",
       fC: "",
-      profileImage:require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+      profileImage: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
     };
   }
 
@@ -77,10 +77,9 @@ class ProfileScreen extends Component {
       )
       .getDownloadURL()
       .then(downloadedFile => {
-        this.setState({ profileImage: {uri: downloadedFile.toString() }});
+        this.setState({ profileImage: { uri: downloadedFile.toString() } });
       })
-      .catch(err => {
-      });
+      .catch(err => {});
   };
 
   loadFriendList() {
@@ -312,9 +311,7 @@ class ProfileScreen extends Component {
       var profileImage = (
         <FastImage
           style={styles.profileImage}
-          source={
-            this.state.profileImage
-          }
+          source={this.state.profileImage}
           resizeMode="cover"
         />
       );
@@ -351,7 +348,7 @@ class ProfileScreen extends Component {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.textContainer}>
+              <TouchableOpacity style={styles.textContainer} onPress={()=>this.props.navigation.navigate("AllTrainingsScreen")}>
                 <Text style={styles.boxText}>
                   {this.props.userData.tC} {trainings}
                 </Text>

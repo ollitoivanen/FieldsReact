@@ -14,10 +14,12 @@ import {
   getUserData,
   getUserAndTeamData
 } from "FieldsReact/app/redux/app-redux.js";
+var moment = require("moment");
 
-import { info, players, edit_team } from "../../strings/strings";
+
+import { info, trainings, edit_team, min, h } from "../../strings/strings";
 import firebase from "react-native-firebase";
-import TeamPlayerListItem from "FieldsReact/app/components/TeamPlayerListItem/TeamPlayerListItem"; // we'll create this next
+import TrainingListItem from "FieldsReact/app/components/TrainingListItem/TrainingListItem"; // we'll create this next
 
 const mapStateToProps = state => {
   return {
@@ -32,30 +34,57 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-class TeamPlayersScreen extends Component {
-  loadPlayersList() {
-    const ref = firebase.firestore().collection("Teams");
+class AllTrainingsScreen extends Component {
+  loadTrainingList() {
+    const ref = firebase.firestore().collection("Users");
     var serializedData;
 
-    const players = [];
+    const trainings = [];
 
-    const query = ref.doc(this.props.userData.uTI).collection("TU");
+    const query = ref.doc(firebase.auth().currentUser.uid).collection("TR");
     query
       .get()
       .then(
         function(doc) {
           doc.forEach(doc => {
-            const { unM } = doc.data();
-            players.push({
+            const { eT, re, fN } = doc.data();
+            const startDate = doc.id
+            var date = moment(parseInt(startDate)).format("ddd D MMM");
+            var startTime = moment(parseInt(startDate)).format("HH:mm");
+            var endTime = moment(parseInt(eT)).format("HH:mm")
+            
+
+            var trainingTimeRaw = parseInt(eT) - parseInt(startDate);
+            console.warn(trainingTimeRaw)
+            var seconds = trainingTimeRaw / 1000;
+            var minutes = Math.trunc(seconds / 60);
+            var hours = Math.trunc(minutes / 60);
+            console.warn(seconds + "ffff")
+        
+              if (hours < 1) {
+              var trainingTime = minutes + {min} 
+            } else {
+              var minSub = minutes - hours * 60;
+              var trainingTime = hours + [h] + " " + minSub + [min]
+            }
+        
+
+            trainings.push({
               key: doc.id,
-              unM
+              date,
+              startTime,
+              endTime,
+              trainingTime,
+              re,
+              fN
+              
             });
           });
         }.bind(this)
       )
       .then(() => {
         const alreadyVisited = [];
-        serializedData = JSON.stringify(players, function(key, value) {
+        serializedData = JSON.stringify(trainings, function(key, value) {
           if (typeof value == "object") {
             if (alreadyVisited.indexOf(value.key) >= 0) {
               // do something other that putting the reference, like
@@ -68,21 +97,8 @@ class TeamPlayersScreen extends Component {
           return value;
         });
       })
-      .then(() => {
-        this.props.getUserAndTeamData();
-      })
-      .then(() => {
-        if (players.length !== this.props.usersTeamData.pC) {
-          //If player count differs from list length, update
-          firebase
-            .firestore()
-            .collection("Teams")
-            .doc(this.props.userData.uTI)
-            .update({
-              pC: players.length
-            });
-        }
-      })
+     
+      
       .then(() => {
         this.storeData(serializedData);
       });
@@ -90,8 +106,7 @@ class TeamPlayersScreen extends Component {
 
   storeData = async data => {
     try {
-      await AsyncStorage.setItem("teamPlayers", data)
-        .then(() => {})
+      await AsyncStorage.setItem("trainings", data)
         .then(this.retrieveData());
     } catch (error) {
       // Error saving data
@@ -100,24 +115,19 @@ class TeamPlayersScreen extends Component {
 
   retrieveData = async () => {
     try {
-      const value = await AsyncStorage.getItem("teamPlayers");
+      const value = await AsyncStorage.getItem("trainings");
       if (value !== null) {
+        console.warn(value)
         //Usre team data redux is pretty uselsess
-        firebase
-          .firestore()
-          .collection("Teams")
-          .doc(this.props.userData.uTI)
-          .get()
-          .then(doc => {
-            if (JSON.parse(value).length === doc.data().pC) {
-              console.warn("toimii");
-              this.setState({ players: JSON.parse(value) });
+            if (JSON.parse(value).length === this.props.userData.tC) {
+
+              this.setState({ trainings: JSON.parse(value) });
             } else {
-              this.loadPlayersList();
+              this.loadTrainingList();
             }
-          });
+          
       } else {
-        this.loadPlayersList();
+        this.loadTrainingList();
       }
     } catch (error) {
       // Error retrieving data
@@ -135,15 +145,12 @@ class TeamPlayersScreen extends Component {
     this.retrieveData();
 
     this.state = {
-      players: [],
-      myKey: null,
-      gg: "mmm"
+      trainings: [],
     };
   }
 
   render() {
     var { params } = this.props.navigation.state;
-
     return (
       <View style={styles.container}>
         <View style={styles.backButtonContainer}>
@@ -158,15 +165,15 @@ class TeamPlayersScreen extends Component {
             />
           </TouchableOpacity>
           <Text style={styles.teamName}>
-            {this.state.players.length + " " + [players]}
+            {this.state.trainings.length + " " + [trainings]}
           </Text>
         </View>
 
         <FlatList
-          data={this.state.players}
+          data={this.state.trainings}
           renderItem={({ item }) => (
             <View style={styles.item}>
-              <TeamPlayerListItem {...item} />
+              <TrainingListItem {...item} />
             </View>
           )}
         />
@@ -177,7 +184,7 @@ class TeamPlayersScreen extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TeamPlayersScreen);
+)(AllTrainingsScreen);
 
 const styles = StyleSheet.create({
   container: {

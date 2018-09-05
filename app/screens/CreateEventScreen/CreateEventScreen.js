@@ -261,7 +261,7 @@ class CreateEventScreen extends Component {
     };
 
     const openFieldSearch = () => {
-      this.props.navigation.navigate("FieldSearchScreen", { fromEvent: true });
+      this.props.navigation.navigate("FieldSearchScreen", { fromEvent: true, selectedIndex: 0 });
     };
     if (params.fieldID === null) {
       var chosenField = (
@@ -324,7 +324,7 @@ class CreateEventScreen extends Component {
               eFI: params.fieldID,
               eFN: params.fieldName,
               tI: this.props.userData.uTI,
-              tUN: this.props.usersTeamData.tUN
+              tUN: this.props.userData.uTN
             })
             .then(() => {
               this.retrieveData();

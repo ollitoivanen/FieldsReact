@@ -1,17 +1,19 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
-import { event_type_array, at } from "../../strings/strings";
-export default class EventListItem extends React.PureComponent {
+import { event_type_array, at, min, h, reputation } from "../../strings/strings";
+var moment = require("moment");
+
+export default class TrainingListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
   render() {
 
-    if (this.props.eFI !== undefined) {
-      var eventField = " " + [at] + " " + this.props.eFN;
-    } else {
-      var eventField = null;
-    }
+var eventField = " " + [at] + " " + this.props.eventFieldName
+         
 
+
+       
+     
     return (
       <View style={styles.cont}>
         <View style={styles.item}>
@@ -19,13 +21,23 @@ export default class EventListItem extends React.PureComponent {
             {this.props.date}
           </Text>
 
+          
+
           <Text style={styles.timeText} numberOfLines={2}>
-            {this.props.startTime + "-" + this.props.eT}
+            {this.props.startTime + "-" + this.props.endTime}
           </Text>
         </View>
         <View style={styles.item}>
-          <Text style={styles.trainingText} numberOfLines={2}>
-            {event_type_array[this.props.eTY] + [eventField]}
+
+        <Text style={styles.trainingText} numberOfLines={2}>
+            {this.props.fN}
+          </Text>
+          </View>
+
+        <View style={styles.item}>
+          <Text style={styles.trainingTextBlue} numberOfLines={2}>
+            {this.props.trainingTime + ","
+             + " " + this.props.re + " " + [reputation]}
           </Text>
         </View>
       </View>
@@ -51,6 +63,15 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     flex: 1,
     fontSize: 18,
+    fontWeight: "bold",
+    marginStart: 16,
+    marginBottom: 16
+  },
+  trainingTextBlue: {
+    flexWrap: "wrap",
+    flex: 1,
+    fontSize: 18,
+    color: "#3facff",
     fontWeight: "bold",
     marginStart: 16,
     marginBottom: 16

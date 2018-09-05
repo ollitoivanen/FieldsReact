@@ -1,5 +1,3 @@
-
-
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import {
@@ -58,7 +56,6 @@ class TrainingScreen extends Component {
     const startTime = params.startTime;
     const currentTime = moment().format("x");
     const trainingTime = currentTime - startTime;
-    this.setState({ trainingTime: trainingTime });
     const seconds = trainingTime / 1000;
     const minutes = Math.trunc(seconds / 60);
     const hours = Math.trunc(minutes / 60);
@@ -79,6 +76,7 @@ class TrainingScreen extends Component {
     const currentTime = moment().format("x");
     const trainingTime = currentTime - startTime;
     if (trainingTime < 900000) {
+      
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -113,6 +111,8 @@ class TrainingScreen extends Component {
           })
         );
     } else if (trainingTime > 18000000) {
+
+
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -149,6 +149,17 @@ class TrainingScreen extends Component {
       var currentReputation = this.props.userData.re;
       var trainingReputation = Math.trunc(trainingTime / 60000);
       var newReputation = trainingReputation + currentReputation;
+    
+      
+      firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("TR").doc(moment(parseInt(startTime)).format("x")).set(
+        {
+          re: trainingReputation,
+          eT: moment(parseInt(currentTime)).format("x"),
+          fN: this.props.userData.cFN
+
+        }
+      )
+
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -280,7 +291,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flexShrink: 1,
     marginTop: 20,
-    marginStart: 8
+    marginStart: 8,elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2
   },
 
   fieldText: {
@@ -307,7 +321,11 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     marginStart: 8,
     position: "absolute",
-    bottom: 16
+    bottom: 16,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2
   },
 
   endText: {

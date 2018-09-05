@@ -341,9 +341,7 @@ class DetailFieldScreen extends Component {
 
     var fieldIm = (
       <TouchableOpacity
-        style={{
-        
-        }}
+        style={{}}
         onPress={() => this.setExpandedImageVisible()}
       >
         <FastImage
@@ -617,8 +615,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     flexShrink: 1,
-    marginStart: 18,
-   
+    marginStart: 18
   },
 
   boxTextBlack: {
@@ -643,8 +640,7 @@ const styles = StyleSheet.create({
 
   infoIcon: {
     height: 36,
-    width: 36,
-   
+    width: 36
   },
   infoBox: {},
 
@@ -691,8 +687,7 @@ const styles = StyleSheet.create({
 
   greenRowContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    
+    alignItems: "center"
   },
 
   backButton: {
