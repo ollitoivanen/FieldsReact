@@ -42,6 +42,8 @@ import MapScreen from "./app/screens/MapScreen/MapScreen";
 import EditFieldScreen from "./app/screens/EditFieldScreen/EditFieldScreen";
 import EditTeamScreen from "./app/screens/EditTeamScreen/EditTeamScreen";
 import AllTrainingsScreen from "./app/screens/AllTrainingsScreen/AllTrainingsScreen";
+import FavoriteFieldsScreen from "./app/screens/FavoriteFieldsScreen/FavoriteFieldsScreen";
+
 
 
 
@@ -166,6 +168,10 @@ export const StackNavigatorApp = createStackNavigator(
     },
     AllTrainingsScreen:{
       screen: AllTrainingsScreen
+    },
+
+    FavoriteFieldsScreen:{
+      screen: FavoriteFieldsScreen
     }
   },
 

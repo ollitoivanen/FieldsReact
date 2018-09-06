@@ -304,11 +304,7 @@ class FeedScreen extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <View style={styles.rowCont}>
-          {teamCard}
-
-         
-        </View>
+        <View style={styles.rowCont}>{teamCard}</View>
 
         <Text style={styles.friendsText}>{friends}</Text>
         {feedFriendList}

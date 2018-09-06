@@ -281,11 +281,15 @@ class FieldSearchScreen extends Component {
           }
         }
       } else {
-        if (name === "nearFields") {
-          this.loadNearFields();
-        } else if (name === "nearTeams") {
-          this.loadNearTeams();
+        if(this.state.locationIOS==="authorized"){
+          if(Platform.OS === "android"){
+          this.setState({locationIOS: "denied"})
+          }else{
+            this.setState({locationIOS: "undetermined"})
+
+          }
         }
+        
       }
     } catch (error) {
       // Error retrieving data
@@ -335,6 +339,7 @@ class FieldSearchScreen extends Component {
   getLocationPure = () => {
     navigator.geolocation.getCurrentPosition(
       position => {
+        if(position.coords.latitude!==0 && position.coords.longitude!==0){
         this.setState({
           userLatitude: position.coords.latitude,
           userLongitude: position.coords.longitude,
@@ -346,6 +351,10 @@ class FieldSearchScreen extends Component {
         } else if (this.state.selectedIndex === 1) {
           this.loadNearTeams();
         }
+      }else{
+
+      }
+       
       },
       error => {
         this.setState({ locationIOS: "disabled" });
@@ -363,17 +372,21 @@ class FieldSearchScreen extends Component {
         //
         navigator.geolocation.getCurrentPosition(
           position => {
-            this.setState({
-              userLatitude: position.coords.latitude,
-              userLongitude: position.coords.longitude,
-              locationIOS: "authorized",
-              error: null
-            });
-            if (this.state.selectedIndex === 0) {
-              this.loadNearFields();
-            } else if (this.state.selectedIndex === 1) {
-              this.loadNearTeams();
-            }
+             if(position.coords.latitude!==0 && position.coords.longitude!==0){
+        this.setState({
+          userLatitude: position.coords.latitude,
+          userLongitude: position.coords.longitude,
+          locationIOS: "authorized",
+          error: null
+        });
+        if (this.state.selectedIndex === 0) {
+          this.loadNearFields();
+        } else if (this.state.selectedIndex === 1) {
+          this.loadNearTeams();
+        }
+      }else{
+        
+      }
           },
           error => {
             this.setState({ locationIOS: "disabled" });
@@ -511,9 +524,14 @@ class FieldSearchScreen extends Component {
     if (this.state.selectedIndex === 0) {
       var filterBox = (
         <View>
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
           <Text style={styles.bigText}>
             {searchHeaders[this.state.selectedIndex]}
           </Text>
+          <TouchableOpacity style={styles.infoContainer} onPress={()=>this.props.navigation.navigate("FavoriteFieldsScreen")}>
+          <Image style={styles.infoIcon} source={{uri: 'favorite_bordered'}}/>
+          </TouchableOpacity>
+          </View>
           <View style={styles.filterBox}>
             <TouchableOpacity style={styles.filterItem}>
               <Text style={styles.filterTextSelected}>{fields}</Text>
@@ -717,7 +735,7 @@ class FieldSearchScreen extends Component {
       } else if (this.state.locationIOS === "undetermined") {
         var list = (
           <View style={styles.locationBox}>
-            <TouchableOpacity onPress={() => this.getLocation()}>
+            <TouchableOpacity onPress={() => this.getLocationPure()}>
               <Text style={styles.locationText}>
                 {enable_location_to_find_nearest_fields}
               </Text>
@@ -818,7 +836,7 @@ class FieldSearchScreen extends Component {
       } else if (this.state.locationIOS === "undetermined") {
         var list = (
           <View style={styles.locationBox}>
-            <TouchableOpacity onPress={() => this.getLocation()}>
+            <TouchableOpacity onPress={() => this.getLocationPure()}>
               <Text style={styles.locationText}>
                 {enable_location_to_find_nearest_fields}
               </Text>
@@ -1070,7 +1088,24 @@ const styles = StyleSheet.create({
   bigText: {
     color: "black",
     margin: 29,
+    marginEnd: 24,
     fontSize: 22,
     fontWeight: "bold"
-  }
+  },
+  infoContainer: {
+    height: 28,
+    width: 28,
+    marginEnd: 24,
+
+
+    
+    
+  },
+
+  infoIcon: {
+    height: 28,
+    width: 28
+  },
+
+  
 });

@@ -64,9 +64,7 @@ class LoadingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-      <ActivityIndicator>
-        
-      </ActivityIndicator>
+        <ActivityIndicator size="large" color="#3bd774"/>
       </View>
     );
   }
@@ -77,7 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: 'white'
+    backgroundColor: "white"
   },
   logo: {
     width: 200,

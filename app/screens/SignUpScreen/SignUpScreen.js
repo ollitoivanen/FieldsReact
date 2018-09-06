@@ -60,7 +60,7 @@ export default class SignUpScreen extends React.Component {
       username1: "",
       errorMessage: null,
       loading: false,
-      firstLaunch: false
+      firstLaunch: true
     };
   }
 

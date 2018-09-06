@@ -168,3 +168,5 @@ export const start_training = "Start training";
 export const searchHeaders = [start_training, search_teams, search_users];
 export const no_upcoming_events = "No upcoming events";
 export const location_access_blocked = "Location access blocked. Turn it back on from settings to find nearest fields!"
+export const favorite_fields = "Favorite fields"
+export const no_favorite_fields = "No favorite fields. Add your favorites from field screen for quick and leannn access! ;) ⚽️❤️"

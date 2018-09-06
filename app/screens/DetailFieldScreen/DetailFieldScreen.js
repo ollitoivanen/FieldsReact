@@ -11,7 +11,8 @@ import {
   Alert,
   ScrollView,
   Geolocation,
-  Platform
+  Platform,
+  AsyncStorage
 } from "react-native";
 import {
   goals,
@@ -227,11 +228,178 @@ class DetailFieldScreen extends Component {
     //console.warn(d)
   };
 
+  toggleFavorite = boolean => {
+    var { params } = this.props.navigation.state;
+
+    if (boolean === true) {
+      if (this.props.userData.fP === true) {
+        firebase
+          .firestore()
+          .collection("Users")
+          .doc(firebase.auth().currentUser.uid)
+          .collection("FF")
+          .doc(this.state.fieldID)
+          .set({
+            3: 0
+          });
+        var favoriteFields = this.state.favoriteFields;
+        favoriteFields.push({
+          key: this.state.fieldID,
+          id: this.state.fieldID,
+          fN: this.state.fieldName,
+          //d: params.d,
+          // fI: ,
+
+          fIm: params.fIm
+        });
+        favoriteFields.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
+
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(favoriteFields, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+        this.storeData(serializedData);
+      }
+    } else {
+      firebase
+        .firestore()
+        .collection("Users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("FF")
+        .doc(this.state.fieldID)
+        .delete();
+
+      let favoriteArray = this.state.favoriteFields;
+
+      let foundFavorite = favoriteArray.find(
+        favoriteArray => favoriteArray.id === this.state.fieldID
+      );
+
+      favoriteArray.pop(foundFavorite);
+      const alreadyVisited = [];
+      serializedData = JSON.stringify(favoriteArray, function(key, value) {
+        if (typeof value == "object") {
+          if (alreadyVisited.indexOf(value.key) >= 0) {
+            // do something other that putting the reference, like
+            // putting some name that you can use to build the
+            // reference again later, for eg.
+            return value.key;
+          }
+          alreadyVisited.push(value.name);
+        }
+        return value;
+      });
+      this.storeData(serializedData);
+    }
+  };
+
+  loadFavoriteFields() {
+    const ref = firebase.firestore().collection("Users");
+    var { params } = this.props.navigation.state;
+    const favoriteFields = [];
+
+    var serializedData;
+
+    const query = ref.doc(firebase.auth().currentUser.uid).collection("FF");
+
+    query
+      .get()
+      .then(
+        function(doc) {
+          doc.forEach(doc => {
+            const id = doc.id;
+            const { fN, fI, fT, gC, fAT, pH, fIm, co } = doc.data();
+
+            if (fIm === true) {
+              favoriteFields.push({
+                key: doc.id,
+
+                id,
+                fN,
+
+                fIm
+              });
+            } else {
+              favoriteFields.push({
+                key: doc.id,
+
+                id,
+                fN,
+
+                fIm
+              });
+            }
+
+            //Sorting the results! cool 2018
+            favoriteFields.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
+          });
+        }.bind(this)
+      )
+      .then(() => {
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(favoriteFields, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+      })
+
+      .then(() => {
+        this.storeData(serializedData);
+      });
+  }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem("favoriteFields", data).then(
+        this.retrieveData()
+      );
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  retrieveData = async () => {
+    const value = await AsyncStorage.getItem("favoriteFields");
+    if (value !== null) {
+      this.setState({ favoriteFields: JSON.parse(value) });
+      let favoriteArray = JSON.parse(value);
+
+      let foundFavorite = favoriteArray.find(
+        favoriteArray => favoriteArray.id === this.state.fieldID
+      );
+      if (foundFavorite === undefined) {
+        this.setState({ favorite: false });
+      } else {
+        this.setState({ favorite: true });
+      }
+    } else {
+      this.loadFavoriteFields();
+    }
+  };
+
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
 
     this.loadEvents();
+    this.retrieveData();
 
     const userRef = firebase
       .firestore()
@@ -239,23 +407,49 @@ class DetailFieldScreen extends Component {
       .doc(firebase.auth().currentUser.uid);
     var { params } = this.props.navigation.state;
 
-    this.state = {
-      events: [],
-      fieldName: params.fieldName,
-      fieldID: params.fieldID,
+    
 
-      fieldType: params.fieldType,
-      accessType: params.accessType,
-      goalCount: params.goalCount,
-      peopleHere: params.peopleHere,
-      infoVisible: false,
-
-      expandeImageVisible: false,
-      fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
-      avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
-    };
+   
     if (params.fIm === true) {
       this.getFieldImage();
+    }
+    if(params.d === undefined){
+      this.state = {
+        events: [],
+        fieldName: params.fieldName,
+        fieldID: params.fieldID,
+        favorite: false,
+  
+        fieldType: params.fieldType,
+        accessType: params.accessType,
+        goalCount: params.goalCount,
+        peopleHere: params.peopleHere,
+        infoVisible: false,
+        d:"",
+  
+        expandeImageVisible: false,
+        fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
+        avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
+      };
+      
+    }else{
+      this.state = {
+        events: [],
+        fieldName: params.fieldName,
+        fieldID: params.fieldID,
+        favorite: false,
+  
+        fieldType: params.fieldType,
+        accessType: params.accessType,
+        goalCount: params.goalCount,
+        peopleHere: params.peopleHere,
+        infoVisible: false,
+        d:params.d,
+  
+        expandeImageVisible: false,
+        fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
+        avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
+      };
     }
   }
   setModalVisible(visible) {
@@ -305,6 +499,28 @@ class DetailFieldScreen extends Component {
     };
     //Small problem: if data is changed back to the param values, it wont be updated 31.7.2018
 
+    if (this.state.favorite === true) {
+      var favoriteIcon = (
+        <TouchableOpacity
+          style={styles.favoriteContainer}
+          onPress={() => this.toggleFavorite(false)}
+        >
+          <Image style={styles.favoriteIcon} source={{ uri: "favorite" }} />
+        </TouchableOpacity>
+      );
+    } else {
+      var favoriteIcon = (
+        <TouchableOpacity
+          style={styles.favoriteContainer}
+          onPress={() => this.toggleFavorite(true)}
+        >
+          <Image
+            style={styles.favoriteIcon}
+            source={{ uri: "favorite_bordered" }}
+          />
+        </TouchableOpacity>
+      );
+    }
     const trainingButtonTraining = (
       <TouchableOpacity
         style={styles.startTrainingButton}
@@ -454,9 +670,19 @@ class DetailFieldScreen extends Component {
                 source={require("FieldsReact/app/images/BackButton/back_button.png")}
               />
             </TouchableOpacity>
-            <Text style={styles.fieldName}>
-              {params.fieldName + " " + params.d}
-            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexGrow: 1
+              }}
+            >
+              <Text style={styles.fieldName}>
+                {params.fieldName + " " + this.state.d}
+              </Text>
+              {favoriteIcon}
+            </View>
           </View>
           <View style={styles.greenRowContainer}>
             {fieldIm}
@@ -647,6 +873,17 @@ const styles = StyleSheet.create({
   infoText: {
     fontWeight: "bold",
     margin: 4
+  },
+
+  favoriteContainer: {
+    height: 28,
+    width: 28,
+    marginEnd: 8
+  },
+
+  favoriteIcon: {
+    height: 28,
+    width: 28
   },
 
   editFieldButton: {

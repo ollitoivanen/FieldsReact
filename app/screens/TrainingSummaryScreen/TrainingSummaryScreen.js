@@ -24,13 +24,11 @@ export default class TrainingSummaryScreen extends Component {
           </Text>
         </View>
 
-        <TouchableOpacity style={styles.roundBackgroundEnd}            onPress={() => this.props.navigation.goBack()}
->
-          <Text
-            style={styles.endText}
-          >
-            {done}
-          </Text>
+        <TouchableOpacity
+          style={styles.roundBackgroundEnd}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Text style={styles.endText}>{done}</Text>
         </TouchableOpacity>
       </View>
     );

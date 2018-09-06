@@ -252,33 +252,36 @@ class DetailTeamScreen extends Component {
       }
     }
 
-    if(this.state.events.length!==0){
-      var eventList =   <FlatList
-      style={{ marginBottom: 50 }}
-      data={this.state.events}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() =>
-            this.props.navigation.navigate("DetailEventScreen", {
-              eventFieldName: item.eFN,
-              eventType: item.eTY,
-              startTime: item.startTime,
-              endTime: item.eT,
-              date: item.date,
-              id: item.id
-            })
-          }
-        >
-          <EventListItem {...item} />
-        </TouchableOpacity>
-      )}
-    />
-    }else{
-      var eventList =
-      <View style={styles.locationBox}>
-         <Text style={styles.locationText}>{no_upcoming_events}</Text>
-       </View>
+    if (this.state.events.length !== 0) {
+      var eventList = (
+        <FlatList
+          style={{ marginBottom: 50 }}
+          data={this.state.events}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() =>
+                this.props.navigation.navigate("DetailEventScreen", {
+                  eventFieldName: item.eFN,
+                  eventType: item.eTY,
+                  startTime: item.startTime,
+                  endTime: item.eT,
+                  date: item.date,
+                  id: item.id
+                })
+              }
+            >
+              <EventListItem {...item} />
+            </TouchableOpacity>
+          )}
+        />
+      );
+    } else {
+      var eventList = (
+        <View style={styles.locationBox}>
+          <Text style={styles.locationText}>{no_upcoming_events}</Text>
+        </View>
+      );
     }
 
     return (
@@ -453,7 +456,6 @@ const styles = StyleSheet.create({
     color: "#e0e0e0",
     margin: 20
   },
-
 
   removeButton: {
     backgroundColor: "red",
