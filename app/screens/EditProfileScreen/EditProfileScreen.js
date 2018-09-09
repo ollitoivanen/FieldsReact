@@ -194,7 +194,7 @@ class EditProfileScreen extends Component {
       var profileImage = (
         <FastImage
           style={styles.profileImage}
-          source={{uri: 'profile_image_default'}}
+          source={{ uri: "profile_image_default" }}
           resizeMode="cover"
         />
       );

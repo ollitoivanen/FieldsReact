@@ -35,7 +35,9 @@ import {
   field_access_type,
   field_goal_count,
   please_fill_all_fields,
-  change_field_location
+  change_field_location,
+  current_training,
+  currently_training_at
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 var moment = require("moment");
@@ -44,6 +46,9 @@ import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import FastImage from "react-native-fast-image";
 var ImagePicker = require("react-native-image-picker");
 import ImageResizer from "react-native-image-resizer";
+var PushNotification = require("react-native-push-notification");
+import PushService from "FieldsReact/PushService";
+
 
 import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
 
@@ -59,6 +64,12 @@ const mapDispatchToProps = dispatch => {
 };
 
 class DetailFieldScreen extends Component {
+  
+
+ 
+  sendNotification = () => {
+    this.notif.localNotif(this.state.fieldName, moment().format("x"))  };
+
   componentWillMount = () => {
     var { params } = this.props.navigation.state;
     this.setState({
@@ -125,6 +136,7 @@ class DetailFieldScreen extends Component {
 
   startTraining = () => {
     var { params } = this.props.navigation.state;
+    this.sendNotification();
     const startTime = moment().format("x");
     firebase
       .firestore()
@@ -397,6 +409,8 @@ class DetailFieldScreen extends Component {
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
+    this.notif = new PushService();
+
 
     this.loadEvents();
     this.retrieveData();
@@ -407,45 +421,41 @@ class DetailFieldScreen extends Component {
       .doc(firebase.auth().currentUser.uid);
     var { params } = this.props.navigation.state;
 
-    
-
-   
     if (params.fIm === true) {
       this.getFieldImage();
     }
-    if(params.d === undefined){
+    if (params.d === undefined) {
       this.state = {
         events: [],
         fieldName: params.fieldName,
         fieldID: params.fieldID,
         favorite: false,
-  
+
         fieldType: params.fieldType,
         accessType: params.accessType,
         goalCount: params.goalCount,
         peopleHere: params.peopleHere,
         infoVisible: false,
-        d:"",
-  
+        d: "",
+
         expandeImageVisible: false,
         fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
         avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
       };
-      
-    }else{
+    } else {
       this.state = {
         events: [],
         fieldName: params.fieldName,
         fieldID: params.fieldID,
         favorite: false,
-  
+
         fieldType: params.fieldType,
         accessType: params.accessType,
         goalCount: params.goalCount,
         peopleHere: params.peopleHere,
         infoVisible: false,
-        d:params.d,
-  
+        d: params.d,
+
         expandeImageVisible: false,
         fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
         avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")

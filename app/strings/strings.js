@@ -70,7 +70,7 @@ export const youre_training_elsewhere = "You're training elsewhere";
 export const under_minute = "<1 minute";
 export const min = "min";
 export const h = "h";
-export const currently_training_at = "Currently training at..";
+export const currently_training_at = "Currently training at";
 export const training_time = "Training time";
 export const end_training = "End training";
 export const done = "Done";
@@ -170,3 +170,5 @@ export const no_upcoming_events = "No upcoming events";
 export const location_access_blocked = "Location access blocked. Turn it back on from settings to find nearest fields!"
 export const favorite_fields = "Favorite fields"
 export const no_favorite_fields = "No favorite fields. Add your favorites from field screen for quick and leannn access! ;) ⚽️❤️"
+export const current_training = "Current training"
+

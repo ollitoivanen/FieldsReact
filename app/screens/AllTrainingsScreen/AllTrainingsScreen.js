@@ -16,7 +16,6 @@ import {
 } from "FieldsReact/app/redux/app-redux.js";
 var moment = require("moment");
 
-
 import { info, trainings, edit_team, min, h } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import TrainingListItem from "FieldsReact/app/components/TrainingListItem/TrainingListItem"; // we'll create this next
@@ -48,26 +47,24 @@ class AllTrainingsScreen extends Component {
         function(doc) {
           doc.forEach(doc => {
             const { eT, re, fN } = doc.data();
-            const startDate = doc.id
+            const startDate = doc.id;
             var date = moment(parseInt(startDate)).format("ddd D MMM");
             var startTime = moment(parseInt(startDate)).format("HH:mm");
-            var endTime = moment(parseInt(eT)).format("HH:mm")
-            
+            var endTime = moment(parseInt(eT)).format("HH:mm");
 
             var trainingTimeRaw = parseInt(eT) - parseInt(startDate);
-            console.warn(trainingTimeRaw)
+            console.warn(trainingTimeRaw);
             var seconds = trainingTimeRaw / 1000;
             var minutes = Math.trunc(seconds / 60);
             var hours = Math.trunc(minutes / 60);
-            console.warn(seconds + "ffff")
-        
-              if (hours < 1) {
-              var trainingTime = minutes + {min} 
+            console.warn(seconds + "ffff");
+
+            if (hours < 1) {
+              var trainingTime = minutes + [ min ];
             } else {
               var minSub = minutes - hours * 60;
-              var trainingTime = hours + [h] + " " + minSub + [min]
+              var trainingTime = hours + [h] + " " + minSub + [min];
             }
-        
 
             trainings.push({
               key: doc.id,
@@ -77,7 +74,6 @@ class AllTrainingsScreen extends Component {
               trainingTime,
               re,
               fN
-              
             });
           });
         }.bind(this)
@@ -97,8 +93,7 @@ class AllTrainingsScreen extends Component {
           return value;
         });
       })
-     
-      
+
       .then(() => {
         this.storeData(serializedData);
       });
@@ -106,8 +101,7 @@ class AllTrainingsScreen extends Component {
 
   storeData = async data => {
     try {
-      await AsyncStorage.setItem("trainings", data)
-        .then(this.retrieveData());
+      await AsyncStorage.setItem("trainings", data).then(this.retrieveData());
     } catch (error) {
       // Error saving data
     }
@@ -117,15 +111,17 @@ class AllTrainingsScreen extends Component {
     try {
       const value = await AsyncStorage.getItem("trainings");
       if (value !== null) {
-        console.warn(value)
+        console.warn(value);
         //Usre team data redux is pretty uselsess
-            if (JSON.parse(value).length === this.props.userData.tC) {
+        if (JSON.parse(value).length === this.props.userData.tC) {
+         var trainings = JSON.parse(value).sort((a, b) => parseInt(b.key) - parseInt(a.key));
 
-              this.setState({ trainings: JSON.parse(value) });
-            } else {
-              this.loadTrainingList();
-            }
-          
+          this.setState({ trainings: trainings});
+        } else {
+          firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).update({
+            tC: JSON.parse(value).length
+          }).then(this.setState({trainings: JSON.parse(value)}))
+        }
       } else {
         this.loadTrainingList();
       }
@@ -145,7 +141,7 @@ class AllTrainingsScreen extends Component {
     this.retrieveData();
 
     this.state = {
-      trainings: [],
+      trainings: []
     };
   }
 

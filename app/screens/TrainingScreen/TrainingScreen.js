@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  AsyncStorage
+} from "react-native";
 import {
   under_minute,
   min,
@@ -11,6 +18,9 @@ import {
 import firebase from "react-native-firebase";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
+var PushNotification = require("react-native-push-notification");
+import PushService from "FieldsReact/PushService";
+
 
 import {
   StackNavigator,
@@ -30,16 +40,113 @@ const mapDispatchToProps = dispatch => {
   };
 };
 class TrainingScreen extends Component {
+  loadTrainingList() {
+    const ref = firebase.firestore().collection("Users");
+    var serializedData;
+
+    const trainings = [];
+
+    const query = ref.doc(firebase.auth().currentUser.uid).collection("TR");
+    query
+      .get()
+      .then(
+        function(doc) {
+          doc.forEach(doc => {
+            const { eT, re, fN } = doc.data();
+            const startDate = doc.id;
+            var date = moment(parseInt(startDate)).format("ddd D MMM");
+            var startTime = moment(parseInt(startDate)).format("HH:mm");
+            var endTime = moment(parseInt(eT)).format("HH:mm");
+
+            var trainingTimeRaw = parseInt(eT) - parseInt(startDate);
+            console.warn(trainingTimeRaw);
+            var seconds = trainingTimeRaw / 1000;
+            var minutes = Math.trunc(seconds / 60);
+            var hours = Math.trunc(minutes / 60);
+            console.warn(seconds + "ffff");
+
+            if (hours < 1) {
+              var trainingTime = minutes + [min];
+            } else {
+              var minSub = minutes - hours * 60;
+              var trainingTime = hours + [h] + " " + minSub + [min];
+            }
+
+            trainings.push({
+              key: doc.id,
+              date,
+              startTime,
+              endTime,
+              trainingTime,
+              re,
+              fN
+            });
+          });
+        }.bind(this)
+      )
+      .then(() => {
+        const alreadyVisited = [];
+        serializedData = JSON.stringify(trainings, function(key, value) {
+          if (typeof value == "object") {
+            if (alreadyVisited.indexOf(value.key) >= 0) {
+              // do something other that putting the reference, like
+              // putting some name that you can use to build the
+              // reference again later, for eg.
+              return value.key;
+            }
+            alreadyVisited.push(value.name);
+          }
+          return value;
+        });
+      })
+
+      .then(() => {
+        this.storeData(serializedData);
+      });
+  }
+
+  storeData = async data => {
+    try {
+      await AsyncStorage.setItem("trainings", data).then(this.retrieveData());
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("trainings");
+      if (value !== null) {
+        //Usre team data redux is pretty uselsess
+        //if (JSON.parse(value).length === this.props.userData.tC) {
+        this.setState({ trainings: JSON.parse(value) });
+        // } else {
+        //firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).update({
+        //tC: JSON.parse(value).length+1
+        //})
+        // }
+      } else {
+        this.loadTrainingList();
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
   static navigationOptions = {
     header: null
   };
+ 
   constructor(props) {
     super(props);
+    this.retrieveData();
+    this.notif = new PushService();
+
 
     this.ref = firebase.firestore().collection("Users");
 
     var { params } = this.props.navigation.state;
     this.state = {
+      trainings: [],
       trainingTime: "",
       currentFieldID: "",
       startTime: params.startTime, //ONly thing via params
@@ -71,12 +178,15 @@ class TrainingScreen extends Component {
   };
 
   endTraining = () => {
+
+   // PushNotification.cancelLocalNotifications({ id: "10" });
+    this.notif.cancelAll()
+
     var { params } = this.props.navigation.state;
     const startTime = params.startTime;
     const currentTime = moment().format("x");
     const trainingTime = currentTime - startTime;
     if (trainingTime < 900000) {
-      
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -111,8 +221,6 @@ class TrainingScreen extends Component {
           })
         );
     } else if (trainingTime > 18000000) {
-
-
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -149,16 +257,19 @@ class TrainingScreen extends Component {
       var currentReputation = this.props.userData.re;
       var trainingReputation = Math.trunc(trainingTime / 60000);
       var newReputation = trainingReputation + currentReputation;
-    
-      
-      firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("TR").doc(moment(parseInt(startTime)).format("x")).set(
-        {
+      var trainings = this.state.trainings;
+
+      firebase
+        .firestore()
+        .collection("Users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("TR")
+        .doc(moment(parseInt(startTime)).format("x"))
+        .set({
           re: trainingReputation,
           eT: moment(parseInt(currentTime)).format("x"),
           fN: this.props.userData.cFN
-
-        }
-      )
+        });
 
       this.ref
         .doc(firebase.auth().currentUser.uid)
@@ -184,6 +295,61 @@ class TrainingScreen extends Component {
                   pH: doc.data().pH - 1
                 });
             });
+        })
+        .then(() => {
+          console.warn("retrieving async");
+        })
+        .then(() => {
+          var { params } = this.props.navigation.state;
+
+          var trainings = this.state.trainings;
+          var date = moment(parseInt(params.startTime)).format("ddd D MMM");
+          var startTime = moment(parseInt(params.startTime)).format("HH:mm");
+          var endTime = moment(parseInt(currentTime)).format("x");
+          var endTimeHH = moment(parseInt(currentTime)).format("HH:mm");
+
+          var trainingTimeRaw = parseInt(endTime) - parseInt(params.startTime);
+          console.warn(trainingTimeRaw);
+          var seconds = trainingTimeRaw / 1000;
+          var minutes = Math.trunc(seconds / 60);
+          var hours = Math.trunc(minutes / 60);
+          console.warn(seconds + "ffff");
+
+          if (hours < 1) {
+            var trainingTime = minutes + [min];
+          } else {
+            var minSub = minutes - hours * 60;
+            var trainingTime = hours + [h] + " " + minSub + [min];
+          }
+
+          console.warn("pushing to traiings", this.state.trainings);
+          trainings.push({
+            key: moment().format("x"),
+            date,
+            startTime,
+            endTime: endTimeHH,
+            trainingTime,
+            re: trainingReputation,
+            fN: this.props.userData.cFN
+          });
+        })
+        .then(() => {
+          const alreadyVisited = [];
+          serializedData = JSON.stringify(trainings, function(key, value) {
+            if (typeof value == "object") {
+              if (alreadyVisited.indexOf(value.key) >= 0) {
+                // do something other that putting the reference, like
+                // putting some name that you can use to build the
+                // reference again later, for eg.
+                return value.key;
+              }
+              alreadyVisited.push(value.name);
+            }
+            return value;
+          });
+        })
+        .then(() => {
+          this.storeData(serializedData);
         })
         .then(() => {
           this.props.getUserData();
@@ -291,7 +457,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flexShrink: 1,
     marginTop: 20,
-    marginStart: 8,elevation: 3,
+    marginStart: 8,
+    elevation: 3,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 2

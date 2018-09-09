@@ -53,6 +53,7 @@ import FavoriteFieldsScreen from "./app/screens/FavoriteFieldsScreen/FavoriteFie
 
 
 
+
 const transitionConfig = () => ({
   transitionSpec: {
     duration: 0,
@@ -64,6 +65,7 @@ const transitionConfig = () => ({
 // create our app's navigation stack
 export const StackNavigatorApp = createStackNavigator(
   {
+   
     SignUpScreen: {
       screen: SignUpScreen
     },

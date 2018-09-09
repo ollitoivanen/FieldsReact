@@ -1,19 +1,20 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
-import { event_type_array, at, min, h, reputation } from "../../strings/strings";
+import {
+  event_type_array,
+  at,
+  min,
+  h,
+  reputation
+} from "../../strings/strings";
 var moment = require("moment");
 
 export default class TrainingListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
   render() {
+    var eventField = " " + [at] + " " + this.props.eventFieldName;
 
-var eventField = " " + [at] + " " + this.props.eventFieldName
-         
-
-
-       
-     
     return (
       <View style={styles.cont}>
         <View style={styles.item}>
@@ -21,23 +22,24 @@ var eventField = " " + [at] + " " + this.props.eventFieldName
             {this.props.date}
           </Text>
 
-          
-
           <Text style={styles.timeText} numberOfLines={2}>
             {this.props.startTime + "-" + this.props.endTime}
           </Text>
         </View>
         <View style={styles.item}>
-
-        <Text style={styles.trainingText} numberOfLines={2}>
+          <Text style={styles.trainingText} numberOfLines={2}>
             {this.props.fN}
           </Text>
-          </View>
+        </View>
 
         <View style={styles.item}>
           <Text style={styles.trainingTextBlue} numberOfLines={2}>
-            {this.props.trainingTime + ","
-             + " " + this.props.re + " " + [reputation]}
+            {this.props.trainingTime +
+              "," +
+              " " +
+              this.props.re +
+              " " +
+              [reputation]}
           </Text>
         </View>
       </View>
