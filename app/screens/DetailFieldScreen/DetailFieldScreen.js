@@ -37,7 +37,8 @@ import {
   please_fill_all_fields,
   change_field_location,
   current_training,
-  currently_training_at
+  currently_training_at,
+  report
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 var moment = require("moment");
@@ -48,7 +49,6 @@ var ImagePicker = require("react-native-image-picker");
 import ImageResizer from "react-native-image-resizer";
 var PushNotification = require("react-native-push-notification");
 import PushService from "FieldsReact/PushService";
-
 
 import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
 
@@ -64,11 +64,9 @@ const mapDispatchToProps = dispatch => {
 };
 
 class DetailFieldScreen extends Component {
-  
-
- 
   sendNotification = () => {
-    this.notif.localNotif(this.state.fieldName, moment().format("x"))  };
+    this.notif.localNotif(this.state.fieldName, moment().format("x"));
+  };
 
   componentWillMount = () => {
     var { params } = this.props.navigation.state;
@@ -411,7 +409,6 @@ class DetailFieldScreen extends Component {
     var { params } = this.props.navigation.state;
     this.notif = new PushService();
 
-
     this.loadEvents();
     this.retrieveData();
 
@@ -633,6 +630,12 @@ class DetailFieldScreen extends Component {
               >
                 <Text style={styles.buttonText}>{edit_field}</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.playersButton}
+                onPress={() => this.props.navigation.navigate("SupportScreen")}
+              >
+                <Text style={styles.buttonText}>{report}</Text>
+              </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
@@ -677,7 +680,7 @@ class DetailFieldScreen extends Component {
             >
               <Image
                 style={styles.backButton}
-                source={require("FieldsReact/app/images/BackButton/back_button.png")}
+                source={{uri: 'back_button'}}
               />
             </TouchableOpacity>
             <View
@@ -685,7 +688,9 @@ class DetailFieldScreen extends Component {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                flexGrow: 1
+                flexGrow: 1,
+                flex: 1,
+                flexWrap: "wrap"
               }}
             >
               <Text style={styles.fieldName}>
@@ -715,7 +720,7 @@ class DetailFieldScreen extends Component {
           >
             <Image
               style={styles.infoIcon}
-              source={require("FieldsReact/app/images/Info/info.png")}
+              source={{uri: 'info'}}
             />
           </TouchableOpacity>
         </View>
@@ -765,6 +770,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white"
+  },
+  playersButton: {
+    padding: 10,
+    backgroundColor: "white",
+    borderWidth: 3,
+    borderRadius: 10,
+    borderColor: "#e0e0e0",
+    marginTop: 8
+  },
+  infoText: {
+    fontWeight: "bold",
+    margin: 4,
+    textAlign: "center"
   },
 
   greenBackground: {
@@ -888,7 +906,9 @@ const styles = StyleSheet.create({
   favoriteContainer: {
     height: 28,
     width: 28,
-    marginEnd: 8
+    marginEnd: 8,
+    position: "absolute",
+    right: 0
   },
 
   favoriteIcon: {

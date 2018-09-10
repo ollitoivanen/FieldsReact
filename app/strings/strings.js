@@ -167,8 +167,13 @@ export const change_team_location = "Change team location";
 export const start_training = "Start training";
 export const searchHeaders = [start_training, search_teams, search_users];
 export const no_upcoming_events = "No upcoming events";
-export const location_access_blocked = "Location access blocked. Turn it back on from settings to find nearest fields!"
-export const favorite_fields = "Favorite fields"
-export const no_favorite_fields = "No favorite fields. Add your favorites from field screen for quick and leannn access! ;) ⚽️❤️"
-export const current_training = "Current training"
-
+export const location_access_blocked =
+  "Location access blocked. Turn it back on from settings to find nearest fields!";
+export const favorite_fields = "Favorite fields";
+export const no_favorite_fields =
+  "No favorite fields. Add your favorites from field screen for quick and leannn access! ;) ⚽️❤️";
+export const current_training = "Current training";
+export const support  = "Support"
+export const contact_us_here = "Contact us here"
+export const report = "Report"
+export const if_you_want_to_report = "If you want to report inapproptiate users, teams or fields, please contact with the link above. Feel free to ask any other pressing questions through this link also! 🙏🏼"

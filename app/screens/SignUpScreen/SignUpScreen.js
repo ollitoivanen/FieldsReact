@@ -53,14 +53,14 @@ export default class SignUpScreen extends React.Component {
   constructor(props) {
     super(props);
     this.ref = firebase.firestore().collection("Users");
-    this.getLaunch()
+    this.getLaunch();
     this.state = {
       email1: "",
       password1: "",
       username1: "",
       errorMessage: null,
       loading: false,
-      firstLaunch: true
+      firstLaunch: null
     };
   }
 
@@ -70,6 +70,8 @@ export default class SignUpScreen extends React.Component {
       } else {
         if (result === null) {
           this.setState({ firstLaunch: true });
+        } else {
+          this.setState({ firstLaunch: false });
         }
       }
     });
@@ -116,154 +118,157 @@ export default class SignUpScreen extends React.Component {
 
   render() {
     const { username1 } = this.state;
-    return (
-      <ScrollView style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image
-            style={styles.logo}
-            source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+    if (this.state.firstLaunch === null) {
+      return null;
+    } else {
+      return (
+        <ScrollView style={styles.container}>
+          <View style={styles.logoContainer}>
+            <Image style={styles.logo} source={{ uri: "f_logo_white_bg" }} />
+          </View>
+          <Text style={styles.text2}>{welcome}</Text>
+          <TextInput
+            textContentType="username"
+            maxLength={30}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder={username}
+            autoCapitalize="none"
+            style={styles.textInput}
+            returnKeyType="next"
+            autoCapitalize="none"
+            value={username1}
+            onSubmitEditing={() => this.emailInput.focus()}
+            onChangeText={this.usernameHandle}
           />
-        </View>
-        <Text style={styles.text2}>{welcome}</Text>
-        <TextInput
-          textContentType="username"
-          maxLength={30}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={username}
-          autoCapitalize="none"
-          style={styles.textInput}
-          returnKeyType="next"
-          autoCapitalize="none"
-          value={username1}
-          onSubmitEditing={() => this.emailInput.focus()}
-          onChangeText={this.usernameHandle}
-        />
-        <TextInput
-          maxLength={100}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={email}
-          returnKeyType="next"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          onSubmitEditing={() => this.passwordInput.focus()}
-          ref={input => (this.emailInput = input)}
-          style={styles.textInput}
-          onChangeText={email1 => this.setState({ email1 })}
-        />
-        <TextInput
-          maxLength={30}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          secureTextEntry
-          returnKeyType="go"
-          placeholder={password}
-          autoCapitalize="none"
-          style={styles.textInput}
-          onChangeText={password1 => this.setState({ password1 })}
-          ref={input1 => (this.passwordInput = input1)}
-        />
-        <View style={styles.termsBox}>
-          <Text style={styles.text}>{by_signing_up_you}</Text>
-          <Text
-            style={{ color: "#3bd774" }}
-            onPress={() =>
-              Linking.openURL("https://fields.one/privacy-policy/")
-            }
+          <TextInput
+            maxLength={100}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder={email}
+            returnKeyType="next"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            onSubmitEditing={() => this.passwordInput.focus()}
+            ref={input => (this.emailInput = input)}
+            style={styles.textInput}
+            onChangeText={email1 => this.setState({ email1 })}
+          />
+          <TextInput
+            maxLength={30}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            secureTextEntry
+            returnKeyType="go"
+            placeholder={password}
+            autoCapitalize="none"
+            style={styles.textInput}
+            onChangeText={password1 => this.setState({ password1 })}
+            ref={input1 => (this.passwordInput = input1)}
+          />
+          <View style={styles.termsBox}>
+            <Text style={styles.text}>{by_signing_up_you}</Text>
+            <Text
+              style={{ color: "#3bd774" }}
+              onPress={() =>
+                Linking.openURL("https://fields.one/privacy-policy/")
+              }
+            >
+              {terms}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={this.handleSignUp}
+            style={styles.buttonContainer}
           >
-            {terms}
-          </Text>
-        </View>
-        <TouchableOpacity
-          onPress={this.handleSignUp}
-          style={styles.buttonContainer}
-        >
-          <Text style={styles.buttonText}>{signup}</Text>
-        </TouchableOpacity>
-        {this.state.errorMessage && (
-          <Text style={styles.error}>{this.state.errorMessage}</Text>
-        )}
+            <Text style={styles.buttonText}>{signup}</Text>
+          </TouchableOpacity>
+          {this.state.errorMessage && (
+            <Text style={styles.error}>{this.state.errorMessage}</Text>
+          )}
 
-        <View style={styles.indicatorContainer} />
-        <Loader loading={this.state.loading} />
-        <View style={styles.alreadyAccountCont}>
-          <Text
-            style={styles.text}
-            onPress={() => this.props.navigation.navigate("LoginScreen")}
-          >
-            {already_have_an_account}
-          </Text>
-        </View>
+          <View style={styles.indicatorContainer} />
+          <Loader loading={this.state.loading} />
+          <View style={styles.alreadyAccountCont}>
+            <Text
+              style={styles.text}
+              onPress={() => this.props.navigation.navigate("LoginScreen")}
+            >
+              {already_have_an_account}
+            </Text>
+          </View>
 
-        <Modal visible={this.state.firstLaunch} onRequestClose={() => {}}>
-          <Swiper
-            style={styles.wrapper}
-            showsButtons={false}
-            loop={false}
-            showsPagination={true}
-            activeDotColor={"#646665"}
-            dotColor={"#f4f4f4"}
-          >
-            <View style={styles.slide1}>
-              <Text style={styles.headerTextBigGray}>{welcome_to_fields}</Text>
+          <Modal visible={this.state.firstLaunch} onRequestClose={() => {}}>
+            <Swiper
+              style={styles.wrapper}
+              showsButtons={false}
+              loop={false}
+              showsPagination={true}
+              activeDotColor={"#646665"}
+              dotColor={"#f4f4f4"}
+            >
+              <View style={styles.slide1}>
+                <Text style={styles.headerTextBigGray}>
+                  {welcome_to_fields}
+                </Text>
 
-              <Image
-                style={styles.logo}
-                source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-              />
-              <Text style={styles.headerTextGray}>{lets_see}</Text>
-            </View>
-            <View style={styles.slide2}>
-              <Text style={styles.headerTextBig}>{football_fields}</Text>
+                <Image
+                  style={styles.logo}
+                  source={{ uri: "f_logo_white_bg" }}
+                />
+                <Text style={styles.headerTextGray}>{lets_see}</Text>
+              </View>
+              <View style={styles.slide2}>
+                <Text style={styles.headerTextBig}>{football_fields}</Text>
 
-              <Image
-                style={styles.logo}
-                source={require("../../images/FootballFieldArt/FootballFieldArt.png")}
-                resizeMode={"contain"}
-              />
+                <Image
+                  style={styles.logo}
+                  source={{ uri: "FootballFieldArt" }}
+                  resizeMode={"contain"}
+                />
 
-              <Text style={styles.headerText}>{see_where}</Text>
-            </View>
-            <View style={styles.slide3}>
-              <Text style={styles.headerTextBig}>{manage_your_team}</Text>
+                <Text style={styles.headerText}>{see_where}</Text>
+              </View>
+              <View style={styles.slide3}>
+                <Text style={styles.headerTextBig}>{manage_your_team}</Text>
 
-              <Image
-                style={styles.logo}
-                source={require("../../images/FieldsPlayArt/FieldsPlayArt.png")}
-                resizeMode={"contain"}
-              />
-              <Text style={styles.headerText}>{set_team_events}</Text>
-            </View>
-            <View style={styles.slide2}>
-              <Text style={styles.headerTextBig}>{earn_reputation}</Text>
+                <Image
+                  style={styles.logo}
+                  source={{ uri: "FieldsPlayArt" }}
+                  resizeMode={"contain"}
+                />
+                <Text style={styles.headerText}>{set_team_events}</Text>
+              </View>
+              <View style={styles.slide2}>
+                <Text style={styles.headerTextBig}>{earn_reputation}</Text>
 
-              <Image
-                style={styles.logo}
-                source={require("../../images/FieldsUpArt/FieldsUpArt.png")}
-                resizeMode={"contain"}
-              />
-              <Text style={styles.headerText}>
-                {earn_reputation_by_training}
-              </Text>
-            </View>
-            <View style={styles.slide1}>
-              <Text style={styles.headerTextBigGray}>
-                {sounds_awesome_right}
-              </Text>
+                <Image
+                  style={styles.logo}
+                  source={{ uri: "FieldsUpArt" }}
+                  resizeMode={"contain"}
+                />
+                <Text style={styles.headerText}>
+                  {earn_reputation_by_training}
+                </Text>
+              </View>
+              <View style={styles.slide1}>
+                <Text style={styles.headerTextBigGray}>
+                  {sounds_awesome_right}
+                </Text>
 
-              <Image
-                style={styles.logo}
-                source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-              />
-              <TouchableOpacity
-                style={styles.letsgo}
-                onPress={() => this.setState({ firstLaunch: false })}
-              >
-                <Text style={styles.headerText}>{lets_go}</Text>
-              </TouchableOpacity>
-            </View>
-          </Swiper>
-        </Modal>
-      </ScrollView>
-    );
+                <Image
+                  style={styles.logo}
+                  source={{ uri: "f_logo_white_bg" }}
+                />
+                <TouchableOpacity
+                  style={styles.letsgo}
+                  onPress={() => this.setState({ firstLaunch: false })}
+                >
+                  <Text style={styles.headerText}>{lets_go}</Text>
+                </TouchableOpacity>
+              </View>
+            </Swiper>
+          </Modal>
+        </ScrollView>
+      );
+    }
   }
 }
 const styles = StyleSheet.create({

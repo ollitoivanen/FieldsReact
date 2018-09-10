@@ -9,16 +9,13 @@ import {
   Animated,
   Easing
 } from "react-native";
-import {
- createStackNavigator
-} from "react-navigation";
+import { createStackNavigator } from "react-navigation";
 // import the different screens
 import LoadingScreen from "FieldsReact/app/screens/LoadingScreen/LoadingScreen";
 import SignUpScreen from "FieldsReact/app/screens/SignUpScreen/SignUpScreen";
 import LoginScreen from "FieldsReact/app/screens/LoginScreen/LoginScreen";
 import FeedScreen from "FieldsReact/app/screens/FeedScreen/FeedScreen";
 import ProfileScreen from "FieldsReact/app/screens/ProfileScreen/ProfileScreen";
-
 import ForgotPasswordScreen from "FieldsReact/app/screens/ForgotPasswordScreen/ForgotPasswordScreen";
 import FieldSearchScreen from "./app/screens/FieldSearchScreen/FieldSearchScreen";
 import DetailFieldScreen from "./app/screens/DetailFieldScreen/DetailFieldScreen";
@@ -43,16 +40,7 @@ import EditFieldScreen from "./app/screens/EditFieldScreen/EditFieldScreen";
 import EditTeamScreen from "./app/screens/EditTeamScreen/EditTeamScreen";
 import AllTrainingsScreen from "./app/screens/AllTrainingsScreen/AllTrainingsScreen";
 import FavoriteFieldsScreen from "./app/screens/FavoriteFieldsScreen/FavoriteFieldsScreen";
-
-
-
-
-
-
-
-
-
-
+import SupportScreen from "./app/screens/SupportScreen/SupportScreen";
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -65,7 +53,6 @@ const transitionConfig = () => ({
 // create our app's navigation stack
 export const StackNavigatorApp = createStackNavigator(
   {
-   
     SignUpScreen: {
       screen: SignUpScreen
     },
@@ -104,7 +91,6 @@ export const StackNavigatorApp = createStackNavigator(
       screen: TrainingSummaryScreen
     },
 
-    
     CreateNewFieldScreen: {
       screen: CreateNewFieldScreen
     },
@@ -123,7 +109,7 @@ export const StackNavigatorApp = createStackNavigator(
     DetailEventScreen: {
       screen: DetailEventScreen
     },
-   
+
     DetailProfileScreen: {
       screen: DetailProfileScreen
     },
@@ -146,39 +132,38 @@ export const StackNavigatorApp = createStackNavigator(
       screen: ReputationScreen
     },
 
-    SettingsScreen:{
+    SettingsScreen: {
       screen: SettingsScreen
     },
 
-
-    EditProfileScreen:{
+    EditProfileScreen: {
       screen: EditProfileScreen
     },
 
     UserFriendListScreen: {
       screen: UserFriendListScreen
     },
-    MapScreen:{
+    MapScreen: {
       screen: MapScreen
     },
-    EditFieldScreen:{
+    EditFieldScreen: {
       screen: EditFieldScreen
     },
 
-    EditTeamScreen:{
+    EditTeamScreen: {
       screen: EditTeamScreen
     },
-    AllTrainingsScreen:{
+    AllTrainingsScreen: {
       screen: AllTrainingsScreen
     },
 
-    FavoriteFieldsScreen:{
+    FavoriteFieldsScreen: {
       screen: FavoriteFieldsScreen
+    },
+    SupportScreen: {
+      screen: SupportScreen
     }
   },
-
-    
-  
 
   {
     initialRouteName: "LoadingScreen",

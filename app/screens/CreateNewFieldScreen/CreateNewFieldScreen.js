@@ -154,7 +154,7 @@ class CreateNewFieldScreen extends Component {
       let clearPath = this.state.fieldImageInitial;
       var fieldID = guid().substring(0, 7);
 
-      if (this.state.fieldName !== "" && params.ltLn !== null) {
+      if (this.state.fieldName !== "" && params.lt !== null) {
         if (clearPath !== null) {
           ImageResizer.createResizedImage(
             clearPath,
@@ -164,17 +164,18 @@ class CreateNewFieldScreen extends Component {
             100
           ).then(({ uri }) => {
             var { params } = this.props.navigation.state;
-            const co = new firebase.firestore.GeoPoint(
-              Math.round(params.lt * 10000000) / 10000000,
-              Math.round(params.ln * 10000000) / 10000000
-            );
+           
 
             storageRef
               .child("fieldpics/" + fieldID + "/" + fieldID + ".jpg")
-              .putFile(uri);
+              .putFile( uri);
           });
+          const co = new firebase.firestore.GeoPoint(
+            Math.round(params.lt * 10000000) / 10000000,
+            Math.round(params.ln * 10000000) / 10000000
+          );
           firebase
-            .firestore()
+            .firestore().collection("Fields")
             .doc(fieldID)
             .set({
               fN: this.state.fieldName,
@@ -183,7 +184,8 @@ class CreateNewFieldScreen extends Component {
 
               pH: 0,
               gC: this.state.goalCount,
-              fIm: true
+              fIm: true,
+              co
               //Goal count
             })
             .then(() => {
@@ -298,7 +300,7 @@ class CreateNewFieldScreen extends Component {
           >
             <Image
               style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
           <Text style={styles.fieldName}>{add_new_field}</Text>

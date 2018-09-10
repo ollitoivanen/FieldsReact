@@ -43,10 +43,7 @@ export default class ForgotPasswordScreen extends Component {
           underlayColor="#bcbcbc"
           onPress={() => this.props.navigation.navigate("LoginScreen")}
         >
-          <Image
-            style={styles.logo}
-            source={require("FieldsReact/app/images/BackButton/back_button.png")}
-          />
+          <Image style={styles.logo} source={{ uri: "back_button" }} />
         </TouchableOpacity>
         <Text style={styles.text}>{forgot_password_enter_email}</Text>
         <TextInput

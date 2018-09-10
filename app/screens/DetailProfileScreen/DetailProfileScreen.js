@@ -22,7 +22,8 @@ import {
   min,
   under_minute,
   remove_friend,
-  add_friend
+  add_friend,
+  report
 } from "../../strings/strings";
 import FastImage from "react-native-fast-image";
 var moment = require("moment");
@@ -205,6 +206,10 @@ class DetailProfileScreen extends Component {
       });
   };
 
+  setModalVisible(visible) {
+    this.setState({ infoVisible: visible });
+  }
+
   constructor(props) {
     super(props);
 
@@ -217,8 +222,9 @@ class DetailProfileScreen extends Component {
       trainingTime: "",
       friends: [],
       friendStatus: null,
+      infoVisible: false,
       //Karinainen perkele
-      profileImagePath: { uri: "profile_image_default" }
+      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
     };
   }
 
@@ -278,102 +284,42 @@ class DetailProfileScreen extends Component {
     }
 
     if (re < 500) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_1.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_1" }} />;
     } else if (re < 1500) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_2.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_2" }} />;
     } else if (re < 3000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_3.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_3" }} />;
     } else if (re < 6000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_4.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_4" }} />;
     } else if (re < 10000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_5.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_5" }} />;
     } else if (re < 15000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_6.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_6" }} />;
     } else if (re < 21000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_7.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_7" }} />;
     } else if (re < 28000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_8.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_8" }} />;
     } else if (re < 38000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_9.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_9" }} />;
     } else if (re < 48000) {
       badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_10.png")}
-        />
+        <Image style={styles.teamIcon} source={{ uri: "badge_10" }} />
       );
     } else if (re < 58000) {
       badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_11.png")}
-        />
+        <Image style={styles.teamIcon} source={{ uri: "badge_11" }} />
       );
     } else if (re < 70000) {
       badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_12.png")}
-        />
+        <Image style={styles.teamIcon} source={{ uri: "badge_12" }} />
       );
     } else if (re < 85000) {
       badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_13.png")}
-        />
+        <Image style={styles.teamIcon} source={{ uri: "badge_13" }} />
       );
     } else if (re >= 85000) {
       badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_14.png")}
-        />
+        <Image style={styles.teamIcon} source={{ uri: "badge_14" }} />
       );
     }
 
@@ -395,20 +341,14 @@ class DetailProfileScreen extends Component {
     if (params.uTI !== undefined) {
       var userTeamPlaceHolder = (
         <TouchableOpacity style={styles.roundTextContainer}>
-          <Image
-            style={styles.teamIcon}
-            source={require("FieldsReact/app/images/Team/team.png")}
-          />
+          <Image style={styles.teamIcon} source={{ uri: "team" }} />
           <Text style={styles.boxText}>{params.uTN} </Text>
         </TouchableOpacity>
       );
     } else if (params.uTI === undefined) {
       var userTeamPlaceHolder = (
         <TouchableOpacity style={styles.roundTextContainer}>
-          <Image
-            style={styles.teamIcon}
-            source={require("FieldsReact/app/images/Team/team.png")}
-          />
+          <Image style={styles.teamIcon} source={{ uri: "team" }} />
           <Text style={styles.boxText}>{not_in_a_team} </Text>
         </TouchableOpacity>
       );
@@ -460,16 +400,60 @@ class DetailProfileScreen extends Component {
 
     return (
       <View style={styles.container}>
+        <Modal
+          transparent={true}
+          visible={this.state.infoVisible}
+          onRequestClose={() => {}}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              backgroundColor: "#00000080",
+              alignItems: "center"
+            }}
+            onPress={() => {
+              this.setModalVisible(!this.state.infoVisible);
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                paddingHorizontal: 30,
+                paddingVertical: 20
+              }}
+              onPress={() => {
+                this.setModalVisible(!this.state.infoVisible);
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontWeight: "bold",
+                  marginBottom: 8,
+                  marginStart: 4
+                }}
+              >
+                {info}
+              </Text>
+
+              <TouchableOpacity
+                style={styles.playersButton}
+                onPress={() => this.props.navigation.navigate("SupportScreen")}
+              >
+                <Text style={styles.infoText}>{report}</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
         <View style={styles.backButtonContainer}>
           <TouchableOpacity
             style={styles.backButton}
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
           <Text style={styles.teamName}>{params.un}</Text>
         </View>
@@ -722,5 +706,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     flexShrink: 1,
     marginTop: 12
+  },
+  playersButton: {
+    padding: 10,
+    backgroundColor: "white",
+    borderWidth: 3,
+    borderRadius: 10,
+    borderColor: "#e0e0e0",
+    marginTop: 8
+  },
+  infoText: {
+    fontWeight: "bold",
+    margin: 4,
+    textAlign: "center"
   }
 });

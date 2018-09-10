@@ -25,130 +25,33 @@ class ReputationScreen extends Component {
 
     let badge;
     if (this.props.userData.re < 500) {
-      nextBadge = 500;
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_1.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_1" }} />;
     } else if (this.props.userData.re < 1500) {
-      nextBadge = 1500;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_2.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_2" }} />;
     } else if (this.props.userData.re < 3000) {
-      nextBadge = 3000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_3.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_3" }} />;
     } else if (this.props.userData.re < 6000) {
-      nextBadge = 6000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_4.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_4" }} />;
     } else if (this.props.userData.re < 10000) {
-      nextBadge = 10000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_5.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_5" }} />;
     } else if (this.props.userData.re < 15000) {
-      nextBadge = 15000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_6.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_6" }} />;
     } else if (this.props.userData.re < 21000) {
-      nextBadge = 21000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_7.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_7" }} />;
     } else if (this.props.userData.re < 28000) {
-      nextBadge = 28000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_8.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_8" }} />;
     } else if (this.props.userData.re < 38000) {
-      nextBadge = 38000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_9.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_9" }} />;
     } else if (this.props.userData.re < 48000) {
-      nextBadge = 48000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_10.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_10" }} />;
     } else if (this.props.userData.re < 58000) {
-      nextBadge = 58000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_11.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_11" }} />;
     } else if (this.props.userData.re < 70000) {
-      nextBadge = 70000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_12.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_12" }} />;
     } else if (this.props.userData.re < 85000) {
-      nextBadge = 85000;
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_13.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_13" }} />;
     } else if (this.props.userData.re >= 85000) {
-      nextBadge = "gg";
-
-      badge = (
-        <Image
-          style={styles.badge}
-          source={require("FieldsReact/app/images/Badges/badge_14.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_14" }} />;
     }
 
     if (this.props.userData.re > 85000) {
@@ -170,10 +73,7 @@ class ReputationScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
           <Text style={styles.teamName}>{reputation}</Text>
         </View>
@@ -197,7 +97,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white"
   },
-  badge: {
+  teamIcon: {
     width: 120,
     height: 120
   },

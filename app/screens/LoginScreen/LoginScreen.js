@@ -59,10 +59,7 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <Image
-            style={styles.logo}
-            source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
-          />
+          <Image style={styles.logo} source={{ uri: "f_logo_white_bg" }} />
         </View>
         <Text style={styles.text2}>{welcome_back}</Text>
         <TextInput

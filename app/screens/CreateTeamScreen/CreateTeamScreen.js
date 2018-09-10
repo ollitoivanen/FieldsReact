@@ -117,7 +117,7 @@ class CreateTeamScreen extends Component {
     // Create a storage reference from our storage service
     var storageRef = storage.ref();
 
-    if (this.state.teamUsername !== "" && params.markerSet===true) {
+    if (this.state.teamUsername !== "" && params.markerSet === true) {
       const co = new firebase.firestore.GeoPoint(
         Math.round(params.lt * 10000000) / 10000000,
         Math.round(params.ln * 10000000) / 10000000
@@ -242,7 +242,7 @@ class CreateTeamScreen extends Component {
           >
             <Image
               style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
           <Text style={styles.teamName}>{create_team}</Text>
@@ -256,7 +256,6 @@ class CreateTeamScreen extends Component {
             resizeMode="cover"
           />
         </TouchableOpacity>
-
 
         <Text style={styles.headerText}>{team_username}</Text>
         <TextInput

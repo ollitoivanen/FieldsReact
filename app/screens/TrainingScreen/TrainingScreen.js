@@ -21,7 +21,6 @@ import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 var PushNotification = require("react-native-push-notification");
 import PushService from "FieldsReact/PushService";
 
-
 import {
   StackNavigator,
   StackActions,
@@ -135,12 +134,11 @@ class TrainingScreen extends Component {
   static navigationOptions = {
     header: null
   };
- 
+
   constructor(props) {
     super(props);
     this.retrieveData();
     this.notif = new PushService();
-
 
     this.ref = firebase.firestore().collection("Users");
 
@@ -178,9 +176,8 @@ class TrainingScreen extends Component {
   };
 
   endTraining = () => {
-
-   // PushNotification.cancelLocalNotifications({ id: "10" });
-    this.notif.cancelAll()
+    // PushNotification.cancelLocalNotifications({ id: "10" });
+    this.notif.cancelAll();
 
     var { params } = this.props.navigation.state;
     const startTime = params.startTime;
@@ -379,7 +376,7 @@ class TrainingScreen extends Component {
             >
               <Image
                 style={styles.backButton}
-                source={require("FieldsReact/app/images/BackButton/back_button.png")}
+                source={{ uri: "back_button" }}
               />
             </TouchableOpacity>
           </View>

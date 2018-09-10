@@ -79,30 +79,27 @@ class FavoriteFieldsScreen extends Component {
       let newFavoriteFields = [];
 
       const query = ref.doc(firebase.auth().currentUser.uid).collection("FF");
-      query
-        .get()
-        .then(
-          function(doc) {
-            doc.forEach(doc=>{
-              firebase
-                .firestore()
-                .collection("Fields")
-                .doc(doc.id)
-                .get()
-                .then(invDoc => {
-                  const id = doc.id;
-                  newFavoriteFields.push({
-                    key: id,
-                    id: id,
-                    fN: invDoc.data().fN,
-                    fIm: invDoc.data().fIm
-                  });
-                  this.setState({newFavoriteFields: newFavoriteFields})
-                  const alreadyVisited = [];
-                  serializedData = JSON.stringify(this.state.newFavoriteFields, function(
-                    key,
-                    value
-                  ) {
+      query.get().then(
+        function(doc) {
+          doc.forEach(doc => {
+            firebase
+              .firestore()
+              .collection("Fields")
+              .doc(doc.id)
+              .get()
+              .then(invDoc => {
+                const id = doc.id;
+                newFavoriteFields.push({
+                  key: id,
+                  id: id,
+                  fN: invDoc.data().fN,
+                  fIm: invDoc.data().fIm
+                });
+                this.setState({ newFavoriteFields: newFavoriteFields });
+                const alreadyVisited = [];
+                serializedData = JSON.stringify(
+                  this.state.newFavoriteFields,
+                  function(key, value) {
                     if (typeof value == "object") {
                       if (alreadyVisited.indexOf(value.key) >= 0) {
                         // do something other that putting the reference, like
@@ -113,13 +110,13 @@ class FavoriteFieldsScreen extends Component {
                       alreadyVisited.push(value.name);
                     }
                     return value;
-                  });
-                  this.storeData(serializedData);
-                })
-            });
-          }.bind(this)
-        )
-       
+                  }
+                );
+                this.storeData(serializedData);
+              });
+          });
+        }.bind(this)
+      );
     } else {
       var favoriteFields = this.state.favoriteFields;
       favoriteFields.forEach(favoriteFields => {

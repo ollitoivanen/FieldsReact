@@ -342,7 +342,7 @@ class DetailEventScreen extends Component {
           >
             <Image
               style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
           <Text style={styles.teamName}>{event_details}</Text>
@@ -353,7 +353,7 @@ class DetailEventScreen extends Component {
           >
             <Image
               style={styles.infoIcon}
-              source={require("FieldsReact/app/images/InfoBlack/info_black.png")}
+              source={{uri: 'info_black'}}
             />
           </TouchableOpacity>
         </View>

@@ -341,7 +341,7 @@ class EditTeamScreen extends Component {
           >
             <Image
               style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
           <View style={{ flexDirection: "column" }}>

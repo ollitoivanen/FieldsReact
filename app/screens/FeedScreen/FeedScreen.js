@@ -19,7 +19,7 @@ import FastImage from "react-native-fast-image";
 import FeedFriendListItem from "FieldsReact/app/components/FeedFriendListItem/FeedFriendListItem"; // we'll create this next
 var moment = require("moment");
 
-import NavigationService from 'FieldsReact/NavigationService';
+import NavigationService from "FieldsReact/NavigationService";
 import PushNotification from "react-native-push-notification";
 import PushService from "FieldsReact/PushService";
 
@@ -217,8 +217,10 @@ class FeedScreen extends React.Component {
       .catch(err => {});
   };
   onNotif(notif) {
-        NavigationService.navigate("TrainingScreen", {startTime: notif.data.startTime})
-      }
+    NavigationService.navigate("TrainingScreen", {
+      startTime: notif.data.startTime
+    });
+  }
 
   constructor(props) {
     super(props);

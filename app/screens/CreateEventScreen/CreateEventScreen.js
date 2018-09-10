@@ -406,7 +406,7 @@ class CreateEventScreen extends Component {
           >
             <Image
               style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
           <Text style={styles.topHeader}>{create_new_event}</Text>

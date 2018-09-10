@@ -510,7 +510,7 @@ class TeamScreen extends Component {
             >
               <Image
                 style={styles.backButton}
-                source={require("FieldsReact/app/images/BackButton/back_button.png")}
+                source={{ uri: "back_button" }}
               />
             </TouchableOpacity>
             <Text style={styles.teamName}>{this.props.userData.uTN}</Text>
@@ -532,7 +532,7 @@ class TeamScreen extends Component {
           >
             <Image
               style={styles.infoIcon}
-              source={require("FieldsReact/app/images/Info/info.png")}
+              source={{ uri: "info" }}
               resizeMode="cover"
             />
           </TouchableOpacity>
@@ -547,10 +547,7 @@ class TeamScreen extends Component {
               })
             }
           >
-            <Image
-              style={styles.addIcon}
-              source={require("FieldsReact/app/images/Add/add.png")}
-            />
+            <Image style={styles.addIcon} source={{ uri: "add" }} />
           </TouchableOpacity>
         </View>
         {eventList}

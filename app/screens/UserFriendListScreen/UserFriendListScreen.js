@@ -64,10 +64,7 @@ export default class UserFriendListScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
           <Text style={styles.teamName}>{friends}</Text>
         </View>

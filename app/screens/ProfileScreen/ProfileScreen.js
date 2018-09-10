@@ -159,103 +159,33 @@ class ProfileScreen extends Component {
   render() {
     let badge;
     if (this.props.userData.re < 500) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_1.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_1" }} />;
     } else if (this.props.userData.re < 1500) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_2.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_2" }} />;
     } else if (this.props.userData.re < 3000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_3.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_3" }} />;
     } else if (this.props.userData.re < 6000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_4.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_4" }} />;
     } else if (this.props.userData.re < 10000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_5.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_5" }} />;
     } else if (this.props.userData.re < 15000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_6.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_6" }} />;
     } else if (this.props.userData.re < 21000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_7.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_7" }} />;
     } else if (this.props.userData.re < 28000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_8.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_8" }} />;
     } else if (this.props.userData.re < 38000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_9.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_9" }} />;
     } else if (this.props.userData.re < 48000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_10.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_10" }} />;
     } else if (this.props.userData.re < 58000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_11.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_11" }} />;
     } else if (this.props.userData.re < 70000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_12.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_12" }} />;
     } else if (this.props.userData.re < 85000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_13.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_13" }} />;
     } else if (this.props.userData.re >= 85000) {
-      badge = (
-        <Image
-          style={styles.teamIcon}
-          source={require("FieldsReact/app/images/Badges/badge_14.png")}
-        />
-      );
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_14" }} />;
     }
 
     var currentFieldPlaceHolder = (
@@ -288,20 +218,14 @@ class ProfileScreen extends Component {
           style={styles.roundTextContainer}
           onPress={() => this.props.navigation.navigate("TeamScreen")}
         >
-          <Image
-            style={styles.teamIcon}
-            source={require("FieldsReact/app/images/Team/team.png")}
-          />
+          <Image style={styles.teamIcon} source={{ uri: "team" }} />
           <Text style={styles.boxText}>{this.props.userData.uTN} </Text>
         </TouchableOpacity>
       );
     } else if (this.props.userData.uTI === undefined) {
       var userTeamPlaceHolder = (
         <TouchableOpacity style={styles.roundTextContainer}>
-          <Image
-            style={styles.teamIcon}
-            source={require("FieldsReact/app/images/Team/team.png")}
-          />
+          <Image style={styles.teamIcon} source={{ uri: "team" }} />
           <Text style={styles.boxText}>{not_in_a_team} </Text>
         </TouchableOpacity>
       );
@@ -328,7 +252,7 @@ class ProfileScreen extends Component {
               >
                 <Image
                   style={styles.settingsIcon}
-                  source={require("FieldsReact/app/images/Settings/settings.png")}
+                  source={{ uri: "settings" }}
                 />
               </TouchableOpacity>
             </View>
@@ -348,7 +272,12 @@ class ProfileScreen extends Component {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.textContainer} onPress={()=>this.props.navigation.navigate("AllTrainingsScreen")}>
+              <TouchableOpacity
+                style={styles.textContainer}
+                onPress={() =>
+                  this.props.navigation.navigate("AllTrainingsScreen")
+                }
+              >
                 <Text style={styles.boxText}>
                   {this.props.userData.tC} {trainings}
                 </Text>

@@ -194,7 +194,7 @@ class EditProfileScreen extends Component {
       var profileImage = (
         <FastImage
           style={styles.profileImage}
-          source={{ uri: "profile_image_default" }}
+          source={require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")}
           resizeMode="cover"
         />
       );
@@ -218,7 +218,7 @@ class EditProfileScreen extends Component {
           >
             <Image
               style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
           <Text style={styles.teamName}>{edit_profile}</Text>

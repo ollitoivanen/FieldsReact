@@ -35,8 +35,7 @@ import {
   field_access_type,
   field_goal_count,
   please_fill_all_fields,
-  change_field_location,
-  
+  change_field_location
 } from "../../strings/strings";
 export default class EditFieldScreen extends Component {
   static navigationOptions = {
@@ -272,7 +271,7 @@ export default class EditFieldScreen extends Component {
           >
             <Image
               style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
+              source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
           <View style={{ flexDirection: "column" }}>

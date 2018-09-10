@@ -28,7 +28,8 @@ import {
   join_team,
   remove_old_request_and_send_new_request_to_this_team,
   remove_request,
-  no_upcoming_events
+  no_upcoming_events,
+  report
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
@@ -64,6 +65,7 @@ class DetailTeamScreen extends Component {
       removeRequestVisible: false,
       removeAndSendRequestVisible: false,
       players: [],
+      infoVisible: false,
       profileImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png")
     };
   }
@@ -119,6 +121,10 @@ class DetailTeamScreen extends Component {
       }.bind(this)
     );
   };
+
+  setModalVisible(visible) {
+    this.setState({ infoVisible: visible });
+  }
 
   openRemoveRequestModal = visible => {
     this.setState({ removeRequestVisible: visible });
@@ -288,6 +294,53 @@ class DetailTeamScreen extends Component {
       <View style={styles.container}>
         <Modal
           transparent={true}
+          visible={this.state.infoVisible}
+          onRequestClose={() => {}}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              backgroundColor: "#00000080",
+              alignItems: "center"
+            }}
+            onPress={() => {
+              this.setModalVisible(!this.state.infoVisible);
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                paddingHorizontal: 30,
+                paddingVertical: 20
+              }}
+              onPress={() => {
+                this.setModalVisible(!this.state.infoVisible);
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontWeight: "bold",
+                  marginBottom: 8,
+                  marginStart: 4
+                }}
+              >
+                {info}
+              </Text>
+
+              <TouchableOpacity
+                style={styles.playersButton}
+                onPress={() => this.props.navigation.navigate("SupportScreen")}
+              >
+                <Text style={styles.infoText}>{report}</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
+        <Modal
+          transparent={true}
           visible={this.state.removeRequestVisible}
           onRequestClose={() => {}}
         >
@@ -375,7 +428,7 @@ class DetailTeamScreen extends Component {
             >
               <Image
                 style={styles.backButton}
-                source={require("FieldsReact/app/images/BackButton/back_button.png")}
+                source={{uri: 'back_button'}}
               />
             </TouchableOpacity>
             <Text style={styles.teamName}>{params.teamUsername}</Text>
@@ -389,6 +442,18 @@ class DetailTeamScreen extends Component {
 
             <Text style={styles.teamFullName}>{params.teamUsername}</Text>
           </View>
+
+          <TouchableOpacity
+            style={styles.infoContainer}
+            underlayColor="#bcbcbc"
+            onPress={() => this.setModalVisible(true)}
+          >
+            <Image
+              style={styles.infoIcon}
+              source={{uri: 'info'}}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
 
           {joinTeam}
         </View>

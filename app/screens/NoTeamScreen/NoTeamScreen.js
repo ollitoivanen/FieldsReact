@@ -23,10 +23,7 @@ export default class NoTeamScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={require("FieldsReact/app/images/BackButton/back_button.png")}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
         </View>
         <Text style={styles.headerText}>
@@ -40,7 +37,12 @@ export default class NoTeamScreen extends Component {
 
         <TouchableOpacity
           style={styles.createTeamButton}
-          onPress={() => this.props.navigation.navigate("CreateTeamScreen", {lt: null, ln: null})}
+          onPress={() =>
+            this.props.navigation.navigate("CreateTeamScreen", {
+              lt: null,
+              ln: null
+            })
+          }
         >
           <Text style={styles.blackText}>{create_team}</Text>
         </TouchableOpacity>
