@@ -20,6 +20,8 @@ import { favorite_fields, no_favorite_fields } from "../../strings/strings";
 import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem";
 import TeamSearchItem from "FieldsReact/app/components/TeamSearchItem/TeamSearchItem";
 import UserSearchItem from "FieldsReact/app/components/UserSearchItem/UserSearchItem";
+import I18n from "FieldsReact/i18n";
+
 
 import Permissions from "react-native-permissions";
 import RNAndroidLocationEnabler from "react-native-android-location-enabler";
@@ -313,7 +315,7 @@ class FavoriteFieldsScreen extends Component {
       var list = (
         <View style={styles.locationBox}>
           <TouchableOpacity>
-            <Text style={styles.locationText}>{no_favorite_fields}</Text>
+            <Text style={styles.locationText}>{I18n.t('no_favorite_fields')}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -346,7 +348,7 @@ class FavoriteFieldsScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{favorite_fields}</Text>
+          <Text style={styles.teamName}>{I18n.t('favorite_fields')}</Text>
         </View>
         {list}
       </View>

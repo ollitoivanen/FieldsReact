@@ -39,6 +39,7 @@ import {
 import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem";
 import TeamSearchItem from "FieldsReact/app/components/TeamSearchItem/TeamSearchItem";
 import UserSearchItem from "FieldsReact/app/components/UserSearchItem/UserSearchItem";
+import I18n from "FieldsReact/i18n";
 
 import Permissions from "react-native-permissions";
 import RNAndroidLocationEnabler from "react-native-android-location-enabler";
@@ -372,12 +373,14 @@ class FieldSearchScreen extends Component {
               position.coords.latitude !== 0 &&
               position.coords.longitude !== 0
             ) {
-              this.setState({
-                userLatitude: position.coords.latitude,
-                userLongitude: position.coords.longitude,
-                locationIOS: "authorized",
-                error: null
-              });
+              //Test
+              locationIOS: "authorized",
+                this.setState({
+                  userLatitude: position.coords.latitude,
+                  userLongitude: position.coords.longitude,
+                  locationIOS: "authorized",
+                  error: null
+                });
               if (this.state.selectedIndex === 0) {
                 this.loadNearFields();
               } else if (this.state.selectedIndex === 1) {
@@ -400,7 +403,9 @@ class FieldSearchScreen extends Component {
           this.setState({ locationIOS: "undetermined" });
         }
       } else if (response === "restricted") {
-        //Write the logic to open permission
+        //Write the logic to open kmsion
+        console.warn("Restricted");
+
         this.setState({ locationIOS: "restricted" });
       }
       // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
@@ -530,7 +535,7 @@ class FieldSearchScreen extends Component {
             }}
           >
             <Text style={styles.bigText}>
-              {searchHeaders[this.state.selectedIndex]}
+              {I18n.t(["searchHeaders", this.state.selectedIndex])}
             </Text>
             <TouchableOpacity
               style={styles.infoContainer}
@@ -546,19 +551,19 @@ class FieldSearchScreen extends Component {
           </View>
           <View style={styles.filterBox}>
             <TouchableOpacity style={styles.filterItem}>
-              <Text style={styles.filterTextSelected}>{fields}</Text>
+              <Text style={styles.filterTextSelected}>{I18n.t("fields")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.filterItem}
               onPress={() => this.changeIndex(1)}
             >
-              <Text style={styles.filterText}>{teams}</Text>
+              <Text style={styles.filterText}>{I18n.t("teams")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.filterItem}
               onPress={() => this.changeIndex(2)}
             >
-              <Text style={styles.filterText}>{users}</Text>
+              <Text style={styles.filterText}>{I18n.t("users")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -567,23 +572,23 @@ class FieldSearchScreen extends Component {
       var filterBox = (
         <View>
           <Text style={styles.bigText}>
-            {searchHeaders[this.state.selectedIndex]}
+            {I18n.t(["searchHeaders", this.state.selectedIndex])}
           </Text>
           <View style={styles.filterBox}>
             <TouchableOpacity
               style={styles.filterItem}
               onPress={() => this.changeIndex(0)}
             >
-              <Text style={styles.filterText}>{fields}</Text>
+              <Text style={styles.filterText}>{I18n.t("fields")}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.filterItem}>
-              <Text style={styles.filterTextSelected}>{teams}</Text>
+              <Text style={styles.filterTextSelected}>{I18n.t("teams")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.filterItem}
               onPress={() => this.changeIndex(2)}
             >
-              <Text style={styles.filterText}>{users}</Text>
+              <Text style={styles.filterText}>{I18n.t("users")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -594,7 +599,7 @@ class FieldSearchScreen extends Component {
           <TextInput
             clearButtonMode={"always"}
             style={styles.searchBar}
-            placeholder={search_users}
+            placeholder={I18n.t("search_users")}
             onChangeText={searchTerm => this.setState({ searchTerm })}
             underlineColorAndroid="rgba(0,0,0,0)"
             value={this.state.searchTerm}
@@ -608,16 +613,16 @@ class FieldSearchScreen extends Component {
               style={styles.filterItem}
               onPress={() => this.changeIndex(0)}
             >
-              <Text style={styles.filterText}>{fields}</Text>
+              <Text style={styles.filterText}>{I18n.t("fields")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.filterItem}
               onPress={() => this.changeIndex(1)}
             >
-              <Text style={styles.filterText}>{teams}</Text>
+              <Text style={styles.filterText}>{I18n.t("teams")}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.filterItem}>
-              <Text style={styles.filterTextSelected}>{users}</Text>
+              <Text style={styles.filterTextSelected}>{I18n.t("users")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -665,7 +670,7 @@ class FieldSearchScreen extends Component {
             })
           }
         >
-          <Text style={styles.addNewFieldText}>{add_new_field}</Text>
+          <Text style={styles.addNewFieldText}>{I18n.t("add_new_field")}</Text>
         </TouchableOpacity>
       );
 
@@ -716,7 +721,7 @@ class FieldSearchScreen extends Component {
                 }
               >
                 <Text style={styles.locationText}>
-                  {no_fields_found_nearby}
+                  {I18n.t("no_fields_found_nearby")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -728,7 +733,7 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => this.getLocationPure()}>
                 <Text style={styles.locationText}>
-                  {enable_location_to_find_nearest_fields}
+                  {I18n.t("enable_location_to_find_nearest_fields")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -738,7 +743,7 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => Permissions.openSettings()}>
                 <Text style={styles.locationText}>
-                  {enable_location_to_find_nearest_fields}
+                  {I18n.t("enable_location_to_find_nearest_fields")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -749,7 +754,7 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.getLocationPure()}>
               <Text style={styles.locationText}>
-                {enable_location_to_find_nearest_fields}
+                {I18n.t("enable_location_to_find_nearest_fields")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -759,7 +764,7 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
               <Text style={styles.locationText}>
-                {enable_location_to_find_nearest_fields}
+                {I18n.t("enable_location_to_find_nearest_fields")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -768,7 +773,9 @@ class FieldSearchScreen extends Component {
         var list = (
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
-              <Text style={styles.locationText}>{location_access_blocked}</Text>
+              <Text style={styles.locationText}>
+                {I18n.t("location_access_blocked")}
+              </Text>
             </TouchableOpacity>
           </View>
         );
@@ -818,7 +825,9 @@ class FieldSearchScreen extends Component {
                 )}
               />
               <TouchableOpacity style={styles.locationBox}>
-                <Text style={styles.locationText}>{no_teams_found_nearby}</Text>
+                <Text style={styles.locationText}>
+                  {I18n.t("no_teams_found_nearby")}
+                </Text>
               </TouchableOpacity>
             </View>
           );
@@ -829,7 +838,7 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => this.getLocationPure()}>
                 <Text style={styles.locationText}>
-                  {enable_location_to_find_nearest_fields}
+                  {I18n.t("enable_location_to_find_nearest_fields")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -839,7 +848,7 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => Permissions.openSettings()}>
                 <Text style={styles.locationText}>
-                  {enable_location_to_find_nearest_fields}
+                  {I18n.t("enable_location_to_find_nearest_fields")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -850,7 +859,7 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.getLocationPure()}>
               <Text style={styles.locationText}>
-                {enable_location_to_find_nearest_fields}
+                {I18n.t("enable_location_to_find_nearest_fields")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -860,7 +869,7 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
               <Text style={styles.locationText}>
-                {enable_location_to_find_nearest_fields}
+                {I18n.t("enable_location_to_find_nearest_fields")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -869,7 +878,9 @@ class FieldSearchScreen extends Component {
         var list = (
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
-              <Text style={styles.locationText}>{location_access_blocked}</Text>
+              <Text style={styles.locationText}>
+                {I18n.t("location_access_blocked")}
+              </Text>
             </TouchableOpacity>
           </View>
         );

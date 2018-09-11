@@ -22,6 +22,7 @@ var moment = require("moment");
 import NavigationService from "FieldsReact/NavigationService";
 import PushNotification from "react-native-push-notification";
 import PushService from "FieldsReact/PushService";
+import I18n from "FieldsReact/i18n";
 
 import {
   not_in_a_team,
@@ -275,7 +276,7 @@ class FeedScreen extends React.Component {
             resizeMode="cover"
             borderRadius={50}
           />
-          <Text style={styles.teamCardText}>{not_in_a_team}</Text>
+          <Text style={styles.teamCardText}>{I18n.t("not_in_a_team")}</Text>
         </TouchableOpacity>
       );
     }
@@ -283,7 +284,9 @@ class FeedScreen extends React.Component {
     if (this.state.friends.length === 0) {
       var feedFriendList = (
         <View style={styles.addFriendBox}>
-          <Text style={styles.add_friends_text}>{add_friends_from_search}</Text>
+          <Text style={styles.add_friends_text}>
+            {I18n.t("add_friends_from_search")}
+          </Text>
         </View>
       );
     } else {
@@ -316,7 +319,7 @@ class FeedScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.rowCont}>{teamCard}</View>
 
-        <Text style={styles.friendsText}>{friends}</Text>
+        <Text style={styles.friendsText}>{I18n.t("friends")}</Text>
         {feedFriendList}
 
         <View style={styles.navigationContainer}>

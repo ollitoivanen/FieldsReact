@@ -8,11 +8,12 @@ export default class UserSearchItem extends React.PureComponent {
     super(props);
 
     this.state = {
-      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+      profileImagePath: { uri: "f_logo_white_bg" }
     };
     if (this.props.uIm === true) {
       this.getUserImage();
-    }  }
+    }
+  }
 
   getUserImage = () => {
     var storage = firebase.storage();

@@ -34,6 +34,7 @@ import {
 import firebase from "react-native-firebase";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
 import FastImage from "react-native-fast-image";
+import I18n from "FieldsReact/i18n";
 
 const mapStateToProps = state => {
   return {
@@ -229,7 +230,7 @@ class DetailTeamScreen extends Component {
             style={styles.roundTextContainer}
             onPress={() => this.openRemoveRequestModal(true)}
           >
-            <Text style={styles.blueText}>{request_pending}</Text>
+            <Text style={styles.blueText}>{I18n.t("request_pending")}</Text>
           </TouchableOpacity>
         );
       } else if (this.props.userData.pT !== params.teamID) {
@@ -238,7 +239,9 @@ class DetailTeamScreen extends Component {
             style={styles.roundTextContainer}
             onPress={() => this.openRemoveAndSendRequestModal()}
           >
-            <Text style={styles.blueText}>{request_pending_on_other_team}</Text>
+            <Text style={styles.blueText}>
+              {I18n.t("request_pending_on_other_team")}
+            </Text>
           </TouchableOpacity>
         );
       }
@@ -250,7 +253,7 @@ class DetailTeamScreen extends Component {
             onPress={() => sendRequest()}
             //Permissions
           >
-            <Text style={styles.blueText}>{join_team}</Text>
+            <Text style={styles.blueText}>{I18n.t("join_team")}</Text>
           </TouchableOpacity>
         );
       } else if (this.props.userData.uTI !== undefined) {
@@ -285,7 +288,9 @@ class DetailTeamScreen extends Component {
     } else {
       var eventList = (
         <View style={styles.locationBox}>
-          <Text style={styles.locationText}>{no_upcoming_events}</Text>
+          <Text style={styles.locationText}>
+            {I18n.t("no_upcoming_events")}
+          </Text>
         </View>
       );
     }
@@ -332,9 +337,12 @@ class DetailTeamScreen extends Component {
 
               <TouchableOpacity
                 style={styles.playersButton}
-                onPress={() => this.props.navigation.navigate("SupportScreen")}
+                onPress={() => {
+                  this.props.navigation.navigate("SupportScreen"),
+                    this.setModalVisible(false);
+                }}
               >
-                <Text style={styles.infoText}>{report}</Text>
+                <Text style={styles.infoText}>{I18n.t("report")}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -372,7 +380,9 @@ class DetailTeamScreen extends Component {
                   removeRequest();
                 }}
               >
-                <Text style={styles.removeText}>{remove_request}</Text>
+                <Text style={styles.removeText}>
+                  {I18n.t("remove_request")}
+                </Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -412,7 +422,9 @@ class DetailTeamScreen extends Component {
                 }}
               >
                 <Text style={styles.removeText}>
-                  {remove_old_request_and_send_new_request_to_this_team}
+                  {I18n.t(
+                    "remove_old_request_and_send_new_request_to_this_team"
+                  )}
                 </Text>
               </TouchableOpacity>
             </TouchableOpacity>
@@ -428,7 +440,7 @@ class DetailTeamScreen extends Component {
             >
               <Image
                 style={styles.backButton}
-                source={{uri: 'back_button'}}
+                source={{ uri: "back_button" }}
               />
             </TouchableOpacity>
             <Text style={styles.teamName}>{params.teamUsername}</Text>
@@ -450,7 +462,7 @@ class DetailTeamScreen extends Component {
           >
             <Image
               style={styles.infoIcon}
-              source={{uri: 'info'}}
+              source={{ uri: "info" }}
               resizeMode="cover"
             />
           </TouchableOpacity>
@@ -459,7 +471,7 @@ class DetailTeamScreen extends Component {
         </View>
 
         <View style={styles.eventRowContainer}>
-          <Text style={styles.teamName}>{events}</Text>
+          <Text style={styles.teamName}>{I18n.t("events")}</Text>
         </View>
         {eventList}
 

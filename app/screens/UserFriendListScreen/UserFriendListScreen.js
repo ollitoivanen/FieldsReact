@@ -11,6 +11,7 @@ import {
 import UserFriendListItem from "FieldsReact/app/components/UserFriendListItem/UserFriendListItem"; // we'll create this next
 import { friends } from "../../strings/strings";
 import firebase from "react-native-firebase";
+import I18n from "FieldsReact/i18n";
 
 export default class UserFriendListScreen extends Component {
   static navigationOptions = {
@@ -66,7 +67,7 @@ export default class UserFriendListScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{friends}</Text>
+          <Text style={styles.teamName}>{I18n.t("friends")}</Text>
         </View>
         <FlatList
           data={this.state.friends}

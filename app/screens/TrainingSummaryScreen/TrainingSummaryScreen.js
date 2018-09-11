@@ -7,6 +7,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { you_earned, done, reputation } from "../../strings/strings";
+import I18n from "FieldsReact/i18n";
 
 export default class TrainingSummaryScreen extends Component {
   static navigationOptions = {
@@ -17,10 +18,10 @@ export default class TrainingSummaryScreen extends Component {
     var trainingReputation = params.trainingReputation;
     return (
       <View style={styles.container}>
-        <Text style={styles.headerText}>{you_earned}</Text>
+        <Text style={styles.headerText}>{I18n.t("you_earned")}</Text>
         <View style={styles.roundBackground}>
           <Text style={styles.headerText}>
-            {trainingReputation} {reputation}
+            {trainingReputation} {I18n.t("reputation")}
           </Text>
         </View>
 
@@ -28,7 +29,7 @@ export default class TrainingSummaryScreen extends Component {
           style={styles.roundBackgroundEnd}
           onPress={() => this.props.navigation.goBack()}
         >
-          <Text style={styles.endText}>{done}</Text>
+          <Text style={styles.endText}>{I18n.t("done")}</Text>
         </TouchableOpacity>
       </View>
     );

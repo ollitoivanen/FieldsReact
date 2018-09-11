@@ -45,6 +45,7 @@ import validator from "validator";
 import { username } from "../../strings/strings";
 import Loader from "FieldsReact/app/components/Loader/Loader.js";
 import Swiper from "react-native-swiper";
+import I18n from "FieldsReact/i18n";
 
 export default class SignUpScreen extends React.Component {
   static navigationOptions = {
@@ -126,7 +127,7 @@ export default class SignUpScreen extends React.Component {
           <View style={styles.logoContainer}>
             <Image style={styles.logo} source={{ uri: "f_logo_white_bg" }} />
           </View>
-          <Text style={styles.text2}>{welcome}</Text>
+          <Text style={styles.text2}>{I18n.t("welcome")}</Text>
           <TextInput
             textContentType="username"
             maxLength={30}
@@ -164,21 +165,21 @@ export default class SignUpScreen extends React.Component {
             ref={input1 => (this.passwordInput = input1)}
           />
           <View style={styles.termsBox}>
-            <Text style={styles.text}>{by_signing_up_you}</Text>
+            <Text style={styles.text}>{I18n.t("by_signing_up_you")}</Text>
             <Text
               style={{ color: "#3bd774" }}
               onPress={() =>
                 Linking.openURL("https://fields.one/privacy-policy/")
               }
             >
-              {terms}
+              {I18n.t("terms")}
             </Text>
           </View>
           <TouchableOpacity
             onPress={this.handleSignUp}
             style={styles.buttonContainer}
           >
-            <Text style={styles.buttonText}>{signup}</Text>
+            <Text style={styles.buttonText}>{I18n.t("signup")}</Text>
           </TouchableOpacity>
           {this.state.errorMessage && (
             <Text style={styles.error}>{this.state.errorMessage}</Text>
@@ -191,7 +192,7 @@ export default class SignUpScreen extends React.Component {
               style={styles.text}
               onPress={() => this.props.navigation.navigate("LoginScreen")}
             >
-              {already_have_an_account}
+              {I18n.t("already_have_an_account")}
             </Text>
           </View>
 
@@ -206,51 +207,59 @@ export default class SignUpScreen extends React.Component {
             >
               <View style={styles.slide1}>
                 <Text style={styles.headerTextBigGray}>
-                  {welcome_to_fields}
+                  {I18n.t("welcome_to_fields")}
                 </Text>
 
                 <Image
                   style={styles.logo}
                   source={{ uri: "f_logo_white_bg" }}
                 />
-                <Text style={styles.headerTextGray}>{lets_see}</Text>
+                <Text style={styles.headerTextGray}>{I18n.t("lets_see")}</Text>
               </View>
               <View style={styles.slide2}>
-                <Text style={styles.headerTextBig}>{football_fields}</Text>
+                <Text style={styles.headerTextBig}>
+                  {I18n.t("football_fields")}
+                </Text>
 
                 <Image
                   style={styles.logo}
-                  source={{ uri: "FootballFieldArt" }}
+                  source={{ uri: "football_field_art" }}
                   resizeMode={"contain"}
                 />
 
-                <Text style={styles.headerText}>{see_where}</Text>
+                <Text style={styles.headerText}>{I18n.t("see_where")}</Text>
               </View>
               <View style={styles.slide3}>
-                <Text style={styles.headerTextBig}>{manage_your_team}</Text>
+                <Text style={styles.headerTextBig}>
+                  {I18n.t("manage_your_team")}
+                </Text>
 
                 <Image
                   style={styles.logo}
-                  source={{ uri: "FieldsPlayArt" }}
-                  resizeMode={"contain"}
-                />
-                <Text style={styles.headerText}>{set_team_events}</Text>
-              </View>
-              <View style={styles.slide2}>
-                <Text style={styles.headerTextBig}>{earn_reputation}</Text>
-
-                <Image
-                  style={styles.logo}
-                  source={{ uri: "FieldsUpArt" }}
+                  source={{ uri: "fields_play_art" }}
                   resizeMode={"contain"}
                 />
                 <Text style={styles.headerText}>
-                  {earn_reputation_by_training}
+                  {I18n.t("set_team_events")}
+                </Text>
+              </View>
+              <View style={styles.slide2}>
+                <Text style={styles.headerTextBig}>
+                  {I18n.t("earn_reputation")}
+                </Text>
+
+                <Image
+                  style={styles.logo}
+                  source={{ uri: "fields_up_art" }}
+                  resizeMode={"contain"}
+                />
+                <Text style={styles.headerText}>
+                  {I18n.t("earn_reputation_by_training")}
                 </Text>
               </View>
               <View style={styles.slide1}>
                 <Text style={styles.headerTextBigGray}>
-                  {sounds_awesome_right}
+                  {I18n.t("sounds_awesome_right")}
                 </Text>
 
                 <Image
@@ -261,7 +270,7 @@ export default class SignUpScreen extends React.Component {
                   style={styles.letsgo}
                   onPress={() => this.setState({ firstLaunch: false })}
                 >
-                  <Text style={styles.headerText}>{lets_go}</Text>
+                  <Text style={styles.headerText}>{I18n.t("lets_go")}</Text>
                 </TouchableOpacity>
               </View>
             </Swiper>

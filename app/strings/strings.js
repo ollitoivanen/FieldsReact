@@ -173,7 +173,8 @@ export const favorite_fields = "Favorite fields";
 export const no_favorite_fields =
   "No favorite fields. Add your favorites from field screen for quick and leannn access! ;) ⚽️❤️";
 export const current_training = "Current training";
-export const support  = "Support"
-export const contact_us_here = "Contact us here"
-export const report = "Report"
-export const if_you_want_to_report = "If you want to report inapproptiate users, teams or fields, please contact with the link above. Feel free to ask any other pressing questions through this link also! 🙏🏼"
+export const support = "Support";
+export const contact_us_here = "Contact us here";
+export const report = "Report";
+export const if_you_want_to_report =
+  "If you want to report inapproptiate users, teams or fields, please contact with the link above. Feel free to ask any other pressing questions through this link also! 🙏🏼";

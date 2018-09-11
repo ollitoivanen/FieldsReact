@@ -8,6 +8,8 @@ import {
   join_team,
   create_team
 } from "../../strings/strings";
+import I18n from "FieldsReact/i18n";
+
 
 export default class NoTeamScreen extends Component {
   static navigationOptions = {
@@ -27,12 +29,11 @@ export default class NoTeamScreen extends Component {
           </TouchableOpacity>
         </View>
         <Text style={styles.headerText}>
-          {join_team_to_get_best_out_of_fields}
+          {I18n.t('join_team_to_get_best_out_of_fields')}
         </Text>
         <View style={styles.roundCont}>
-          <Text style={styles.subText}>{add_team_events}</Text>
-          <Text style={styles.subText}>{see_whos_coming_to_events}</Text>
-          <Text style={styles.subText}>{message_your_squad}</Text>
+          <Text style={styles.subText}>{I18n.t('add_team_events')}</Text>
+          <Text style={styles.subText}>{I18n.t('see_whos_coming_to_events')}</Text>
         </View>
 
         <TouchableOpacity
@@ -44,7 +45,7 @@ export default class NoTeamScreen extends Component {
             })
           }
         >
-          <Text style={styles.blackText}>{create_team}</Text>
+          <Text style={styles.blackText}>{I18n.t('create_team')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -53,7 +54,7 @@ export default class NoTeamScreen extends Component {
             this.props.navigation.navigate("SearchScreen", { selectedIndex: 1 })
           }
         >
-          <Text style={styles.whiteText}>{join_team}</Text>
+          <Text style={styles.whiteText}>{I18n.t('join_team')}</Text>
         </TouchableOpacity>
       </View>
     );

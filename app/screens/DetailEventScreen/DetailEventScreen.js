@@ -24,6 +24,7 @@ import firebase, { Firebase } from "react-native-firebase";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import PlayerListItem from "FieldsReact/app/components/PlayerListItem/PlayerListItem"; // we'll create this next
+import I18n from "FieldsReact/i18n";
 
 const mapStateToProps = state => {
   return {
@@ -170,19 +171,19 @@ class DetailEventScreen extends Component {
       var filterBox = (
         <View style={styles.filterBox}>
           <TouchableOpacity style={styles.filterItem}>
-            <Text style={styles.filterTextGreen}>{event_in}</Text>
+            <Text style={styles.filterTextGreen}>{I18n.t("event_in")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.filterItem}
             onPress={() => this.updateIndex(1)}
           >
-            <Text style={styles.filterText}>{event_open}</Text>
+            <Text style={styles.filterText}>{I18n.t("event_open")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.filterItem}
             onPress={() => this.updateIndex(2)}
           >
-            <Text style={styles.filterText}>{event_out}</Text>
+            <Text style={styles.filterText}>{I18n.t("event_out")}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -193,16 +194,16 @@ class DetailEventScreen extends Component {
             style={styles.filterItem}
             onPress={() => this.updateIndex(0)}
           >
-            <Text style={styles.filterText}>{event_in}</Text>
+            <Text style={styles.filterText}>{I18n.t("event_in")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.filterItem}>
-            <Text style={styles.filterTextGray}>{event_open}</Text>
+            <Text style={styles.filterTextGray}>{I18n.t("event_open")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.filterItem}
             onPress={() => this.updateIndex(2)}
           >
-            <Text style={styles.filterText}>{event_out}</Text>
+            <Text style={styles.filterText}>{I18n.t("event_out")}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -213,16 +214,16 @@ class DetailEventScreen extends Component {
             style={styles.filterItem}
             onPress={() => this.updateIndex(0)}
           >
-            <Text style={styles.filterText}>{event_in}</Text>
+            <Text style={styles.filterText}>{I18n.t("event_in")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.filterItem}
             onPress={() => this.updateIndex(1)}
           >
-            <Text style={styles.filterText}>{event_open}</Text>
+            <Text style={styles.filterText}>{I18n.t("event_open")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.filterItem}>
-            <Text style={styles.filterTextRed}>{event_out}</Text>
+            <Text style={styles.filterTextRed}>{I18n.t("event_out")}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -231,7 +232,7 @@ class DetailEventScreen extends Component {
     if (this.state.playerListVisible === false) {
       var playerListTab = (
         <TouchableOpacity onPress={() => this.setPlayerListVisible()}>
-          <Text style={styles.blueText}>{show_players}</Text>
+          <Text style={styles.blueText}>{I18n.t("show_players")}</Text>
         </TouchableOpacity>
       );
     } else {
@@ -256,7 +257,9 @@ class DetailEventScreen extends Component {
     }
 
     if (params.eventFieldName === undefined) {
-      var eventField = <Text style={styles.infoText}>{field_not_set}</Text>;
+      var eventField = (
+        <Text style={styles.infoText}>{I18n.t("field_not_set")}</Text>
+      );
     } else {
       var eventField = (
         <Text style={styles.infoText}>{params.eventFieldName}</Text>
@@ -329,7 +332,7 @@ class DetailEventScreen extends Component {
                 style={styles.buttonContainer}
                 onPress={() => deleteEvent()}
               >
-                <Text style={styles.deleteText}>{delete_event}</Text>
+                <Text style={styles.deleteText}>{I18n.t("delete_event")}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -340,28 +343,22 @@ class DetailEventScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={{uri: 'back_button'}}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{event_details}</Text>
+          <Text style={styles.teamName}>{I18n.t("event_details")}</Text>
           <TouchableOpacity
             style={styles.infoContainer}
             underlayColor="#bcbcbc"
             onPress={() => this.setModalVisible(true)}
           >
-            <Image
-              style={styles.infoIcon}
-              source={{uri: 'info_black'}}
-            />
+            <Image style={styles.infoIcon} source={{ uri: "info_black" }} />
           </TouchableOpacity>
         </View>
         <View style={styles.eventInfoCont}>
           <View style={styles.greenTab} />
           <View style={styles.columnCont}>
             <Text style={styles.infoTextType}>
-              {event_type_array[params.eventType]}
+              {I18n.t(["event_type_array", params.eventType])}
             </Text>
             {eventField}
             <Text style={styles.infoTextDate}>

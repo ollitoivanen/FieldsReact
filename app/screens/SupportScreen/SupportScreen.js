@@ -4,12 +4,20 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Linking
+  Linking,
+  Image
 } from "react-native";
-import { if_you_want_to_report } from "../../strings/strings";
-export { contact_us_here } from "../../strings/strings";
+import {
+  if_you_want_to_report,
+  support,
+  contact_us_here
+} from "../../strings/strings";
+import I18n from "FieldsReact/i18n";
 
 export default class SupportScreen extends Component {
+  static navigationOptions = {
+    header: null
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -21,15 +29,15 @@ export default class SupportScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{settings}</Text>
+          <Text style={styles.teamName}>{I18n.t("support")}</Text>
         </View>
         <TouchableOpacity
           style={styles.contactButton}
           onPress={() => Linking.openURL("https://fields.one/contact/")}
         >
-          <Text style={styles.contact}>{contact_us_here}</Text>
+          <Text style={styles.contact}>{I18n.t("contact_us_here")}</Text>
         </TouchableOpacity>
-        <Text style={styles.reportText}>{if_you_want_to_report}</Text>
+        <Text style={styles.reportText}>{I18n.t("if_you_want_to_report")}</Text>
       </View>
     );
   }
@@ -49,11 +57,11 @@ const styles = StyleSheet.create({
     padding: 20
   },
   reportText: {
-    fldxWrap: "wrap",
+    flexWrap: "wrap",
     margin: 20,
     textAlign: "center",
     fontSize: 16,
-    fontWeight: "bolf"
+    fontWeight: "bold"
   },
   teamName: {
     fontWeight: "bold",

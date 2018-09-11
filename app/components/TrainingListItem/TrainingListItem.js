@@ -39,7 +39,7 @@ export default class TrainingListItem extends React.PureComponent {
               " " +
               this.props.re +
               " " +
-              [reputation]}
+              [I18n.t('reputation')]}
           </Text>
         </View>
       </View>

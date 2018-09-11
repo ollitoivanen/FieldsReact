@@ -27,7 +27,7 @@ export default class PlayerListItem extends React.PureComponent {
       <View style={styles.item}>
         <Image
           style={styles.fieldImage}
-          source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+          source={{ uri: "f_logo_white_bg" }}
           borderRadius={25}
           resizeMode="cover"
         />

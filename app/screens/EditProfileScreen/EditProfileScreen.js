@@ -21,6 +21,8 @@ import firebase from "react-native-firebase";
 import FastImage from "react-native-fast-image";
 var ImagePicker = require("react-native-image-picker");
 import ImageResizer from "react-native-image-resizer";
+import I18n from "FieldsReact/i18n";
+
 const mapStateToProps = state => {
   return {
     userData: state.userData
@@ -221,7 +223,7 @@ class EditProfileScreen extends Component {
               source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{edit_profile}</Text>
+          <Text style={styles.teamName}>{I18n.t('edit_profile')}</Text>
         </View>
         <TouchableOpacity
           style={styles.imageTabContainer}
@@ -230,7 +232,7 @@ class EditProfileScreen extends Component {
           {profileImage}
         </TouchableOpacity>
 
-        <Text style={styles.headerText}>{username}</Text>
+        <Text style={styles.headerText}>{I18n.t('username')}</Text>
         <TextInput
           style={styles.textInput}
           maxLength={30}
@@ -244,7 +246,7 @@ class EditProfileScreen extends Component {
           style={styles.buttonContainer}
           onPress={() => this.saveProfile()}
         >
-          <Text style={styles.buttonText}>{save}</Text>
+          <Text style={styles.buttonText}>{I18n.t('save')}</Text>
         </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
       </View>

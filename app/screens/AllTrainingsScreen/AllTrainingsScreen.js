@@ -18,7 +18,8 @@ var moment = require("moment");
 
 import { info, trainings, edit_team, min, h } from "../../strings/strings";
 import firebase from "react-native-firebase";
-import TrainingListItem from "FieldsReact/app/components/TrainingListItem/TrainingListItem"; // we'll create this next
+import TrainingListItem from "FieldsReact/app/components/TrainingListItem/TrainingListItem"; // we'll create this nextimport I18n from "FieldsReact/i18n";
+import I18n from "FieldsReact/i18n";
 
 const mapStateToProps = state => {
   return {
@@ -60,10 +61,11 @@ class AllTrainingsScreen extends Component {
             console.warn(seconds + "ffff");
 
             if (hours < 1) {
-              var trainingTime = minutes + [ min ];
+              var trainingTime = minutes + [I18n.t("min")];
             } else {
               var minSub = minutes - hours * 60;
-              var trainingTime = hours + [h] + " " + minSub + [min];
+              var trainingTime =
+                hours + [I18n.t("h")] + " " + minSub + [I18n.t("min")];
             }
 
             trainings.push({
@@ -114,13 +116,20 @@ class AllTrainingsScreen extends Component {
         console.warn(value);
         //Usre team data redux is pretty uselsess
         if (JSON.parse(value).length === this.props.userData.tC) {
-         var trainings = JSON.parse(value).sort((a, b) => parseInt(b.key) - parseInt(a.key));
+          var trainings = JSON.parse(value).sort(
+            (a, b) => parseInt(b.key) - parseInt(a.key)
+          );
 
-          this.setState({ trainings: trainings});
+          this.setState({ trainings: trainings });
         } else {
-          firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).update({
-            tC: JSON.parse(value).length
-          }).then(this.setState({trainings: JSON.parse(value)}))
+          firebase
+            .firestore()
+            .collection("Users")
+            .doc(firebase.auth().currentUser.uid)
+            .update({
+              tC: JSON.parse(value).length
+            })
+            .then(this.setState({ trainings: JSON.parse(value) }));
         }
       } else {
         this.loadTrainingList();
@@ -155,13 +164,10 @@ class AllTrainingsScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={{uri: 'back_button'}}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
           <Text style={styles.teamName}>
-            {this.state.trainings.length + " " + [trainings]}
+            {this.state.trainings.length + " " + [I18n.t("trainings")]}
           </Text>
         </View>
 

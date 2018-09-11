@@ -62,6 +62,8 @@ pod 'Firebase/Storage', '~> 5.3.0'
 
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
 
+  pod 'RNI18n', :path => '../node_modules/react-native-i18n'
+
 end
 
 # Auth0 Lock

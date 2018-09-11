@@ -1,9 +1,6 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
-import {
- accept,
- decline
-} from "../../strings/strings";
+import { accept, decline } from "../../strings/strings";
 export default class TeamPlayerListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
@@ -18,13 +15,11 @@ export default class TeamPlayerListItem extends React.PureComponent {
       <View style={styles.item}>
         <Image
           style={styles.fieldImage}
-          source={require("FieldsReact/app/images/FieldsLogo/fields_logo_green.png")}
+          source={{ uri: "f_logo_white_bg" }}
           borderRadius={25}
           resizeMode="cover"
         />
         {usernameText}
-       
-
       </View>
     );
   }
@@ -32,7 +27,7 @@ export default class TeamPlayerListItem extends React.PureComponent {
 const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
-    flex:1,
+    flex: 1,
     backgroundColor: "white",
     alignItems: "center"
   },
@@ -46,27 +41,23 @@ const styles = StyleSheet.create({
   },
 
   textRed: {
-    color: 'red',
-    fontWeight:'bold',
+    color: "red",
+    fontWeight: "bold",
     marginHorizontal: 10,
     marginEnd: 20
-
-
   },
 
   textGreen: {
-    color: '#3bd774',
-    fontWeight:'bold',
+    color: "#3bd774",
+    fontWeight: "bold",
     marginHorizontal: 10
-
-    
   },
 
   textGray: {
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
-    flexWrap: "wrap",
+    flexWrap: "wrap"
   },
 
   fieldImage: {

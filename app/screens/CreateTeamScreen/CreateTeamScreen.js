@@ -26,6 +26,8 @@ import {
 import FastImage from "react-native-fast-image";
 var ImagePicker = require("react-native-image-picker");
 import ImageResizer from "react-native-image-resizer";
+import I18n from "FieldsReact/i18n";
+
 
 const mapStateToProps = state => {
   return {
@@ -210,7 +212,7 @@ class CreateTeamScreen extends Component {
             })
           }
         >
-          <Text style={styles.getLocationText}>{get_team_location}</Text>
+          <Text style={styles.getLocationText}>{I18n.t('get_team_location')}</Text>
         </TouchableOpacity>
       );
     } else {
@@ -228,7 +230,7 @@ class CreateTeamScreen extends Component {
             })
           }
         >
-          <Text style={styles.getLocationText}>{team_location_set}</Text>
+          <Text style={styles.getLocationText}>{I18n.t('team_location_set')}</Text>
         </TouchableOpacity>
       );
     }
@@ -245,7 +247,7 @@ class CreateTeamScreen extends Component {
               source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{create_team}</Text>
+          <Text style={styles.teamName}>{I18n.t('create_team')}</Text>
         </View>
 
         <TouchableOpacity onPress={() => this.showPicker()}>
@@ -257,7 +259,7 @@ class CreateTeamScreen extends Component {
           />
         </TouchableOpacity>
 
-        <Text style={styles.headerText}>{team_username}</Text>
+        <Text style={styles.headerText}>{I18n.t('team_username')}</Text>
         <TextInput
           style={styles.textInput}
           maxLength={30}
@@ -274,7 +276,7 @@ class CreateTeamScreen extends Component {
           style={styles.buttonContainer}
           onPress={() => this.createTeam()}
         >
-          <Text style={styles.buttonText}>{create_team}</Text>
+          <Text style={styles.buttonText}>{I18n.t('create_team')}</Text>
         </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
       </View>

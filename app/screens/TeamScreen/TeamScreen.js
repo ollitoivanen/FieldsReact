@@ -24,6 +24,7 @@ import {
 var moment = require("moment");
 
 import EventListItem from "FieldsReact/app/components/EventListItem/EventListItem"; // we'll create this next
+import I18n from "FieldsReact/i18n";
 
 import {
   info,
@@ -372,7 +373,9 @@ class TeamScreen extends Component {
     } else {
       var eventList = (
         <View style={styles.locationBox}>
-          <Text style={styles.locationText}>{no_upcoming_events}</Text>
+          <Text style={styles.locationText}>
+            {I18n.t("no_upcoming_events")}
+          </Text>
         </View>
       );
     }
@@ -413,21 +416,21 @@ class TeamScreen extends Component {
                   marginStart: 4
                 }}
               >
-                {are_you_sure_to_leave_team}
+                {I18n.t("are_you_sure_to_leave_team")}
               </Text>
 
               <TouchableOpacity
                 style={styles.leaveTeamButton}
                 onPress={() => this.leaveTeam()}
               >
-                <Text style={styles.buttonText}>{leave_team}</Text>
+                <Text style={styles.buttonText}>{I18n.t("leave_team")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.editTeamButton}
                 onPress={() => this.openPendingPlayerList()}
               >
-                <Text style={styles.buttonText}>{nope}</Text>
+                <Text style={styles.buttonText}>{I18n.t("nope")}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -468,35 +471,35 @@ class TeamScreen extends Component {
                   marginStart: 4
                 }}
               >
-                {info}
+                {I18n.t("info")}
               </Text>
 
               <TouchableOpacity
                 style={styles.playersButton}
                 onPress={() => this.openPlayerList()}
               >
-                <Text style={styles.infoText}>{players}</Text>
+                <Text style={styles.infoText}>{I18n.t("players")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.playersButton}
                 onPress={() => this.openPendingPlayerList()}
               >
-                <Text style={styles.infoText}>{pending_players}</Text>
+                <Text style={styles.infoText}>{I18n.t("pending_players")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.editTeamButton}
                 onPress={() => this.setEditVisible(true)}
               >
-                <Text style={styles.buttonText}>{edit_team}</Text>
+                <Text style={styles.buttonText}>{I18n.t("edit_team")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.leaveTeamButton}
                 onPress={() => this.setLeaveVisible(true)}
               >
-                <Text style={styles.buttonText}>{leave_team}</Text>
+                <Text style={styles.buttonText}>{I18n.t("leave_team")}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -539,7 +542,7 @@ class TeamScreen extends Component {
         </View>
 
         <View style={styles.eventRowContainer}>
-          <Text style={styles.teamName}>{events}</Text>
+          <Text style={styles.teamName}>{I18n.t("events")}</Text>
           <TouchableOpacity
             onPress={() =>
               this.props.navigation.navigate("CreateEventScreen", {

@@ -8,6 +8,7 @@ import {
   Geolocation
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import I18n from "FieldsReact/i18n";
 
 import { get_field_location, done } from "../../strings/strings";
 
@@ -86,7 +87,7 @@ export default class MapScreen extends Component {
               })
             }
           >
-            <Text style={styles.doneText}>{done}</Text>
+            <Text style={styles.doneText}>{I18n.t("done")}</Text>
           </TouchableOpacity>
         );
       } else if (params.from === "createTeam") {
@@ -101,7 +102,7 @@ export default class MapScreen extends Component {
               })
             }
           >
-            <Text style={styles.doneText}>{done}</Text>
+            <Text style={styles.doneText}>{I18n.t("done")}</Text>
           </TouchableOpacity>
         );
       } else if (params.from === "editField") {
@@ -116,7 +117,7 @@ export default class MapScreen extends Component {
               })
             }
           >
-            <Text style={styles.doneText}>{done}</Text>
+            <Text style={styles.doneText}>{I18n.t("done")}</Text>
           </TouchableOpacity>
         );
       } else if (params.from === "editTeam") {
@@ -131,14 +132,14 @@ export default class MapScreen extends Component {
               })
             }
           >
-            <Text style={styles.doneText}>{done}</Text>
+            <Text style={styles.doneText}>{I18n.t("done")}</Text>
           </TouchableOpacity>
         );
       }
     } else {
       var doneButton = (
         <TouchableOpacity style={styles.notDoneBox}>
-          <Text style={styles.notDoneText}>{done}</Text>
+          <Text style={styles.notDoneText}>{I18n.t("done")}</Text>
         </TouchableOpacity>
       );
     }
@@ -153,7 +154,7 @@ export default class MapScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{get_field_location}</Text>
+          <Text style={styles.teamName}>{I18n.t("get_field_location")}</Text>
         </View>
         <View style={styles.mapBox}>
           <MapView

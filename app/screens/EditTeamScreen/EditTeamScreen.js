@@ -15,6 +15,7 @@ var ImagePicker = require("react-native-image-picker");
 import ImageResizer from "react-native-image-resizer";
 import firebase from "react-native-firebase";
 import { connect } from "react-redux";
+import I18n from "FieldsReact/i18n";
 
 import {
   getUserData,
@@ -345,7 +346,7 @@ class EditTeamScreen extends Component {
             />
           </TouchableOpacity>
           <View style={{ flexDirection: "column" }}>
-            <Text style={styles.fieldName}>{edit_team}</Text>
+            <Text style={styles.fieldName}>{I18n.t('edit_team')}</Text>
           </View>
         </View>
 
@@ -357,7 +358,7 @@ class EditTeamScreen extends Component {
             resizeMode="cover"
           />
         </TouchableOpacity>
-        <Text style={styles.headerText}>{team_username}</Text>
+        <Text style={styles.headerText}>{I18n.t('team_username')}</Text>
         <TextInput
           style={styles.textInput}
           maxLength={30}
@@ -371,14 +372,14 @@ class EditTeamScreen extends Component {
           style={styles.getLocationBox}
           onPress={() => this.openMap()}
         >
-          <Text style={styles.getLocationText}>{change_team_location}</Text>
+          <Text style={styles.getLocationText}>{I18n.t('change_team_location')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={() => saveTeamData()}
         >
-          <Text style={styles.buttonText}>{save}</Text>
+          <Text style={styles.buttonText}>{I18n.t('save')}</Text>
         </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
       </ScrollView>

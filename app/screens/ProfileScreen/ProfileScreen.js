@@ -12,6 +12,7 @@ import {
 import { connect } from "react-redux";
 var moment = require("moment");
 import FastImage from "react-native-fast-image";
+import I18n from "FieldsReact/i18n";
 
 import firebase from "react-native-firebase";
 
@@ -190,7 +191,7 @@ class ProfileScreen extends Component {
 
     var currentFieldPlaceHolder = (
       <TouchableOpacity style={styles.roundTextContainerBordered}>
-        <Text style={styles.boxText}>{not_at_any_field}</Text>
+        <Text style={styles.boxText}>{I18n.t("not_at_any_field")}</Text>
       </TouchableOpacity>
     );
     if (this.props.userData.cFI !== "") {
@@ -226,7 +227,7 @@ class ProfileScreen extends Component {
       var userTeamPlaceHolder = (
         <TouchableOpacity style={styles.roundTextContainer}>
           <Image style={styles.teamIcon} source={{ uri: "team" }} />
-          <Text style={styles.boxText}>{not_in_a_team} </Text>
+          <Text style={styles.boxText}>{I18n.t("not_in_a_team")} </Text>
         </TouchableOpacity>
       );
     }
@@ -268,7 +269,7 @@ class ProfileScreen extends Component {
                 }
               >
                 <Text style={styles.boxText}>
-                  {this.state.fC} {friends}
+                  {this.state.fC} {I18n.t("friends")}
                 </Text>
               </TouchableOpacity>
 
@@ -279,7 +280,7 @@ class ProfileScreen extends Component {
                 }
               >
                 <Text style={styles.boxText}>
-                  {this.props.userData.tC} {trainings}
+                  {this.props.userData.tC} {I18n.t("trainings")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -292,7 +293,7 @@ class ProfileScreen extends Component {
             >
               {badge}
               <Text style={styles.boxText}>
-                {this.props.userData.re} {reputation}
+                {this.props.userData.re} {I18n.t("reputation")}
               </Text>
             </TouchableOpacity>
           </View>

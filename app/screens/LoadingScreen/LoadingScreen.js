@@ -5,6 +5,7 @@ import { NavigationActions, StackActions } from "react-navigation";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import { getUserAndTeamData } from "../../redux/app-redux";
+import I18n from "FieldsReact/i18n";
 
 const mapStateToProps = state => {
   return {

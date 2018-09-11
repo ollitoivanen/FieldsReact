@@ -1,13 +1,12 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
-import { event_type_array, at } from "../../strings/strings";
+import { event_type_array } from "../../strings/strings";
 export default class EventListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
   render() {
-
     if (this.props.eFI !== undefined) {
-      var eventField = " " + [at] + " " + this.props.eFN;
+      var eventField = ", " + this.props.eFN;
     } else {
       var eventField = null;
     }

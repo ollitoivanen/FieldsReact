@@ -3,6 +3,8 @@ import { StyleSheet, View, Image, TouchableOpacity, Text } from "react-native";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import { reputation, to_next_badge } from "../../strings/strings";
+import I18n from "FieldsReact/i18n";
+
 const mapStateToProps = state => {
   return {
     userData: state.userData,
@@ -75,15 +77,15 @@ class ReputationScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{reputation}</Text>
+          <Text style={styles.teamName}>{I18n.t('reputation')}</Text>
         </View>
         <View style={styles.badgeContainer}>{badge}</View>
         <View style={styles.badgeContainer}>
           <Text style={styles.reputationText}>
-            {this.props.userData.re + " " + [reputation]}
+            {this.props.userData.re + " " + [I18n.t('reputation')]}
           </Text>
         </View>
-        <Text style={styles.tillText}>{tillNextBadge}</Text>
+        <Text style={styles.tillText}>{I18n.t('tillNextBadge')}</Text>
       </View>
     );
   }

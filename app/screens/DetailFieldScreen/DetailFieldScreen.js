@@ -49,6 +49,8 @@ var ImagePicker = require("react-native-image-picker");
 import ImageResizer from "react-native-image-resizer";
 var PushNotification = require("react-native-push-notification");
 import PushService from "FieldsReact/PushService";
+import Permissions from "react-native-permissions";
+import I18n from "FieldsReact/i18n";
 
 import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
 
@@ -133,6 +135,14 @@ class DetailFieldScreen extends Component {
   };
 
   startTraining = () => {
+    /*if(Platform.OS === 'ios'){
+    Permissions.check('notifications').then(response=>{
+      if(response==='denied'){
+        Permissions.request('notification')
+      }
+    })
+  }
+*/
     var { params } = this.props.navigation.state;
     this.sendNotification();
     const startTime = moment().format("x");
@@ -533,7 +543,7 @@ class DetailFieldScreen extends Component {
         style={styles.startTrainingButton}
         onPress={() => this.existingTraining()}
       >
-        <Text style={styles.boxTextBlue}>{youre_training_here}</Text>
+        <Text style={styles.boxTextBlue}>{I18n.t("youre_training_here")}</Text>
       </TouchableOpacity>
     );
 
@@ -542,13 +552,15 @@ class DetailFieldScreen extends Component {
         style={styles.startTrainingButton}
         onPress={() => this.startTraining()}
       >
-        <Text style={styles.boxTextBlue}>{start_training_here}</Text>
+        <Text style={styles.boxTextBlue}>{I18n.t("start_training_here")}</Text>
       </TouchableOpacity>
     );
 
     const trainingButtonTrainingElsewhere = (
       <TouchableOpacity style={styles.startTrainingButton}>
-        <Text style={styles.boxTextBlue}>{youre_training_elsewhere}</Text>
+        <Text style={styles.boxTextBlue}>
+          {I18n.t("youre_training_elsewhere")}
+        </Text>
       </TouchableOpacity>
     );
 
@@ -611,30 +623,35 @@ class DetailFieldScreen extends Component {
                   marginStart: 4
                 }}
               >
-                {info}
+                {I18n.t("info")}
               </Text>
               <Text style={styles.infoText}>
-                {goals} {this.state.goalCount}
+                {I18n.t("goals")} {this.state.goalCount}
               </Text>
               <Text style={styles.infoText}>
-                {field_type} {field_type_array[[this.state.fieldType]]}
+                {I18n.t("field_type")}{" "}
+                {field_type_array[[this.state.fieldType]]}
               </Text>
 
               <Text style={styles.infoText}>
-                {access_type} {field_access_type_array[[this.state.accessType]]}
+                {I18n.t("access_type")}{" "}
+                {field_access_type_array[[this.state.accessType]]}
               </Text>
 
               <TouchableOpacity
                 style={styles.editFieldButton}
                 onPress={() => this.setEditVisible(true)}
               >
-                <Text style={styles.buttonText}>{edit_field}</Text>
+                <Text style={styles.buttonText}>{I18n.t("edit_field")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.playersButton}
-                onPress={() => this.props.navigation.navigate("SupportScreen")}
+                onPress={() => {
+                  this.props.navigation.navigate("SupportScreen"),
+                    this.setModalVisible(false);
+                }}
               >
-                <Text style={styles.buttonText}>{report}</Text>
+                <Text style={styles.reportText}>{I18n.t("report")}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -680,7 +697,7 @@ class DetailFieldScreen extends Component {
             >
               <Image
                 style={styles.backButton}
-                source={{uri: 'back_button'}}
+                source={{ uri: "back_button" }}
               />
             </TouchableOpacity>
             <View
@@ -705,7 +722,7 @@ class DetailFieldScreen extends Component {
             <View>
               <TouchableOpacity style={styles.peopleHereButton}>
                 <Text style={styles.boxTextBlack}>
-                  {this.state.peopleHere} {people_here}
+                  {this.state.peopleHere} {I18n.t("people_here")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -718,10 +735,7 @@ class DetailFieldScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.setModalVisible(true)}
           >
-            <Image
-              style={styles.infoIcon}
-              source={{uri: 'info'}}
-            />
+            <Image style={styles.infoIcon} source={{ uri: "info" }} />
           </TouchableOpacity>
         </View>
 
@@ -779,7 +793,7 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     marginTop: 8
   },
-  infoText: {
+  reportText: {
     fontWeight: "bold",
     margin: 4,
     textAlign: "center"

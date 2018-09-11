@@ -1,16 +1,12 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
-import { event_type_array, at } from "../../strings/strings";
+import { event_type_array } from "../../strings/strings";
+import I18n from "FieldsReact/i18n";
+
 export default class EventListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
   render() {
-if(this.props.eventFieldID!==undefined){
-var eventField = " " + [at] + " " + this.props.eventFieldName
-}else{
-    var eventField = null
-}
-     
     return (
       <View style={styles.cont}>
         <View style={styles.item}>
@@ -24,8 +20,10 @@ var eventField = " " + [at] + " " + this.props.eventFieldName
         </View>
         <View style={styles.item}>
           <Text style={styles.trainingText} numberOfLines={2}>
-            {event_type_array[this.props.eTY] + ","
-             + " " + this.props.tUN}
+            {I18n.t(["event_type_array", this.props.eTY]) +
+              "," +
+              " " +
+              this.props.tUN}
           </Text>
         </View>
       </View>

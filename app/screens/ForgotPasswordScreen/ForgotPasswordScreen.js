@@ -16,6 +16,8 @@ import {
 import firebase from "react-native-firebase";
 import validator from "validator";
 import { please_enter_valid_email } from "FieldsReact/app/strings/strings";
+import I18n from "FieldsReact/i18n";
+
 
 export default class ForgotPasswordScreen extends Component {
   static navigationOptions = {
@@ -45,7 +47,7 @@ export default class ForgotPasswordScreen extends Component {
         >
           <Image style={styles.logo} source={{ uri: "back_button" }} />
         </TouchableOpacity>
-        <Text style={styles.text}>{forgot_password_enter_email}</Text>
+        <Text style={styles.text}>{I18n.t('forgot_password_enter_email')}</Text>
         <TextInput
           value={this.state.email1}
           style={styles.textInput}
@@ -60,7 +62,7 @@ export default class ForgotPasswordScreen extends Component {
           style={styles.buttonContainer}
           onPress={this.sendMessage}
         >
-          <Text style={styles.buttonText}>{send}</Text>
+          <Text style={styles.buttonText}>{I18n.t('send')}</Text>
         </TouchableOpacity>
         {this.state.errorMessage && (
           <Text style={styles.error}>{this.state.errorMessage}</Text>

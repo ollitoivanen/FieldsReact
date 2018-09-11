@@ -28,6 +28,8 @@ import {
   getUserData,
   getUserAndTeamData
 } from "FieldsReact/app/redux/app-redux.js";
+import I18n from "FieldsReact/i18n";
+
 
 import DateTimePicker from "react-native-modal-datetime-picker";
 
@@ -266,7 +268,7 @@ class CreateEventScreen extends Component {
     if (params.fieldID === null) {
       var chosenField = (
         <TouchableOpacity onPress={() => openFieldSearch()}>
-          <Text style={styles.chooseFieldText}>{choose_field}</Text>
+          <Text style={styles.chooseFieldText}>{I18n.t('choose_field')}</Text>
         </TouchableOpacity>
       );
     } else {
@@ -380,19 +382,19 @@ class CreateEventScreen extends Component {
               }}
             >
               <TouchableOpacity onPress={() => changeEventType(0)}>
-                <Text style={styles.dialogText}>{event_type_array[0]}</Text>
+                <Text style={styles.dialogText}>{I18n.t(['event_type_array', 0])}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeEventType(1)}>
-                <Text style={styles.dialogText}>{event_type_array[1]}</Text>
+                <Text style={styles.dialogText}>{I18n.t(['event_type_array', 1])}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeEventType(2)}>
-                <Text style={styles.dialogText}>{event_type_array[2]}</Text>
+                <Text style={styles.dialogText}>{I18n.t(['event_type_array', 2])}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeEventType(3)}>
-                <Text style={styles.dialogText}>{event_type_array[3]}</Text>
+                <Text style={styles.dialogText}>{I18n.t(['event_type_array', 3])}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeEventType(4)}>
-                <Text style={styles.dialogText}>{event_type_array[4]}</Text>
+                <Text style={styles.dialogText}>{I18n.t(['event_type_array', 4])}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -409,29 +411,29 @@ class CreateEventScreen extends Component {
               source={{uri: 'back_button'}}
             />
           </TouchableOpacity>
-          <Text style={styles.topHeader}>{create_new_event}</Text>
+          <Text style={styles.topHeader}>{I18n.t('create_new_event')}</Text>
         </View>
-        <Text style={styles.header}>{event_field}</Text>
+        <Text style={styles.header}>{I18n.t('event_field')}</Text>
         {chosenField}
-        <Text style={styles.header}>{event_type}</Text>
+        <Text style={styles.header}>{I18n.t('event_type')}</Text>
 
         <TouchableOpacity onPress={() => this.setEventTypeModal(true)}>
           <Text style={styles.timeText}>
-            {event_type_array[this.state.chosenEventType]}
+            {I18n.t(['event_type_array', this.state.chosenEventType])}
           </Text>
         </TouchableOpacity>
 
-        <Text style={styles.header}>{event_date}</Text>
+        <Text style={styles.header}>{I18n.t('event_date')}</Text>
         <TouchableOpacity onPress={() => this.showDatePicker()}>
           <Text style={styles.timeText}>{this.state.date}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.header}>{start_time}</Text>
+        <Text style={styles.header}>{I18n.t('start_time')}</Text>
         <TouchableOpacity onPress={() => this.showStartTimePicker()}>
           <Text style={styles.timeText}>{this.state.startTime}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.header}>{end_time}</Text>
+        <Text style={styles.header}>{I18n.t('end_time')}</Text>
         <TouchableOpacity onPress={() => this.showEndTimePicker()}>
           <Text style={styles.timeText}>{this.state.endTime}</Text>
         </TouchableOpacity>
@@ -467,7 +469,7 @@ class CreateEventScreen extends Component {
           style={styles.buttonContainer}
           onPress={() => saveEvent()}
         >
-          <Text style={styles.buttonText}>{save}</Text>
+          <Text style={styles.buttonText}>{I18n.t('save')}</Text>
         </TouchableOpacity>
       </View>
     );

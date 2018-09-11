@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 var PushNotification = require("react-native-push-notification");
 import PushService from "FieldsReact/PushService";
+import I18n from "FieldsReact/i18n";
 
 import {
   StackNavigator,
@@ -381,11 +382,13 @@ class TrainingScreen extends Component {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.headerText}>{currently_training_at}</Text>
+          <Text style={styles.headerText}>
+            {I18n.t("currently_training_at")}
+          </Text>
           <View style={styles.roundBackground}>
             <Text style={styles.fieldText}>{this.props.userData.cFN}</Text>
           </View>
-          <Text style={styles.headerText}>{training_time}</Text>
+          <Text style={styles.headerText}>{I18n.t("training_time")}</Text>
 
           <View style={styles.roundBackground}>
             <Text style={styles.trainingTimeText}>
@@ -397,7 +400,7 @@ class TrainingScreen extends Component {
             style={styles.roundBackgroundEnd}
             onPress={() => this.endTraining()}
           >
-            <Text style={styles.endText}>{end_training}</Text>
+            <Text style={styles.endText}>{I18n.t("end_training")}</Text>
           </TouchableOpacity>
         </View>
       </View>

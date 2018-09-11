@@ -21,6 +21,7 @@ import {
 } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import TeamPendingPlayerListItem from "FieldsReact/app/components/TeamPendingPlayerListItem/TeamPendingPlayerListItem"; // we'll create this next
+import I18n from "FieldsReact/i18n";
 
 const mapStateToProps = state => {
   return {
@@ -149,7 +150,7 @@ class TeamPendingPlayersScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{pending_players}</Text>
+          <Text style={styles.teamName}>{I18n.t("pending_players")}</Text>
         </View>
         <FlatList
           data={this.state.players}
@@ -157,11 +158,11 @@ class TeamPendingPlayersScreen extends Component {
             <View style={styles.item}>
               <TeamPendingPlayerListItem {...item} />
               <TouchableOpacity onPress={() => this.accept(item)}>
-                <Text style={styles.textGreen}>{accept}</Text>
+                <Text style={styles.textGreen}>{I18n.t("accept")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => this.decline(item)}>
-                <Text style={styles.textRed}>{decline}</Text>
+                <Text style={styles.textRed}>{I18n.t("decline")}</Text>
               </TouchableOpacity>
               <View style={styles.div} />
             </View>

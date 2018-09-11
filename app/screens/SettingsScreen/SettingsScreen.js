@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import firebase from "react-native-firebase";
+import I18n from "FieldsReact/i18n";
 
 import {
   settings,
@@ -35,21 +36,21 @@ class SettingsScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{settings}</Text>
+          <Text style={styles.teamName}>{I18n.t("settings")}</Text>
         </View>
         <TouchableOpacity
           style={styles.item}
           onPress={() => this.props.navigation.navigate("EditProfileScreen")}
         >
-          <Text style={styles.itemText}>{edit_profile}</Text>
+          <Text style={styles.itemText}>{I18n.t("edit_profile")}</Text>
 
           <View style={styles.div} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.item}
-          onPress={() => this.props.navigation.navigate("SupportScreens")}
+          onPress={() => this.props.navigation.navigate("SupportScreen")}
         >
-          <Text style={styles.itemText}>{support}</Text>
+          <Text style={styles.itemText}>{I18n.t("support")}</Text>
 
           <View style={styles.div} />
         </TouchableOpacity>
@@ -57,7 +58,7 @@ class SettingsScreen extends Component {
           style={styles.item}
           onPress={() => firebase.auth().signOut()}
         >
-          <Text style={styles.itemText}>{log_out}</Text>
+          <Text style={styles.itemText}>{I18n.t("log_out")}</Text>
 
           <View style={styles.div} />
         </TouchableOpacity>
