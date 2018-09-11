@@ -6,7 +6,7 @@ export default {
   login: "Kirjaudu sisään",
   signup: "Rekisteröidy",
   password: "Salasana",
-  already_have_an_account: "Onko sinulla jo Käyttäjä? Kirjaudu sisään",
+  already_have_an_account: "Onko sinulla jo käyttäjä? Kirjaudu sisään",
   dont_have_an_account: "Ei vielä käyttäjää? Rekistöidy.",
   please_enter_valid_email: "Virheellinen sähkposti",
   please_enter_username: "Käyttäjänimi puutuu",
@@ -19,10 +19,12 @@ export default {
   forgot_password_enter_email:
     "Anna käyttäjäsi sähköposti alle ja lähetämme sinulle viestin salasanan vaihtamiseksi!",
   send: "lähetä",
-  trainings: "Harjoitukset",
-  friends: "Kaverit",
+  trainings: "Harjoitusta",
+  friends: "Kaveria",
+  friends_fi: "Kaverit",
+
   not_in_a_team: "Ei joukkueessa",
-  reputation: "Reputaatio",
+  reputation: "Reputaatiota",
   not_at_any_field: "Ei kentillä",
 
   goals: "Maalit:",
@@ -31,7 +33,7 @@ export default {
   info: "Info",
   field_type_array: {
     0: "Ylläpidetty luonnonnurmi",
-    1: "luonnonnurmi",
+    1: "Luonnonnurmi",
     2: "Pehmeä keinonurmi",
     3: "Kova keinonurmi",
     4: "Hiekka",
@@ -114,7 +116,7 @@ export default {
   add_team_events: "Lisää joukkueen tapahtumia",
   see_whos_coming_to_events: "Katso kuka on tulossa tapahtumiin",
   create_team: "Luo joukkue",
-  to_next_badge: "ta seuraavaan merkkiin. Let's go!",
+  to_next_badge: "seuraavaan merkkiin. Let's go!",
   settings: "Asetukset",
   log_out: "Kirjaudu ulos",
   edit_profile: "Muokkaa profiilia",
@@ -164,5 +166,11 @@ export default {
   contact_us_here: "Ota meihin yhteyttä täältä",
   report: "Ilmoita epä-asiallisuus",
   if_you_want_to_report:
-    "Jos haluat ilmoittaa epä-asiallisista käyttäjistä, joukkueista tai kentistä, otathan meihin yhteyttä yläpuolella olevan linkin kautta. Kysy vapaasti mitä tahansa muitankin kysymyksiä tätä kautta! 🙏🏼"
+    "Jos haluat ilmoittaa epä-asiallisista käyttäjistä, joukkueista tai kentistä, otathan meihin yhteyttä yläpuolella olevan linkin kautta. Kysy vapaasti mitä tahansa muitankin kysymyksiä tätä kautta! 🙏🏼 Jos haluat saada tietoosi sinun käyttäjästä tallentamamme tiedot, ota yhteyttä tästä liknistä."
+    ,delete_account: "Poista käyttäjä",
+    are_you_sure_to_delete_all_account_data : "Haluatko varmasti poistaa kaikki käyttäjätiedot?",
+    yes: "kyllä",
+    enter_account_information_to_delete :"Anna käyttäjätiedot poistaaksesi"
+
+
 };

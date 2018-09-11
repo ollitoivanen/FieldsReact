@@ -319,7 +319,7 @@ class FeedScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.rowCont}>{teamCard}</View>
 
-        <Text style={styles.friendsText}>{I18n.t("friends")}</Text>
+        <Text style={styles.friendsText}>{I18n.t("friends_fi")}</Text>
         {feedFriendList}
 
         <View style={styles.navigationContainer}>

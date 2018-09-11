@@ -90,13 +90,13 @@ export default class SignUpScreen extends React.Component {
 
   handleSignUp = () => {
     if (this.state.username1.length == 0) {
-      this.setState({ errorMessage: [please_enter_username] });
+      this.setState({ errorMessage: [I18n.t("please_enter_username")] });
     } else if (!validator.isEmail(this.state.email1)) {
-      this.setState({ errorMessage: [please_enter_valid_email] });
+      this.setState({ errorMessage: [I18n.t("please_enter_valid_email")] });
     } else if (this.state.password1.length == 0) {
-      this.setState({ errorMessage: [please_enter_password] });
+      this.setState({ errorMessage: [I18n.t("please_enter_password")] });
     } else if (this.state.password1.length < 7) {
-      this.setState({ errorMessage: [please_enter_password] });
+      this.setState({ errorMessage: [I18n.t("please_enter_password")] });
     } else {
       this.setState({ loading: true });
       firebase

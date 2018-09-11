@@ -247,7 +247,7 @@ export default class EditFieldScreen extends Component {
           }
         }
       } else {
-        this.setState({ errorMessage: [please_fill_all_fields] });
+        this.setState({ errorMessage: [I18n.t('please_fill_all_fields')] });
       }
     };
     const changeFieldType = index => {
@@ -291,7 +291,7 @@ export default class EditFieldScreen extends Component {
           style={styles.textInput}
           maxLength={30}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={field_name}
+          placeholder={I18n.t('field_name')}
           value={this.state.fieldName}
           onChangeText={fieldName => this.setState({ fieldName })}
         />
@@ -323,7 +323,7 @@ export default class EditFieldScreen extends Component {
 
         <TouchableOpacity onPress={() => this.setFieldAccessTypeModal(true)}>
           <Text style={styles.pickerText}>
-            {["field_access_type_array", this.state.chosenAccessType]}
+            {I18n.t(["field_access_type_array", this.state.chosenAccessType])}
           </Text>
         </TouchableOpacity>
 
@@ -522,6 +522,15 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 10,
     backgroundColor: "white"
+  },
+  backButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  backButton: {
+    height: 48,
+    width: 48,
+    alignSelf: "center"
   },
   profileImageEdit: {
     width: 80,

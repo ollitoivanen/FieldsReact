@@ -188,7 +188,7 @@ class EditProfileScreen extends Component {
           });
       }
     } else {
-      this.setState({ errorMessage: [please_fill_all_fields] });
+      this.setState({ errorMessage: I18n.t('please_fill_all_fields') });
     }
   };
   render() {
@@ -218,12 +218,9 @@ class EditProfileScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={{uri: 'back_button'}}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{I18n.t('edit_profile')}</Text>
+          <Text style={styles.teamName}>{I18n.t("edit_profile")}</Text>
         </View>
         <TouchableOpacity
           style={styles.imageTabContainer}
@@ -232,12 +229,12 @@ class EditProfileScreen extends Component {
           {profileImage}
         </TouchableOpacity>
 
-        <Text style={styles.headerText}>{I18n.t('username')}</Text>
+        <Text style={styles.headerText}>{I18n.t("username")}</Text>
         <TextInput
           style={styles.textInput}
           maxLength={30}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={username}
+          placeholder={I18n.t('username')}
           value={this.state.username}
           onChangeText={this.usernameHandle}
         />
@@ -246,7 +243,7 @@ class EditProfileScreen extends Component {
           style={styles.buttonContainer}
           onPress={() => this.saveProfile()}
         >
-          <Text style={styles.buttonText}>{I18n.t('save')}</Text>
+          <Text style={styles.buttonText}>{I18n.t("save")}</Text>
         </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
       </View>

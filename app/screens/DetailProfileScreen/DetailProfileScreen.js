@@ -244,12 +244,12 @@ class DetailProfileScreen extends Component {
     const hours = Math.trunc(minutes / 60);
 
     if (minutes < 1) {
-      this.setState({ trainingTime: [under_minute] });
+      this.setState({ trainingTime: [I18n.t('under_minute')] });
     } else if (hours < 1) {
-      this.setState({ trainingTime: minutes + [min] });
+      this.setState({ trainingTime: minutes + [I18n.t('min')] });
     } else {
       const minSub = minutes - hours * 60;
-      this.setState({ trainingTime: hours + [h] + " " + minSub + [min] });
+      this.setState({ trainingTime: hours + [I18n.t('h')] + " " + minSub + [I18n.t('min')] });
     }
   };
 
@@ -429,7 +429,7 @@ class DetailProfileScreen extends Component {
                   marginStart: 4
                 }}
               >
-                {info}
+                {I18n.t('info')}
               </Text>
 
               <TouchableOpacity
@@ -439,7 +439,7 @@ class DetailProfileScreen extends Component {
                     this.setModalVisible(false);
                 }}
               >
-                <Text style={styles.infoText}>{report}</Text>
+                <Text style={styles.infoText}>{I18n.t('report')}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -467,13 +467,24 @@ class DetailProfileScreen extends Component {
 
             {userTeamPlaceHolder}
             {friendButton}
+            <TouchableOpacity
+            style={styles.infoContainer}
+            underlayColor="#bcbcbc"
+            onPress={() => this.setModalVisible(true)}
+          >
+            <Image
+              style={styles.infoIcon}
+              source={{ uri: "info" }}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
           </View>
 
           <View style={styles.actionContainer}>
             <View style={styles.imageTabContainer}>
               <TouchableOpacity style={styles.textContainer}>
                 <Text style={styles.boxText}>
-                  {tC} {trainings}
+                  {tC} {I18n.t('trainings')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -483,7 +494,7 @@ class DetailProfileScreen extends Component {
             <TouchableOpacity style={styles.roundTextContainerBordered}>
               {badge}
               <Text style={styles.boxText}>
-                {re} {reputation}
+                {re} {I18n.t('reputation')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -520,7 +531,8 @@ const styles = StyleSheet.create({
   backButtonContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
     paddingHorizontal: 10,
     backgroundColor: "#3bd774"
   },
@@ -528,6 +540,20 @@ const styles = StyleSheet.create({
     height: 48,
     width: 48,
     alignSelf: "center"
+  },
+
+  infoContainer: {
+    position: "absolute",
+    bottom: 18,
+    end: 12,
+    height: 36,
+    width: 36,
+    elevation: 10
+  },
+
+  infoIcon: {
+    height: 36,
+    width: 36
   },
 
   rowCont: {

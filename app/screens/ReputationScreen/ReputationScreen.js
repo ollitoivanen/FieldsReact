@@ -27,32 +27,59 @@ class ReputationScreen extends Component {
 
     let badge;
     if (this.props.userData.re < 500) {
+      nextBadge = 500;
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_1" }} />;
     } else if (this.props.userData.re < 1500) {
+      nextBadge = 1500;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_2" }} />;
     } else if (this.props.userData.re < 3000) {
+      nextBadge = 3000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_3" }} />;
     } else if (this.props.userData.re < 6000) {
+      nextBadge = 6000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_4" }} />;
     } else if (this.props.userData.re < 10000) {
+      nextBadge = 10000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_5" }} />;
     } else if (this.props.userData.re < 15000) {
+      nextBadge = 15000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_6" }} />;
     } else if (this.props.userData.re < 21000) {
+      nextBadge = 21000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_7" }} />;
     } else if (this.props.userData.re < 28000) {
+      nextBadge = 28000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_8" }} />;
     } else if (this.props.userData.re < 38000) {
+      nextBadge = 38000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_9" }} />;
     } else if (this.props.userData.re < 48000) {
+      nextBadge = 48000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_10" }} />;
     } else if (this.props.userData.re < 58000) {
+      nextBadge = 58000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_11" }} />;
     } else if (this.props.userData.re < 70000) {
+      nextBadge = 70000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_12" }} />;
     } else if (this.props.userData.re < 85000) {
+      nextBadge = 85000;
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_13" }} />;
     } else if (this.props.userData.re >= 85000) {
+      nextBadge = "gg";
+
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_14" }} />;
     }
 
@@ -63,9 +90,9 @@ class ReputationScreen extends Component {
         nextBadge -
         this.props.userData.re +
         " " +
-        [reputation] +
+        [I18n.t("reputation")] +
         " " +
-        [to_next_badge];
+        [I18n.t("to_next_badge")];
     }
     return (
       <View style={styles.container}>
@@ -77,15 +104,15 @@ class ReputationScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{I18n.t('reputation')}</Text>
+          <Text style={styles.teamName}>{I18n.t("reputation")}</Text>
         </View>
         <View style={styles.badgeContainer}>{badge}</View>
         <View style={styles.badgeContainer}>
           <Text style={styles.reputationText}>
-            {this.props.userData.re + " " + [I18n.t('reputation')]}
+            {this.props.userData.re + " " + [I18n.t("reputation")]}
           </Text>
         </View>
-        <Text style={styles.tillText}>{I18n.t('tillNextBadge')}</Text>
+        <Text style={styles.tillText}>{tillNextBadge}</Text>
       </View>
     );
   }

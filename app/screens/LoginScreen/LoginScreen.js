@@ -25,7 +25,6 @@ import validator from "validator";
 import Loader from "FieldsReact/app/components/Loader/Loader.js";
 import I18n from "FieldsReact/i18n";
 
-
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -52,7 +51,7 @@ export default class LoginScreen extends React.Component {
         .catch(error =>
           this.setState({
             loading: false,
-            errorMessage: [email_and_password_dont_match_any_users]
+            errorMessage: [I18n.t("email_and_password_dont_match_any_users")]
           })
         );
     }
@@ -63,7 +62,7 @@ export default class LoginScreen extends React.Component {
         <View style={styles.logoContainer}>
           <Image style={styles.logo} source={{ uri: "f_logo_white_bg" }} />
         </View>
-        <Text style={styles.text2}>{I18n.t('welcome_back')}</Text>
+        <Text style={styles.text2}>{I18n.t("welcome_back")}</Text>
         <TextInput
           underlineColorAndroid="rgba(0,0,0,0)"
           style={styles.textInput}
@@ -90,7 +89,7 @@ export default class LoginScreen extends React.Component {
           style={styles.buttonContainer}
           onPress={this.handleLogin}
         >
-          <Text style={styles.buttonText}>{I18n.t('login')}</Text>
+          <Text style={styles.buttonText}>{I18n.t("login")}</Text>
         </TouchableOpacity>
         {this.state.errorMessage && (
           <Text style={styles.error}>{this.state.errorMessage}</Text>
@@ -103,13 +102,13 @@ export default class LoginScreen extends React.Component {
           style={styles.text}
           onPress={() => this.props.navigation.navigate("ForgotPasswordScreen")}
         >
-          {I18n.t('forgot_password')}
+          {I18n.t("forgot_password")}
         </Text>
         <Text
           style={styles.text3}
           onPress={() => this.props.navigation.navigate("SignUpScreen")}
         >
-          {I18n.t('dont_have_an_account')}
+          {I18n.t("dont_have_an_account")}
         </Text>
       </View>
     );
@@ -149,9 +148,9 @@ const styles = StyleSheet.create({
 
   text: {
     marginTop: 16,
+    marginBottom: 16,
     color: "#bcbcbc",
     textAlign: "center",
-    flex: 1,
     justifyContent: "flex-start"
   },
   text2: {

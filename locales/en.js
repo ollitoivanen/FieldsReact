@@ -21,6 +21,7 @@ export default {
   send: "send",
   trainings: "Trainings",
   friends: "Friends",
+  friends_fi: "Friends",
   not_in_a_team: "Not in a team",
   reputation: "Reputation",
   not_at_any_field: "Not at any field",
@@ -41,22 +42,28 @@ export default {
   address: "Address:",
   info: "Info",
   field_type_array: {
-   0: "Maintained natural grass",
-    1:"Natural grass",
-    2:"Soft artificial grass",
-   3: "Hard artificial grass",
-   4: "Sand",
-   5: "Pavement"
+    0: "Maintained natural grass",
+    1: "Natural grass",
+    2: "Soft artificial grass",
+    3: "Hard artificial grass",
+    4: "Sand",
+    5: "Pavement"
   },
   field_access_type_array: {
-   0: "Booking only",
-   1: "Booking, free if space",
-   2: "No booking, free if space",
-   3: "No outside access"
+    0: "Booking only",
+    1: "Booking, free if space",
+    2: "No booking, free if space",
+    3: "No outside access"
   },
 
-  event_type_array: {0:"Training", 0:"Game", 0:"Meeting", 0:"Tournament",0: "Other"},
-  people_here: "People here",
+  event_type_array: {
+    0: "Training",
+    0: "Game",
+    0: "Meeting",
+    0: "Tournament",
+    0: "Other"
+  },
+  people_here: "Players here",
   start_training_here: "Start training here",
   youre_training_here: "You're training here",
   youre_training_elsewhere: "You're training elsewhere",
@@ -155,7 +162,7 @@ export default {
   team_location_set: "Team location set",
   change_team_location: "Change team location",
   start_training: "Start training",
-  searchHeaders: {0:"Start training", 1:"Search team", 2:"Search players"},
+  searchHeaders: { 0: "Start training", 1: "Search team", 2: "Search players" },
   no_upcoming_events: "No upcoming events",
   location_access_blocked:
     "Location access blocked. Turn it back on from settings to find nearest fields!",
@@ -167,5 +174,10 @@ export default {
   contact_us_here: "Contact us here",
   report: "Report",
   if_you_want_to_report:
-    "If you want to report inapproptiate users, teams or fields, please contact with the link above. Feel free to ask any other pressing questions through this link also! 🙏🏼"
+    "If you want to report inapproptiate users, teams or fields, please contact with the link above. Feel free to ask any other pressing questions through this link also! 🙏🏼 If you want to see the data we have saved about your account, please contact us with this link.",
+  delete_account: "Delete account",
+  are_you_sure_to_delete_all_account_data: "Are you sure to delete all account data",
+  yes: "yes",
+  enter_account_information_to_delete: "Enter account information to delete"
+  
 };

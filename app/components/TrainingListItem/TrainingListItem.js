@@ -8,6 +8,8 @@ import {
   reputation
 } from "../../strings/strings";
 var moment = require("moment");
+import I18n from "FieldsReact/i18n";
+
 
 export default class TrainingListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
@@ -39,7 +41,7 @@ export default class TrainingListItem extends React.PureComponent {
               " " +
               this.props.re +
               " " +
-              [I18n.t('reputation')]}
+              [I18n.t("reputation")]}
           </Text>
         </View>
       </View>

@@ -249,7 +249,7 @@ class CreateNewFieldScreen extends Component {
             });
         }
       } else {
-        this.setState({ errorMessage: [please_fill_all_fields] });
+        this.setState({ errorMessage: I18n.t('please_fill_all_fields') });
       }
     };
     var { params } = this.props.navigation.state;

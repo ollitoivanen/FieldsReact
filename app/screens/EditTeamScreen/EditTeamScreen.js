@@ -328,7 +328,7 @@ class EditTeamScreen extends Component {
           }
         }
       } else {
-        this.setState({ errorMessage: please_fill_all_fields });
+        this.setState({ errorMessage: I18n.t('please_fill_all_fields') });
       }
     };
 
@@ -340,13 +340,10 @@ class EditTeamScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={{uri: 'back_button'}}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
           <View style={{ flexDirection: "column" }}>
-            <Text style={styles.fieldName}>{I18n.t('edit_team')}</Text>
+            <Text style={styles.fieldName}>{I18n.t("edit_team")}</Text>
           </View>
         </View>
 
@@ -358,12 +355,12 @@ class EditTeamScreen extends Component {
             resizeMode="cover"
           />
         </TouchableOpacity>
-        <Text style={styles.headerText}>{I18n.t('team_username')}</Text>
+        <Text style={styles.headerText}>{I18n.t("team_username")}</Text>
         <TextInput
           style={styles.textInput}
           maxLength={30}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={team_username}
+          placeholder={I18n.t('team_username')}
           value={this.state.teamUsername}
           onChangeText={this.usernameHandle}
         />
@@ -372,14 +369,16 @@ class EditTeamScreen extends Component {
           style={styles.getLocationBox}
           onPress={() => this.openMap()}
         >
-          <Text style={styles.getLocationText}>{I18n.t('change_team_location')}</Text>
+          <Text style={styles.getLocationText}>
+            {I18n.t("change_team_location")}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={() => saveTeamData()}
         >
-          <Text style={styles.buttonText}>{I18n.t('save')}</Text>
+          <Text style={styles.buttonText}>{I18n.t("save")}</Text>
         </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
       </ScrollView>
@@ -408,6 +407,15 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     marginTop: 16,
     borderRadius: 40
+  },
+  backButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  backButton: {
+    height: 48,
+    width: 48,
+    alignSelf: "center"
   },
 
   fieldName: {
