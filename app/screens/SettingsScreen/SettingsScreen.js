@@ -60,9 +60,9 @@ class SettingsScreen extends Component {
         .auth()
         .currentUser.reauthenticateWithCredential(credential)
         .then(() => {
-          this.setState({deleteVisible: false, loading: true})
+          this.setState({ deleteVisible: false, loading: true });
           if (this.props.userData.uTI !== undefined) {
-        var promise1 = firebase
+            var promise1 = firebase
               .firestore()
               .collection("Teams")
               .doc(this.props.userData.uTI)
@@ -70,7 +70,9 @@ class SettingsScreen extends Component {
               .doc(firebase.auth().currentUser.uid)
               .delete();
           }
-         var promise2 = firebase.firestore().collection("Friends")
+          var promise2 = firebase
+            .firestore()
+            .collection("Friends")
             .where("aI", "==", firebase.auth().currentUser.uid)
             .get()
             .then(function(doc) {
@@ -79,8 +81,9 @@ class SettingsScreen extends Component {
               });
             });
 
-          
-            var promise3 = firebase.firestore().collection("Friends")
+          var promise3 = firebase
+            .firestore()
+            .collection("Friends")
             .where("fI", "==", firebase.auth().currentUser.uid)
             .get()
             .then(function(doc) {
@@ -88,7 +91,7 @@ class SettingsScreen extends Component {
                 doc.delete();
               });
             });
-       var promise4 =   AsyncStorage.getItem("trainings").then(response => {
+          var promise4 = AsyncStorage.getItem("trainings").then(response => {
             if (response !== null) {
               AsyncStorage.removeItem("trainings");
               firebase
@@ -104,40 +107,42 @@ class SettingsScreen extends Component {
                 });
             }
           });
-       var promise5 =   AsyncStorage.getItem("favoriteFields").then(response => {
-            if (response !== null) {
-              AsyncStorage.removeItem("favoriteFields");
-              firebase
-                .firestore()
-                .collection("Users")
-                .doc(firebase.auth().currentUser.uid)
-                .collection("FF")
-                .get()
-                .then(function(doc) {
-                  doc.forEach(doc => {
-                    doc.delete();
+          var promise5 = AsyncStorage.getItem("favoriteFields").then(
+            response => {
+              if (response !== null) {
+                AsyncStorage.removeItem("favoriteFields");
+                firebase
+                  .firestore()
+                  .collection("Users")
+                  .doc(firebase.auth().currentUser.uid)
+                  .collection("FF")
+                  .get()
+                  .then(function(doc) {
+                    doc.forEach(doc => {
+                      doc.delete();
+                    });
                   });
-                });
+              }
             }
-          });
+          );
 
-        var promise6 =  AsyncStorage.getItem("teamPlayers").then(response => {
+          var promise6 = AsyncStorage.getItem("teamPlayers").then(response => {
             if (response !== null) {
               AsyncStorage.removeItem("teamPlayers");
             }
           });
-          var promise7 =  AsyncStorage.getItem("friends").then(response => {
+          var promise7 = AsyncStorage.getItem("friends").then(response => {
             if (response !== null) {
               AsyncStorage.removeItem("friends");
             }
           });
 
-          var promise8 =  AsyncStorage.getItem("nearTeams").then(response => {
+          var promise8 = AsyncStorage.getItem("nearTeams").then(response => {
             if (response !== null) {
               AsyncStorage.removeItem("nearTeams");
             }
           });
-          var promise9 =  AsyncStorage.getItem("nearFields").then(response => {
+          var promise9 = AsyncStorage.getItem("nearFields").then(response => {
             if (response !== null) {
               AsyncStorage.removeItem("nearFields");
             }
@@ -152,13 +157,22 @@ class SettingsScreen extends Component {
               firebase
                 .auth()
                 .currentUser.delete()
-                .then(() => {
-                });
+                .then(() => {});
             });
-            Promise.all([promise1, promise2, promise3, promise4, promise5, promise6, promise7, promise8, promise9, promise10]).then(()=>{
-              this.props.navigation.replace("LoadingScreen");
-
-            })
+          Promise.all([
+            promise1,
+            promise2,
+            promise3,
+            promise4,
+            promise5,
+            promise6,
+            promise7,
+            promise8,
+            promise9,
+            promise10
+          ]).then(() => {
+            this.props.navigation.replace("LoadingScreen");
+          });
         })
         .catch(error => {
           this.setState({
@@ -252,7 +266,7 @@ class SettingsScreen extends Component {
                 <Text style={styles.deleteText}>{I18n.t("yes")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.buttonContaineGreen}
+                style={styles.buttonContainerGreen}
                 onPress={() => this.setState({ infoVisible: false })}
               >
                 <Text style={styles.deleteText}>{I18n.t("nope")}</Text>
@@ -318,15 +332,13 @@ class SettingsScreen extends Component {
                   {I18n.t("delete_account")}
                 </Text>
               </TouchableOpacity>
-                <Text style={styles.error}>{this.state.errorMessage}</Text>
-              
-              <View style={styles.indicatorContainer} />
+              <Text style={styles.error}>{this.state.errorMessage}</Text>
 
+              <View style={styles.indicatorContainer} />
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
         <Loader loading={this.state.loading} />
-
       </View>
     );
   }
@@ -427,7 +439,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   buttonContainerGreen: {
-    backgroundColor: "#3bd774",
+    backgroundColor: "#3bd774",marginTop: 16,
     padding: 25,
     borderRadius: 10,
     alignItems: "center"

@@ -31,7 +31,6 @@ import {
 } from "../../strings/strings";
 import I18n from "FieldsReact/i18n";
 
-
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
@@ -166,18 +165,18 @@ class CreateNewFieldScreen extends Component {
             100
           ).then(({ uri }) => {
             var { params } = this.props.navigation.state;
-           
 
             storageRef
               .child("fieldpics/" + fieldID + "/" + fieldID + ".jpg")
-              .putFile( uri);
+              .putFile(uri);
           });
           const co = new firebase.firestore.GeoPoint(
             Math.round(params.lt * 10000000) / 10000000,
             Math.round(params.ln * 10000000) / 10000000
           );
           firebase
-            .firestore().collection("Fields")
+            .firestore()
+            .collection("Fields")
             .doc(fieldID)
             .set({
               fN: this.state.fieldName,
@@ -249,7 +248,7 @@ class CreateNewFieldScreen extends Component {
             });
         }
       } else {
-        this.setState({ errorMessage: I18n.t('please_fill_all_fields') });
+        this.setState({ errorMessage: I18n.t("please_fill_all_fields") });
       }
     };
     var { params } = this.props.navigation.state;
@@ -269,7 +268,9 @@ class CreateNewFieldScreen extends Component {
             })
           }
         >
-          <Text style={styles.getLocationText}>{I18n.t('get_field_location')}</Text>
+          <Text style={styles.getLocationText}>
+            {I18n.t("get_field_location")}
+          </Text>
         </TouchableOpacity>
       );
     } else {
@@ -287,7 +288,9 @@ class CreateNewFieldScreen extends Component {
             })
           }
         >
-          <Text style={styles.getLocationText}>{I18n.t('field_location_set')}</Text>
+          <Text style={styles.getLocationText}>
+            {I18n.t("field_location_set")}
+          </Text>
         </TouchableOpacity>
       );
     }
@@ -300,10 +303,7 @@ class CreateNewFieldScreen extends Component {
             underlayColor="#bcbcbc"
             onPress={() => this.props.navigation.goBack()}
           >
-            <Image
-              style={styles.backButton}
-              source={{uri: 'back_button'}}
-            />
+            <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
           <Text style={styles.fieldName}>{add_new_field}</Text>
         </View>
@@ -317,7 +317,7 @@ class CreateNewFieldScreen extends Component {
           />
         </TouchableOpacity>
 
-        <Text style={styles.headerText}>{I18n.t('field_name')}</Text>
+        <Text style={styles.headerText}>{I18n.t("field_name")}</Text>
         <TextInput
           style={styles.textInput}
           maxLength={30}
@@ -329,22 +329,22 @@ class CreateNewFieldScreen extends Component {
 
         {getFieldLocationBox}
 
-        <Text style={styles.headerText}>{I18n.t('field_field_type')}</Text>
+        <Text style={styles.headerText}>{I18n.t("field_field_type")}</Text>
 
         <TouchableOpacity onPress={() => this.setFieldTypeModal(true)}>
           <Text style={styles.pickerText}>
-            {I18n.t(['field_type_array',this.state.chosenFieldType])}
+            {I18n.t(["field_type_array", this.state.chosenFieldType])}
           </Text>
         </TouchableOpacity>
-        <Text style={styles.headerText}>{I18n.t('field_access_type')}</Text>
+        <Text style={styles.headerText}>{I18n.t("field_access_type")}</Text>
 
         <TouchableOpacity onPress={() => this.setFieldAccessTypeModal(true)}>
           <Text style={styles.pickerText}>
-            {I18n.t(['field_access_type_array',this.state.chosenAccessType])}
+            {I18n.t(["field_access_type_array", this.state.chosenAccessType])}
           </Text>
         </TouchableOpacity>
 
-        <Text style={styles.headerText}>{I18n.t('field_goal_count')}</Text>
+        <Text style={styles.headerText}>{I18n.t("field_goal_count")}</Text>
 
         <TouchableOpacity onPress={() => this.setGoalCountModal(true)}>
           <Text style={styles.pickerText}>{this.state.goalCount}</Text>
@@ -377,22 +377,34 @@ class CreateNewFieldScreen extends Component {
               }}
             >
               <TouchableOpacity onPress={() => changeFieldType(0)}>
-                <Text style={styles.dialogText}>{I18n.t(['field_type_array',0])}</Text>
+                <Text style={styles.dialogText}>
+                  {I18n.t(["field_type_array", 0])}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeFieldType(1)}>
-                <Text style={styles.dialogText}>{I18n.t(['field_type_array',1])}</Text>
+                <Text style={styles.dialogText}>
+                  {I18n.t(["field_type_array", 1])}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeFieldType(2)}>
-                <Text style={styles.dialogText}>{I18n.t(['field_type_array',2])}</Text>
+                <Text style={styles.dialogText}>
+                  {I18n.t(["field_type_array", 2])}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeFieldType(3)}>
-                <Text style={styles.dialogText}>{I18n.t(['field_type_array',3])}</Text>
+                <Text style={styles.dialogText}>
+                  {I18n.t(["field_type_array", 3])}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeFieldType(4)}>
-                <Text style={styles.dialogText}>{I18n.t(['field_type_array',4])}</Text>
+                <Text style={styles.dialogText}>
+                  {I18n.t(["field_type_array", 4])}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeFieldType(5)}>
-                <Text style={styles.dialogText}>{I18n.t(['field_type_array',5])}</Text>
+                <Text style={styles.dialogText}>
+                  {I18n.t(["field_type_array", 5])}
+                </Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -430,22 +442,22 @@ class CreateNewFieldScreen extends Component {
             >
               <TouchableOpacity onPress={() => changeFieldAccessType(0)}>
                 <Text style={styles.dialogText}>
-                  {I18n.t(['field_access_type_array',0])}
+                  {I18n.t(["field_access_type_array", 0])}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeFieldAccessType(1)}>
                 <Text style={styles.dialogText}>
-                  {I18n.t(['field_access_type_array',1])}
+                  {I18n.t(["field_access_type_array", 1])}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeFieldAccessType(2)}>
                 <Text style={styles.dialogText}>
-                  {I18n.t(['field_access_type_array',2])}
+                  {I18n.t(["field_access_type_array", 2])}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeFieldAccessType(3)}>
                 <Text style={styles.dialogText}>
-                  {I18n.t(['field_access_type_array',3])}
+                  {I18n.t(["field_access_type_array", 3])}
                 </Text>
               </TouchableOpacity>
             </TouchableOpacity>
@@ -513,7 +525,7 @@ class CreateNewFieldScreen extends Component {
           style={styles.buttonContainer}
           onPress={() => saveFieldData()}
         >
-          <Text style={styles.buttonText}>{I18n.t('save')}</Text>
+          <Text style={styles.buttonText}>{I18n.t("save")}</Text>
         </TouchableOpacity>
         {this.state.errorMessage && (
           <Text style={styles.error}>{this.state.errorMessage}</Text>

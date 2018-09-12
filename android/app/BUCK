@@ -45,12 +45,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.fieldsreact",
+    package = "com.fields.football",
 )
 
 android_resource(
     name = "res",
-    package = "com.fieldsreact",
+    package = "com.fields.football",
     res = "src/main/res",
 )
 

@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:111402678546:android:dbd3b8b7bf33f0d7",
         "android_client_info": {
-          "package_name": "com.fieldsreact"
+          "package_name": "com.fields.football"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "111402678546-9oufgp7vq6ka846phkkf9t4sd8iko99a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.fieldsreact",
+            "package_name": "com.fields.football",
             "certificate_hash": "c00b04f946662595d4e33e0971634828c24da855"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "111402678546-cvht1f6rj022lvdv9vd2fvh7grakfd3b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.fieldsreact",
+            "package_name": "com.fields.football",
             "certificate_hash": "b6a22ae4d1442f56e707f1a0271a1680d46b0c6d"
           }
         },

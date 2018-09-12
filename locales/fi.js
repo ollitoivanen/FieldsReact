@@ -166,11 +166,17 @@ export default {
   contact_us_here: "Ota meihin yhteyttä täältä",
   report: "Ilmoita epä-asiallisuus",
   if_you_want_to_report:
-    "Jos haluat ilmoittaa epä-asiallisista käyttäjistä, joukkueista tai kentistä, otathan meihin yhteyttä yläpuolella olevan linkin kautta. Kysy vapaasti mitä tahansa muitankin kysymyksiä tätä kautta! 🙏🏼 Jos haluat saada tietoosi sinun käyttäjästä tallentamamme tiedot, ota yhteyttä tästä liknistä."
-    ,delete_account: "Poista käyttäjä",
-    are_you_sure_to_delete_all_account_data : "Haluatko varmasti poistaa kaikki käyttäjätiedot?",
-    yes: "kyllä",
-    enter_account_information_to_delete :"Anna käyttäjätiedot poistaaksesi"
+    "Jos haluat ilmoittaa epä-asiallisista käyttäjistä, joukkueista tai kentistä, otathan meihin yhteyttä yläpuolella olevan linkin kautta. Kysy vapaasti mitä tahansa muitankin kysymyksiä tätä kautta! 🙏🏼 Jos haluat saada tietoosi sinun käyttäjästä tallentamamme tiedot, ota yhteyttä tästä liknistä.",
+  delete_account: "Poista käyttäjä",
+  are_you_sure_to_delete_all_account_data:
+    "Haluatko varmasti poistaa kaikki käyttäjätiedot?",
+  yes: "kyllä",
+  enter_account_information_to_delete: "Anna käyttäjätiedot poistaaksesi",
+  fields_plus: "Fields Plus"
+  ,  try_it_out: "Laita kokeiluun ilmaiseksi",
+  fields_plus_unlocks: "Fields Plus avaa",
+  training_history: "Treenihistorian",
+  unlock_full_potential: "Avaa Fieldsin täysi potentiaali Fields Plus-päivityksellä"
 
 
 };

@@ -41,6 +41,8 @@ import EditTeamScreen from "./app/screens/EditTeamScreen/EditTeamScreen";
 import AllTrainingsScreen from "./app/screens/AllTrainingsScreen/AllTrainingsScreen";
 import FavoriteFieldsScreen from "./app/screens/FavoriteFieldsScreen/FavoriteFieldsScreen";
 import SupportScreen from "./app/screens/SupportScreen/SupportScreen";
+import FieldsPlusScreen from "./app/screens/FieldsPlusScreen/FieldsPlusScreen";
+
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -162,6 +164,9 @@ export const StackNavigatorApp = createStackNavigator(
     },
     SupportScreen: {
       screen: SupportScreen
+    },
+    FieldsPlusScreen:{
+      screen: FieldsPlusScreen
     }
   },
 

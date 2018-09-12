@@ -296,7 +296,36 @@ class ProfileScreen extends Component {
                 {this.props.userData.re} {I18n.t("reputation")}
               </Text>
             </TouchableOpacity>
+
           </View>
+<View style={{flex: 1, width: '100%',  position: "absolute",
+                bottom: 66,}}>
+            <TouchableOpacity
+              style={{
+                padding: 10,
+                paddingVertical: 15,
+                backgroundColor: "#3facff",
+                borderWidth: 3, 
+                borderColor: "#e0e0e0",
+               
+                marginHorizontal: 16,
+                borderRadius: 50,
+                justifyContent: "center"
+              }}
+              onPress={() => this.props.navigation.navigate("FieldsPlusScreen")}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 16
+                }}
+              >
+                {I18n.t("fields_plus")}
+              </Text>
+            </TouchableOpacity>
+            </View>
         </View>
         <View style={styles.navigationContainer}>
           <TouchableOpacity

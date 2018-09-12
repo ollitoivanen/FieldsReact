@@ -98,10 +98,10 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        applicationId "com.fieldsreact"
+        applicationId "com.fields.football"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 1
+        versionCode 3
         versionName "1.0"
         multiDexEnabled true
 
@@ -112,7 +112,7 @@ android {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86"
+              include 'x86', 'armeabi-v7a'
         }
     }
     buildTypes {
@@ -121,23 +121,22 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-    // applicationVariants are e.g. debug, release
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            // For each separate APK per architecture, set a unique version code as described here:
-            // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
-            def abi = output.getFilter(OutputFile.ABI)
-            if (abi != null) {  // null for the universal-debug, universal-release variants
-                output.versionCodeOverride =
-                        versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
-            }
+    def abiCodes = ['x86':1,'armeabi-v7a':2]
+    android.applicationVariants.all { variant ->
+        // Assigns a different version code for each output APK.
+        variant.outputs.each {
+            output ->
+                def abiName = output.getFilter(OutputFile.ABI)
+                output.versionCodeOverride = abiCodes.get(abiName, 0) * 100000 + variant.versionCode
         }
     }
+
+
 }
 
 
 dependencies {
+    compile project(':react-native-iap')
     compile project(':react-native-i18n')
     compile project(':react-native-push-notification')
     compile project(':react-native-android-location-enabler')
