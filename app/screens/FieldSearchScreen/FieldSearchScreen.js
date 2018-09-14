@@ -12,6 +12,8 @@ import {
   AsyncStorage
 } from "react-native";
 import firebase from "react-native-firebase";
+import * as RNIap from "react-native-iap";
+
 
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
@@ -412,6 +414,49 @@ class FieldSearchScreen extends Component {
     });
   };
 
+  openFavorite=()=>{
+    promise1 = RNIap.initConnection();
+    Promise.all([promise1]).then(() => {
+      RNIap.getAvailablePurchases()
+        .then(purchases => {
+          var state = purchases[0].autoRenewingAndroid;
+
+          if (state == true) {
+            RNIap.endConnection();
+
+            this.props.navigation.navigate("FavoriteFieldsScreen");
+          } else {
+            if (this.props.userData.fP === true) {
+              promise1 = firebase
+                .firestore()
+                .collection("Users")
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                  fP: false
+                });
+              promise2 = AsyncStorage.removeItem("fP");
+              promise3 = this.props.getUserData();
+
+              Promise.all([promise1, promise2, promise3]).then(() => {
+                RNIap.endConnection();
+
+                this.props.navigation.navigate("FieldsPlusScreen");
+              });
+            } else {
+              RNIap.endConnection();
+
+              this.props.navigation.navigate("FieldsPlusScreen");
+            }
+          }
+        })
+        .catch(() => {
+          RNIap.endConnection();
+
+          this.props.navigation.navigate("FieldsPlusScreen");
+        });
+    });
+  }
+
   getDistanceFromLatLonInKm = (lat, lng) => {
     deg2rad = deg => {
       return deg * (Math.PI / 180);
@@ -540,8 +585,7 @@ class FieldSearchScreen extends Component {
             <TouchableOpacity
               style={styles.infoContainer}
               onPress={() =>
-                this.props.navigation.navigate("FavoriteFieldsScreen")
-              }
+this.openFavorite()              }
             >
               <Image
                 style={styles.infoIcon}

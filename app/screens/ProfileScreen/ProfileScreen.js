@@ -13,8 +13,8 @@ import { connect } from "react-redux";
 var moment = require("moment");
 import FastImage from "react-native-fast-image";
 import I18n from "FieldsReact/i18n";
-
 import firebase from "react-native-firebase";
+import * as RNIap from "react-native-iap";
 
 import {
   trainings,
@@ -35,7 +35,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getuserData: () => dispatch(getuserData())
+    getUserData: () => dispatch(getUserData())
   };
 };
 
@@ -60,6 +60,49 @@ class ProfileScreen extends Component {
       profileImage: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
     };
   }
+
+  openAllTrainings = () => {
+    promise1 = RNIap.initConnection();
+    Promise.all([promise1]).then(() => {
+      RNIap.getAvailablePurchases()
+        .then(purchases => {
+          var state = purchases[0].autoRenewingAndroid;
+
+          if (state == true) {
+            RNIap.endConnection();
+
+            this.props.navigation.navigate("AllTrainingsScreen");
+          } else {
+            if (this.props.userData.fP === true) {
+              promise1 = firebase
+                .firestore()
+                .collection("Users")
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                  fP: false
+                });
+              promise2 = AsyncStorage.removeItem("fP");
+              promise3 = this.props.getUserData();
+
+              Promise.all([promise1, promise2, promise3]).then(() => {
+                RNIap.endConnection();
+
+                this.props.navigation.navigate("FieldsPlusScreen");
+              });
+            } else {
+              RNIap.endConnection();
+
+              this.props.navigation.navigate("FieldsPlusScreen");
+            }
+          }
+        })
+        .catch(() => {
+          RNIap.endConnection();
+
+          this.props.navigation.navigate("FieldsPlusScreen");
+        });
+    });
+  };
 
   getProfileImage = () => {
     // Get a reference to the storage service, which is used to create references in your storage bucket
@@ -232,6 +275,47 @@ class ProfileScreen extends Component {
       );
     }
 
+    if (this.props.userData.fP === false) {
+      var fieldsPlusButton = (
+        <View
+          style={{
+            flex: 1,
+            width: "100%",
+            position: "absolute",
+            bottom: 66
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              padding: 10,
+              paddingVertical: 15,
+              backgroundColor: "#3facff",
+              borderWidth: 3,
+              borderColor: "#e0e0e0",
+
+              marginHorizontal: 16,
+              borderRadius: 50,
+              justifyContent: "center"
+            }}
+            onPress={() => this.props.navigation.navigate("FieldsPlusScreen")}
+          >
+            <Text
+              style={{
+                color: "white",
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: 16
+              }}
+            >
+              {I18n.t("fields_plus")}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      var fieldsPlusButton = null;
+    }
+
     if (this.state.profileImage !== null) {
       var profileImage = (
         <FastImage
@@ -275,9 +359,7 @@ class ProfileScreen extends Component {
 
               <TouchableOpacity
                 style={styles.textContainer}
-                onPress={() =>
-                  this.props.navigation.navigate("AllTrainingsScreen")
-                }
+                onPress={() => this.openAllTrainings()}
               >
                 <Text style={styles.boxText}>
                   {this.props.userData.tC} {I18n.t("trainings")}
@@ -296,36 +378,8 @@ class ProfileScreen extends Component {
                 {this.props.userData.re} {I18n.t("reputation")}
               </Text>
             </TouchableOpacity>
-
           </View>
-<View style={{flex: 1, width: '100%',  position: "absolute",
-                bottom: 66,}}>
-            <TouchableOpacity
-              style={{
-                padding: 10,
-                paddingVertical: 15,
-                backgroundColor: "#3facff",
-                borderWidth: 3, 
-                borderColor: "#e0e0e0",
-               
-                marginHorizontal: 16,
-                borderRadius: 50,
-                justifyContent: "center"
-              }}
-              onPress={() => this.props.navigation.navigate("FieldsPlusScreen")}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 16
-                }}
-              >
-                {I18n.t("fields_plus")}
-              </Text>
-            </TouchableOpacity>
-            </View>
+          {fieldsPlusButton}
         </View>
         <View style={styles.navigationContainer}>
           <TouchableOpacity

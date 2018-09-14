@@ -42,6 +42,9 @@ import AllTrainingsScreen from "./app/screens/AllTrainingsScreen/AllTrainingsScr
 import FavoriteFieldsScreen from "./app/screens/FavoriteFieldsScreen/FavoriteFieldsScreen";
 import SupportScreen from "./app/screens/SupportScreen/SupportScreen";
 import FieldsPlusScreen from "./app/screens/FieldsPlusScreen/FieldsPlusScreen";
+import PurchaseSuccessfulScreen from "./app/screens/PurchaseSuccessfulScreen/PurchaseSuccessfulScreen";
+
+
 
 
 const transitionConfig = () => ({
@@ -167,6 +170,9 @@ export const StackNavigatorApp = createStackNavigator(
     },
     FieldsPlusScreen:{
       screen: FieldsPlusScreen
+    },
+    PurchaseSuccessfulScreen:{
+      screen: PurchaseSuccessfulScreen
     }
   },
 

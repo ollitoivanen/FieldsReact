@@ -225,6 +225,7 @@ class FeedScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("FeedScreen", "FeedScreen")
     // this.props.getUserData();
     this.retrieveData();
     this.getProfileImage();
@@ -348,7 +349,7 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navigationItem}
-            onPress={() => this.props.navigation.navigate("ProfileScreen")}
+            onPress={() => {this.props.navigation.navigate("ProfileScreen"), firebase.analytics().logEvent("feed_to_profile")}}
           >
             <Image style={styles.navigationImage} source={{ uri: "profile" }} />
           </TouchableOpacity>

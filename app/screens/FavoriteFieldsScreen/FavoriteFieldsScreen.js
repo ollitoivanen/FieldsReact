@@ -22,7 +22,6 @@ import TeamSearchItem from "FieldsReact/app/components/TeamSearchItem/TeamSearch
 import UserSearchItem from "FieldsReact/app/components/UserSearchItem/UserSearchItem";
 import I18n from "FieldsReact/i18n";
 
-
 import Permissions from "react-native-permissions";
 import RNAndroidLocationEnabler from "react-native-android-location-enabler";
 
@@ -120,7 +119,10 @@ class FavoriteFieldsScreen extends Component {
         }.bind(this)
       );
     } else {
+      let newFavoriteFields = [];
+
       var favoriteFields = this.state.favoriteFields;
+      console.warn(favoriteFields, this.state.favoriteFields)
       favoriteFields.forEach(favoriteFields => {
         firebase
           .firestore()
@@ -315,7 +317,9 @@ class FavoriteFieldsScreen extends Component {
       var list = (
         <View style={styles.locationBox}>
           <TouchableOpacity>
-            <Text style={styles.locationText}>{I18n.t('no_favorite_fields')}</Text>
+            <Text style={styles.locationText}>
+              {I18n.t("no_favorite_fields")}
+            </Text>
           </TouchableOpacity>
         </View>
       );
@@ -348,7 +352,7 @@ class FavoriteFieldsScreen extends Component {
           >
             <Image style={styles.backButton} source={{ uri: "back_button" }} />
           </TouchableOpacity>
-          <Text style={styles.teamName}>{I18n.t('favorite_fields')}</Text>
+          <Text style={styles.teamName}>{I18n.t("favorite_fields")}</Text>
         </View>
         {list}
       </View>

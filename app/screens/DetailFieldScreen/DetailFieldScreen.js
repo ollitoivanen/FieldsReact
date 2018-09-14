@@ -51,6 +51,7 @@ var PushNotification = require("react-native-push-notification");
 import PushService from "FieldsReact/PushService";
 import Permissions from "react-native-permissions";
 import I18n from "FieldsReact/i18n";
+import * as RNIap from "react-native-iap";
 
 import EventListItem from "FieldsReact/app/components/FieldEventListItem/FieldEventListItem"; // we'll create this next
 
@@ -249,77 +250,124 @@ class DetailFieldScreen extends Component {
   };
 
   toggleFavorite = boolean => {
-    var { params } = this.props.navigation.state;
+    promise1 = RNIap.initConnection();
+    Promise.all([promise1]).then(() => {
+      RNIap.getAvailablePurchases()
+        .then(purchases => {
+          var state = purchases[0].autoRenewingAndroid;
 
-    if (boolean === true) {
-      if (this.props.userData.fP === true) {
-        firebase
-          .firestore()
-          .collection("Users")
-          .doc(firebase.auth().currentUser.uid)
-          .collection("FF")
-          .doc(this.state.fieldID)
-          .set({
-            3: 0
-          });
-        var favoriteFields = this.state.favoriteFields;
-        favoriteFields.push({
-          key: this.state.fieldID,
-          id: this.state.fieldID,
-          fN: this.state.fieldName,
-          //d: params.d,
-          // fI: ,
+          if (state == true) {
+            RNIap.endConnection();
 
-          fIm: params.fIm
-        });
-        favoriteFields.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
+            var { params } = this.props.navigation.state;
 
-        const alreadyVisited = [];
-        serializedData = JSON.stringify(favoriteFields, function(key, value) {
-          if (typeof value == "object") {
-            if (alreadyVisited.indexOf(value.key) >= 0) {
-              // do something other that putting the reference, like
-              // putting some name that you can use to build the
-              // reference again later, for eg.
-              return value.key;
+            if (boolean === true) {
+              if (this.props.userData.fP === true) {
+                firebase
+                  .firestore()
+                  .collection("Users")
+                  .doc(firebase.auth().currentUser.uid)
+                  .collection("FF")
+                  .doc(this.state.fieldID)
+                  .set({
+                    3: 0
+                  });
+                var favoriteFields = this.state.favoriteFields;
+                favoriteFields.push({
+                  key: this.state.fieldID,
+                  id: this.state.fieldID,
+                  fN: this.state.fieldName,
+                  //d: params.d,
+                  // fI: ,
+
+                  fIm: params.fIm
+                });
+                favoriteFields.sort(
+                  (a, b) => parseFloat(a.d) - parseFloat(b.d)
+                );
+
+                const alreadyVisited = [];
+                serializedData = JSON.stringify(favoriteFields, function(
+                  key,
+                  value
+                ) {
+                  if (typeof value == "object") {
+                    if (alreadyVisited.indexOf(value.key) >= 0) {
+                      // do something other that putting the reference, like
+                      // putting some name that you can use to build the
+                      // reference again later, for eg.
+                      return value.key;
+                    }
+                    alreadyVisited.push(value.name);
+                  }
+                  return value;
+                });
+                this.storeData(serializedData);
+              }
+            } else {
+              firebase
+                .firestore()
+                .collection("Users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("FF")
+                .doc(this.state.fieldID)
+                .delete();
+
+              let favoriteArray = this.state.favoriteFields;
+
+              let foundFavorite = favoriteArray.find(
+                favoriteArray => favoriteArray.id === this.state.fieldID
+              );
+
+              favoriteArray.pop(foundFavorite);
+              const alreadyVisited = [];
+              serializedData = JSON.stringify(favoriteArray, function(
+                key,
+                value
+              ) {
+                if (typeof value == "object") {
+                  if (alreadyVisited.indexOf(value.key) >= 0) {
+                    // do something other that putting the reference, like
+                    // putting some name that you can use to build the
+                    // reference again later, for eg.
+                    return value.key;
+                  }
+                  alreadyVisited.push(value.name);
+                }
+                return value;
+              });
+              this.storeData(serializedData);
             }
-            alreadyVisited.push(value.name);
+          } else {
+            if (this.props.userData.fP === true) {
+              promise1 = firebase
+                .firestore()
+                .collection("Users")
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                  fP: false
+                });
+              promise2 = AsyncStorage.removeItem("fP");
+              promise3 = this.props.getUserData();
+
+              Promise.all([promise1, promise2, promise3]).then(() => {
+                RNIap.endConnection();
+
+                this.props.navigation.navigate("FieldsPlusScreen");
+              });
+            } else {
+              RNIap.endConnection();
+
+              this.props.navigation.navigate("FieldsPlusScreen");
+            }
           }
-          return value;
+        })
+        .catch(() => {
+          RNIap.endConnection();
+
+          this.props.navigation.navigate("FieldsPlusScreen");
         });
-        this.storeData(serializedData);
-      }
-    } else {
-      firebase
-        .firestore()
-        .collection("Users")
-        .doc(firebase.auth().currentUser.uid)
-        .collection("FF")
-        .doc(this.state.fieldID)
-        .delete();
-
-      let favoriteArray = this.state.favoriteFields;
-
-      let foundFavorite = favoriteArray.find(
-        favoriteArray => favoriteArray.id === this.state.fieldID
-      );
-
-      favoriteArray.pop(foundFavorite);
-      const alreadyVisited = [];
-      serializedData = JSON.stringify(favoriteArray, function(key, value) {
-        if (typeof value == "object") {
-          if (alreadyVisited.indexOf(value.key) >= 0) {
-            // do something other that putting the reference, like
-            // putting some name that you can use to build the
-            // reference again later, for eg.
-            return value.key;
-          }
-          alreadyVisited.push(value.name);
-        }
-        return value;
-      });
-      this.storeData(serializedData);
-    }
+    });
   };
 
   loadFavoriteFields() {
@@ -469,6 +517,7 @@ class DetailFieldScreen extends Component {
       };
     }
   }
+
   setModalVisible(visible) {
     this.setState({ infoVisible: visible });
   }

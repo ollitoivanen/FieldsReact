@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import { getUserAndTeamData } from "../../redux/app-redux";
 import I18n from "FieldsReact/i18n";
+import * as RNIap from "react-native-iap";
+
 
 const mapStateToProps = state => {
   return {

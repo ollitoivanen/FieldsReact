@@ -54,11 +54,9 @@ class AllTrainingsScreen extends Component {
             var endTime = moment(parseInt(eT)).format("HH:mm");
 
             var trainingTimeRaw = parseInt(eT) - parseInt(startDate);
-            console.warn(trainingTimeRaw);
             var seconds = trainingTimeRaw / 1000;
             var minutes = Math.trunc(seconds / 60);
             var hours = Math.trunc(minutes / 60);
-            console.warn(seconds + "ffff");
 
             if (hours < 1) {
               var trainingTime = minutes + [I18n.t("min")];
@@ -113,7 +111,6 @@ class AllTrainingsScreen extends Component {
     try {
       const value = await AsyncStorage.getItem("trainings");
       if (value !== null) {
-        console.warn(value);
         //Usre team data redux is pretty uselsess
         if (JSON.parse(value).length === this.props.userData.tC) {
           var trainings = JSON.parse(value).sort(

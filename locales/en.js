@@ -183,7 +183,9 @@ export default {
   try_it_out: "Put it into test for free",
   fields_plus_unlocks: "Fields Plus unlocks",
   training_history: "Training history",
-  unlock_full_potential: "Unlock full potential of Fields with Fields Plus!"
+  unlock_full_potential: "Unlock full potential of Fields with Fields Plus!",
+  thank_you_for: "❤️ Thank you for taking Fields Plus to the test. Just for your plain awesomeness, we have added 2000 reputation for your account. Hope you enjoy it and all the upcoming features! Now back to training, right? ;)"
+
 
   
 };

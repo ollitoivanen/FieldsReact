@@ -4,10 +4,15 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha11'
-        classpath 'com.google.gms:google-services:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha09'
+        classpath 'com.google.gms:google-services:4.0.1'
+
+        classpath 'io.fabric.tools:gradle:1.25.4'
+
 
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -23,6 +28,8 @@ allprojects {
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
+
         }
+
     }
 }
