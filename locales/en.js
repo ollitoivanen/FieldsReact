@@ -58,10 +58,10 @@ export default {
 
   event_type_array: {
     0: "Training",
-    0: "Game",
-    0: "Meeting",
-    0: "Tournament",
-    0: "Other"
+    1: "Game",
+    2: "Meeting",
+    3: "Tournament",
+    4: "Other"
   },
   people_here: "Players here",
   start_training_here: "Start training here",
@@ -141,6 +141,8 @@ export default {
   change_field_location: "Change field location",
   enable_location_to_find_nearest_fields:
     "Enable location by pressing here and find the closest fields!",
+  enable_location_to_find_nearest_teams:
+    "Enable location by pressing here and find the closest teams!",
   load_other: "Load other",
   no_fields_found_nearby:
     "No fields found nearby. Time to get it started and create a new field! Pull to refresh",
@@ -176,7 +178,8 @@ export default {
   if_you_want_to_report:
     "If you want to report inapproptiate users, teams or fields, please contact with the link above. Feel free to ask any other pressing questions through this link also! 🙏🏼 If you want to see the data we have saved about your account, please contact us with this link.",
   delete_account: "Delete account",
-  are_you_sure_to_delete_all_account_data: "Are you sure to delete all account data",
+  are_you_sure_to_delete_all_account_data:
+    "Are you sure to delete all account data",
   yes: "yes",
   enter_account_information_to_delete: "Enter account information to delete",
   fields_plus: "Fields Plus",
@@ -184,8 +187,6 @@ export default {
   fields_plus_unlocks: "Fields Plus unlocks",
   training_history: "Training history",
   unlock_full_potential: "Unlock full potential of Fields with Fields Plus!",
-  thank_you_for: "❤️ Thank you for taking Fields Plus to the test. Just for your plain awesomeness, we have added 2000 reputation for your account. Hope you enjoy it and all the upcoming features! Now back to training, right? ;)"
-
-
-  
+  thank_you_for:
+    "❤️ Thank you for taking Fields Plus to the test. Just for your plain awesomeness, we have added 2000 reputation for your account. Hope you enjoy it and all the upcoming features! Now back to training, right? ;)"
 };

@@ -57,8 +57,10 @@ class FeedScreen extends React.Component {
       let friendArray = JSON.parse(value);
       this.getCurrentFields(friendArray);
       //this.setState({ friends: friendArray });
+    }else{
+      this.loadFriendList()
+
     }
-    //Else
   };
 
   loadFriendList() {
@@ -225,7 +227,7 @@ class FeedScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("FeedScreen", "FeedScreen")
+    firebase.analytics().setCurrentScreen("FeedScreen", "FeedScreen");
     // this.props.getUserData();
     this.retrieveData();
     this.getProfileImage();
@@ -349,7 +351,9 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navigationItem}
-            onPress={() => {this.props.navigation.navigate("ProfileScreen"), firebase.analytics().logEvent("feed_to_profile")}}
+            onPress={() => {
+              this.props.navigation.navigate("ProfileScreen");
+            }}
           >
             <Image style={styles.navigationImage} source={{ uri: "profile" }} />
           </TouchableOpacity>

@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
 
   div: {
-    height: 1,
+    height: 3,
     width: "100%",
     backgroundColor: "#e0e0e0",
     bottom: 0,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
-    marginStart: 8,
+    marginStart: 12,
     flexWrap: "wrap",
     color: "black"
   },
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   fieldImage: {
     width: 50,
     height: 50,
-    marginTop: 16,
+    marginTop: 22,
     marginStart: 8,
     borderWidth: 3,
     borderColor: "#e0e0e0",
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   fieldText: {
     marginStart: 16,
     marginTop: 3,
-    marginBottom: 16,
+    marginBottom: 22,
     fontSize: 18,
     fontWeight: "500"
   }

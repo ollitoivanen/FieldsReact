@@ -130,6 +130,8 @@ export default {
   change_field_location: "Muuta kentän sijaintia",
   enable_location_to_find_nearest_fields:
     "Laita sijainti päälle painamalla tästä ja löydä lähimmät kentät!",
+    enable_location_to_find_nearest_teams:
+    "Laita sijainti päälle painamalla tästä ja löydä lähimmät joukkueet!",
   load_other: "Load other",
   no_fields_found_nearby:
     "Ei kenttiä lähellä. Aika aloittaa ja luoda uusi kenttä! Vedä päivittääksesi",

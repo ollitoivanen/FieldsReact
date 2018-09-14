@@ -86,7 +86,9 @@ class CreateEventScreen extends Component {
       () => {
         var diff = moment().format("x") - moment(date).format("x");
         if (diff > 86400000) {
-          this.setState({ errorMessage: I18n.t('event_date_has_already_passed') });
+          this.setState({
+            errorMessage: I18n.t("event_date_has_already_passed")
+          });
           this.hideDatePicker();
         } else {
           this.setState({ errorMessage: null });
@@ -109,7 +111,9 @@ class CreateEventScreen extends Component {
       },
       () => {
         if (this.state.startTime > this.state.endTime) {
-          this.setState({ errorMessage: I18n.t('event_ends_before_it_starts') });
+          this.setState({
+            errorMessage: I18n.t("event_ends_before_it_starts")
+          });
           this.hideStartTimePicker();
         } else {
           this.setState({ errorMessage: null });
@@ -127,7 +131,9 @@ class CreateEventScreen extends Component {
       },
       () => {
         if (this.state.startTime > this.state.endTime) {
-          this.setState({ errorMessage: I18n.t('event_ends_before_it_starts') });
+          this.setState({
+            errorMessage: I18n.t("event_ends_before_it_starts")
+          });
           this.hideEndTimePicker();
         } else {
           this.setState({ errorMessage: null });

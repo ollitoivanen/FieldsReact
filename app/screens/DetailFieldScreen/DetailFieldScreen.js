@@ -444,21 +444,23 @@ class DetailFieldScreen extends Component {
   };
 
   retrieveData = async () => {
-    const value = await AsyncStorage.getItem("favoriteFields");
-    if (value !== null) {
-      this.setState({ favoriteFields: JSON.parse(value) });
-      let favoriteArray = JSON.parse(value);
+    if (this.props.fP === true) {
+      const value = await AsyncStorage.getItem("favoriteFields");
+      if (value !== null) {
+        this.setState({ favoriteFields: JSON.parse(value) });
+        let favoriteArray = JSON.parse(value);
 
-      let foundFavorite = favoriteArray.find(
-        favoriteArray => favoriteArray.id === this.state.fieldID
-      );
-      if (foundFavorite === undefined) {
-        this.setState({ favorite: false });
+        let foundFavorite = favoriteArray.find(
+          favoriteArray => favoriteArray.id === this.state.fieldID
+        );
+        if (foundFavorite === undefined) {
+          this.setState({ favorite: false });
+        } else {
+          this.setState({ favorite: true });
+        }
       } else {
-        this.setState({ favorite: true });
+        this.loadFavoriteFields();
       }
-    } else {
-      this.loadFavoriteFields();
     }
   };
 

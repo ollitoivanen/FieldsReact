@@ -107,6 +107,11 @@ const getUserAndTeamData = () => {
                   uIm: false
                 });
               }
+              if (doc.data().fC === undefined) {
+                undefinedOnes.push({
+                  fC: 0
+                });
+              }
 
               var userData = Object.assign(...undefinedOnes, doc.data());
 
@@ -170,6 +175,14 @@ const getUserAndTeamData = () => {
               pT: undefined
             });
           }
+          if (doc.data().fC === undefined) {
+            undefinedOnes.push({
+              fC: 0
+            });
+          }
+
+          
+          
 
           var userData = Object.assign(...undefinedOnes, doc.data());
 
@@ -191,14 +204,16 @@ const getUserData = () => {
         //Checking the undefined stuff so no useless data is created. It's all about staying lean!
 
         var undefinedOnes = [];
-        if (doc.data().fC === undefined) {
-          undefinedOnes.push({
-            fC: 0
-          });
-        }
+        
         if (doc.data().tC === undefined) {
           undefinedOnes.push({
             tC: 0
+          });
+        }
+
+        if (doc.data().fC === undefined) {
+          undefinedOnes.push({
+            fC: 0
           });
         }
 

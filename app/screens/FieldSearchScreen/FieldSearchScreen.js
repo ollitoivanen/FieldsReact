@@ -14,7 +14,6 @@ import {
 import firebase from "react-native-firebase";
 import * as RNIap from "react-native-iap";
 
-
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
@@ -414,7 +413,7 @@ class FieldSearchScreen extends Component {
     });
   };
 
-  openFavorite=()=>{
+  openFavorite = () => {
     promise1 = RNIap.initConnection();
     Promise.all([promise1]).then(() => {
       RNIap.getAvailablePurchases()
@@ -455,7 +454,7 @@ class FieldSearchScreen extends Component {
           this.props.navigation.navigate("FieldsPlusScreen");
         });
     });
-  }
+  };
 
   getDistanceFromLatLonInKm = (lat, lng) => {
     deg2rad = deg => {
@@ -584,8 +583,7 @@ class FieldSearchScreen extends Component {
             </Text>
             <TouchableOpacity
               style={styles.infoContainer}
-              onPress={() =>
-this.openFavorite()              }
+              onPress={() => this.openFavorite()}
             >
               <Image
                 style={styles.infoIcon}
@@ -882,7 +880,7 @@ this.openFavorite()              }
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => this.getLocationPure()}>
                 <Text style={styles.locationText}>
-                  {I18n.t("enable_location_to_find_nearest_fields")}
+                  {I18n.t("enable_location_to_find_nearest_teams")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -892,7 +890,7 @@ this.openFavorite()              }
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => Permissions.openSettings()}>
                 <Text style={styles.locationText}>
-                  {I18n.t("enable_location_to_find_nearest_fields")}
+                  {I18n.t("enable_location_to_find_nearest_teams")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -903,7 +901,7 @@ this.openFavorite()              }
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.getLocationPure()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_fields")}
+                {I18n.t("enable_location_to_find_nearest_teams")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -913,7 +911,7 @@ this.openFavorite()              }
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_fields")}
+                {I18n.t("enable_location_to_find_nearest_teams")}
               </Text>
             </TouchableOpacity>
           </View>

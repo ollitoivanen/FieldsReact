@@ -221,7 +221,7 @@ class SettingsScreen extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.item}
-          onPress={() => firebase.auth().signOut()}
+          onPress={() => {AsyncStorage.multiRemove(["friends", "trainings", "nearFields", "nearTeams", "teamPlayers"]), firebase.auth().signOut()}}
         >
           <Text style={styles.itemText}>{I18n.t("log_out")}</Text>
 
@@ -439,7 +439,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   buttonContainerGreen: {
-    backgroundColor: "#3bd774",marginTop: 16,
+    backgroundColor: "#3bd774",
+    marginTop: 16,
     padding: 25,
     borderRadius: 10,
     alignItems: "center"
