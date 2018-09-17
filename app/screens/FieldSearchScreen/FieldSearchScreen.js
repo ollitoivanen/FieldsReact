@@ -9,10 +9,12 @@ import {
   Image,
   Geolocation,
   Platform,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator
 } from "react-native";
 import firebase from "react-native-firebase";
 import * as RNIap from "react-native-iap";
+import Loader from "FieldsReact/app/components/Loader/Loader.js";
 
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
@@ -128,12 +130,14 @@ class FieldSearchScreen extends Component {
             }
             //Sorting the results! cool 2018
             fields.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
+
           });
         }.bind(this)
       )
       .then(() => {
         const alreadyVisited = [];
         serializedData = JSON.stringify(fields, function(key, value) {
+
           if (typeof value == "object") {
             if (alreadyVisited.indexOf(value.key) >= 0) {
               // do something other that putting the reference, like
@@ -145,12 +149,16 @@ class FieldSearchScreen extends Component {
           }
           return value;
         });
+
       })
 
       .then(() => {
         this.storeData(serializedData, "nearFields");
         this.setState({ refreshing: false });
       });
+
+     
+      
   }
   loadNearTeams() {
     const ref = firebase.firestore().collection("Teams");
@@ -194,6 +202,7 @@ class FieldSearchScreen extends Component {
             }
             //Sorting the results! cool 2018
             teams.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
+            
           });
         }.bind(this)
       )
@@ -211,6 +220,7 @@ class FieldSearchScreen extends Component {
           }
           return value;
         });
+
       })
 
       .then(() => {
@@ -268,8 +278,10 @@ class FieldSearchScreen extends Component {
   };
 
   retrieveData = async name => {
+
     try {
       const value = await AsyncStorage.getItem(name);
+
       if (value !== null) {
         if (name === "nearFields") {
           this.setState({ fields: JSON.parse(value) });
@@ -277,7 +289,8 @@ class FieldSearchScreen extends Component {
             this.setState({ fieldsEmpty: true });
           }
         } else if (name === "nearTeams") {
-          this.setState({ teams: JSON.parse(value) });
+          this.setState({ teams: JSON.parse(value) })
+
           if (JSON.parse(value).length === 0) {
             this.setState({ teamsEmpty: true });
           }
@@ -306,6 +319,8 @@ class FieldSearchScreen extends Component {
           if (data == "enabled") {
             this.setState({ locationIOS: "authorized" });
             this.getLocation();
+          }else if(data == "already-enabled"){
+            this.getLocation()
           }
           // The user has accepted to enable the location services
           // data can be :
@@ -337,8 +352,11 @@ class FieldSearchScreen extends Component {
   };
 
   getLocationPure = () => {
+    this.setState({ loading: true });
     navigator.geolocation.getCurrentPosition(
       position => {
+        this.setState({ loading: false });
+
         if (position.coords.latitude !== 0 && position.coords.longitude !== 0) {
           this.setState({
             userLatitude: position.coords.latitude,
@@ -355,9 +373,9 @@ class FieldSearchScreen extends Component {
         }
       },
       error => {
-        this.setState({ locationIOS: "disabled" });
-      },
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 0 }
+        //This
+        this.setState({ locationIOS: "disabled", loading: false });
+      }, {enableHighAccuracy: false, timeout: 20000}
     );
   };
 
@@ -370,12 +388,12 @@ class FieldSearchScreen extends Component {
         //
         navigator.geolocation.getCurrentPosition(
           position => {
+            this.setState({ loading: false });
             if (
               position.coords.latitude !== 0 &&
               position.coords.longitude !== 0
             ) {
               //Test
-              locationIOS: "authorized",
                 this.setState({
                   userLatitude: position.coords.latitude,
                   userLongitude: position.coords.longitude,
@@ -391,11 +409,9 @@ class FieldSearchScreen extends Component {
             }
           },
           error => {
+            this.setState({ loading: false });
             this.setState({ locationIOS: "disabled" });
-          },
-          { enableHighAccuracy: false, timeout: 20000, maximumAge: 0 }
-          //
-          //
+          }, {enableHighAccuracy: false, timeout: 20000}
         );
       } else if (response === "undetermined") {
         if (Platform.OS == "android") {
@@ -405,7 +421,6 @@ class FieldSearchScreen extends Component {
         }
       } else if (response === "restricted") {
         //Write the logic to open kmsion
-        console.warn("Restricted");
 
         this.setState({ locationIOS: "restricted" });
       }
@@ -485,7 +500,7 @@ class FieldSearchScreen extends Component {
   };
 
   handleRefresh = () => {
-    this.setState({ refreshing: true }, () => {
+    this.setState({ refreshing: true, loading: true }, () => {
       this.getLocation();
     });
   };
@@ -519,7 +534,8 @@ class FieldSearchScreen extends Component {
       refreshing: false,
       fieldsEmpty: false,
       teamsEmpty: false,
-      selectedIndex: params.selectedIndex
+      selectedIndex: params.selectedIndex,
+      loading: false
     };
 
     if (params.selectedIndex === 0) {
@@ -775,7 +791,7 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => this.getLocationPure()}>
                 <Text style={styles.locationText}>
-                  {I18n.t("enable_location_to_find_nearest_fields")}
+                  {I18n.t("enable_location_to_find_nearest_fields")} denied
                 </Text>
               </TouchableOpacity>
             </View>
@@ -796,7 +812,7 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.getLocationPure()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_fields")}
+                {I18n.t("enable_location_to_find_nearest_fields")} undetermined
               </Text>
             </TouchableOpacity>
           </View>
@@ -806,7 +822,7 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_fields")}
+                {I18n.t("enable_location_to_find_nearest_fields")} disabled
               </Text>
             </TouchableOpacity>
           </View>
@@ -911,7 +927,7 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_teams")}
+                {I18n.t("enable_location_to_find_nearest_teams")}denied
               </Text>
             </TouchableOpacity>
           </View>
@@ -945,7 +961,8 @@ class FieldSearchScreen extends Component {
                   cFN: item.cFN,
                   ts: item.ts,
                   id: item.id,
-                  uIm: item.uIm
+                  uIm: item.uIm,
+                  re: item.re
                 })
               }
             >
@@ -964,6 +981,7 @@ class FieldSearchScreen extends Component {
           {addNewFieldBox}
         </View>
         {list}
+        <Loader loading={this.state.loading} />
 
         {navigation}
       </View>
@@ -1021,7 +1039,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
-    color: "#e0e0e0",
+    color: "#6b6b6b",
     margin: 20
   },
 

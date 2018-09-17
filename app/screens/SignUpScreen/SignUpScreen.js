@@ -14,7 +14,7 @@ import {
   Dimensions,
   ScrollView,
   AsyncStorage,
-  Platform,
+  Platform
 } from "react-native";
 import {
   email,
@@ -123,7 +123,6 @@ export default class SignUpScreen extends React.Component {
       return null;
     } else {
       return (
-
         <ScrollView style={styles.container}>
           <View style={styles.logoContainer}>
             <Image style={styles.logo} source={{ uri: "f_logo_white_bg" }} />
@@ -156,7 +155,6 @@ export default class SignUpScreen extends React.Component {
           />
 
           <TextInput
-          
             maxLength={30}
             underlineColorAndroid="rgba(0,0,0,0)"
             secureTextEntry
@@ -280,7 +278,6 @@ export default class SignUpScreen extends React.Component {
             </Swiper>
           </Modal>
         </ScrollView>
-
       );
     }
   }

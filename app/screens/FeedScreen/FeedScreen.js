@@ -57,9 +57,8 @@ class FeedScreen extends React.Component {
       let friendArray = JSON.parse(value);
       this.getCurrentFields(friendArray);
       //this.setState({ friends: friendArray });
-    }else{
-      this.loadFriendList()
-
+    } else {
+      this.loadFriendList();
     }
   };
 
@@ -151,7 +150,8 @@ class FeedScreen extends React.Component {
               cFI: doc.data().cFI,
               ts: doc.data().ts,
               id: doc.id,
-              uIm: doc.data().uIm
+              uIm: doc.data().uIm,
+              re: doc.data().re
             });
           } else {
             const startTime = doc.data().ts;
@@ -185,6 +185,7 @@ class FeedScreen extends React.Component {
               tC: doc.data().tC,
               cFI: doc.data().cFI,
               uIm: doc.data().uIm,
+              re: doc.data().re,
 
               id: doc.id
             });
@@ -262,6 +263,7 @@ class FeedScreen extends React.Component {
             style={styles.profileImage}
             source={this.state.teamImage}
             resizeMode="cover"
+            borderRadius={50}
           />
 
           <Text style={styles.teamCardText}>{this.props.userData.uTN}</Text>
@@ -308,7 +310,8 @@ class FeedScreen extends React.Component {
                   cFI: item.cFI,
                   cFN: item.cFN,
                   ts: item.ts,
-                  id: item.id
+                  id: item.id,
+                  re: item.re
                 })
               }
             >

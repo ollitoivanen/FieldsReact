@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import { getUserAndTeamData } from "../../redux/app-redux";
 import I18n from "FieldsReact/i18n";
-import * as RNIap from "react-native-iap";
 
 const mapStateToProps = state => {
   return {
@@ -21,10 +20,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const gg = () => {
-  startFeedScreen();
-};
-
 class LoadingScreen extends Component {
   static navigationOptions = {
     header: null
@@ -32,10 +27,6 @@ class LoadingScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
-  }
-
-  componentWillMount() {
     const startFeed = StackActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({ routeName: "FeedScreen" })]
@@ -46,22 +37,21 @@ class LoadingScreen extends Component {
       actions: [NavigationActions.navigate({ routeName: "SignUpScreen" })]
     });
 
-    const loadData = () => {
-      this.props.getUserData();
-    };
-
     firebase.auth().onAuthStateChanged(user => {
-      user ? loadData() : this.props.navigation.dispatch(startSignUp);
+      user ? this.loadData() : this.props.navigation.dispatch(startSignUp);
     });
   }
 
-  componentWillReceiveProps() {
-    const startFeed = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: "FeedScreen" })]
+  loadData = () => {
+    promise1 = this.props.getUserData();
+    Promise.all([promise1]).then(() => {
+      const startFeed = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: "FeedScreen" })]
+      });
+      this.props.navigation.dispatch(startFeed);
     });
-    this.props.navigation.dispatch(startFeed);
-  }
+  };
 
   render() {
     return (

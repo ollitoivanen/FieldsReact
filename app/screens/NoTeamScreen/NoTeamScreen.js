@@ -52,7 +52,9 @@ export default class NoTeamScreen extends Component {
         <TouchableOpacity
           style={styles.joinTeamButton}
           onPress={() =>
-            this.props.navigation.navigate("FieldSearchScreen", { selectedIndex: 1 })
+            this.props.navigation.navigate("FieldSearchScreen", {
+              selectedIndex: 1
+            })
           }
         >
           <Text style={styles.whiteText}>{I18n.t("join_team")}</Text>

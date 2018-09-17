@@ -103,19 +103,26 @@ class TeamPendingPlayersScreen extends Component {
           .firestore()
           .collection("Teams")
           .doc(this.props.userData.uTI)
-          .update({
-            pC: this.props.usersTeamData.pC + 1
-          });
-      })
-      .then(() => {
-        firebase
-          .firestore()
-          .collection("Users")
-          .doc(item.id)
-          .update({
-            pT: firebase.firestore.FieldValue.delete(),
-            uTI: this.props.userData.uTI,
-            uTN: this.props.userData.uTN
+          .get()
+          .then(doc => {
+            firebase
+              .firestore()
+              .collection("Teams")
+              .doc(this.props.userData.uTI)
+              .update({
+                pC: doc.data().pC + 1
+              });
+          })
+          .then(() => {
+            firebase
+              .firestore()
+              .collection("Users")
+              .doc(item.id)
+              .update({
+                pT: firebase.firestore.FieldValue.delete(),
+                uTI: this.props.userData.uTI,
+                uTN: this.props.userData.uTN
+              });
           });
       });
   };

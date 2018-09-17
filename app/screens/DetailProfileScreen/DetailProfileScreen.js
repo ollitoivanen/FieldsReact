@@ -31,7 +31,6 @@ import FastImage from "react-native-fast-image";
 var moment = require("moment");
 import I18n from "FieldsReact/i18n";
 
-
 const mapStateToProps = state => {
   return {
     userData: state.userData,
@@ -244,12 +243,14 @@ class DetailProfileScreen extends Component {
     const hours = Math.trunc(minutes / 60);
 
     if (minutes < 1) {
-      this.setState({ trainingTime: [I18n.t('under_minute')] });
+      this.setState({ trainingTime: [I18n.t("under_minute")] });
     } else if (hours < 1) {
-      this.setState({ trainingTime: minutes + [I18n.t('min')] });
+      this.setState({ trainingTime: minutes + [I18n.t("min")] });
     } else {
       const minSub = minutes - hours * 60;
-      this.setState({ trainingTime: hours + [I18n.t('h')] + " " + minSub + [I18n.t('min')] });
+      this.setState({
+        trainingTime: hours + [I18n.t("h")] + " " + minSub + [I18n.t("min")]
+      });
     }
   };
 
@@ -261,13 +262,13 @@ class DetailProfileScreen extends Component {
           style={styles.roundTextContainer}
           onPress={() => this.removeFriend()}
         >
-          <Text style={styles.blueText}>{I18n.t('remove_friend')}</Text>
+          <Text style={styles.blueText}>{I18n.t("remove_friend")}</Text>
         </TouchableOpacity>
       );
     } else if (this.state.friendStatus === null) {
       var friendButton = (
         <View style={styles.roundTextContainer}>
-          <Text style={styles.blueText}>{I18n.t('add_friend')}</Text>
+          <Text style={styles.blueText}>{I18n.t("add_friend")}</Text>
         </View>
       );
     } else {
@@ -276,7 +277,7 @@ class DetailProfileScreen extends Component {
           style={styles.roundTextContainer}
           onPress={() => this.addFriend()}
         >
-          <Text style={styles.blueText}>{I18n.t('add_friend')}</Text>
+          <Text style={styles.blueText}>{I18n.t("add_friend")}</Text>
         </TouchableOpacity>
       );
     }
@@ -319,7 +320,7 @@ class DetailProfileScreen extends Component {
 
     var currentFieldPlaceHolder = (
       <TouchableOpacity style={styles.roundTextContainerBordered}>
-        <Text style={styles.boxText}>{I18n.t('not_at_any_field')}</Text>
+        <Text style={styles.boxText}>{I18n.t("not_at_any_field")}</Text>
       </TouchableOpacity>
     );
     if (params.cFI !== undefined) {
@@ -343,7 +344,7 @@ class DetailProfileScreen extends Component {
       var userTeamPlaceHolder = (
         <TouchableOpacity style={styles.roundTextContainer}>
           <Image style={styles.teamIcon} source={{ uri: "team" }} />
-          <Text style={styles.boxText}>{I18n.t('not_in_a_team')} </Text>
+          <Text style={styles.boxText}>{I18n.t("not_in_a_team")} </Text>
         </TouchableOpacity>
       );
     }
@@ -429,7 +430,7 @@ class DetailProfileScreen extends Component {
                   marginStart: 4
                 }}
               >
-                {I18n.t('info')}
+                {I18n.t("info")}
               </Text>
 
               <TouchableOpacity
@@ -439,7 +440,7 @@ class DetailProfileScreen extends Component {
                     this.setModalVisible(false);
                 }}
               >
-                <Text style={styles.infoText}>{I18n.t('report')}</Text>
+                <Text style={styles.infoText}>{I18n.t("report")}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -468,23 +469,23 @@ class DetailProfileScreen extends Component {
             {userTeamPlaceHolder}
             {friendButton}
             <TouchableOpacity
-            style={styles.infoContainer}
-            underlayColor="#bcbcbc"
-            onPress={() => this.setModalVisible(true)}
-          >
-            <Image
-              style={styles.infoIcon}
-              source={{ uri: "info" }}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
+              style={styles.infoContainer}
+              underlayColor="#bcbcbc"
+              onPress={() => this.setModalVisible(true)}
+            >
+              <Image
+                style={styles.infoIcon}
+                source={{ uri: "info" }}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
           </View>
 
           <View style={styles.actionContainer}>
             <View style={styles.imageTabContainer}>
               <TouchableOpacity style={styles.textContainer}>
                 <Text style={styles.boxText}>
-                  {tC} {I18n.t('trainings')}
+                  {tC} {I18n.t("trainings")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -494,7 +495,7 @@ class DetailProfileScreen extends Component {
             <TouchableOpacity style={styles.roundTextContainerBordered}>
               {badge}
               <Text style={styles.boxText}>
-                {re} {I18n.t('reputation')}
+                {params.re} {I18n.t("reputation")}
               </Text>
             </TouchableOpacity>
           </View>
