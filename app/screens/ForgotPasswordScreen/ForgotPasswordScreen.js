@@ -20,6 +20,11 @@ import I18n from "FieldsReact/i18n";
 
 
 export default class ForgotPasswordScreen extends Component {
+  constructor(props){
+    super(props);
+    firebase.analytics().setCurrentScreen("ForgotPasswordScreen", "ForgotPasswordScreen");
+
+  }
   static navigationOptions = {
     header: null
   };

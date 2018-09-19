@@ -26,6 +26,7 @@ class LoadingScreen extends Component {
   };
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("LoadingScreen", "LoadingScreen");
 
     const startFeed = StackActions.reset({
       index: 0,
@@ -42,15 +43,18 @@ class LoadingScreen extends Component {
     });
   }
 
-  loadData = () => {
-    promise1 = this.props.getUserData();
-    Promise.all([promise1]).then(() => {
-      const startFeed = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: "FeedScreen" })]
-      });
-      this.props.navigation.dispatch(startFeed);
+  componentWillReceiveProps() {
+    const startFeed = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: "FeedScreen" })]
     });
+    this.props.navigation.dispatch(startFeed);
+
+  }
+
+  loadData = () => {
+  this.props.getUserData();
+   
   };
 
   render() {

@@ -55,6 +55,8 @@ class DetailTeamScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("DetailTeamScreen", "DetailTeamScreen");
+
     var { params } = this.props.navigation.state;
     this.loadEvents();
     this.getProfileImage();
@@ -163,6 +165,8 @@ class DetailTeamScreen extends Component {
         });
     };
     const sendRequest = () => {
+      firebase.analytics().logEvent("requestSent")
+
       firebase
         .firestore()
         .collection("Teams")

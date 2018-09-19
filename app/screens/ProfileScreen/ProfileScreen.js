@@ -49,6 +49,8 @@ class ProfileScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("ProfileScreen", "ProfileScreen");
+
     this.retrieveData();
     if (this.props.userData.uIm === true) {
       this.getProfileImage();
@@ -86,19 +88,25 @@ class ProfileScreen extends Component {
 
               Promise.all([promise1, promise2, promise3]).then(() => {
                 RNIap.endConnection();
-
+                firebase
+                  .analytics()
+                  .logEvent("toFieldsPlusScreen", "fromProfileAllTrainings");
                 this.props.navigation.navigate("FieldsPlusScreen");
               });
             } else {
               RNIap.endConnection();
-
+              firebase
+              .analytics()
+              .logEvent("toFieldsPlusScreen", "fromProfileAllTrainings");
               this.props.navigation.navigate("FieldsPlusScreen");
             }
           }
         })
         .catch(() => {
           RNIap.endConnection();
-
+          firebase
+          .analytics()
+          .logEvent("toFieldsPlusScreen", "fromProfileAllTrainings");
           this.props.navigation.navigate("FieldsPlusScreen");
         });
     });
@@ -297,7 +305,9 @@ class ProfileScreen extends Component {
               borderRadius: 50,
               justifyContent: "center"
             }}
-            onPress={() => this.props.navigation.navigate("FieldsPlusScreen")}
+            onPress={() => {this.props.navigation.navigate("FieldsPlusScreen"), firebase
+            .analytics()
+            .logEvent("toFieldsPlusScreen", "fromProfileButton");}}
           >
             <Text
               style={{
@@ -333,7 +343,9 @@ class ProfileScreen extends Component {
             <View style={styles.rowCont}>
               <Text style={styles.username}>{this.props.userData.un}</Text>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate("SettingsScreen")}
+                onPress={() => {this.props.navigation.navigate("SettingsScreen"), firebase
+                .analytics()
+                .logEvent("toSettings");}}
               >
                 <Image
                   style={styles.settingsIcon}
@@ -348,8 +360,10 @@ class ProfileScreen extends Component {
             <View style={styles.imageTabContainer}>
               <TouchableOpacity
                 style={styles.textContainer}
-                onPress={() =>
-                  this.props.navigation.navigate("UserFriendListScreen")
+                onPress={() =>{
+                  this.props.navigation.navigate("UserFriendListScreen"), firebase
+                  .analytics()
+                  .logEvent("toUserFriendList")}
                 }
               >
                 <Text style={styles.boxText}>
@@ -371,7 +385,9 @@ class ProfileScreen extends Component {
 
             <TouchableOpacity
               style={styles.roundTextContainerBordered}
-              onPress={() => this.props.navigation.navigate("ReputationScreen")}
+              onPress={() => {this.props.navigation.navigate("ReputationScreen"), firebase
+              .analytics()
+              .logEvent("toReputationScreen")}}
             >
               {badge}
               <Text style={styles.boxText}>

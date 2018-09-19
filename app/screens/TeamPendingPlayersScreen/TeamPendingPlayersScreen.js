@@ -48,6 +48,8 @@ class TeamPendingPlayersScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("TeamPendingPlayersScreen", "TeamPendingPlayersScreen");
+
     this.ref = firebase
       .firestore()
       .collection("Teams")
@@ -79,6 +81,9 @@ class TeamPendingPlayersScreen extends Component {
   };
 
   accept = item => {
+    firebase
+                  .analytics()
+                  .logEvent("player_accepted")
     firebase
       .firestore()
       .collection("Teams")
@@ -128,6 +133,9 @@ class TeamPendingPlayersScreen extends Component {
   };
 
   decline = item => {
+    firebase
+                  .analytics()
+                  .logEvent("player_declined")
     firebase
       .firestore()
       .collection("Teams")

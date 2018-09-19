@@ -102,6 +102,7 @@ class DetailFieldScreen extends Component {
   };
 
   loadEvents = () => {
+    
     var { params } = this.props.navigation.state;
 
     const events = [];
@@ -109,6 +110,8 @@ class DetailFieldScreen extends Component {
     const query = ref.where("eFI", "==", params.fieldID);
     query.get().then(
       function(doc) {
+        firebase.analytics().logEvent("fetchFieldEvents", doc.length)
+
         doc.forEach(doc => {
           const { eT, eFI, eFN, eTY, tUN } = doc.data();
           const id = doc.id;
@@ -136,6 +139,8 @@ class DetailFieldScreen extends Component {
   };
 
   startTraining = () => {
+    firebase.analytics().logEvent("startTraining")
+
     /*if(Platform.OS === 'ios'){
     Permissions.check('notifications').then(response=>{
       if(response==='denied'){
@@ -199,55 +204,9 @@ class DetailFieldScreen extends Component {
     });
   };
 
-  getLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState({
-          userLatitude: position.coords.latitude,
-          userLongitude: position.coords.longitude,
 
-          error: null
-        });
 
-        // ,this.getDistanceFromLatLonInKm();
-      },
-
-      error => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-  };
-
-  getDistanceFromLatLonInKm = () => {
-    deg2rad = deg => {
-      return deg * (Math.PI / 180);
-    };
-
-    var { params } = this.props.navigation.state;
-
-    var lat1 = params.lt;
-    var lon1 = params.ln;
-
-    var lat2 = this.state.userLatitude;
-    var lon2 = this.state.userLongitude;
-
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lon2 - lon1);
-
-    var a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
-
-    this.setState({
-      distance: Math.round(d * 100) / 100
-    });
-    //console.warn(d)
-  };
+  
 
   toggleFavorite = boolean => {
     promise1 = RNIap.initConnection();
@@ -352,11 +311,13 @@ class DetailFieldScreen extends Component {
 
               Promise.all([promise1, promise2, promise3]).then(() => {
                 RNIap.endConnection();
+                firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldDetail")
 
                 this.props.navigation.navigate("FieldsPlusScreen");
               });
             } else {
               RNIap.endConnection();
+              firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldDetail")
 
               this.props.navigation.navigate("FieldsPlusScreen");
             }
@@ -466,6 +427,8 @@ class DetailFieldScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("DetailFieldScreen", "DetailFieldScreen");
+
     var { params } = this.props.navigation.state;
     this.notif = new PushService();
 

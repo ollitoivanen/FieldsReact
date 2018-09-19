@@ -38,6 +38,8 @@ class SettingsScreen extends Component {
   };
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("SettingsScreen", "SettingsScreen");
+
     this.state = {
       infoVisible: false,
       deleteVisible: false,
@@ -47,7 +49,7 @@ class SettingsScreen extends Component {
       loading: false
     };
   }
-
+ReputationScreen
   deleteAccount = () => {
     if (this.state.email1 === "" || this.state.password1 === "") {
       this.setState({ errorMessage: I18n.t("please_fill_all_fields") });

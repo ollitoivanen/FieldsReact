@@ -45,6 +45,8 @@ export default class EditFieldScreen extends Component {
   };
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("EditFieldScreen", "EditFieldScreen");
+
     var { params } = this.props.navigation.state;
 
     this.state = {

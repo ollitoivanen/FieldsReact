@@ -72,6 +72,7 @@ class TeamScreen extends Component {
       .get()
       .then(
         function(doc) {
+          firebase.analytics().logEvent("fetchTeamPlayersFromDB");
           doc.forEach(doc => {
             const { unM } = doc.data();
             const id = doc.id;
@@ -98,20 +99,25 @@ class TeamScreen extends Component {
           return value;
         });
       })
+
       .then(() => {
-        this.props.getUserAndTeamData();
-      })
-      .then(() => {
-        if (players.length !== this.props.usersTeamData.pC) {
-          //If player count differs from list length, update
-          firebase
-            .firestore()
-            .collection("Teams")
-            .doc(this.props.userData.uTI)
-            .update({
-              pC: players.length
-            });
-        }
+        firebase
+          .firestore()
+          .collection("Teams")
+          .doc(this.props.userData.uTI)
+          .get()
+          .then(doc => {
+            if (players.length !== doc.data().pC) {
+              //If player count differs from list length, update
+              firebase
+                .firestore()
+                .collection("Teams")
+                .doc(this.props.userData.uTI)
+                .update({
+                  pC: players.length
+                });
+            }
+          });
       })
       .then(() => {
         this.storeData(serializedData);
@@ -133,6 +139,7 @@ class TeamScreen extends Component {
     try {
       const value = await AsyncStorage.getItem("teamPlayers");
       if (value !== null) {
+        firebase.analytics().logEvent("fetchTeamPlayersFromAsync");
         //If player count changes, this falls out, propably should call getuserdata here
 
         if (JSON.parse(value).length === this.props.usersTeamData.pC) {
@@ -157,6 +164,8 @@ class TeamScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("TeamScreen", "TeamScreen");
+
     this.getProfileImage();
 
     this.ref = firebase

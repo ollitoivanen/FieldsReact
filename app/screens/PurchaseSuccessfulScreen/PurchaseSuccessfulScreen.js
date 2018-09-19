@@ -3,6 +3,11 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import I18n from "FieldsReact/i18n";
 
 export default class PurchaseSuccessfulScreen extends Component {
+  constructor(props){
+    super(props);
+    firebase.analytics().setCurrentScreen("PurchaseSuccessfulScreen", "PurchaseSuccessfulScreen");
+
+  }
   static navigationOptions = {
     header: null
   };

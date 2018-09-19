@@ -94,6 +94,8 @@ class DetailEventScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("DetailEventScreen", "DetailEventScreen");
+
     var { params } = this.props.navigation.state;
 
     this.getUserSelection();
@@ -117,6 +119,7 @@ class DetailEventScreen extends Component {
     };
   }
   updateIndex = selectedIndex => {
+    firebase.analytics().logEvent("in_out_index_updated");
     var { params } = this.props.navigation.state;
 
     this.setState({ selectedIndex }, () => {

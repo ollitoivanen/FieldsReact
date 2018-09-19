@@ -139,6 +139,8 @@ export default {
   field_location_set: "Field location set",
 
   change_field_location: "Change field location",
+  location_off: "Location off",
+  no_location_permission: "No location permission",
   enable_location_to_find_nearest_fields:
     "Enable location by pressing here and find the closest fields!",
   enable_location_to_find_nearest_teams:

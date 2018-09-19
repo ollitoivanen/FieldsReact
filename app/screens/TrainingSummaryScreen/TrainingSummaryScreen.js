@@ -10,6 +10,11 @@ import { you_earned, done, reputation } from "../../strings/strings";
 import I18n from "FieldsReact/i18n";
 
 export default class TrainingSummaryScreen extends Component {
+  constructor(props){
+    super(props);
+    firebase.analytics().setCurrentScreen("TrainingSummaryScreen", "TrainingSummaryScreen");
+
+  }
   static navigationOptions = {
     header: null
   };

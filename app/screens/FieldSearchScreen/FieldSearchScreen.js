@@ -79,12 +79,15 @@ class FieldSearchScreen extends Component {
     const query = ref
       .where("co", ">=", southWest)
       .where("co", "<=", northEast)
-      .limit(10);
+      .limit(25);
 
     query
       .get()
       .then(
         function(doc) {
+          firebase.analytics().logEvent("fieldFetchFromDB");
+          console.warn(doc.length);
+
           doc.forEach(doc => {
             const id = doc.id;
             const { fN, fI, fT, gC, fAT, pH, fIm, co } = doc.data();
@@ -130,14 +133,12 @@ class FieldSearchScreen extends Component {
             }
             //Sorting the results! cool 2018
             fields.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
-
           });
         }.bind(this)
       )
       .then(() => {
         const alreadyVisited = [];
         serializedData = JSON.stringify(fields, function(key, value) {
-
           if (typeof value == "object") {
             if (alreadyVisited.indexOf(value.key) >= 0) {
               // do something other that putting the reference, like
@@ -149,16 +150,12 @@ class FieldSearchScreen extends Component {
           }
           return value;
         });
-
       })
 
       .then(() => {
         this.storeData(serializedData, "nearFields");
         this.setState({ refreshing: false });
       });
-
-     
-      
   }
   loadNearTeams() {
     const ref = firebase.firestore().collection("Teams");
@@ -185,6 +182,8 @@ class FieldSearchScreen extends Component {
       .get()
       .then(
         function(doc) {
+          firebase.analytics().logEvent("teamFetchFromDB");
+
           doc.forEach(doc => {
             const id = doc.id;
             const { tUN, co } = doc.data();
@@ -202,7 +201,6 @@ class FieldSearchScreen extends Component {
             }
             //Sorting the results! cool 2018
             teams.sort((a, b) => parseFloat(a.d) - parseFloat(b.d));
-            
           });
         }.bind(this)
       )
@@ -220,7 +218,6 @@ class FieldSearchScreen extends Component {
           }
           return value;
         });
-
       })
 
       .then(() => {
@@ -241,6 +238,8 @@ class FieldSearchScreen extends Component {
     );
     query.get().then(
       function(doc) {
+        firebase.analytics().logEvent("userFetchFromDB");
+
         doc.forEach(doc => {
           const { un, fC, tC, re, cFI, cFN, uTI, ts, uTN, uIm } = doc.data();
 
@@ -278,18 +277,20 @@ class FieldSearchScreen extends Component {
   };
 
   retrieveData = async name => {
-
     try {
       const value = await AsyncStorage.getItem(name);
 
       if (value !== null) {
         if (name === "nearFields") {
-          this.setState({ fields: JSON.parse(value) });
+          this.setState({ fields: JSON.parse(value) }),
+            firebase.analytics().logEvent("fieldFetchFromAsync", value.length);
+
           if (JSON.parse(value).length === 0) {
             this.setState({ fieldsEmpty: true });
           }
         } else if (name === "nearTeams") {
-          this.setState({ teams: JSON.parse(value) })
+          this.setState({ teams: JSON.parse(value) }),
+            firebase.analytics().logEvent("teamFetchFromAsync", value.length);
 
           if (JSON.parse(value).length === 0) {
             this.setState({ teamsEmpty: true });
@@ -319,8 +320,8 @@ class FieldSearchScreen extends Component {
           if (data == "enabled") {
             this.setState({ locationIOS: "authorized" });
             this.getLocation();
-          }else if(data == "already-enabled"){
-            this.getLocation()
+          } else if (data == "already-enabled") {
+            this.getLocation();
           }
           // The user has accepted to enable the location services
           // data can be :
@@ -352,10 +353,12 @@ class FieldSearchScreen extends Component {
   };
 
   getLocationPure = () => {
-    this.setState({ loading: true });
+
+   // this.setState({ loading: true });
     navigator.geolocation.getCurrentPosition(
       position => {
-        this.setState({ loading: false });
+        this.setState({ loading: false }),
+          firebase.analytics().logEvent("locationEnabled");
 
         if (position.coords.latitude !== 0 && position.coords.longitude !== 0) {
           this.setState({
@@ -373,33 +376,42 @@ class FieldSearchScreen extends Component {
         }
       },
       error => {
-        //This
-        this.setState({ locationIOS: "disabled", loading: false });
-      }, {enableHighAccuracy: false, timeout: 20000}
+        console.warn("errror")
+
+        this.setState({ locationIOS: "disabled", loading: false })
+        //  firebase.analytics().logEvent("locationDisabled");
+      },
+      { enableHighAccuracy: false, timeout: 20000 }
     );
   };
 
   getLocation = () => {
     Permissions.check("location").then(response => {
       if (response === "denied") {
-        this.setState({ locationIOS: "denied" });
+        this.setState({ locationIOS: "denied" }),
+          firebase.analytics().logEvent("locationDenied");
       } else if (response === "authorized") {
         //
         //
         navigator.geolocation.getCurrentPosition(
           position => {
-            this.setState({ loading: false });
+
+            this.setState({ loading: false }),
+            firebase.analytics().logEvent("locationEnabled"),
+
+              firebase.analytics().logEvent("locationAuthorized");
+
             if (
               position.coords.latitude !== 0 &&
               position.coords.longitude !== 0
             ) {
               //Test
-                this.setState({
-                  userLatitude: position.coords.latitude,
-                  userLongitude: position.coords.longitude,
-                  locationIOS: "authorized",
-                  error: null
-                });
+              this.setState({
+                userLatitude: position.coords.latitude,
+                userLongitude: position.coords.longitude,
+                locationIOS: "authorized",
+                error: null
+              });
               if (this.state.selectedIndex === 0) {
                 this.loadNearFields();
               } else if (this.state.selectedIndex === 1) {
@@ -409,9 +421,12 @@ class FieldSearchScreen extends Component {
             }
           },
           error => {
-            this.setState({ loading: false });
+
+            this.setState({ loading: false }),             firebase.analytics().logEvent("locationDisabled");
+
             this.setState({ locationIOS: "disabled" });
-          }, {enableHighAccuracy: false, timeout: 20000}
+          },
+          { enableHighAccuracy: false, timeout: 20000 }
         );
       } else if (response === "undetermined") {
         if (Platform.OS == "android") {
@@ -453,11 +468,13 @@ class FieldSearchScreen extends Component {
 
               Promise.all([promise1, promise2, promise3]).then(() => {
                 RNIap.endConnection();
+                 firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldSearch");
 
                 this.props.navigation.navigate("FieldsPlusScreen");
               });
             } else {
               RNIap.endConnection();
+               firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldSearch");
 
               this.props.navigation.navigate("FieldsPlusScreen");
             }
@@ -465,6 +482,7 @@ class FieldSearchScreen extends Component {
         })
         .catch(() => {
           RNIap.endConnection();
+          firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldSearch");
 
           this.props.navigation.navigate("FieldsPlusScreen");
         });
@@ -522,6 +540,8 @@ class FieldSearchScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("FieldSearchScreen", "FieldSearchScreen");
+
     var { params } = this.props.navigation.state;
 
     this.state = {
@@ -557,6 +577,8 @@ class FieldSearchScreen extends Component {
       var { params } = this.props.navigation.state;
 
       if (params.fromEvent === false) {
+         firebase.analytics().logEvent("toFieldDetail");
+
         this.props.navigation.navigate("DetailFieldScreen", {
           fieldName: item.fN,
           fieldID: item.id,
@@ -791,7 +813,9 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => this.getLocationPure()}>
                 <Text style={styles.locationText}>
-                  {I18n.t("enable_location_to_find_nearest_fields")} denied
+                  {I18n.t("enable_location_to_find_nearest_fields") +
+                    " " +
+                    I18n.t("no_location_permission")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -801,7 +825,9 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => Permissions.openSettings()}>
                 <Text style={styles.locationText}>
-                  {I18n.t("enable_location_to_find_nearest_fields")}
+                  {I18n.t("enable_location_to_find_nearest_fields") +
+                    " " +
+                    I18n.t("no_location_permission")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -812,7 +838,9 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.getLocationPure()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_fields")} undetermined
+                {I18n.t("enable_location_to_find_nearest_fields") +
+                  " " +
+                  I18n.t("no_location_permission")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -822,7 +850,9 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_fields")} disabled
+                {I18n.t("enable_location_to_find_nearest_fields") +
+                  " " +
+                  I18n.t("location_off")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -852,13 +882,14 @@ class FieldSearchScreen extends Component {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.item}
-                  onPress={() =>
+                  onPress={() => {
                     this.props.navigation.navigate("DetailTeamScreen", {
                       teamUsername: item.username,
                       teamFullName: item.teamFullName,
                       teamID: item.id
-                    })
-                  }
+                    });
+                       firebase.analytics().logEvent("toTeamDetail");
+                  }}
                 >
                   <TeamSearchItem {...item} />
                 </TouchableOpacity>
@@ -896,7 +927,9 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => this.getLocationPure()}>
                 <Text style={styles.locationText}>
-                  {I18n.t("enable_location_to_find_nearest_teams")}
+                  {I18n.t("enable_location_to_find_nearest_teams") +
+                    " " +
+                    I18n.t("no_location_permission")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -906,7 +939,9 @@ class FieldSearchScreen extends Component {
             <View style={styles.locationBox}>
               <TouchableOpacity onPress={() => Permissions.openSettings()}>
                 <Text style={styles.locationText}>
-                  {I18n.t("enable_location_to_find_nearest_teams")}
+                  {I18n.t("enable_location_to_find_nearest_teams") +
+                    " " +
+                    I18n.t("no_location_permission")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -917,7 +952,9 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.getLocationPure()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_teams")}
+                {I18n.t("enable_location_to_find_nearest_teams") +
+                  " " +
+                  I18n.t("no_location_permission")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -927,7 +964,9 @@ class FieldSearchScreen extends Component {
           <View style={styles.locationBox}>
             <TouchableOpacity onPress={() => this.showdialog()}>
               <Text style={styles.locationText}>
-                {I18n.t("enable_location_to_find_nearest_teams")}denied
+                {I18n.t("enable_location_to_find_nearest_teams") +
+                  " " +
+                  I18n.t("location_off")}
               </Text>
             </TouchableOpacity>
           </View>

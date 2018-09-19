@@ -217,6 +217,8 @@ class FavoriteFieldsScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("FavoriteFieldsScreen", "FavoriteFieldsScreen");
+
     var { params } = this.props.navigation.state;
 
     this.state = {

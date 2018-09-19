@@ -35,6 +35,7 @@ const mapDispatchToProps = dispatch => {
 
 class TeamPlayersScreen extends Component {
   loadPlayersList() {
+   
     const ref = firebase.firestore().collection("Teams");
     var serializedData;
 
@@ -45,6 +46,9 @@ class TeamPlayersScreen extends Component {
       .get()
       .then(
         function(doc) {
+          firebase
+          .analytics()
+          .logEvent("fetchTeamPlayersFromDB", doc.length)
           doc.forEach(doc => {
             const { unM } = doc.data();
             players.push({
@@ -69,20 +73,25 @@ class TeamPlayersScreen extends Component {
           return value;
         });
       })
+      
       .then(() => {
-        this.props.getUserAndTeamData();
-      })
-      .then(() => {
-        if (players.length !== this.props.usersTeamData.pC) {
-          //If player count differs from list length, update
-          firebase
-            .firestore()
-            .collection("Teams")
-            .doc(this.props.userData.uTI)
-            .update({
-              pC: players.length
-            });
-        }
+        firebase
+        .firestore()
+        .collection("Teams")
+        .doc(this.props.userData.uTI)
+        .get().then(doc=>{
+          if (players.length !== doc.data().pC) {
+            //If player count differs from list length, update
+            firebase
+              .firestore()
+              .collection("Teams")
+              .doc(this.props.userData.uTI)
+              .update({
+                pC: players.length
+              });
+          }
+        })
+       
       })
       .then(() => {
         this.storeData(serializedData);
@@ -103,6 +112,9 @@ class TeamPlayersScreen extends Component {
     try {
       const value = await AsyncStorage.getItem("teamPlayers");
       if (value !== null) {
+        firebase
+                  .analytics()
+                  .logEvent("fetchTeamPlayersFromAsync")
         //Usre team data redux is pretty uselsess
         firebase
           .firestore()
@@ -131,6 +143,8 @@ class TeamPlayersScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("TeamPlayersScreen", "TeamPlayersScreen");
+
     var { params } = this.props.navigation.state;
 
     this.retrieveData();

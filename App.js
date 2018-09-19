@@ -43,8 +43,6 @@ import FavoriteFieldsScreen from "./app/screens/FavoriteFieldsScreen/FavoriteFie
 import SupportScreen from "./app/screens/SupportScreen/SupportScreen";
 import FieldsPlusScreen from "./app/screens/FieldsPlusScreen/FieldsPlusScreen";
 import PurchaseSuccessfulScreen from "./app/screens/PurchaseSuccessfulScreen/PurchaseSuccessfulScreen";
-import Testing from "./app/screens/Testing/Testing";
-
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -173,9 +171,7 @@ export const StackNavigatorApp = createStackNavigator(
     PurchaseSuccessfulScreen: {
       screen: PurchaseSuccessfulScreen
     },
-    Testing:{
-      screen: Testing
-    }
+   
   },
 
   {

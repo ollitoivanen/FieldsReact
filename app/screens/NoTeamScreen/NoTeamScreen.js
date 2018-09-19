@@ -11,6 +11,11 @@ import {
 import I18n from "FieldsReact/i18n";
 
 export default class NoTeamScreen extends Component {
+  constructor(props){
+    super(props);
+    firebase.analytics().setCurrentScreen("NoTeamScreen", "NoTeamScreen");
+
+  }
   static navigationOptions = {
     header: null
   };
@@ -39,11 +44,12 @@ export default class NoTeamScreen extends Component {
 
         <TouchableOpacity
           style={styles.createTeamButton}
-          onPress={() =>
+          onPress={() => {
             this.props.navigation.navigate("CreateTeamScreen", {
               lt: null,
               ln: null
-            })
+            }),             firebase.analytics().logEvent("no_team_create")
+          }
           }
         >
           <Text style={styles.blackText}>{I18n.t("create_team")}</Text>
@@ -51,10 +57,11 @@ export default class NoTeamScreen extends Component {
 
         <TouchableOpacity
           style={styles.joinTeamButton}
-          onPress={() =>
+          onPress={() =>{
             this.props.navigation.navigate("FieldSearchScreen", {
               selectedIndex: 1
-            })
+            }),             firebase.analytics().logEvent("no_team_join")
+          }
           }
         >
           <Text style={styles.whiteText}>{I18n.t("join_team")}</Text>

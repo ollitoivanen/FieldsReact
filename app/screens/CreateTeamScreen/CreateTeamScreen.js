@@ -47,6 +47,8 @@ class CreateTeamScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("CreateTeamScreen", "CreateTeamScreen");
+
     this.state = {
       teamUsername: "",
       errorMessage: "",
@@ -119,6 +121,8 @@ class CreateTeamScreen extends Component {
     var storageRef = storage.ref();
 
     if (this.state.teamUsername !== "" && params.markerSet === true) {
+      firebase.analytics().logEvent("newTeam")
+
       const co = new firebase.firestore.GeoPoint(
         Math.round(params.lt * 10000000) / 10000000,
         Math.round(params.ln * 10000000) / 10000000

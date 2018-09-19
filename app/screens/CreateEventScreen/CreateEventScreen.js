@@ -159,6 +159,8 @@ class CreateEventScreen extends Component {
       .get()
       .then(
         function(doc) {
+          firebase.analytics().logEvent("loadTeamPlayersFromDB");
+
           doc.forEach(doc => {
             const { unM } = doc.data();
             const id = doc.id;
@@ -219,6 +221,8 @@ class CreateEventScreen extends Component {
     try {
       const value = await AsyncStorage.getItem("teamPlayers");
       if (value !== null) {
+        firebase.analytics().logEvent("loadTeamPlayersFromAsync");
+
         firebase
           .firestore()
           .collection("Teams")
@@ -241,6 +245,7 @@ class CreateEventScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("CreateEventScreen", "CreateEventScreen");
 
     this.retrieveData();
 
@@ -290,6 +295,8 @@ class CreateEventScreen extends Component {
     const saveEvent = () => {
       if (this.state.errorMessage === null) {
         if (params.fieldID === null) {
+          firebase.analytics().logEvent("eventCreated", "noField");
+
           firebase
             .firestore()
 
@@ -323,6 +330,8 @@ class CreateEventScreen extends Component {
               this.props.navigation.navigate("TeamScreen");
             });
         } else {
+          firebase.analytics().logEvent("eventCreated", "field");
+
           firebase
             .firestore()
 

@@ -128,6 +128,8 @@ export default {
   field_location_set: "Kentän sijainti asetettu",
 
   change_field_location: "Muuta kentän sijaintia",
+  location_off: "Sijainti on pois päältä",
+  no_location_permission: "Ei hyväksyntää sijainnin käyttöön",
   enable_location_to_find_nearest_fields:
     "Laita sijainti päälle painamalla tästä ja löydä lähimmät kentät!",
     enable_location_to_find_nearest_teams:

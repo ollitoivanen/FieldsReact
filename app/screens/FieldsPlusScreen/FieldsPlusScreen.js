@@ -29,6 +29,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 class FieldsPlusScreen extends Component {
+  constructor(props){
+    super(props);
+    firebase.analytics().setCurrentScreen("FieldsPlusScreen", "FieldsPlusScreen");
+
+  }
   static navigationOptions = {
     header: null
   };
@@ -48,10 +53,14 @@ class FieldsPlusScreen extends Component {
   }
 
   buy = () => {
+    firebase.analytics().logEvent("buying_init")
     var currentRep = this.props.userData.re;
     var newRep = currentRep + 2000;
     RNIap.buySubscription("fields_plus")
       .then(purchase => {
+        firebase
+                  .analytics()
+                  .logEvent("bying_success")
         promise1 = firebase
           .firestore()
           .collection("Users")
@@ -74,8 +83,7 @@ class FieldsPlusScreen extends Component {
         RNIap.getAvailablePurchases;
       })
       .catch(err => {
-        console.warn(err);
-        // resetting UI
+        firebase.analytics().logEvent("buying_declined")        // resetting UI
       });
   };
   render() {

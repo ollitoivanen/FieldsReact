@@ -181,9 +181,6 @@ const getUserAndTeamData = () => {
             });
           }
 
-          
-          
-
           var userData = Object.assign(...undefinedOnes, doc.data());
 
           var actionSetUserData = setUserData(userData);
@@ -204,7 +201,7 @@ const getUserData = () => {
         //Checking the undefined stuff so no useless data is created. It's all about staying lean!
 
         var undefinedOnes = [];
-        
+
         if (doc.data().tC === undefined) {
           undefinedOnes.push({
             tC: 0
@@ -266,6 +263,7 @@ const getUserData = () => {
 
         var actionSetUserData = setUserData(userData);
         dispatch(actionSetUserData);
+        console.warn("user data set")
       });
   };
 };

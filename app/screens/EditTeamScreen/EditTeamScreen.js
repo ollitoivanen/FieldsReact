@@ -49,6 +49,8 @@ class EditTeamScreen extends Component {
   };
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("EditTeamScreen", "EditTeamScreen");
+
     var { params } = this.props.navigation.state;
     this.retrieveData();
 

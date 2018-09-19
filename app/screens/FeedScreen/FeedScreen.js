@@ -54,7 +54,9 @@ class FeedScreen extends React.Component {
 
     const value = await AsyncStorage.getItem("friends");
     if (value !== null) {
+      firebase.analytics().logEvent("fetchingFriendsFromAsync");
       let friendArray = JSON.parse(value);
+      console.warn(friendArray)
       this.getCurrentFields(friendArray);
       //this.setState({ friends: friendArray });
     } else {
@@ -63,6 +65,7 @@ class FeedScreen extends React.Component {
   };
 
   loadFriendList() {
+    firebase.analytics().logEvent("fetchingFriendsFromAsync");
     const ref = firebase.firestore().collection("Friends");
     var serializedData;
 
@@ -126,6 +129,7 @@ class FeedScreen extends React.Component {
   };
 
   getCurrentFields = array => {
+    firebase.analytics().logEvent("fetchingFriendFields");
     let friendArray = [];
     array.forEach(item => {
       firebase
@@ -221,6 +225,7 @@ class FeedScreen extends React.Component {
       .catch(err => {});
   };
   onNotif(notif) {
+    firebase.analytics().logEvent("from_notification");
     NavigationService.navigate("TrainingScreen", {
       startTime: notif.data.startTime
     });
@@ -273,7 +278,10 @@ class FeedScreen extends React.Component {
       teamCard = (
         <TouchableOpacity
           style={styles.teamCard}
-          onPress={() => this.props.navigation.navigate("NoTeamScreen")}
+          onPress={() => {
+            this.props.navigation.navigate("NoTeamScreen"),
+              firebase.analytics().logEvent("feed_to_noteam");
+          }}
         >
           <FastImage
             style={styles.profileImage}
@@ -289,9 +297,18 @@ class FeedScreen extends React.Component {
     if (this.state.friends.length === 0) {
       var feedFriendList = (
         <View style={styles.addFriendBox}>
-          <Text style={styles.add_friends_text}>
-            {I18n.t("add_friends_from_search")}
-          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate("FieldSearchScreen", {
+                selectedIndex: 2
+              }),
+                firebase.analytics().logEvent("feed_to_team");
+            }}
+          >
+            <Text style={styles.add_friends_text}>
+              {I18n.t("add_friends_from_search")}
+            </Text>
+          </TouchableOpacity>
         </View>
       );
     } else {
@@ -301,7 +318,7 @@ class FeedScreen extends React.Component {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.item}
-              onPress={() =>
+              onPress={() => {
                 this.props.navigation.navigate("DetailProfileScreen", {
                   uTI: item.uTI,
                   uTN: item.uTN,
@@ -312,8 +329,11 @@ class FeedScreen extends React.Component {
                   ts: item.ts,
                   id: item.id,
                   re: item.re
-                })
-              }
+                }),
+                  firebase
+                    .analytics()
+                    .logEvent("opening_detail_profile_from_feed");
+              }}
             >
               <FeedFriendListItem {...item} />
             </TouchableOpacity>
@@ -340,12 +360,13 @@ class FeedScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navigationItemGreen}
-            onPress={() =>
+            onPress={() => {
               this.props.navigation.navigate("FieldSearchScreen", {
                 selectedIndex: 0,
                 fromEvent: false
-              })
-            }
+              }),
+                firebase.analytics().logEvent("feed_to_search");
+            }}
           >
             <Image
               style={styles.navigationImage}
@@ -355,7 +376,8 @@ class FeedScreen extends React.Component {
           <TouchableOpacity
             style={styles.navigationItem}
             onPress={() => {
-              this.props.navigation.navigate("ProfileScreen");
+              this.props.navigation.navigate("ProfileScreen"),
+                firebase.analytics().logEvent("feed_to_profile");
             }}
           >
             <Image style={styles.navigationImage} source={{ uri: "profile" }} />

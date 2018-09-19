@@ -40,6 +40,8 @@ class EditProfileScreen extends Component {
   };
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("EditProfileScreen", "EditProfileScreen");
+
     if (this.props.userData.uIm === true) {
       this.getProfileImage();
     }

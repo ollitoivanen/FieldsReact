@@ -15,6 +15,11 @@ import {
 import I18n from "FieldsReact/i18n";
 
 export default class SupportScreen extends Component {
+  constructor(props){
+    super(props);
+    firebase.analytics().setCurrentScreen("SupportScreen", "SupportScreen");
+
+  }
   static navigationOptions = {
     header: null
   };
@@ -33,7 +38,10 @@ export default class SupportScreen extends Component {
         </View>
         <TouchableOpacity
           style={styles.contactButton}
-          onPress={() => Linking.openURL("https://fields.one/contact/")}
+          onPress={() => {
+            Linking.openURL("https://fields.one/contact/"),
+              firebase.analytics().logEvent("support_pressed");
+          }}
         >
           <Text style={styles.contact}>{I18n.t("contact_us_here")}</Text>
         </TouchableOpacity>

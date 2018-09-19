@@ -19,6 +19,8 @@ export default class UserFriendListScreen extends Component {
   };
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("UserFriendListScreen", "UserFriendListScreen");
+
     this.retrieveData();
     this.state = {
       friends: []
@@ -36,6 +38,9 @@ export default class UserFriendListScreen extends Component {
   };
 
   openDetailUser = id => {
+    firebase
+      .analytics()
+      .logEvent("detail_profile_opened_from_user_friend_list");
     firebase
       .firestore()
       .collection("Users")

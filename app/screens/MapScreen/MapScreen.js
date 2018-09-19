@@ -19,6 +19,8 @@ export default class MapScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("MapScreen", "MapScreen");
+
     var { params } = this.props.navigation.state;
     this.setMarker = this.setMarker.bind(this);
 

@@ -18,6 +18,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 class ReputationScreen extends Component {
+  constructor(props){
+    super(props);
+    firebase.analytics().setCurrentScreen("ReputationScreen", "ReputationScreen");
+
+  }
   static navigationOptions = {
     header: null
   };

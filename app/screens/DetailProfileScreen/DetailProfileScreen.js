@@ -214,6 +214,10 @@ class DetailProfileScreen extends Component {
   }
 
   constructor(props) {
+    firebase
+      .analytics()
+      .setCurrentScreen("DetailProfileScreen", "DetailProfileScreen");
+
     super(props);
 
     this.retrieveData();

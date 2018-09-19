@@ -138,6 +138,8 @@ class TrainingScreen extends Component {
 
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("TrainingScreen", "TrainingScreen");
+
     this.retrieveData();
     this.notif = new PushService();
 
@@ -154,6 +156,9 @@ class TrainingScreen extends Component {
   }
 
   componentWillMount = () => {
+    firebase
+          .analytics()
+          .logEvent("training_screen_opened")
     this.getTrainingTime();
   };
 
@@ -185,6 +190,9 @@ class TrainingScreen extends Component {
     const currentTime = moment().format("x");
     const trainingTime = currentTime - startTime;
     if (trainingTime < 900000) {
+      firebase
+          .analytics()
+          .logEvent("end_training_under_15_minutes")
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -219,6 +227,9 @@ class TrainingScreen extends Component {
           })
         );
     } else if (trainingTime > 18000000) {
+      firebase
+          .analytics()
+          .logEvent("end_training_over_6_hours")
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -252,6 +263,9 @@ class TrainingScreen extends Component {
           })
         );
     } else {
+      firebase
+          .analytics()
+          .logEvent("end_training_valid")
       var currentReputation = this.props.userData.re;
       var trainingReputation = Math.trunc(trainingTime / 60000);
       var newReputation = trainingReputation + currentReputation;

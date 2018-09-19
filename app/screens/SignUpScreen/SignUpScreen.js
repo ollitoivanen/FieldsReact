@@ -53,6 +53,8 @@ export default class SignUpScreen extends React.Component {
   };
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("SignUpScreen", "SignUpScreen");
+
     this.ref = firebase.firestore().collection("Users");
     this.getLaunch();
     this.state = {
@@ -105,7 +107,8 @@ export default class SignUpScreen extends React.Component {
           this.state.email1,
           this.state.password1
         )
-        .then(() =>
+        .then(
+          () => firebase.analytics().logEvent("sign_up_complete"),
           this.ref.doc(firebase.auth().currentUser.uid).set({
             un: this.state.username1.toLowerCase()
           })
@@ -113,7 +116,10 @@ export default class SignUpScreen extends React.Component {
         .then(() => {
           this.setState({ loading: false });
         })
-        .then(() => this.props.navigation.navigate("LoadingScreen"));
+        .then(() => this.props.navigation.navigate("LoadingScreen"))
+        .catch(err => {
+          this.setState({ errorMessage: err });
+        });
     }
   };
 
@@ -170,9 +176,10 @@ export default class SignUpScreen extends React.Component {
             <Text style={styles.text}>{I18n.t("by_signing_up_you")}</Text>
             <Text
               style={{ color: "#3bd774" }}
-              onPress={() =>
-                Linking.openURL("https://fields.one/privacy-policy/")
-              }
+              onPress={() => {
+                Linking.openURL("https://fields.one/privacy-policy/"),
+                  firebase.analytics().logEvent("terms_clicked");
+              }}
             >
               {I18n.t("terms")}
             </Text>
@@ -192,7 +199,10 @@ export default class SignUpScreen extends React.Component {
           <View style={styles.alreadyAccountCont}>
             <Text
               style={styles.text}
-              onPress={() => this.props.navigation.navigate("LoginScreen")}
+              onPress={() => {
+                this.props.navigation.navigate("LoginScreen"),
+                  firebase.analytics().logEvent("signup_to_login");
+              }}
             >
               {I18n.t("already_have_an_account")}
             </Text>
@@ -270,7 +280,10 @@ export default class SignUpScreen extends React.Component {
                 />
                 <TouchableOpacity
                   style={styles.letsgo}
-                  onPress={() => this.setState({ firstLaunch: false })}
+                  onPress={() => {
+                    this.setState({ firstLaunch: false }),
+                      firebase.analytics().logEvent("introduction_complete");
+                  }}
                 >
                   <Text style={styles.headerText}>{I18n.t("lets_go")}</Text>
                 </TouchableOpacity>

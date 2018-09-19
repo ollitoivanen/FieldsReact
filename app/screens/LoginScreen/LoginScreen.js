@@ -26,6 +26,11 @@ import Loader from "FieldsReact/app/components/Loader/Loader.js";
 import I18n from "FieldsReact/i18n";
 
 export default class LoginScreen extends React.Component {
+  constructor(props){
+    super(props);
+    firebase.analytics().setCurrentScreen("LoginScreen", "LoginScreen");
+
+  }
   static navigationOptions = {
     header: null
   };
@@ -47,13 +52,18 @@ export default class LoginScreen extends React.Component {
         .then(() => {
           this.setState({ loading: false });
         })
+        .then(() => {
+          firebase.analytics().logEvent("success_login");
+        })
         .then(() => this.props.navigation.navigate("LoadingScreen"))
-        .catch(error =>
+        .catch(error => {
+          firebase.analytics().logEvent("failed_login");
+
           this.setState({
             loading: false,
             errorMessage: [I18n.t("email_and_password_dont_match_any_users")]
-          })
-        );
+          });
+        });
     }
   };
   render() {
