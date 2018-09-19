@@ -54,12 +54,14 @@ class FeedScreen extends React.Component {
 
     const value = await AsyncStorage.getItem("friends");
     if (value !== null) {
+      this.setState({ refreshing: false });
       firebase.analytics().logEvent("fetchingFriendsFromAsync");
       let friendArray = JSON.parse(value);
-      console.warn(friendArray)
       this.getCurrentFields(friendArray);
-      //this.setState({ friends: friendArray });
+     // this.setState({ friends: friendArray });
     } else {
+      this.setState({ refreshing: false });
+
       this.loadFriendList();
     }
   };
@@ -71,17 +73,19 @@ class FeedScreen extends React.Component {
 
     const friends = [];
 
-    const query = ref.where("aI", "==", firebase.auth().currentUser.uid);
+    const query = ref
+      .where("aI", "==", firebase.auth().currentUser.uid)
+      .limit(10);
     query
       .get()
       .then(
         function(doc) {
           doc.forEach(doc => {
             const { aI, fI, fN } = doc.data();
-            const id = doc.id;
+            const docID = doc.id;
             friends.push({
               key: doc.id,
-              id,
+              docID,
               aI,
               fI,
               fN
@@ -141,11 +145,11 @@ class FeedScreen extends React.Component {
           if (doc.data().cFI === undefined) {
             friendArray.push({
               key: item.key,
-              id: item.id,
               aI: item.aI,
               fI: item.fI,
               fN: item.fN,
               cFN: [not_at_any_field],
+              id: doc.id,
 
               uTI: doc.data().uTI,
               uTN: doc.data().uTN,
@@ -153,7 +157,7 @@ class FeedScreen extends React.Component {
               tC: doc.data().tC,
               cFI: doc.data().cFI,
               ts: doc.data().ts,
-              id: doc.id,
+              docID: item.docID,
               uIm: doc.data().uIm,
               re: doc.data().re
             });
@@ -176,7 +180,10 @@ class FeedScreen extends React.Component {
 
             friendArray.push({
               key: item.key,
-              id: item.id,
+              docID: item.docID,
+              id: doc.id,
+
+
               aI: item.aI,
               fI: item.fI,
               fN: item.fN,
@@ -191,7 +198,6 @@ class FeedScreen extends React.Component {
               uIm: doc.data().uIm,
               re: doc.data().re,
 
-              id: doc.id
             });
           }
         })
@@ -200,6 +206,11 @@ class FeedScreen extends React.Component {
             friends: friendArray
           });
         });
+    });
+  };
+  handleRefresh = () => {
+    this.setState({ refreshing: true }, () => {
+      this.retrieveData();
     });
   };
 
@@ -242,6 +253,7 @@ class FeedScreen extends React.Component {
     var { params } = this.props.navigation.state;
 
     this.state = {
+      refreshing: false,
       currentUser: null,
       homeArea: "",
       friends: [],
@@ -262,7 +274,10 @@ class FeedScreen extends React.Component {
       teamCard = (
         <TouchableOpacity
           style={styles.teamCard}
-          onPress={() => this.props.navigation.navigate("TeamScreen")}
+          onPress={() => {
+            this.props.navigation.navigate("TeamScreen"),
+              firebase.analytics().logEvent("feed_to_team");
+          }}
         >
           <FastImage
             style={styles.profileImage}
@@ -296,13 +311,41 @@ class FeedScreen extends React.Component {
 
     if (this.state.friends.length === 0) {
       var feedFriendList = (
-        <View style={styles.addFriendBox}>
+        <View style={{ flex: 1 }}>
+          <FlatList
+            onRefresh={this.handleRefresh}
+            refreshing={this.state.refreshing}
+            data={this.state.friends}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() => {
+                  this.props.navigation.navigate("DetailProfileScreen", {
+                    uTI: item.uTI,
+                    uTN: item.uTN,
+                    un: item.un,
+                    tC: item.tC,
+                    cFI: item.cFI,
+                    cFN: item.cFN,
+                    ts: item.ts,
+                    id: item.id,
+                    re: item.re,
+                    docID: item.docID
+                  }),
+                    firebase
+                      .analytics()
+                      .logEvent("opening_detail_profile_from_feed");
+                }}
+              >
+                <FeedFriendListItem {...item} />
+              </TouchableOpacity>
+            )}
+          />
           <TouchableOpacity
             onPress={() => {
               this.props.navigation.navigate("FieldSearchScreen", {
                 selectedIndex: 2
-              }),
-                firebase.analytics().logEvent("feed_to_team");
+              });
             }}
           >
             <Text style={styles.add_friends_text}>
@@ -314,6 +357,8 @@ class FeedScreen extends React.Component {
     } else {
       var feedFriendList = (
         <FlatList
+          onRefresh={this.handleRefresh}
+          refreshing={this.state.refreshing}
           data={this.state.friends}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -327,8 +372,10 @@ class FeedScreen extends React.Component {
                   cFI: item.cFI,
                   cFN: item.cFN,
                   ts: item.ts,
-                  id: item.id,
-                  re: item.re
+                  re: item.re,
+                  docID: item.docID,
+                  id: item.id
+
                 }),
                   firebase
                     .analytics()
@@ -341,11 +388,12 @@ class FeedScreen extends React.Component {
         />
       );
     }
+
     return (
       <View style={styles.container}>
         <View style={styles.rowCont}>{teamCard}</View>
-
         <Text style={styles.friendsText}>{I18n.t("friends_fi")}</Text>
+
         {feedFriendList}
 
         <View style={styles.navigationContainer}>
@@ -426,6 +474,7 @@ const styles = StyleSheet.create({
   add_friends_text: {
     fontWeight: "bold",
     fontSize: 20,
+    marginBottom: 200,
     textAlign: "center",
     color: "#e0e0e0"
   },
@@ -509,6 +558,13 @@ const styles = StyleSheet.create({
 
   friendsText: {
     color: "black",
+    fontWeight: "bold",
+    margin: 10,
+    marginBottom: 0,
+    fontSize: 16
+  },
+  friendsTextGreen: {
+    color: "#3bd774",
     fontWeight: "bold",
     margin: 10,
     marginBottom: 0,

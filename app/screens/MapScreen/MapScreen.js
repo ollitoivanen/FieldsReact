@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import I18n from "FieldsReact/i18n";
+import firebase from "react-native-firebase";
+
 
 import { get_field_location, done } from "../../strings/strings";
 

@@ -143,7 +143,9 @@ class AllTrainingsScreen extends Component {
   constructor(props) {
     super(props);
     var { params } = this.props.navigation.state;
-    firebase.analytics().setCurrentScreen("AllTrainingsScreen", "AllTrainingsScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("AllTrainingsScreen", "AllTrainingsScreen");
 
     this.retrieveData();
 

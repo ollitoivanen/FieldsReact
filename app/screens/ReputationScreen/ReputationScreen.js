@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import { reputation, to_next_badge } from "../../strings/strings";
 import I18n from "FieldsReact/i18n";
+import firebase from "react-native-firebase";
+
 
 const mapStateToProps = state => {
   return {

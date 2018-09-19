@@ -160,15 +160,17 @@ class DetailProfileScreen extends Component {
     var { params } = this.props.navigation.state;
 
     let friendArray = this.state.friends;
+
     let friendRemoved = friendArray.find(
       friendArray => friendArray.fI === params.id
     );
-    friendArray.pop(friendRemoved);
+   let index = friendArray.indexOf(friendRemoved)
+    friendArray.splice(index, 1)
 
     serializedData = JSON.stringify(friendArray);
     this.storeData(serializedData);
 
-    let friendRemovedID = friendRemoved.id;
+    let friendRemovedID = friendRemoved.docID;
 
     firebase
       .firestore()
@@ -183,13 +185,13 @@ class DetailProfileScreen extends Component {
 
     var friendID = this.guid().substring(0, 7);
     let friendArray = this.state.friends;
-    const id = friendID;
+    const docID = friendID;
     const aI = firebase.auth().currentUser.uid;
     const fI = params.id;
     const fN = params.un;
     friendArray.push({
       key: params.id,
-      id,
+      docID,
       aI,
       fI,
       fN
@@ -270,11 +272,7 @@ class DetailProfileScreen extends Component {
         </TouchableOpacity>
       );
     } else if (this.state.friendStatus === null) {
-      var friendButton = (
-        <View style={styles.roundTextContainer}>
-          <Text style={styles.blueText}>{I18n.t("add_friend")}</Text>
-        </View>
-      );
+      var friendButton = null
     } else {
       var friendButton = (
         <TouchableOpacity

@@ -9,6 +9,7 @@ import {
   create_team
 } from "../../strings/strings";
 import I18n from "FieldsReact/i18n";
+import firebase from "react-native-firebase";
 
 export default class NoTeamScreen extends Component {
   constructor(props){

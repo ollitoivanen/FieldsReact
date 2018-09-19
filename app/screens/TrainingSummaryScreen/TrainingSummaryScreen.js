@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { you_earned, done, reputation } from "../../strings/strings";
 import I18n from "FieldsReact/i18n";
+import firebase from "react-native-firebase";
+
 
 export default class TrainingSummaryScreen extends Component {
   constructor(props){

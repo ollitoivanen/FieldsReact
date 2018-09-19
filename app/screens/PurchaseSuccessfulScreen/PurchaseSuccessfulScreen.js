@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import I18n from "FieldsReact/i18n";
+import firebase from "react-native-firebase";
+
 
 export default class PurchaseSuccessfulScreen extends Component {
   constructor(props){

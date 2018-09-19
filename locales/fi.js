@@ -184,4 +184,5 @@ export default {
     "Avaa Fieldsin täysi potentiaali Fields Plus-päivityksellä",
   thank_you_for:
     "❤️ Kiitos, kun otit Fields Plus-tilauksen testiin. Täysin sinun mahtavuuden takia olemme lisänneet 2000 reputaatiota käyttäjällesi. Toivottavasti nautit siitä ja kaikista tulevista ominaisuuksista! Nyt takaisin treenaamaan, vai mitä? ;)"
+
 };

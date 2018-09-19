@@ -353,8 +353,7 @@ class FieldSearchScreen extends Component {
   };
 
   getLocationPure = () => {
-
-   // this.setState({ loading: true });
+    // this.setState({ loading: true });
     navigator.geolocation.getCurrentPosition(
       position => {
         this.setState({ loading: false }),
@@ -376,9 +375,9 @@ class FieldSearchScreen extends Component {
         }
       },
       error => {
-        console.warn("errror")
+        console.warn("errror");
 
-        this.setState({ locationIOS: "disabled", loading: false })
+        this.setState({ locationIOS: "disabled", loading: false });
         //  firebase.analytics().logEvent("locationDisabled");
       },
       { enableHighAccuracy: false, timeout: 20000 }
@@ -395,10 +394,8 @@ class FieldSearchScreen extends Component {
         //
         navigator.geolocation.getCurrentPosition(
           position => {
-
             this.setState({ loading: false }),
-            firebase.analytics().logEvent("locationEnabled"),
-
+              firebase.analytics().logEvent("locationEnabled"),
               firebase.analytics().logEvent("locationAuthorized");
 
             if (
@@ -421,8 +418,8 @@ class FieldSearchScreen extends Component {
             }
           },
           error => {
-
-            this.setState({ loading: false }),             firebase.analytics().logEvent("locationDisabled");
+            this.setState({ loading: false }),
+              firebase.analytics().logEvent("locationDisabled");
 
             this.setState({ locationIOS: "disabled" });
           },
@@ -468,13 +465,17 @@ class FieldSearchScreen extends Component {
 
               Promise.all([promise1, promise2, promise3]).then(() => {
                 RNIap.endConnection();
-                 firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldSearch");
+                firebase
+                  .analytics()
+                  .logEvent("toFieldsPlusScreen", "fromFieldSearch");
 
                 this.props.navigation.navigate("FieldsPlusScreen");
               });
             } else {
               RNIap.endConnection();
-               firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldSearch");
+              firebase
+                .analytics()
+                .logEvent("toFieldsPlusScreen", "fromFieldSearch");
 
               this.props.navigation.navigate("FieldsPlusScreen");
             }
@@ -482,7 +483,9 @@ class FieldSearchScreen extends Component {
         })
         .catch(() => {
           RNIap.endConnection();
-          firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldSearch");
+          firebase
+            .analytics()
+            .logEvent("toFieldsPlusScreen", "fromFieldSearch");
 
           this.props.navigation.navigate("FieldsPlusScreen");
         });
@@ -540,7 +543,9 @@ class FieldSearchScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("FieldSearchScreen", "FieldSearchScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("FieldSearchScreen", "FieldSearchScreen");
 
     var { params } = this.props.navigation.state;
 
@@ -577,7 +582,7 @@ class FieldSearchScreen extends Component {
       var { params } = this.props.navigation.state;
 
       if (params.fromEvent === false) {
-         firebase.analytics().logEvent("toFieldDetail");
+        firebase.analytics().logEvent("toFieldDetail");
 
         this.props.navigation.navigate("DetailFieldScreen", {
           fieldName: item.fN,
@@ -888,7 +893,7 @@ class FieldSearchScreen extends Component {
                       teamFullName: item.teamFullName,
                       teamID: item.id
                     });
-                       firebase.analytics().logEvent("toTeamDetail");
+                    firebase.analytics().logEvent("toTeamDetail");
                   }}
                 >
                   <TeamSearchItem {...item} />
