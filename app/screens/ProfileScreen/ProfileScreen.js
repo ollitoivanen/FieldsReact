@@ -15,6 +15,9 @@ import FastImage from "react-native-fast-image";
 import I18n from "FieldsReact/i18n";
 import firebase from "react-native-firebase";
 import * as RNIap from "react-native-iap";
+import NavigationService from "FieldsReact/NavigationService";
+import PushNotification from "react-native-push-notification";
+import PushService from "FieldsReact/PushService";
 
 import {
   trainings,
@@ -40,6 +43,12 @@ const mapDispatchToProps = dispatch => {
 };
 
 class ProfileScreen extends Component {
+  onNotif(notif) {
+    firebase.analytics().logEvent("from_notification");
+    NavigationService.navigate("TrainingScreen", {
+      startTime: notif.data.startTime
+    });
+  }
   componentWillMount() {
     this.getTrainingTime();
   }
@@ -50,6 +59,7 @@ class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     firebase.analytics().setCurrentScreen("ProfileScreen", "ProfileScreen");
+    this.notif = new PushService(this.onNotif.bind(this));
 
     this.retrieveData();
     if (this.props.userData.uIm === true) {
@@ -68,9 +78,9 @@ class ProfileScreen extends Component {
     Promise.all([promise1]).then(() => {
       RNIap.getAvailablePurchases()
         .then(purchases => {
-          var state = purchases[0].autoRenewingAndroid;
+          var productId = purchases[0].productId;
 
-          if (state == true) {
+          if (productId == "fields_plus") {
             RNIap.endConnection();
 
             this.props.navigation.navigate("AllTrainingsScreen");
@@ -88,25 +98,19 @@ class ProfileScreen extends Component {
 
               Promise.all([promise1, promise2, promise3]).then(() => {
                 RNIap.endConnection();
-                firebase
-                  .analytics()
-                  .logEvent("toFieldsPlusScreen", "fromProfileAllTrainings");
+                firebase.analytics().logEvent("toFieldsPlusScreen");
                 this.props.navigation.navigate("FieldsPlusScreen");
               });
             } else {
               RNIap.endConnection();
-              firebase
-              .analytics()
-              .logEvent("toFieldsPlusScreen", "fromProfileAllTrainings");
+              firebase.analytics().logEvent("toFieldsPlusScreen");
               this.props.navigation.navigate("FieldsPlusScreen");
             }
           }
         })
         .catch(() => {
           RNIap.endConnection();
-          firebase
-          .analytics()
-          .logEvent("toFieldsPlusScreen", "fromProfileAllTrainings");
+          firebase.analytics().logEvent("toFieldsPlusScreen");
           this.props.navigation.navigate("FieldsPlusScreen");
         });
     });
@@ -305,9 +309,10 @@ class ProfileScreen extends Component {
               borderRadius: 50,
               justifyContent: "center"
             }}
-            onPress={() => {this.props.navigation.navigate("FieldsPlusScreen"), firebase
-            .analytics()
-            .logEvent("toFieldsPlusScreen", "fromProfileButton");}}
+            onPress={() => {
+              this.props.navigation.navigate("FieldsPlusScreen"),
+                firebase.analytics().logEvent("toFieldsPlusScreen");
+            }}
           >
             <Text
               style={{
@@ -343,9 +348,10 @@ class ProfileScreen extends Component {
             <View style={styles.rowCont}>
               <Text style={styles.username}>{this.props.userData.un}</Text>
               <TouchableOpacity
-                onPress={() => {this.props.navigation.navigate("SettingsScreen"), firebase
-                .analytics()
-                .logEvent("toSettings");}}
+                onPress={() => {
+                  this.props.navigation.navigate("SettingsScreen"),
+                    firebase.analytics().logEvent("toSettings");
+                }}
               >
                 <Image
                   style={styles.settingsIcon}
@@ -360,11 +366,10 @@ class ProfileScreen extends Component {
             <View style={styles.imageTabContainer}>
               <TouchableOpacity
                 style={styles.textContainer}
-                onPress={() =>{
-                  this.props.navigation.navigate("UserFriendListScreen"), firebase
-                  .analytics()
-                  .logEvent("toUserFriendList")}
-                }
+                onPress={() => {
+                  this.props.navigation.navigate("UserFriendListScreen"),
+                    firebase.analytics().logEvent("toUserFriendList");
+                }}
               >
                 <Text style={styles.boxText}>
                   {this.state.fC} {I18n.t("friends")}
@@ -385,9 +390,10 @@ class ProfileScreen extends Component {
 
             <TouchableOpacity
               style={styles.roundTextContainerBordered}
-              onPress={() => {this.props.navigation.navigate("ReputationScreen"), firebase
-              .analytics()
-              .logEvent("toReputationScreen")}}
+              onPress={() => {
+                this.props.navigation.navigate("ReputationScreen"),
+                  firebase.analytics().logEvent("toReputationScreen");
+              }}
             >
               {badge}
               <Text style={styles.boxText}>

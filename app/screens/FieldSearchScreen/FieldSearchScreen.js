@@ -86,7 +86,6 @@ class FieldSearchScreen extends Component {
       .then(
         function(doc) {
           firebase.analytics().logEvent("fieldFetchFromDB");
-          console.warn(doc.length);
 
           doc.forEach(doc => {
             const id = doc.id;
@@ -283,14 +282,14 @@ class FieldSearchScreen extends Component {
       if (value !== null) {
         if (name === "nearFields") {
           this.setState({ fields: JSON.parse(value) }),
-            firebase.analytics().logEvent("fieldFetchFromAsync", value.length);
+            firebase.analytics().logEvent("fieldFetchFromAsync");
 
           if (JSON.parse(value).length === 0) {
             this.setState({ fieldsEmpty: true });
           }
         } else if (name === "nearTeams") {
           this.setState({ teams: JSON.parse(value) }),
-            firebase.analytics().logEvent("teamFetchFromAsync", value.length);
+            firebase.analytics().logEvent("teamFetchFromAsync");
 
           if (JSON.parse(value).length === 0) {
             this.setState({ teamsEmpty: true });
@@ -378,7 +377,7 @@ class FieldSearchScreen extends Component {
         console.warn("errror");
 
         this.setState({ locationIOS: "disabled", loading: false });
-        //  firebase.analytics().logEvent("locationDisabled");
+        firebase.analytics().logEvent("locationDisabled");
       },
       { enableHighAccuracy: false, timeout: 20000 }
     );
@@ -445,9 +444,9 @@ class FieldSearchScreen extends Component {
     Promise.all([promise1]).then(() => {
       RNIap.getAvailablePurchases()
         .then(purchases => {
-          var state = purchases[0].autoRenewingAndroid;
+          var productId = purchases[0].productId;
 
-          if (state == true) {
+          if (productId == "fields_plus") {
             RNIap.endConnection();
 
             this.props.navigation.navigate("FavoriteFieldsScreen");
@@ -465,17 +464,13 @@ class FieldSearchScreen extends Component {
 
               Promise.all([promise1, promise2, promise3]).then(() => {
                 RNIap.endConnection();
-                firebase
-                  .analytics()
-                  .logEvent("toFieldsPlusScreen", "fromFieldSearch");
+                firebase.analytics().logEvent("toFieldsPlusScreen");
 
                 this.props.navigation.navigate("FieldsPlusScreen");
               });
             } else {
               RNIap.endConnection();
-              firebase
-                .analytics()
-                .logEvent("toFieldsPlusScreen", "fromFieldSearch");
+              firebase.analytics().logEvent("toFieldsPlusScreen");
 
               this.props.navigation.navigate("FieldsPlusScreen");
             }
@@ -483,9 +478,7 @@ class FieldSearchScreen extends Component {
         })
         .catch(() => {
           RNIap.endConnection();
-          firebase
-            .analytics()
-            .logEvent("toFieldsPlusScreen", "fromFieldSearch");
+          firebase.analytics().logEvent("toFieldsPlusScreen");
 
           this.props.navigation.navigate("FieldsPlusScreen");
         });

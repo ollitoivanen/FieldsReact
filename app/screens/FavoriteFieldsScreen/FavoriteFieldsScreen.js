@@ -122,7 +122,7 @@ class FavoriteFieldsScreen extends Component {
       let newFavoriteFields = [];
 
       var favoriteFields = this.state.favoriteFields;
-      console.warn(favoriteFields, this.state.favoriteFields)
+      console.warn(favoriteFields, this.state.favoriteFields);
       favoriteFields.forEach(favoriteFields => {
         firebase
           .firestore()
@@ -132,7 +132,7 @@ class FavoriteFieldsScreen extends Component {
           .then(doc => {
             var id = doc.id;
             const co = doc.data().co;
-            var d = this.getDistanceFromLatLonInKm(co.latitude, co.longitude);
+           // var d = this.getDistanceFromLatLonInKm(co.latitude, co.longitude);
 
             newFavoriteFields.push({
               key: id,
@@ -217,7 +217,9 @@ class FavoriteFieldsScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("FavoriteFieldsScreen", "FavoriteFieldsScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("FavoriteFieldsScreen", "FavoriteFieldsScreen");
 
     var { params } = this.props.navigation.state;
 

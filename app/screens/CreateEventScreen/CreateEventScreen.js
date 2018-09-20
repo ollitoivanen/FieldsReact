@@ -245,7 +245,9 @@ class CreateEventScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("CreateEventScreen", "CreateEventScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("CreateEventScreen", "CreateEventScreen");
 
     this.retrieveData();
 
@@ -295,7 +297,7 @@ class CreateEventScreen extends Component {
     const saveEvent = () => {
       if (this.state.errorMessage === null) {
         if (params.fieldID === null) {
-          firebase.analytics().logEvent("eventCreated", "noField");
+          firebase.analytics().logEvent("eventCreated", {field:"noField"});
 
           firebase
             .firestore()
@@ -330,7 +332,7 @@ class CreateEventScreen extends Component {
               this.props.navigation.navigate("TeamScreen");
             });
         } else {
-          firebase.analytics().logEvent("eventCreated", "field");
+          firebase.analytics().logEvent("eventCreated",{field: "field"});
 
           firebase
             .firestore()

@@ -263,7 +263,6 @@ const getUserData = () => {
 
         var actionSetUserData = setUserData(userData);
         dispatch(actionSetUserData);
-        console.warn("user data set")
       });
   };
 };

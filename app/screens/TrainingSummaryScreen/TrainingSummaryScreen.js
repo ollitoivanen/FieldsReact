@@ -10,12 +10,12 @@ import { you_earned, done, reputation } from "../../strings/strings";
 import I18n from "FieldsReact/i18n";
 import firebase from "react-native-firebase";
 
-
 export default class TrainingSummaryScreen extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("TrainingSummaryScreen", "TrainingSummaryScreen");
-
+    firebase
+      .analytics()
+      .setCurrentScreen("TrainingSummaryScreen", "TrainingSummaryScreen");
   }
   static navigationOptions = {
     header: null

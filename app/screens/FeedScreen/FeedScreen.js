@@ -44,7 +44,14 @@ const mapDispatchToProps = dispatch => {
     getUserData: () => dispatch(getUserData())
   };
 };
+
 class FeedScreen extends React.Component {
+  onNotif(notif) {
+    firebase.analytics().logEvent("from_notification");
+    NavigationService.navigate("TrainingScreen", {
+      startTime: notif.data.startTime
+    });
+  }
   static navigationOptions = {
     header: null
   };
@@ -54,11 +61,12 @@ class FeedScreen extends React.Component {
 
     const value = await AsyncStorage.getItem("friends");
     if (value !== null) {
+
       this.setState({ refreshing: false });
       firebase.analytics().logEvent("fetchingFriendsFromAsync");
       let friendArray = JSON.parse(value);
-      this.getCurrentFields(friendArray);
-     // this.setState({ friends: friendArray });
+      //this.getCurrentFields(friendArray);
+      this.setState({ friends: friendArray });
     } else {
       this.setState({ refreshing: false });
 
@@ -66,8 +74,9 @@ class FeedScreen extends React.Component {
     }
   };
 
+  //Executed when async is null
   loadFriendList() {
-    firebase.analytics().logEvent("fetchingFriendsFromAsync");
+    firebase.analytics().logEvent("fetchingFriendsFromDB");
     const ref = firebase.firestore().collection("Friends");
     var serializedData;
 
@@ -80,16 +89,71 @@ class FeedScreen extends React.Component {
       .get()
       .then(
         function(doc) {
-          doc.forEach(doc => {
-            const { aI, fI, fN } = doc.data();
-            const docID = doc.id;
-            friends.push({
-              key: doc.id,
-              docID,
-              aI,
-              fI,
-              fN
-            });
+          doc.forEach(item => {
+            firebase
+              .firestore()
+              .collection("Users")
+              .doc(item.id)
+              .get()
+              .then(
+                function(doc) {
+                  if (doc.data().cFI === undefined) {
+                    friends.push({
+                      key: doc.id,
+                      aI: item.data().aI,
+                      fI: item.data().fI,
+                      fN: item.data().fN,
+                      cFN:  I18n.t('not_at_any_field'),
+                      id: doc.id,
+
+                      uTI: doc.data().uTI,
+                      uTN: doc.data().uTN,
+                      un: doc.data().un,
+                      tC: doc.data().tC,
+                      cFI: doc.data().cFI,
+                      ts: doc.data().ts,
+                      docID: item.id,
+                      uIm: doc.data().uIm,
+                      re: doc.data().re
+                    });
+                  } else {
+                    const startTime = doc.data().ts;
+                    const currentTime = moment().format("x");
+                    const trainingTime = currentTime - startTime;
+                    const seconds = trainingTime / 1000;
+                    const minutes = Math.trunc(seconds / 60);
+                    const hours = Math.trunc(minutes / 60);
+
+                    if (minutes < 1) {
+                      var trainingTime = [under_minute];
+                    } else if (hours < 1) {
+                      var trainingTime = minutes + [min];
+                    } else {
+                      const minSub = minutes - hours * 60;
+                      var trainingTime = hours + [h] + " " + minSub + [min];
+                    }
+
+                    friends.push({
+                      key: doc.id,
+                      aI: item.data().aI,
+                      fI: item.data().fI,
+                      fN: item.data().fN,
+                      id: doc.id,
+
+                      ts: doc.data().ts,
+                      cFN: doc.data().cFN,
+                      trainingTime: trainingTime,
+                      uTI: doc.data().uTI,
+                      uTN: doc.data().uTN,
+                      un: doc.data().un,
+                      tC: doc.data().tC,
+                      cFI: doc.data().cFI,
+                      uIm: doc.data().uIm,
+                      re: doc.data().re
+                    });
+                  }
+                }.bind(this)
+              );
           });
         }.bind(this)
       )
@@ -134,83 +198,93 @@ class FeedScreen extends React.Component {
 
   getCurrentFields = array => {
     firebase.analytics().logEvent("fetchingFriendFields");
-    let friendArray = [];
-    array.forEach(item => {
-      firebase
-        .firestore()
-        .collection("Users")
-        .doc(item.fI)
-        .get()
-        .then(doc => {
-          if (doc.data().cFI === undefined) {
-            friendArray.push({
-              key: item.key,
-              aI: item.aI,
-              fI: item.fI,
-              fN: item.fN,
-              cFN: [not_at_any_field],
-              id: doc.id,
-
-              uTI: doc.data().uTI,
-              uTN: doc.data().uTN,
-              un: doc.data().un,
-              tC: doc.data().tC,
-              cFI: doc.data().cFI,
-              ts: doc.data().ts,
-              docID: item.docID,
-              uIm: doc.data().uIm,
-              re: doc.data().re
-            });
-          } else {
-            const startTime = doc.data().ts;
-            const currentTime = moment().format("x");
-            const trainingTime = currentTime - startTime;
-            const seconds = trainingTime / 1000;
-            const minutes = Math.trunc(seconds / 60);
-            const hours = Math.trunc(minutes / 60);
-
-            if (minutes < 1) {
-              var trainingTime = [under_minute];
-            } else if (hours < 1) {
-              var trainingTime = minutes + [min];
+    var promise1 = this.retrieveData()
+    let friendArrayEmpty = []
+var friendArray = []
+    Promise.all([promise1]).then(()=>{
+      friendArray = this.state.friends;
+//It wokrs!!! that was 2 hours of pure focus
+    }).then(()=>{
+      friendArray.forEach(function(item){
+        firebase
+          .firestore()
+          .collection("Users")
+          .doc(item.fI)
+          .get()
+          .then(function(doc){
+            if (doc.data().cFI === undefined) {
+              friendArrayEmpty.push({
+                key: item.key,
+                aI: item.aI,
+                fI: item.fI,
+                fN: doc.data().un,
+                cFN: I18n.t('not_at_any_field'),
+                id: doc.id,
+  
+                uTI: doc.data().uTI,
+                uTN: doc.data().uTN,
+                un: doc.data().un,
+                tC: doc.data().tC,
+                docID: item.docID,
+                uIm: doc.data().uIm,
+                re: doc.data().re
+              });
+              
+  
             } else {
-              const minSub = minutes - hours * 60;
-              var trainingTime = hours + [h] + " " + minSub + [min];
+              const startTime = doc.data().ts;
+              const currentTime = moment().format("x");
+              const trainingTime = currentTime - startTime;
+              const seconds = trainingTime / 1000;
+              const minutes = Math.trunc(seconds / 60);
+              const hours = Math.trunc(minutes / 60);
+  
+              if (minutes < 1) {
+                var trainingTime = [under_minute];
+              } else if (hours < 1) {
+                var trainingTime = minutes + [min];
+              } else {
+                const minSub = minutes - hours * 60;
+                var trainingTime = hours + [h] + " " + minSub + [min];
+              }
+  
+              friendArrayEmpty.push({
+                key: item.key,
+                docID: item.docID,
+                id: doc.id,
+  
+                aI: item.aI,
+                fI: item.fI,
+                fN: doc.data().un,
+                ts: doc.data().ts,
+                cFN: doc.data().cFN,
+                trainingTime: trainingTime,
+                uTI: doc.data().uTI,
+                uTN: doc.data().uTN,
+                un: doc.data().un,
+                tC: doc.data().tC,
+                cFI: doc.data().cFI,
+                uIm: doc.data().uIm,
+                re: doc.data().re
+              });
+            }
+          }.bind(this)).then(()=>{
+            if(friendArrayEmpty.length === friendArray.length){
+              this.storeData(JSON.stringify(friendArrayEmpty))
+
             }
 
-            friendArray.push({
-              key: item.key,
-              docID: item.docID,
-              id: doc.id,
+          })
+      }.bind(this))
+    })
 
-
-              aI: item.aI,
-              fI: item.fI,
-              fN: item.fN,
-              ts: doc.data().ts,
-              cFN: doc.data().cFN,
-              trainingTime: trainingTime,
-              uTI: doc.data().uTI,
-              uTN: doc.data().uTN,
-              un: doc.data().un,
-              tC: doc.data().tC,
-              cFI: doc.data().cFI,
-              uIm: doc.data().uIm,
-              re: doc.data().re,
-
-            });
-          }
-        })
-        .then(() => {
-          this.setState({
-            friends: friendArray
-          });
-        });
-    });
+   
+     
+    
   };
   handleRefresh = () => {
     this.setState({ refreshing: true }, () => {
-      this.retrieveData();
+      this.getCurrentFields();
     });
   };
 
@@ -235,20 +309,14 @@ class FeedScreen extends React.Component {
       })
       .catch(err => {});
   };
-  onNotif(notif) {
-    firebase.analytics().logEvent("from_notification");
-    NavigationService.navigate("TrainingScreen", {
-      startTime: notif.data.startTime
-    });
-  }
 
   constructor(props) {
     super(props);
     firebase.analytics().setCurrentScreen("FeedScreen", "FeedScreen");
-    // this.props.getUserData();
+    this.notif = new PushService(this.onNotif.bind(this));
+
     this.retrieveData();
     this.getProfileImage();
-    this.notif = new PushService(this.onNotif.bind(this));
 
     var { params } = this.props.navigation.state;
 
@@ -374,8 +442,8 @@ class FeedScreen extends React.Component {
                   ts: item.ts,
                   re: item.re,
                   docID: item.docID,
-                  id: item.id
-
+                  id: item.id,
+                  uIm: item.uIm
                 }),
                   firebase
                     .analytics()

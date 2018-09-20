@@ -102,7 +102,6 @@ class DetailFieldScreen extends Component {
   };
 
   loadEvents = () => {
-    
     var { params } = this.props.navigation.state;
 
     const events = [];
@@ -110,7 +109,7 @@ class DetailFieldScreen extends Component {
     const query = ref.where("eFI", "==", params.fieldID);
     query.get().then(
       function(doc) {
-        firebase.analytics().logEvent("fetchFieldEvents", doc.length)
+        firebase.analytics().logEvent("fetchFieldEvents");
 
         doc.forEach(doc => {
           const { eT, eFI, eFN, eTY, tUN } = doc.data();
@@ -139,7 +138,7 @@ class DetailFieldScreen extends Component {
   };
 
   startTraining = () => {
-    firebase.analytics().logEvent("startTraining")
+    firebase.analytics().logEvent("startTraining");
 
     /*if(Platform.OS === 'ios'){
     Permissions.check('notifications').then(response=>{
@@ -204,18 +203,14 @@ class DetailFieldScreen extends Component {
     });
   };
 
-
-
-  
-
   toggleFavorite = boolean => {
     promise1 = RNIap.initConnection();
     Promise.all([promise1]).then(() => {
       RNIap.getAvailablePurchases()
         .then(purchases => {
-          var state = purchases[0].autoRenewingAndroid;
+          var productId = purchases[0].productId;
 
-          if (state == true) {
+          if (productId == "fields_plus") {
             RNIap.endConnection();
 
             var { params } = this.props.navigation.state;
@@ -311,13 +306,17 @@ class DetailFieldScreen extends Component {
 
               Promise.all([promise1, promise2, promise3]).then(() => {
                 RNIap.endConnection();
-                firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldDetail")
+                firebase
+                  .analytics()
+                  .logEvent("toFieldsPlusScreen");
 
                 this.props.navigation.navigate("FieldsPlusScreen");
               });
             } else {
               RNIap.endConnection();
-              firebase.analytics().logEvent("toFieldsPlusScreen", "fromFieldDetail")
+              firebase
+                .analytics()
+                .logEvent("toFieldsPlusScreen");
 
               this.props.navigation.navigate("FieldsPlusScreen");
             }
@@ -325,6 +324,9 @@ class DetailFieldScreen extends Component {
         })
         .catch(() => {
           RNIap.endConnection();
+          firebase
+            .analytics()
+            .logEvent("toFieldsPlusScreen");
 
           this.props.navigation.navigate("FieldsPlusScreen");
         });
@@ -427,7 +429,9 @@ class DetailFieldScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("DetailFieldScreen", "DetailFieldScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("DetailFieldScreen", "DetailFieldScreen");
 
     var { params } = this.props.navigation.state;
     this.notif = new PushService();

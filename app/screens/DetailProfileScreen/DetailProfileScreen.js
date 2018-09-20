@@ -119,6 +119,8 @@ class DetailProfileScreen extends Component {
       this.setState({ friends: JSON.parse(value) });
 
       let friendArray = JSON.parse(value);
+      console.warn(friendArray)
+
       let foundFriend = friendArray.find(
         friendArray => friendArray.fI === params.id
       );
@@ -164,8 +166,8 @@ class DetailProfileScreen extends Component {
     let friendRemoved = friendArray.find(
       friendArray => friendArray.fI === params.id
     );
-   let index = friendArray.indexOf(friendRemoved)
-    friendArray.splice(index, 1)
+    let index = friendArray.indexOf(friendRemoved);
+    friendArray.splice(index, 1);
 
     serializedData = JSON.stringify(friendArray);
     this.storeData(serializedData);
@@ -189,13 +191,61 @@ class DetailProfileScreen extends Component {
     const aI = firebase.auth().currentUser.uid;
     const fI = params.id;
     const fN = params.un;
+
+    if(params.cFI!==undefined){
+      const startTime = params.ts;
+      const currentTime = moment().format("x");
+      var trainingTime = currentTime - startTime;
+      console.warn(trainingTime)
+      const seconds = trainingTime / 1000;
+      const minutes = Math.trunc(seconds / 60);
+      const hours = Math.trunc(minutes / 60);
+
+      if (minutes < 1) {
+        var trainingTime = [under_minute];
+      } else if (hours < 1) {
+        var trainingTime = minutes + [min];
+      } else {
+        const minSub = minutes - hours * 60;
+        var trainingTime = hours + [h] + " " + minSub + [min];
+      }
     friendArray.push({
       key: params.id,
+      id: params.id,
+      trainingTime: trainingTime,
       docID,
       aI,
       fI,
-      fN
+      fN,
+      uTI: params.uTI,
+      uTN: params.uTN,
+      un: params.un,
+      tC: params.tC,
+      cFI: params.cFI,
+      cFN: params.cFN,
+      ts: params.ts,
+      re: params.re,
     });
+  }else{
+
+    friendArray.push({
+      key: params.id,
+      id: params.id,
+      docID,
+      aI,
+      fI,
+      fN,
+      uTI: params.uTI,
+      uTN: params.uTN,
+      un: params.un,
+      tC: params.tC,
+      uIm: params.uIm,
+      cFN: I18n.t('not_at_any_field'),
+      ts: params.ts,
+      re: params.re,
+    });
+  }
+  console.warn(friendArray)
 
     serializedData = JSON.stringify(friendArray);
     this.storeData(serializedData);
@@ -216,16 +266,21 @@ class DetailProfileScreen extends Component {
   }
 
   constructor(props) {
+    super(props);
+
     firebase
       .analytics()
       .setCurrentScreen("DetailProfileScreen", "DetailProfileScreen");
 
-    super(props);
 
     this.retrieveData();
     var { params } = this.props.navigation.state;
 
+    if(params.uIm===true){
+
+    
     this.getProfileImage();
+  }
 
     this.state = {
       trainingTime: "",
@@ -272,7 +327,7 @@ class DetailProfileScreen extends Component {
         </TouchableOpacity>
       );
     } else if (this.state.friendStatus === null) {
-      var friendButton = null
+      var friendButton = null;
     } else {
       var friendButton = (
         <TouchableOpacity
@@ -360,6 +415,11 @@ class DetailProfileScreen extends Component {
       var fC = 0;
     } else {
       var fC = params.fC;
+    }
+    if (params.re === undefined) {
+      var re = 0;
+    } else {
+      var re = params.re;
     }
 
     var navigation = (
@@ -497,7 +557,7 @@ class DetailProfileScreen extends Component {
             <TouchableOpacity style={styles.roundTextContainerBordered}>
               {badge}
               <Text style={styles.boxText}>
-                {params.re} {I18n.t("reputation")}
+                {re} {I18n.t("reputation")}
               </Text>
             </TouchableOpacity>
           </View>

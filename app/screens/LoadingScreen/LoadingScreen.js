@@ -49,12 +49,10 @@ class LoadingScreen extends Component {
       actions: [NavigationActions.navigate({ routeName: "FeedScreen" })]
     });
     this.props.navigation.dispatch(startFeed);
-
   }
 
   loadData = () => {
-  this.props.getUserData();
-   
+    this.props.getUserData();
   };
 
   render() {
