@@ -227,10 +227,10 @@ class EditTeamScreen extends Component {
         if (clearPath !== null) {
           ImageResizer.createResizedImage(
             clearPath,
-            200,
-            200,
+            150,
+            150,
             "JPEG",
-            100
+            80
           ).then(({ uri }) => {
             var { params } = this.props.navigation.state;
 
@@ -330,7 +330,7 @@ class EditTeamScreen extends Component {
           }
         }
       } else {
-        this.setState({ errorMessage: I18n.t('please_fill_all_fields') });
+        this.setState({ errorMessage: I18n.t("please_fill_all_fields") });
       }
     };
 
@@ -362,7 +362,7 @@ class EditTeamScreen extends Component {
           style={styles.textInput}
           maxLength={30}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={I18n.t('team_username')}
+          placeholder={I18n.t("team_username")}
           value={this.state.teamUsername}
           onChangeText={this.usernameHandle}
         />

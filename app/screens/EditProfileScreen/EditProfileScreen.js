@@ -40,7 +40,9 @@ class EditProfileScreen extends Component {
   };
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("EditProfileScreen", "EditProfileScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("EditProfileScreen", "EditProfileScreen");
 
     if (this.props.userData.uIm === true) {
       this.getProfileImage();
@@ -118,7 +120,7 @@ class EditProfileScreen extends Component {
 
     if (this.state.username !== "") {
       if (clearPath !== null) {
-        ImageResizer.createResizedImage(imagePath, 200, 200, "JPEG", 100).then(
+        ImageResizer.createResizedImage(imagePath, 150, 150, "JPEG", 80).then(
           ({ uri }) => {
             var { params } = this.props.navigation.state;
 
@@ -190,7 +192,7 @@ class EditProfileScreen extends Component {
           });
       }
     } else {
-      this.setState({ errorMessage: I18n.t('please_fill_all_fields') });
+      this.setState({ errorMessage: I18n.t("please_fill_all_fields") });
     }
   };
   render() {
@@ -236,7 +238,7 @@ class EditProfileScreen extends Component {
           style={styles.textInput}
           maxLength={30}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={I18n.t('username')}
+          placeholder={I18n.t("username")}
           value={this.state.username}
           onChangeText={this.usernameHandle}
         />

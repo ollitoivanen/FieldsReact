@@ -22,6 +22,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FIREBASE_ANALYTICS_COLLECTION_DEACTIVATED</key>
+	<string>YES</string>
+	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
+	<string>NO</string>
+	<key>FirebaseScreenReportingEnabled</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -46,12 +52,6 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
 	<key>UIAppFonts</key>
-  <key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
-  <string>NO</string>
-  <key>FIREBASE_ANALYTICS_COLLECTION_DEACTIVATED</key>
-  <string>YES</string>
-  <key>FirebaseScreenReportingEnabled</key>
-  <false/>
 	<array>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>

@@ -6,14 +6,32 @@ export default class PushService {
     this.configure(onNotification);
   }
 
-  localNotif(field, startTime) {
+  scheduledNotif(field, startTime, fieldID) {
+    PushNotification.setApplicationIconBadgeNumber(1);
+
+    PushNotification.localNotificationSchedule({
+      message: [currently_training_at] + " " + field, // (required)
+      date: new Date(Date.now() + 0 * 1000), // in 3 secs
+      playSound: false,
+      title: current_training,
+      number: 1,
+      userInfo: {
+        id: "10",
+        field: field,
+        startTime: startTime,
+        fieldID: fieldID
+      }
+    });
+  }
+
+  localNotif(field, startTime, fieldID) {
     PushNotification.localNotification({
       autoCancel: false,
       ongoing: true,
       largeIcon: "ic_launcher",
       smallIcon: "ic_notification",
       color: "green",
-      vibrate: true,
+      vibrate: false,
       vibration: 300,
       title: current_training,
       message: [currently_training_at] + " " + field,
@@ -21,7 +39,7 @@ export default class PushService {
       foreground: false,
       soundName: "default",
 
-      data: { field: field, startTime: startTime }
+      data: { field: field, startTime: startTime, fieldID: fieldID }
     });
   }
 

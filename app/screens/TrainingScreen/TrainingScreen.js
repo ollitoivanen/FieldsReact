@@ -5,7 +5,8 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  Platform
 } from "react-native";
 import {
   under_minute,
@@ -59,11 +60,9 @@ class TrainingScreen extends Component {
             var endTime = moment(parseInt(eT)).format("HH:mm");
 
             var trainingTimeRaw = parseInt(eT) - parseInt(startDate);
-            console.warn(trainingTimeRaw);
             var seconds = trainingTimeRaw / 1000;
             var minutes = Math.trunc(seconds / 60);
             var hours = Math.trunc(minutes / 60);
-            console.warn(seconds + "ffff");
 
             if (hours < 1) {
               var trainingTime = minutes + [min];
@@ -156,9 +155,7 @@ class TrainingScreen extends Component {
   }
 
   componentWillMount = () => {
-    firebase
-          .analytics()
-          .logEvent("training_screen_opened")
+    firebase.analytics().logEvent("training_screen_opened");
     this.getTrainingTime();
   };
 
@@ -182,17 +179,19 @@ class TrainingScreen extends Component {
   };
 
   endTraining = () => {
-    // PushNotification.cancelLocalNotifications({ id: "10" });
-    this.notif.cancelAll();
+    if (Platform.OS === "ios") {
+      PushNotification.cancelLocalNotifications({ id: "10" });
+      PushNotification.setApplicationIconBadgeNumber(0);
+    } else {
+      this.notif.cancelAll();
+    }
 
     var { params } = this.props.navigation.state;
     const startTime = params.startTime;
     const currentTime = moment().format("x");
     const trainingTime = currentTime - startTime;
-    if (trainingTime < 900000) {
-      firebase
-          .analytics()
-          .logEvent("end_training_under_15_minutes")
+    if (trainingTime < 0 /*900000*/) {
+      firebase.analytics().logEvent("end_training_under_15_minutes");
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -227,9 +226,7 @@ class TrainingScreen extends Component {
           })
         );
     } else if (trainingTime > 18000000) {
-      firebase
-          .analytics()
-          .logEvent("end_training_over_6_hours")
+      firebase.analytics().logEvent("end_training_over_6_hours");
       this.ref
         .doc(firebase.auth().currentUser.uid)
         .update({
@@ -263,9 +260,7 @@ class TrainingScreen extends Component {
           })
         );
     } else {
-      firebase
-          .analytics()
-          .logEvent("end_training_valid")
+      firebase.analytics().logEvent("end_training_valid");
       var currentReputation = this.props.userData.re;
       var trainingReputation = Math.trunc(trainingTime / 60000);
       var newReputation = trainingReputation + currentReputation;
@@ -308,9 +303,7 @@ class TrainingScreen extends Component {
                 });
             });
         })
-        .then(() => {
-          console.warn("retrieving async");
-        })
+        .then(() => {})
         .then(() => {
           var { params } = this.props.navigation.state;
 
@@ -321,11 +314,9 @@ class TrainingScreen extends Component {
           var endTimeHH = moment(parseInt(currentTime)).format("HH:mm");
 
           var trainingTimeRaw = parseInt(endTime) - parseInt(params.startTime);
-          console.warn(trainingTimeRaw);
           var seconds = trainingTimeRaw / 1000;
           var minutes = Math.trunc(seconds / 60);
           var hours = Math.trunc(minutes / 60);
-          console.warn(seconds + "ffff");
 
           if (hours < 1) {
             var trainingTime = minutes + [min];
@@ -334,7 +325,6 @@ class TrainingScreen extends Component {
             var trainingTime = hours + [h] + " " + minSub + [min];
           }
 
-          console.warn("pushing to traiings", this.state.trainings);
           trainings.push({
             key: moment().format("x"),
             date,
@@ -346,6 +336,7 @@ class TrainingScreen extends Component {
           });
         })
         .then(() => {
+
           const alreadyVisited = [];
           serializedData = JSON.stringify(trainings, function(key, value) {
             if (typeof value == "object") {

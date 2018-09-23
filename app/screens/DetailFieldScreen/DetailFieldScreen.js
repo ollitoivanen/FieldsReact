@@ -12,7 +12,8 @@ import {
   ScrollView,
   Geolocation,
   Platform,
-  AsyncStorage
+  AsyncStorage,
+  AppState
 } from "react-native";
 import {
   goals,
@@ -68,7 +69,16 @@ const mapDispatchToProps = dispatch => {
 
 class DetailFieldScreen extends Component {
   sendNotification = () => {
-    this.notif.localNotif(this.state.fieldName, moment().format("x"));
+    if (Platform.OS === "android") {
+      this.notif.localNotif(
+        this.state.fieldName,
+        moment().format("x"),
+        this.state.fieldID
+      );
+    } else {
+      PushNotification.requestPermissions()
+
+    }
   };
 
   componentWillMount = () => {
@@ -151,7 +161,7 @@ class DetailFieldScreen extends Component {
     var { params } = this.props.navigation.state;
     this.sendNotification();
     const startTime = moment().format("x");
-    firebase
+    var promise = firebase
       .firestore()
       .collection("Users")
       .doc(firebase.auth().currentUser.uid)
@@ -177,15 +187,14 @@ class DetailFieldScreen extends Component {
                 pH: doc.data().pH + 1
               });
           });
-      })
-
-      .then(() => {
-        this.props.navigation.navigate("TrainingScreen", {
-          startTime: startTime,
-          peopleHere: this.state.peopleHere,
-          fieldID: this.state.fieldID
-        });
       });
+    Promise.all([promise]).then(() => {
+      this.props.navigation.navigate("TrainingScreen", {
+        startTime: startTime,
+        peopleHere: this.state.peopleHere,
+        fieldID: this.state.fieldID
+      });
+    });
   };
 
   existingTraining = () => {
@@ -306,17 +315,13 @@ class DetailFieldScreen extends Component {
 
               Promise.all([promise1, promise2, promise3]).then(() => {
                 RNIap.endConnection();
-                firebase
-                  .analytics()
-                  .logEvent("toFieldsPlusScreen");
+                firebase.analytics().logEvent("toFieldsPlusScreen");
 
                 this.props.navigation.navigate("FieldsPlusScreen");
               });
             } else {
               RNIap.endConnection();
-              firebase
-                .analytics()
-                .logEvent("toFieldsPlusScreen");
+              firebase.analytics().logEvent("toFieldsPlusScreen");
 
               this.props.navigation.navigate("FieldsPlusScreen");
             }
@@ -324,9 +329,7 @@ class DetailFieldScreen extends Component {
         })
         .catch(() => {
           RNIap.endConnection();
-          firebase
-            .analytics()
-            .logEvent("toFieldsPlusScreen");
+          firebase.analytics().logEvent("toFieldsPlusScreen");
 
           this.props.navigation.navigate("FieldsPlusScreen");
         });
@@ -648,12 +651,12 @@ class DetailFieldScreen extends Component {
               </Text>
               <Text style={styles.infoText}>
                 {I18n.t("field_type")}{" "}
-                {field_type_array[[this.state.fieldType]]}
+                {I18n.t(["field_type_array", this.state.fieldType])}
               </Text>
 
               <Text style={styles.infoText}>
                 {I18n.t("access_type")}{" "}
-                {field_access_type_array[[this.state.accessType]]}
+                {I18n.t(["field_access_type_array", this.state.accessType])}
               </Text>
 
               <TouchableOpacity

@@ -165,10 +165,10 @@ export default class EditFieldScreen extends Component {
           if (clearPath !== null) {
             ImageResizer.createResizedImage(
               clearPath,
-              200,
-              200,
+              150,
+              150,
               "JPEG",
-              100
+              80
             ).then(({ uri }) => {
               var { params } = this.props.navigation.state;
 
@@ -201,10 +201,10 @@ export default class EditFieldScreen extends Component {
           if (clearPath !== null) {
             ImageResizer.createResizedImage(
               clearPath,
-              200,
-              200,
+              150,
+              150,
               "JPEG",
-              100
+              80
             ).then(({ uri }) => {
               var { params } = this.props.navigation.state;
 
@@ -249,7 +249,7 @@ export default class EditFieldScreen extends Component {
           }
         }
       } else {
-        this.setState({ errorMessage: [I18n.t('please_fill_all_fields')] });
+        this.setState({ errorMessage: [I18n.t("please_fill_all_fields")] });
       }
     };
     const changeFieldType = index => {
@@ -293,7 +293,7 @@ export default class EditFieldScreen extends Component {
           style={styles.textInput}
           maxLength={30}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={I18n.t('field_name')}
+          placeholder={I18n.t("field_name")}
           value={this.state.fieldName}
           onChangeText={fieldName => this.setState({ fieldName })}
         />

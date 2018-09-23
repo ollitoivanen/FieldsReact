@@ -119,7 +119,6 @@ class DetailProfileScreen extends Component {
       this.setState({ friends: JSON.parse(value) });
 
       let friendArray = JSON.parse(value);
-      console.warn(friendArray)
 
       let foundFriend = friendArray.find(
         friendArray => friendArray.fI === params.id
@@ -196,7 +195,6 @@ class DetailProfileScreen extends Component {
       const startTime = params.ts;
       const currentTime = moment().format("x");
       var trainingTime = currentTime - startTime;
-      console.warn(trainingTime)
       const seconds = trainingTime / 1000;
       const minutes = Math.trunc(seconds / 60);
       const hours = Math.trunc(minutes / 60);
@@ -245,7 +243,6 @@ class DetailProfileScreen extends Component {
       re: params.re,
     });
   }
-  console.warn(friendArray)
 
     serializedData = JSON.stringify(friendArray);
     this.storeData(serializedData);

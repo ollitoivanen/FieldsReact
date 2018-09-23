@@ -41,6 +41,8 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		F727AAA4212BD7C600B6C70A /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F727AAA3212BD79300B6C70A /* libRNImagePicker.a */; };
 		F74DF9BB212B2EBD00A2290A /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F74DF994212B2EA100A2290A /* libFastImage.a */; };
+		F7B2074F215634F4006A18E1 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7B2074C215634B9006A18E1 /* libRCTPushNotification.a */; };
+		F7D39604215611AC00B1471B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7D39603215611AC00B1471B /* Info.plist */; };
 		F7D7FA1A212C94220044CE4F /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7D7F9FA212C93E00044CE4F /* libRCTImageResizer.a */; };
 		F7E2E197211B6B8800796D5D /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		F7EF6A8E211B7892004185E4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7EF6A67211B7892004185E4 /* GoogleService-Info.plist */; };
@@ -348,6 +350,20 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFirebase;
 		};
+		F7B2074B215634B9006A18E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F7B20746215634B9006A18E1 /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTPushNotification;
+		};
+		F7B2074D215634B9006A18E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F7B20746215634B9006A18E1 /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
+			remoteInfo = "RCTPushNotification-tvOS";
+		};
 		F7D7F9F9212C93E00044CE4F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F7D7F9EC212C93E00044CE4F /* RCTImageResizer.xcodeproj */;
@@ -374,7 +390,6 @@
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = FieldsReact/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FieldsReact/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FieldsReact/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FieldsReact/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		15D3818A767B4DF094F0B7D5 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
@@ -407,6 +422,8 @@
 		F74DF98E212B2EA000A2290A /* FastImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
 		F79B456B213A919F00D28401 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		F7A350602142B141003C78C5 /* FieldsReact.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FieldsReact.entitlements; path = FieldsReact/FieldsReact.entitlements; sourceTree = "<group>"; };
+		F7B20746215634B9006A18E1 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		F7D39603215611AC00B1471B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F7D661CA21477D6300460D71 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F7D7F9EC212C93E00044CE4F /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		F7EF6A67211B7892004185E4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -425,6 +442,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7B2074F215634F4006A18E1 /* libRCTPushNotification.a in Frameworks */,
 				F7D7FA1A212C94220044CE4F /* libRCTImageResizer.a in Frameworks */,
 				F727AAA4212BD7C600B6C70A /* libRNImagePicker.a in Frameworks */,
 				F74DF9BB212B2EBD00A2290A /* libFastImage.a in Frameworks */,
@@ -559,9 +577,9 @@
 				F7EF6A67211B7892004185E4 /* GoogleService-Info.plist */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				F7D39603215611AC00B1471B /* Info.plist */,
 			);
 			name = FieldsReact;
 			sourceTree = "<group>";
@@ -619,6 +637,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F7B20746215634B9006A18E1 /* RCTPushNotification.xcodeproj */,
 				F79B456B213A919F00D28401 /* ReactNativePermissions.xcodeproj */,
 				F7D7F9EC212C93E00044CE4F /* RCTImageResizer.xcodeproj */,
 				F727AA77212BD79300B6C70A /* RNImagePicker.xcodeproj */,
@@ -756,6 +775,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F7B20747215634B9006A18E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F7B2074C215634B9006A18E1 /* libRCTPushNotification.a */,
+				F7B2074E215634B9006A18E1 /* libRCTPushNotification-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F7D7F9ED212C93E00044CE4F /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -863,6 +891,9 @@
 							com.apple.Push = {
 								enabled = 1;
 							};
+							com.apple.Siri = {
+								enabled = 0;
+							};
 						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -923,6 +954,10 @@
 				{
 					ProductGroup = 00C302D41ABCB9D200DB3ED1 /* Products */;
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
+				},
+				{
+					ProductGroup = F7B20747215634B9006A18E1 /* Products */;
+					ProjectRef = F7B20746215634B9006A18E1 /* RCTPushNotification.xcodeproj */;
 				},
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
@@ -1255,6 +1290,20 @@
 			remoteRef = F7AF75142115F1210015DCA6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F7B2074C215634B9006A18E1 /* libRCTPushNotification.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTPushNotification.a;
+			remoteRef = F7B2074B215634B9006A18E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F7B2074E215634B9006A18E1 /* libRCTPushNotification-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTPushNotification-tvOS.a";
+			remoteRef = F7B2074D215634B9006A18E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F7D7F9FA212C93E00044CE4F /* libRCTImageResizer.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1278,6 +1327,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				F7D39604215611AC00B1471B /* Info.plist in Resources */,
 				F7EF6A8E211B7892004185E4 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1504,15 +1554,16 @@
 					"$(SRCROOT)/../node_modules/react-native-image-resizer/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 				);
-				INFOPLIST_FILE = FieldsReact/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fields.football;
 				PRODUCT_NAME = FieldsReact;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1531,15 +1582,16 @@
 					"$(SRCROOT)/../node_modules/react-native-image-resizer/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 				);
-				INFOPLIST_FILE = FieldsReact/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fields.football;
 				PRODUCT_NAME = FieldsReact;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

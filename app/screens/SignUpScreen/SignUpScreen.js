@@ -133,12 +133,13 @@ export default class SignUpScreen extends React.Component {
           <View style={styles.logoContainer}>
             <Image style={styles.logo} source={{ uri: "f_logo_white_bg" }} />
           </View>
+          <View style={styles.paddingContainer}>
           <Text style={styles.text2}>{I18n.t("welcome")}</Text>
           <TextInput
             textContentType="username"
             maxLength={30}
             underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder={username}
+            placeholder={I18n.t("username")}
             autoCapitalize="none"
             style={styles.textInput}
             returnKeyType="next"
@@ -150,7 +151,7 @@ export default class SignUpScreen extends React.Component {
           <TextInput
             maxLength={100}
             underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder={email}
+            placeholder={I18n.t("email")}
             returnKeyType="next"
             autoCapitalize="none"
             keyboardType="email-address"
@@ -165,7 +166,7 @@ export default class SignUpScreen extends React.Component {
             underlineColorAndroid="rgba(0,0,0,0)"
             secureTextEntry
             returnKeyType="go"
-            placeholder={password}
+            placeholder={I18n.t("password")}
             autoCapitalize="none"
             style={styles.textInput}
             onChangeText={password1 => this.setState({ password1 })}
@@ -190,6 +191,7 @@ export default class SignUpScreen extends React.Component {
           >
             <Text style={styles.buttonText}>{I18n.t("signup")}</Text>
           </TouchableOpacity>
+          </View>
           {this.state.errorMessage && (
             <Text style={styles.error}>{this.state.errorMessage}</Text>
           )}
@@ -297,10 +299,12 @@ export default class SignUpScreen extends React.Component {
 }
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     backgroundColor: "white",
-
     flex: 1
+  },
+  paddingContainer: {
+    padding: 20,
+    backgroundColor: 'white'
   },
   textInput: {
     height: 60,
@@ -345,6 +349,7 @@ const styles = StyleSheet.create({
   },
 
   logo: {
+    marginTop: 10,
     width: 200,
     height: 200
   },
@@ -380,7 +385,8 @@ const styles = StyleSheet.create({
 
   alreadyAccountCont: {
     flex: 1,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    marginBottom: 20
   },
   indicatorContainer: {
     alignItems: "center",

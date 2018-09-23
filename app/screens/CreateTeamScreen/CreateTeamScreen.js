@@ -47,7 +47,9 @@ class CreateTeamScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("CreateTeamScreen", "CreateTeamScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("CreateTeamScreen", "CreateTeamScreen");
 
     this.state = {
       teamUsername: "",
@@ -121,14 +123,14 @@ class CreateTeamScreen extends Component {
     var storageRef = storage.ref();
 
     if (this.state.teamUsername !== "" && params.markerSet === true) {
-      firebase.analytics().logEvent("newTeam")
+      firebase.analytics().logEvent("newTeam");
 
       const co = new firebase.firestore.GeoPoint(
         Math.round(params.lt * 10000000) / 10000000,
         Math.round(params.ln * 10000000) / 10000000
       );
       if (clearPath !== null) {
-        ImageResizer.createResizedImage(clearPath, 200, 200, "JPEG", 100).then(
+        ImageResizer.createResizedImage(clearPath, 150, 150, "JPEG", 80).then(
           ({ uri }) => {
             var { params } = this.props.navigation.state;
 
@@ -194,7 +196,7 @@ class CreateTeamScreen extends Component {
           this.props.navigation.popToTop();
         });
     } else {
-      this.setState({ errorMessage: I18n.t('please_fill_all_fields') });
+      this.setState({ errorMessage: I18n.t("please_fill_all_fields") });
     }
   };
   render() {

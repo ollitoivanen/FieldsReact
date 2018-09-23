@@ -52,7 +52,9 @@ class CreateNewFieldScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("CreateNewFieldScreen", "CreateNewFieldScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("CreateNewFieldScreen", "CreateNewFieldScreen");
 
     this.state = {
       fieldName: "",
@@ -158,14 +160,14 @@ class CreateNewFieldScreen extends Component {
       var fieldID = guid().substring(0, 7);
 
       if (this.state.fieldName !== "" && params.lt !== null) {
-        firebase.analytics().logEvent("newField")
+        firebase.analytics().logEvent("newField");
         if (clearPath !== null) {
           ImageResizer.createResizedImage(
             clearPath,
-            200,
-            200,
+            150,
+150,
             "JPEG",
-            100
+            80
           ).then(({ uri }) => {
             var { params } = this.props.navigation.state;
 

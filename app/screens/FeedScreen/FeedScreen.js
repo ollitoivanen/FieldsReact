@@ -9,7 +9,9 @@ import {
   Button,
   TouchableOpacity,
   FlatList,
-  AsyncStorage
+  AsyncStorage,
+  PushNotificationIOS,
+  AppState
 } from "react-native";
 import firebase from "react-native-firebase";
 import { NavigationActions, StackActions } from "react-navigation";
@@ -46,10 +48,29 @@ const mapDispatchToProps = dispatch => {
 };
 
 class FeedScreen extends React.Component {
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+  _handleAppStateChange = (nextAppState) => {
+    if (nextAppState === 'background' && this.props.userData.cFI !== "") {
+      PushNotification.getApplicationIconBadgeNumber(count=>{
+        if(count===0){
+          this.notif.scheduledNotif(this.props.userData.cFN, this.props.userData.ts, this.props.userData.cFI)
+
+        }
+      })
+
+    }
+  }
   onNotif(notif) {
+    notif.finish(PushNotificationIOS.FetchResult.NoData);
     firebase.analytics().logEvent("from_notification");
     NavigationService.navigate("TrainingScreen", {
-      startTime: notif.data.startTime
+      startTime: notif.data.startTime,
+      fieldID: notif.data.fieldID
     });
   }
   static navigationOptions = {
@@ -61,7 +82,6 @@ class FeedScreen extends React.Component {
 
     const value = await AsyncStorage.getItem("friends");
     if (value !== null) {
-
       this.setState({ refreshing: false });
       firebase.analytics().logEvent("fetchingFriendsFromAsync");
       let friendArray = JSON.parse(value);
@@ -85,85 +105,76 @@ class FeedScreen extends React.Component {
     const query = ref
       .where("aI", "==", firebase.auth().currentUser.uid)
       .limit(10);
-    query
-      .get()
-      .then(
-        function(doc) {
-          doc.forEach(item => {
-            firebase
-              .firestore()
-              .collection("Users")
-              .doc(item.id)
-              .get()
-              .then(
-                function(doc) {
-                  if (doc.data().cFI === undefined) {
-                    friends.push({
-                      key: doc.id,
-                      aI: item.data().aI,
-                      fI: item.data().fI,
-                      fN: item.data().fN,
-                      cFN:  I18n.t('not_at_any_field'),
-                      id: doc.id,
+    query.get().then(doc1 => {
+      var promise = doc1.forEach(item => {
+        firebase
+          .firestore()
+          .collection("Users")
+          .doc(item.data().fI)
+          .get()
+          .then(doc => {
+            if (doc.data().cFI === undefined) {
+              friends.push({
+                key: doc.id,
+                aI: item.data().aI,
+                fI: item.data().fI,
+                fN: item.data().fN,
+                cFN: I18n.t("not_at_any_field"),
+                id: doc.id,
 
-                      uTI: doc.data().uTI,
-                      uTN: doc.data().uTN,
-                      un: doc.data().un,
-                      tC: doc.data().tC,
-                      cFI: doc.data().cFI,
-                      ts: doc.data().ts,
-                      docID: item.id,
-                      uIm: doc.data().uIm,
-                      re: doc.data().re
-                    });
-                  } else {
-                    const startTime = doc.data().ts;
-                    const currentTime = moment().format("x");
-                    const trainingTime = currentTime - startTime;
-                    const seconds = trainingTime / 1000;
-                    const minutes = Math.trunc(seconds / 60);
-                    const hours = Math.trunc(minutes / 60);
+                uTI: doc.data().uTI,
+                uTN: doc.data().uTN,
+                un: doc.data().un,
+                tC: doc.data().tC,
+                cFI: doc.data().cFI,
+                ts: doc.data().ts,
+                docID: item.id,
+                uIm: doc.data().uIm,
+                re: doc.data().re
+              });
+            } else {
+              const startTime = doc.data().ts;
+              const currentTime = moment().format("x");
+              const trainingTime = currentTime - startTime;
+              const seconds = trainingTime / 1000;
+              const minutes = Math.trunc(seconds / 60);
+              const hours = Math.trunc(minutes / 60);
 
-                    if (minutes < 1) {
-                      var trainingTime = [under_minute];
-                    } else if (hours < 1) {
-                      var trainingTime = minutes + [min];
-                    } else {
-                      const minSub = minutes - hours * 60;
-                      var trainingTime = hours + [h] + " " + minSub + [min];
-                    }
+              if (minutes < 1) {
+                var trainingTime = [under_minute];
+              } else if (hours < 1) {
+                var trainingTime = minutes + [min];
+              } else {
+                const minSub = minutes - hours * 60;
+                var trainingTime = hours + [h] + " " + minSub + [min];
+              }
 
-                    friends.push({
-                      key: doc.id,
-                      aI: item.data().aI,
-                      fI: item.data().fI,
-                      fN: item.data().fN,
-                      id: doc.id,
+              friends.push({
+                key: doc.id,
+                aI: item.data().aI,
+                fI: item.data().fI,
+                fN: item.data().fN,
+                id: doc.id,
 
-                      ts: doc.data().ts,
-                      cFN: doc.data().cFN,
-                      trainingTime: trainingTime,
-                      uTI: doc.data().uTI,
-                      uTN: doc.data().uTN,
-                      un: doc.data().un,
-                      tC: doc.data().tC,
-                      cFI: doc.data().cFI,
-                      uIm: doc.data().uIm,
-                      re: doc.data().re
-                    });
-                  }
-                }.bind(this)
-              );
+                ts: doc.data().ts,
+                cFN: doc.data().cFN,
+                trainingTime: trainingTime,
+                uTI: doc.data().uTI,
+                uTN: doc.data().uTN,
+                un: doc.data().un,
+                tC: doc.data().tC,
+                cFI: doc.data().cFI,
+                uIm: doc.data().uIm,
+                re: doc.data().re
+              });
+            }
+            this.setState({ friends: friends }),
+              this.storeData(JSON.stringify(this.state.friends));
           });
-        }.bind(this)
-      )
-      .then(() => {
-        serializedData = JSON.stringify(friends);
-      })
-
-      .then(() => {
-        this.storeData(serializedData);
       });
+
+      Promise.all([promise]);
+    });
   }
 
   storeData = async data => {
@@ -198,89 +209,88 @@ class FeedScreen extends React.Component {
 
   getCurrentFields = array => {
     firebase.analytics().logEvent("fetchingFriendFields");
-    var promise1 = this.retrieveData()
-    let friendArrayEmpty = []
-var friendArray = []
-    Promise.all([promise1]).then(()=>{
-      friendArray = this.state.friends;
-//It wokrs!!! that was 2 hours of pure focus
-    }).then(()=>{
-      friendArray.forEach(function(item){
-        firebase
-          .firestore()
-          .collection("Users")
-          .doc(item.fI)
-          .get()
-          .then(function(doc){
-            if (doc.data().cFI === undefined) {
-              friendArrayEmpty.push({
-                key: item.key,
-                aI: item.aI,
-                fI: item.fI,
-                fN: doc.data().un,
-                cFN: I18n.t('not_at_any_field'),
-                id: doc.id,
-  
-                uTI: doc.data().uTI,
-                uTN: doc.data().uTN,
-                un: doc.data().un,
-                tC: doc.data().tC,
-                docID: item.docID,
-                uIm: doc.data().uIm,
-                re: doc.data().re
+    var promise1 = this.retrieveData();
+    let friendArrayEmpty = [];
+    var friendArray = [];
+    Promise.all([promise1])
+      .then(() => {
+        friendArray = this.state.friends;
+        //It wokrs!!! that was 2 hours of pure focus
+      })
+      .then(() => {
+        friendArray.forEach(
+          function(item) {
+            firebase
+              .firestore()
+              .collection("Users")
+              .doc(item.fI)
+              .get()
+              .then(
+                function(doc) {
+                  if (doc.data().cFI === undefined) {
+                    friendArrayEmpty.push({
+                      key: item.key,
+                      aI: item.aI,
+                      fI: item.fI,
+                      fN: doc.data().un,
+                      cFN: I18n.t("not_at_any_field"),
+                      id: doc.id,
+
+                      uTI: doc.data().uTI,
+                      uTN: doc.data().uTN,
+                      un: doc.data().un,
+                      tC: doc.data().tC,
+                      docID: item.docID,
+                      uIm: doc.data().uIm,
+                      re: doc.data().re
+                    });
+                  } else {
+                    const startTime = doc.data().ts;
+                    const currentTime = moment().format("x");
+                    const trainingTime = currentTime - startTime;
+                    const seconds = trainingTime / 1000;
+                    const minutes = Math.trunc(seconds / 60);
+                    const hours = Math.trunc(minutes / 60);
+
+                    if (minutes < 1) {
+                      var trainingTime = [under_minute];
+                    } else if (hours < 1) {
+                      var trainingTime = minutes + [min];
+                    } else {
+                      const minSub = minutes - hours * 60;
+                      var trainingTime = hours + [h] + " " + minSub + [min];
+                    }
+
+                    friendArrayEmpty.push({
+                      key: item.key,
+                      docID: item.docID,
+                      id: doc.id,
+
+                      aI: item.aI,
+                      fI: item.fI,
+                      fN: doc.data().un,
+                      ts: doc.data().ts,
+                      cFN: doc.data().cFN,
+                      trainingTime: trainingTime,
+                      uTI: doc.data().uTI,
+                      uTN: doc.data().uTN,
+                      un: doc.data().un,
+                      tC: doc.data().tC,
+                      cFI: doc.data().cFI,
+                      uIm: doc.data().uIm,
+                      re: doc.data().re
+                    });
+                  }
+                }.bind(this)
+              )
+              .then(() => {
+                if (friendArrayEmpty.length === friendArray.length) {
+                  this.storeData(JSON.stringify(friendArrayEmpty));
+                }
               });
-              
-  
-            } else {
-              const startTime = doc.data().ts;
-              const currentTime = moment().format("x");
-              const trainingTime = currentTime - startTime;
-              const seconds = trainingTime / 1000;
-              const minutes = Math.trunc(seconds / 60);
-              const hours = Math.trunc(minutes / 60);
-  
-              if (minutes < 1) {
-                var trainingTime = [under_minute];
-              } else if (hours < 1) {
-                var trainingTime = minutes + [min];
-              } else {
-                const minSub = minutes - hours * 60;
-                var trainingTime = hours + [h] + " " + minSub + [min];
-              }
-  
-              friendArrayEmpty.push({
-                key: item.key,
-                docID: item.docID,
-                id: doc.id,
-  
-                aI: item.aI,
-                fI: item.fI,
-                fN: doc.data().un,
-                ts: doc.data().ts,
-                cFN: doc.data().cFN,
-                trainingTime: trainingTime,
-                uTI: doc.data().uTI,
-                uTN: doc.data().uTN,
-                un: doc.data().un,
-                tC: doc.data().tC,
-                cFI: doc.data().cFI,
-                uIm: doc.data().uIm,
-                re: doc.data().re
-              });
-            }
-          }.bind(this)).then(()=>{
-            if(friendArrayEmpty.length === friendArray.length){
-              this.storeData(JSON.stringify(friendArrayEmpty))
-
-            }
-
-          })
-      }.bind(this))
-    })
-
-   
-     
-    
+          }.bind(this)
+        );
+      });
   };
   handleRefresh = () => {
     this.setState({ refreshing: true }, () => {
@@ -329,6 +339,7 @@ var friendArray = []
     };
   }
   componentWillMount() {
+
     const { currentUser } = firebase.auth();
     this.setState({ currentUser });
   }

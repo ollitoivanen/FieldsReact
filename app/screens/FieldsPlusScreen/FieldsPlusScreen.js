@@ -29,10 +29,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 class FieldsPlusScreen extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("FieldsPlusScreen", "FieldsPlusScreen");
-
+    firebase
+      .analytics()
+      .setCurrentScreen("FieldsPlusScreen", "FieldsPlusScreen");
   }
   static navigationOptions = {
     header: null
@@ -53,14 +54,12 @@ class FieldsPlusScreen extends Component {
   }
 
   buy = () => {
-    firebase.analytics().logEvent("buying_init")
+    firebase.analytics().logEvent("buying_init");
     var currentRep = this.props.userData.re;
     var newRep = currentRep + 2000;
     RNIap.buySubscription("fields_plus")
       .then(purchase => {
-        firebase
-                  .analytics()
-                  .logEvent("bying_success")
+        firebase.analytics().logEvent("bying_success");
         promise1 = firebase
           .firestore()
           .collection("Users")
@@ -70,11 +69,9 @@ class FieldsPlusScreen extends Component {
             re: newRep
           });
 
-
-
         promise2 = AsyncStorage.setItem("fP", "true");
 
-        promise3 = this.props.getUserData()
+        promise3 = this.props.getUserData();
 
         Promise.all([promise1, promise2, promise3]).then(() => {
           this.props.navigation.replace("PurchaseSuccessfulScreen");
@@ -83,7 +80,7 @@ class FieldsPlusScreen extends Component {
         RNIap.getAvailablePurchases;
       })
       .catch(err => {
-        firebase.analytics().logEvent("buying_declined")        // resetting UI
+        firebase.analytics().logEvent("buying_declined"); // resetting UI
       });
   };
   render() {
@@ -110,6 +107,8 @@ class FieldsPlusScreen extends Component {
             <Text style={styles.text}>{I18n.t("training_history")}</Text>
             <Text style={styles.text}>{I18n.t("favorite_fields")}</Text>
           </View>
+          <Text style={styles.textSmall}>{I18n.t("purchases_are_restored")}</Text>
+
 
           <TouchableOpacity
             style={{
@@ -165,6 +164,13 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "bold",
     fontSize: 16,
+    textAlign: "center",
+    color: "#c6c6c6",
+    marginVertical: 16
+  },
+  textSmall: {
+    fontWeight: "bold",
+    fontSize: 12,
     textAlign: "center",
     color: "#c6c6c6",
     marginVertical: 16

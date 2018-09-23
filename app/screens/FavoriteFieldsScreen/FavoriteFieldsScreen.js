@@ -132,7 +132,7 @@ class FavoriteFieldsScreen extends Component {
           .then(doc => {
             var id = doc.id;
             const co = doc.data().co;
-           // var d = this.getDistanceFromLatLonInKm(co.latitude, co.longitude);
+            // var d = this.getDistanceFromLatLonInKm(co.latitude, co.longitude);
 
             newFavoriteFields.push({
               key: id,

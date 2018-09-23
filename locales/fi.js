@@ -132,7 +132,7 @@ export default {
   no_location_permission: "Ei hyväksyntää sijainnin käyttöön",
   enable_location_to_find_nearest_fields:
     "Laita sijainti päälle painamalla tästä ja löydä lähimmät kentät!",
-    enable_location_to_find_nearest_teams:
+  enable_location_to_find_nearest_teams:
     "Laita sijainti päälle painamalla tästä ja löydä lähimmät joukkueet!",
   load_other: "Load other",
   no_fields_found_nearby:
@@ -183,6 +183,7 @@ export default {
   unlock_full_potential:
     "Avaa Fieldsin täysi potentiaali Fields Plus-päivityksellä",
   thank_you_for:
-    "❤️ Kiitos, kun otit Fields Plus-tilauksen testiin. Täysin sinun mahtavuuden takia olemme lisänneet 2000 reputaatiota käyttäjällesi. Toivottavasti nautit siitä ja kaikista tulevista ominaisuuksista! Nyt takaisin treenaamaan, vai mitä? ;)"
+    "❤️ Kiitos, kun otit Fields Plus-tilauksen testiin. Täysin sinun mahtavuuden takia olemme lisänneet 2000 reputaatiota käyttäjällesi. Toivottavasti nautit siitä ja kaikista tulevista ominaisuuksista! Nyt takaisin treenaamaan, vai mitä? ;)",
+    purchases_are_restored: "Ostokset palautetaan automaattisesti"
 
 };

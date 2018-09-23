@@ -190,5 +190,6 @@ export default {
   training_history: "Training history",
   unlock_full_potential: "Unlock full potential of Fields with Fields Plus!",
   thank_you_for:
-    "❤️ Thank you for taking Fields Plus to the test. Just for your plain awesomeness, we have added 2000 reputation for your account. Hope you enjoy it and all the upcoming features! Now back to training, right? ;)"
+    "❤️ Thank you for taking Fields Plus to the test. Just for your plain awesomeness, we have added 2000 reputation for your account. Hope you enjoy it and all the upcoming features! Now back to training, right? ;)",
+    purchases_are_restored: "Purchases are restored automatically"
 };

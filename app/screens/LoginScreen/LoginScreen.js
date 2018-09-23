@@ -26,10 +26,9 @@ import Loader from "FieldsReact/app/components/Loader/Loader.js";
 import I18n from "FieldsReact/i18n";
 
 export default class LoginScreen extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     firebase.analytics().setCurrentScreen("LoginScreen", "LoginScreen");
-
   }
   static navigationOptions = {
     header: null
@@ -77,7 +76,7 @@ export default class LoginScreen extends React.Component {
           underlineColorAndroid="rgba(0,0,0,0)"
           style={styles.textInput}
           autoCapitalize="none"
-          placeholder={email}
+          placeholder={I18n.t('email')}
           returnKeyType="next"
           keyboardType="email-address"
           onChangeText={email1 => this.setState({ email1 })}
@@ -90,7 +89,7 @@ export default class LoginScreen extends React.Component {
           style={styles.textInput}
           autoCapitalize="none"
           returnKeyType="go"
-          placeholder={password}
+          placeholder={I18n.t('password')}
           onChangeText={password1 => this.setState({ password1 })}
           value={this.state.password1}
           ref={input1 => (this.passwordInput = input1)}
