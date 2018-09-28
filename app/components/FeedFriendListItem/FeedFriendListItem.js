@@ -48,7 +48,7 @@ export default class FeedFriendListItem extends React.PureComponent {
             source={this.state.profileImagePath}
             resizeMode="cover"
           />
-          <Text style={styles.text} numberOfLines={2}>
+          <Text style={styles.text} >
             {this.props.fN}
           </Text>
         </View>

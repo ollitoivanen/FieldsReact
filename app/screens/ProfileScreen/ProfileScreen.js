@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Image,
   AsyncStorage,
-  Platform
+  Platform,
+  ScrollView
 } from "react-native";
 import { connect } from "react-redux";
 var moment = require("moment");
@@ -214,34 +215,38 @@ class ProfileScreen extends Component {
 
   render() {
     let badge;
-    if (this.props.userData.re < 500) {
+    if (this.props.userData.re < 200) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_1" }} />;
-    } else if (this.props.userData.re < 1500) {
+    } else if (this.props.userData.re < 500) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_2" }} />;
-    } else if (this.props.userData.re < 3000) {
+    } else if (this.props.userData.re < 900) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_3" }} />;
-    } else if (this.props.userData.re < 6000) {
+    } else if (this.props.userData.re < 1500) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_4" }} />;
-    } else if (this.props.userData.re < 10000) {
+    } else if (this.props.userData.re < 2300) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_5" }} />;
-    } else if (this.props.userData.re < 15000) {
+    } else if (this.props.userData.re < 3500) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_6" }} />;
-    } else if (this.props.userData.re < 21000) {
+    } else if (this.props.userData.re < 5000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_7" }} />;
-    } else if (this.props.userData.re < 28000) {
+    } else if (this.props.userData.re < 7000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_8" }} />;
-    } else if (this.props.userData.re < 38000) {
+    } else if (this.props.userData.re < 10000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_9" }} />;
-    } else if (this.props.userData.re < 48000) {
+    } else if (this.props.userData.re < 15000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_10" }} />;
-    } else if (this.props.userData.re < 58000) {
+    } else if (this.props.userData.re < 23000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_11" }} />;
-    } else if (this.props.userData.re < 70000) {
+    } else if (this.props.userData.re < 35000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_12" }} />;
-    } else if (this.props.userData.re < 85000) {
+    } else if (this.props.userData.re < 50000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_13" }} />;
-    } else if (this.props.userData.re >= 85000) {
+    } else if (this.props.userData.re < 70000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_14" }} />;
+    } else if (this.props.userData.re < 100000) {
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_15" }} />;
+    } else if (this.props.userData.re >= 100000) {
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_16" }} />;
     }
 
     var currentFieldPlaceHolder = (
@@ -293,8 +298,7 @@ class ProfileScreen extends Component {
           style={{
             flex: 1,
             width: "100%",
-            position: "absolute",
-            bottom: 66
+            marginTop: 16
           }}
         >
           <TouchableOpacity
@@ -362,7 +366,7 @@ class ProfileScreen extends Component {
             {userTeamPlaceHolder}
           </View>
 
-          <View style={styles.actionContainer}>
+          <ScrollView style={styles.actionContainer}>
             <View style={styles.imageTabContainer}>
               <TouchableOpacity
                 style={styles.textContainer}
@@ -400,8 +404,9 @@ class ProfileScreen extends Component {
                 {this.props.userData.re} {I18n.t("reputation")}
               </Text>
             </TouchableOpacity>
-          </View>
-          {fieldsPlusButton}
+            {fieldsPlusButton}
+
+          </ScrollView>
         </View>
         <View style={styles.navigationContainer}>
           <TouchableOpacity
@@ -606,7 +611,8 @@ const styles = StyleSheet.create({
   },
 
   actionContainer: {
-    flex: 1
+    flex: 1,
+    marginBottom: 50
   },
 
   roundTextContainerBordered: {

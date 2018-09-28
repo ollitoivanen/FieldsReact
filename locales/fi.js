@@ -177,13 +177,18 @@ export default {
   yes: "kyllä",
   enter_account_information_to_delete: "Anna käyttäjätiedot poistaaksesi",
   fields_plus: "Fields Plus",
-  try_it_out: "Laita kokeiluun ilmaiseksi",
+  try_it_out: "Laita kokeiluun",
   fields_plus_unlocks: "Fields Plus avaa",
   training_history: "Treenihistorian",
   unlock_full_potential:
     "Avaa Fieldsin täysi potentiaali Fields Plus-päivityksellä",
   thank_you_for:
     "❤️ Kiitos, kun otit Fields Plus-tilauksen testiin. Täysin sinun mahtavuuden takia olemme lisänneet 2000 reputaatiota käyttäjällesi. Toivottavasti nautit siitä ja kaikista tulevista ominaisuuksista! Nyt takaisin treenaamaan, vai mitä? ;)",
-    purchases_are_restored: "Ostokset palautetaan automaattisesti"
+  purchases_are_restored: "Ostokset palautetaan automaattisesti",
+  required_reputation: "Vaadittu reputaatio:",
+  time_to_get_a_head_start: "Aika ottaa etumatkaa.",
 
+
+  locked: "Lukittu",
+  unlocked: "Avattu"
 };

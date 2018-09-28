@@ -5,7 +5,8 @@ import {
   StyleSheet,
   StatusBar,
   DeviceEventEmitter,
-  Platform
+  Platform,
+  SafeAreaView
 } from "react-native";
 import { StackNavigatorApp } from "FieldsReact/App";
 import { YellowBox } from "react-native";
@@ -13,7 +14,6 @@ import { Provider } from "react-redux";
 import { store } from "FieldsReact/app/redux/app-redux.js"; //Import the store
 
 import NavigationService from "./NavigationService";
-
 
 export default class FieldsApp extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class FieldsApp extends Component {
       "Warning: isMounted(...) is deprecated",
       "Module RCTImageLoader"
     ]);
-    if(Platform.OS === 'android'){
+    if (Platform.OS === "android") {
       return (
         <Provider store={store}>
           <View style={{ flex: 1 }}>
@@ -38,7 +38,7 @@ export default class FieldsApp extends Component {
               barStyle="light-content"
               animated={true}
             />
-  
+
             <StackNavigatorApp
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
@@ -47,22 +47,19 @@ export default class FieldsApp extends Component {
           </View>
         </Provider>
       );
-    }else{
+    } else {
       return (
         <Provider store={store}>
-          <View style={{ flex: 1 }}>
-           
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
             <StackNavigatorApp
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
               }}
             />
-          </View>
+          </SafeAreaView>
         </Provider>
       );
     }
-
-   
   }
 }
 

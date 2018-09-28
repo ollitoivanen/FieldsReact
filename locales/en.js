@@ -185,11 +185,15 @@ export default {
   yes: "yes",
   enter_account_information_to_delete: "Enter account information to delete",
   fields_plus: "Fields Plus",
-  try_it_out: "Put it into test for free",
+  try_it_out: "Put it into test",
   fields_plus_unlocks: "Fields Plus unlocks",
   training_history: "Training history",
   unlock_full_potential: "Unlock full potential of Fields with Fields Plus!",
   thank_you_for:
     "❤️ Thank you for taking Fields Plus to the test. Just for your plain awesomeness, we have added 2000 reputation for your account. Hope you enjoy it and all the upcoming features! Now back to training, right? ;)",
-    purchases_are_restored: "Purchases are restored automatically"
+  purchases_are_restored: "Purchases are restored automatically",
+  required_reputation: "Required reputation:",
+  time_to_get_a_head_start: "Time to get a head start.",
+  locked: "Locked",
+  unlocked: "Unlocked"
 };

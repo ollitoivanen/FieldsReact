@@ -5,7 +5,8 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  Text
+  Text,
+  ScrollView
 } from "react-native";
 import {
   edit_team,
@@ -244,7 +245,7 @@ class CreateTeamScreen extends Component {
       );
     }
     return (
-      <View style={styles.editContainer}>
+      <ScrollView style={styles.editContainer}>
         <View style={styles.greenRowContainer}>
           <TouchableOpacity
             style={styles.backButton}
@@ -285,7 +286,7 @@ class CreateTeamScreen extends Component {
           <Text style={styles.buttonText}>{I18n.t("create_team")}</Text>
         </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
-      </View>
+      </ScrollView>
     );
   }
 }

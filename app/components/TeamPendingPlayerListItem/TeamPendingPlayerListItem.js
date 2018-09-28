@@ -6,7 +6,7 @@ export default class TeamPlayerListItem extends React.PureComponent {
 
   render() {
     var usernameText = (
-      <Text style={styles.textGray} numberOfLines={2}>
+      <Text style={styles.textGray} >
         {this.props.pUN}
       </Text>
     );

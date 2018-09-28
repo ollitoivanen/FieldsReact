@@ -103,7 +103,7 @@ android {
         applicationId "com.fields.football"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 11
+        versionCode 12
         versionName "1.0"
         multiDexEnabled true
 

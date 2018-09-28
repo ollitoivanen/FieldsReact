@@ -20,22 +20,22 @@ export default class TrainingListItem extends React.PureComponent {
     return (
       <View style={styles.cont}>
         <View style={styles.item}>
-          <Text style={styles.bigDateText} numberOfLines={2}>
+          <Text style={styles.bigDateText} >
             {this.props.date}
           </Text>
 
-          <Text style={styles.timeText} numberOfLines={2}>
+          <Text style={styles.timeText} >
             {this.props.startTime + "-" + this.props.endTime}
           </Text>
         </View>
         <View style={styles.item}>
-          <Text style={styles.trainingText} numberOfLines={2}>
+          <Text style={styles.trainingText} >
             {this.props.fN}
           </Text>
         </View>
 
         <View style={styles.item}>
-          <Text style={styles.trainingTextBlue} numberOfLines={2}>
+          <Text style={styles.trainingTextBlue} >
             {this.props.trainingTime +
               "," +
               " " +

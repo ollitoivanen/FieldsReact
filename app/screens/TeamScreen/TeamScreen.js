@@ -23,7 +23,7 @@ import {
 
 var moment = require("moment");
 
-import EventListItem from "FieldsReact/app/components/EventListItem/EventListItem"; // we'll create this next
+import EventListItem from "FieldsReact/app/components/EventListItem/EventListItem"; 
 import I18n from "FieldsReact/i18n";
 
 import {

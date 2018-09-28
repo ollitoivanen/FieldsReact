@@ -8,7 +8,7 @@ export default class Searchitem extends React.PureComponent {
   render() {
     return (
       <View style={styles.item}>
-        <Text style={styles.text} numberOfLines={2}>
+        <Text style={styles.text} >
           {this.props.fN}
         </Text>
         <View style={styles.div} />

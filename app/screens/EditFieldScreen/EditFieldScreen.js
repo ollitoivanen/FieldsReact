@@ -267,6 +267,7 @@ export default class EditFieldScreen extends Component {
     };
     return (
       <ScrollView style={styles.container}>
+      <View style={styles.paddingContainer}>
         <View style={styles.greenRowContainer}>
           <TouchableOpacity
             style={styles.backButton}
@@ -514,6 +515,7 @@ export default class EditFieldScreen extends Component {
             </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
+        </View>
       </ScrollView>
     );
   }
@@ -521,9 +523,12 @@ export default class EditFieldScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 20,
+    paddingTop: 20,
     paddingHorizontal: 10,
     backgroundColor: "white"
+  },
+  paddingContainer:{
+    paddingBottom: 26,
   },
   backButtonContainer: {
     flexDirection: "row",

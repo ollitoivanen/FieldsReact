@@ -154,7 +154,7 @@ class TrainingScreen extends Component {
     };
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     firebase.analytics().logEvent("training_screen_opened");
     this.getTrainingTime();
   };
@@ -336,7 +336,6 @@ class TrainingScreen extends Component {
           });
         })
         .then(() => {
-
           const alreadyVisited = [];
           serializedData = JSON.stringify(trainings, function(key, value) {
             if (typeof value == "object") {

@@ -39,9 +39,7 @@ export default class UserSearchItem extends React.PureComponent {
           source={this.state.profileImagePath}
           resizeMode="cover"
         />
-        <Text style={styles.text} numberOfLines={2}>
-          {this.props.username}
-        </Text>
+        <Text style={styles.text}>{this.props.username}</Text>
         <View style={styles.div} />
       </View>
     );

@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Image,
   AsyncStorage,
-  Modal
+  Modal,
+  ScrollView
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -191,7 +192,7 @@ class DetailProfileScreen extends Component {
     const fI = params.id;
     const fN = params.un;
 
-    if(params.cFI!==undefined){
+    if (params.cFI !== undefined) {
       const startTime = params.ts;
       const currentTime = moment().format("x");
       var trainingTime = currentTime - startTime;
@@ -207,42 +208,41 @@ class DetailProfileScreen extends Component {
         const minSub = minutes - hours * 60;
         var trainingTime = hours + [h] + " " + minSub + [min];
       }
-    friendArray.push({
-      key: params.id,
-      id: params.id,
-      trainingTime: trainingTime,
-      docID,
-      aI,
-      fI,
-      fN,
-      uTI: params.uTI,
-      uTN: params.uTN,
-      un: params.un,
-      tC: params.tC,
-      cFI: params.cFI,
-      cFN: params.cFN,
-      ts: params.ts,
-      re: params.re,
-    });
-  }else{
-
-    friendArray.push({
-      key: params.id,
-      id: params.id,
-      docID,
-      aI,
-      fI,
-      fN,
-      uTI: params.uTI,
-      uTN: params.uTN,
-      un: params.un,
-      tC: params.tC,
-      uIm: params.uIm,
-      cFN: I18n.t('not_at_any_field'),
-      ts: params.ts,
-      re: params.re,
-    });
-  }
+      friendArray.push({
+        key: params.id,
+        id: params.id,
+        trainingTime: trainingTime,
+        docID,
+        aI,
+        fI,
+        fN,
+        uTI: params.uTI,
+        uTN: params.uTN,
+        un: params.un,
+        tC: params.tC,
+        cFI: params.cFI,
+        cFN: params.cFN,
+        ts: params.ts,
+        re: params.re
+      });
+    } else {
+      friendArray.push({
+        key: params.id,
+        id: params.id,
+        docID,
+        aI,
+        fI,
+        fN,
+        uTI: params.uTI,
+        uTN: params.uTN,
+        un: params.un,
+        tC: params.tC,
+        uIm: params.uIm,
+        cFN: I18n.t("not_at_any_field"),
+        ts: params.ts,
+        re: params.re
+      });
+    }
 
     serializedData = JSON.stringify(friendArray);
     this.storeData(serializedData);
@@ -269,15 +269,12 @@ class DetailProfileScreen extends Component {
       .analytics()
       .setCurrentScreen("DetailProfileScreen", "DetailProfileScreen");
 
-
     this.retrieveData();
     var { params } = this.props.navigation.state;
 
-    if(params.uIm===true){
-
-    
-    this.getProfileImage();
-  }
+    if (params.uIm === true) {
+      this.getProfileImage();
+    }
 
     this.state = {
       trainingTime: "",
@@ -342,34 +339,38 @@ class DetailProfileScreen extends Component {
       var re = params.re;
     }
 
-    if (re < 500) {
+    if (re < 200) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_1" }} />;
-    } else if (re < 1500) {
+    } else if (re < 500) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_2" }} />;
-    } else if (re < 3000) {
+    } else if (re < 900) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_3" }} />;
-    } else if (re < 6000) {
+    } else if (re < 1500) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_4" }} />;
-    } else if (re < 10000) {
+    } else if (re < 2300) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_5" }} />;
-    } else if (re < 15000) {
+    } else if (re < 3500) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_6" }} />;
-    } else if (re < 21000) {
+    } else if (re < 5000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_7" }} />;
-    } else if (re < 28000) {
+    } else if (re < 7000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_8" }} />;
-    } else if (re < 38000) {
+    } else if (re < 10000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_9" }} />;
-    } else if (re < 48000) {
+    } else if (re < 15000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_10" }} />;
-    } else if (re < 58000) {
+    } else if (re < 23000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_11" }} />;
-    } else if (re < 70000) {
+    } else if (re < 35000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_12" }} />;
-    } else if (re < 85000) {
+    } else if (re < 50000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_13" }} />;
-    } else if (re >= 85000) {
+    } else if (re < 70000) {
       badge = <Image style={styles.teamIcon} source={{ uri: "badge_14" }} />;
+    } else if (re < 100000) {
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_15" }} />;
+    } else if (re >= 100000) {
+      badge = <Image style={styles.teamIcon} source={{ uri: "badge_16" }} />;
     }
 
     var currentFieldPlaceHolder = (
@@ -540,7 +541,7 @@ class DetailProfileScreen extends Component {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.actionContainer}>
+          <ScrollView style={styles.actionContainer}>
             <View style={styles.imageTabContainer}>
               <TouchableOpacity style={styles.textContainer}>
                 <Text style={styles.boxText}>
@@ -557,7 +558,7 @@ class DetailProfileScreen extends Component {
                 {re} {I18n.t("reputation")}
               </Text>
             </TouchableOpacity>
-          </View>
+          </ScrollView>
         </View>
         {navigation}
       </View>
@@ -762,7 +763,8 @@ const styles = StyleSheet.create({
   },
 
   actionContainer: {
-    flex: 1
+    flex: 1,
+    marginBottom: 50
   },
 
   roundTextContainerBordered: {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, TouchableOpacity, Image, Text } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image, Text, ScrollView } from "react-native";
 import {
   join_team_to_get_best_out_of_fields,
   add_team_events,
@@ -23,7 +23,7 @@ export default class NoTeamScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.backButtonContainer}>
           <TouchableOpacity
             style={styles.backButton}
@@ -67,7 +67,7 @@ export default class NoTeamScreen extends Component {
         >
           <Text style={styles.whiteText}>{I18n.t("join_team")}</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
     fontSize: 26,
-    margin: 30,
+    margin: 20,
     textAlign: "center"
   },
 

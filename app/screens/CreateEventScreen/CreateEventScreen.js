@@ -6,7 +6,8 @@ import {
   Image,
   Text,
   Modal,
-  AsyncStorage
+  AsyncStorage,
+  ScrollView
 } from "react-native";
 import {
   create_new_event,
@@ -297,7 +298,7 @@ class CreateEventScreen extends Component {
     const saveEvent = () => {
       if (this.state.errorMessage === null) {
         if (params.fieldID === null) {
-          firebase.analytics().logEvent("eventCreated", {field:"noField"});
+          firebase.analytics().logEvent("eventCreated", { field: "noField" });
 
           firebase
             .firestore()
@@ -332,7 +333,7 @@ class CreateEventScreen extends Component {
               this.props.navigation.navigate("TeamScreen");
             });
         } else {
-          firebase.analytics().logEvent("eventCreated",{field: "field"});
+          firebase.analytics().logEvent("eventCreated", { field: "field" });
 
           firebase
             .firestore()
@@ -373,7 +374,7 @@ class CreateEventScreen extends Component {
     };
 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Modal
           transparent={true}
           visible={this.state.eventTypeModalVisible}
@@ -497,7 +498,7 @@ class CreateEventScreen extends Component {
         >
           <Text style={styles.buttonText}>{I18n.t("save")}</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     );
   }
 }

@@ -76,8 +76,7 @@ class DetailFieldScreen extends Component {
         this.state.fieldID
       );
     } else {
-      PushNotification.requestPermissions()
-
+      PushNotification.requestPermissions();
     }
   };
 
@@ -220,8 +219,6 @@ class DetailFieldScreen extends Component {
           var productId = purchases[0].productId;
 
           if (productId == "fields_plus") {
-            RNIap.endConnection();
-
             var { params } = this.props.navigation.state;
 
             if (boolean === true) {
@@ -410,7 +407,7 @@ class DetailFieldScreen extends Component {
   };
 
   retrieveData = async () => {
-    if (this.props.fP === true) {
+    if (this.props.userData.fP === true) {
       const value = await AsyncStorage.getItem("favoriteFields");
       if (value !== null) {
         this.setState({ favoriteFields: JSON.parse(value) });

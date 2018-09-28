@@ -43,11 +43,11 @@ export default class FieldSearchitem extends React.PureComponent {
           source={this.state.fieldImagePath}
           resizeMode="cover"
         />
-        <View style={{ flexDirection: "column" }}>
-          <Text style={styles.text} numberOfLines={2}>
+        <View>
+          <Text style={styles.text} >
             {this.props.fN}
           </Text>
-          <Text style={styles.distanceText} numberOfLines={2}>
+          <Text style={styles.distanceText} >
             {this.props.d}
           </Text>
         </View>

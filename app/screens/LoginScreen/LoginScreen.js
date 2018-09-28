@@ -7,7 +7,8 @@ import {
   Button,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Image
+  Image,
+  ScrollView
 } from "react-native";
 import {
   email,
@@ -67,68 +68,73 @@ export default class LoginScreen extends React.Component {
   };
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.logoContainer}>
           <Image style={styles.logo} source={{ uri: "f_logo_white_bg" }} />
         </View>
-        <Text style={styles.text2}>{I18n.t("welcome_back")}</Text>
-        <TextInput
-          underlineColorAndroid="rgba(0,0,0,0)"
-          style={styles.textInput}
-          autoCapitalize="none"
-          placeholder={I18n.t('email')}
-          returnKeyType="next"
-          keyboardType="email-address"
-          onChangeText={email1 => this.setState({ email1 })}
-          value={this.state.email1}
-          onSubmitEditing={() => this.passwordInput.focus()}
-        />
-        <TextInput
-          underlineColorAndroid="rgba(0,0,0,0)"
-          secureTextEntry
-          style={styles.textInput}
-          autoCapitalize="none"
-          returnKeyType="go"
-          placeholder={I18n.t('password')}
-          onChangeText={password1 => this.setState({ password1 })}
-          value={this.state.password1}
-          ref={input1 => (this.passwordInput = input1)}
-        />
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={this.handleLogin}
-        >
-          <Text style={styles.buttonText}>{I18n.t("login")}</Text>
-        </TouchableOpacity>
-        {this.state.errorMessage && (
-          <Text style={styles.error}>{this.state.errorMessage}</Text>
-        )}
-        <View style={styles.indicatorContainer} />
+        <View style={styles.paddingContainer}>
+          <Text style={styles.text2}>{I18n.t("welcome_back")}</Text>
+          <TextInput
+            underlineColorAndroid="rgba(0,0,0,0)"
+            style={styles.textInput}
+            autoCapitalize="none"
+            placeholder={I18n.t("email")}
+            returnKeyType="next"
+            keyboardType="email-address"
+            onChangeText={email1 => this.setState({ email1 })}
+            value={this.state.email1}
+            onSubmitEditing={() => this.passwordInput.focus()}
+          />
+          <TextInput
+            underlineColorAndroid="rgba(0,0,0,0)"
+            secureTextEntry
+            style={styles.textInput}
+            autoCapitalize="none"
+            returnKeyType="go"
+            placeholder={I18n.t("password")}
+            onChangeText={password1 => this.setState({ password1 })}
+            value={this.state.password1}
+            ref={input1 => (this.passwordInput = input1)}
+          />
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={this.handleLogin}
+          >
+            <Text style={styles.buttonText}>{I18n.t("login")}</Text>
+          </TouchableOpacity>
+          {this.state.errorMessage && (
+            <Text style={styles.error}>{this.state.errorMessage}</Text>
+          )}
+          <View style={styles.indicatorContainer} />
 
-        <Loader loading={this.state.loading} />
+          <Loader loading={this.state.loading} />
 
-        <Text
-          style={styles.text}
-          onPress={() => this.props.navigation.navigate("ForgotPasswordScreen")}
-        >
-          {I18n.t("forgot_password")}
-        </Text>
-        <Text
-          style={styles.text3}
-          onPress={() => this.props.navigation.navigate("SignUpScreen")}
-        >
-          {I18n.t("dont_have_an_account")}
-        </Text>
-      </View>
+          <Text
+            style={styles.text}
+            onPress={() =>
+              this.props.navigation.navigate("ForgotPasswordScreen")
+            }
+          >
+            {I18n.t("forgot_password")}
+          </Text>
+          <Text
+            style={styles.text3}
+            onPress={() => this.props.navigation.navigate("SignUpScreen")}
+          >
+            {I18n.t("dont_have_an_account")}
+          </Text>
+        </View>
+      </ScrollView>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "flex-start",
-    padding: 20,
     backgroundColor: "white",
     flex: 1
+  },
+  paddingContainer: {
+    padding: 20
   },
   textInput: {
     height: 60,

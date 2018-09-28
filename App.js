@@ -43,6 +43,9 @@ import FavoriteFieldsScreen from "./app/screens/FavoriteFieldsScreen/FavoriteFie
 import SupportScreen from "./app/screens/SupportScreen/SupportScreen";
 import FieldsPlusScreen from "./app/screens/FieldsPlusScreen/FieldsPlusScreen";
 import PurchaseSuccessfulScreen from "./app/screens/PurchaseSuccessfulScreen/PurchaseSuccessfulScreen";
+import AllBadgesScreen from "./app/screens/AllBadgesScreen/AllBadgesScreen";
+import ReputationPurchaseScreen from "./app/screens/ReputationPurchaseScreen/ReputationPurchaseScreen";
+
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -171,11 +174,18 @@ export const StackNavigatorApp = createStackNavigator(
     PurchaseSuccessfulScreen: {
       screen: PurchaseSuccessfulScreen
     },
-   
+    AllBadgesScreen: {
+      screen: AllBadgesScreen
+    },
+    ReputationPurchaseScreen: {
+      screen: ReputationPurchaseScreen
+    }
   },
 
   {
     initialRouteName: "LoadingScreen",
-    transitionConfig
+    transitionConfig,
+
+
   }
 );

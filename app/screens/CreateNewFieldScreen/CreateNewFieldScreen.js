@@ -162,19 +162,15 @@ class CreateNewFieldScreen extends Component {
       if (this.state.fieldName !== "" && params.lt !== null) {
         firebase.analytics().logEvent("newField");
         if (clearPath !== null) {
-          ImageResizer.createResizedImage(
-            clearPath,
-            150,
-150,
-            "JPEG",
-            80
-          ).then(({ uri }) => {
-            var { params } = this.props.navigation.state;
+          ImageResizer.createResizedImage(clearPath, 150, 150, "JPEG", 80).then(
+            ({ uri }) => {
+              var { params } = this.props.navigation.state;
 
-            storageRef
-              .child("fieldpics/" + fieldID + "/" + fieldID + ".jpg")
-              .putFile(uri);
-          });
+              storageRef
+                .child("fieldpics/" + fieldID + "/" + fieldID + ".jpg")
+                .putFile(uri);
+            }
+          );
           const co = new firebase.firestore.GeoPoint(
             Math.round(params.lt * 10000000) / 10000000,
             Math.round(params.ln * 10000000) / 10000000

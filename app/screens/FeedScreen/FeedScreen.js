@@ -49,22 +49,24 @@ const mapDispatchToProps = dispatch => {
 
 class FeedScreen extends React.Component {
   componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
+    AppState.addEventListener("change", this._handleAppStateChange);
   }
   componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
+    AppState.removeEventListener("change", this._handleAppStateChange);
   }
-  _handleAppStateChange = (nextAppState) => {
-    if (nextAppState === 'background' && this.props.userData.cFI !== "") {
-      PushNotification.getApplicationIconBadgeNumber(count=>{
-        if(count===0){
-          this.notif.scheduledNotif(this.props.userData.cFN, this.props.userData.ts, this.props.userData.cFI)
-
+  _handleAppStateChange = nextAppState => {
+    if (nextAppState === "background" && this.props.userData.cFI !== "") {
+      PushNotification.getApplicationIconBadgeNumber(count => {
+        if (count === 0) {
+          this.notif.scheduledNotif(
+            this.props.userData.cFN,
+            this.props.userData.ts,
+            this.props.userData.cFI
+          );
         }
-      })
-
+      });
     }
-  }
+  };
   onNotif(notif) {
     notif.finish(PushNotificationIOS.FetchResult.NoData);
     firebase.analytics().logEvent("from_notification");
@@ -339,7 +341,6 @@ class FeedScreen extends React.Component {
     };
   }
   componentWillMount() {
-
     const { currentUser } = firebase.auth();
     this.setState({ currentUser });
   }

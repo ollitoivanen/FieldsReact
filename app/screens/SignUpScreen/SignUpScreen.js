@@ -108,13 +108,13 @@ export default class SignUpScreen extends React.Component {
           this.state.password1
         )
         .then(
-          () => firebase.analytics().logEvent("sign_up_complete"),
+          () => 
           this.ref.doc(firebase.auth().currentUser.uid).set({
             un: this.state.username1.toLowerCase()
           })
         )
         .then(() => {
-          this.setState({ loading: false });
+          this.setState({ loading: false }),firebase.analytics().logEvent("sign_up_complete")
         })
         .then(() => this.props.navigation.navigate("LoadingScreen"))
         .catch(err => {
@@ -134,63 +134,63 @@ export default class SignUpScreen extends React.Component {
             <Image style={styles.logo} source={{ uri: "f_logo_white_bg" }} />
           </View>
           <View style={styles.paddingContainer}>
-          <Text style={styles.text2}>{I18n.t("welcome")}</Text>
-          <TextInput
-            textContentType="username"
-            maxLength={30}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder={I18n.t("username")}
-            autoCapitalize="none"
-            style={styles.textInput}
-            returnKeyType="next"
-            autoCapitalize="none"
-            value={username1}
-            onSubmitEditing={() => this.emailInput.focus()}
-            onChangeText={this.usernameHandle}
-          />
-          <TextInput
-            maxLength={100}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder={I18n.t("email")}
-            returnKeyType="next"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            onSubmitEditing={() => this.passwordInput.focus()}
-            ref={input => (this.emailInput = input)}
-            style={styles.textInput}
-            onChangeText={email1 => this.setState({ email1 })}
-          />
+            <Text style={styles.text2}>{I18n.t("welcome")}</Text>
+            <TextInput
+              textContentType="username"
+              maxLength={30}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder={I18n.t("username")}
+              autoCapitalize="none"
+              style={styles.textInput}
+              returnKeyType="next"
+              autoCapitalize="none"
+              value={username1}
+              onSubmitEditing={() => this.emailInput.focus()}
+              onChangeText={this.usernameHandle}
+            />
+            <TextInput
+              maxLength={100}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder={I18n.t("email")}
+              returnKeyType="next"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              onSubmitEditing={() => this.passwordInput.focus()}
+              ref={input => (this.emailInput = input)}
+              style={styles.textInput}
+              onChangeText={email1 => this.setState({ email1 })}
+            />
 
-          <TextInput
-            maxLength={30}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            secureTextEntry
-            returnKeyType="go"
-            placeholder={I18n.t("password")}
-            autoCapitalize="none"
-            style={styles.textInput}
-            onChangeText={password1 => this.setState({ password1 })}
-            ref={input1 => (this.passwordInput = input1)}
-          />
+            <TextInput
+              maxLength={30}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              secureTextEntry
+              returnKeyType="go"
+              placeholder={I18n.t("password")}
+              autoCapitalize="none"
+              style={styles.textInput}
+              onChangeText={password1 => this.setState({ password1 })}
+              ref={input1 => (this.passwordInput = input1)}
+            />
 
-          <View style={styles.termsBox}>
-            <Text style={styles.text}>{I18n.t("by_signing_up_you")}</Text>
-            <Text
-              style={{ color: "#3bd774" }}
-              onPress={() => {
-                Linking.openURL("https://fields.one/privacy-policy/"),
-                  firebase.analytics().logEvent("terms_clicked");
-              }}
+            <View style={styles.termsBox}>
+              <Text style={styles.text}>{I18n.t("by_signing_up_you")}</Text>
+              <Text
+                style={{ color: "#3bd774" }}
+                onPress={() => {
+                  Linking.openURL("https://fields.one/privacy-policy/"),
+                    firebase.analytics().logEvent("terms_clicked");
+                }}
+              >
+                {I18n.t("terms")}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={this.handleSignUp}
+              style={styles.buttonContainer}
             >
-              {I18n.t("terms")}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={this.handleSignUp}
-            style={styles.buttonContainer}
-          >
-            <Text style={styles.buttonText}>{I18n.t("signup")}</Text>
-          </TouchableOpacity>
+              <Text style={styles.buttonText}>{I18n.t("signup")}</Text>
+            </TouchableOpacity>
           </View>
           {this.state.errorMessage && (
             <Text style={styles.error}>{this.state.errorMessage}</Text>
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   },
   paddingContainer: {
     padding: 20,
-    backgroundColor: 'white'
+    backgroundColor: "white"
   },
   textInput: {
     height: 60,

@@ -38,15 +38,14 @@ class FieldsPlusScreen extends Component {
   static navigationOptions = {
     header: null
   };
-  async componentWillMount() {
+  async componentDidMount() {
     const itemSkus = Platform.select({
-      ios: [],
+      ios: ["fields_plus"],
       android: ["fields_plus"]
     });
     try {
       const result = await RNIap.initConnection();
-      const products = await RNIap.getSubscriptions(itemSkus);
-      this.setState({ products });
+    //  const products = await RNIap.getSubscriptions(itemSkus);
     } catch (err) {}
   }
   componentWillUnmount() {
@@ -76,10 +75,10 @@ class FieldsPlusScreen extends Component {
         Promise.all([promise1, promise2, promise3]).then(() => {
           this.props.navigation.replace("PurchaseSuccessfulScreen");
         });
-
-        RNIap.getAvailablePurchases;
       })
       .catch(err => {
+        console.warn(err);
+
         firebase.analytics().logEvent("buying_declined"); // resetting UI
       });
   };
@@ -107,8 +106,9 @@ class FieldsPlusScreen extends Component {
             <Text style={styles.text}>{I18n.t("training_history")}</Text>
             <Text style={styles.text}>{I18n.t("favorite_fields")}</Text>
           </View>
-          <Text style={styles.textSmall}>{I18n.t("purchases_are_restored")}</Text>
-
+          <Text style={styles.textSmall}>
+            {I18n.t("purchases_are_restored")}
+          </Text>
 
           <TouchableOpacity
             style={{
