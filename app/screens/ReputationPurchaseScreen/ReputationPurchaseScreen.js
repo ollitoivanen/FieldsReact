@@ -71,6 +71,8 @@ class ReputationPurchaseScreen extends Component {
     } catch (err) {}
   }
   componentWillUnmount() {
+    RNIap.clearProducts()
+
     RNIap.endConnection();
   }
   static navigationOptions = {
@@ -124,9 +126,18 @@ class ReputationPurchaseScreen extends Component {
 
   render() {
     if (this.state.prices == null) {
-      return <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignContent: 'center'}}>
-      <ActivityIndicator/>
-      </View>;
+      return (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "white",
+            justifyContent: "center",
+            alignContent: "center"
+          }}
+        >
+          <ActivityIndicator />
+        </View>
+      );
     } else {
       return (
         <ScrollView style={styles.container}>

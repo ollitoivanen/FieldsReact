@@ -42,8 +42,8 @@
 		F727AAA4212BD7C600B6C70A /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F727AAA3212BD79300B6C70A /* libRNImagePicker.a */; };
 		F74DF9BB212B2EBD00A2290A /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F74DF994212B2EA100A2290A /* libFastImage.a */; };
 		F79589E821598DC6009C9F77 /* libRNIap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F79589E621598DA4009C9F77 /* libRNIap.a */; };
+		F7A15EFA2175C1E300FE9C9C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7A15EF92175C1E300FE9C9C /* StoreKit.framework */; };
 		F7B2074F215634F4006A18E1 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7B2074C215634B9006A18E1 /* libRCTPushNotification.a */; };
-		F7D39604215611AC00B1471B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7D39603215611AC00B1471B /* Info.plist */; };
 		F7D7FA1A212C94220044CE4F /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7D7F9FA212C93E00044CE4F /* libRCTImageResizer.a */; };
 		F7E2E197211B6B8800796D5D /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		F7EF6A8E211B7892004185E4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7EF6A67211B7892004185E4 /* GoogleService-Info.plist */; };
@@ -430,10 +430,10 @@
 		F74DF98E212B2EA000A2290A /* FastImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
 		F79589B621598DA3009C9F77 /* RNIap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNIap.xcodeproj; path = "../node_modules/react-native-iap/ios/RNIap.xcodeproj"; sourceTree = "<group>"; };
 		F79B456B213A919F00D28401 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
+		F7A15EF92175C1E300FE9C9C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		F7A350602142B141003C78C5 /* FieldsReact.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FieldsReact.entitlements; path = FieldsReact/FieldsReact.entitlements; sourceTree = "<group>"; };
 		F7B20746215634B9006A18E1 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		F7D39603215611AC00B1471B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F7D661CA21477D6300460D71 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F7D7F9EC212C93E00044CE4F /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		F7EF6A67211B7892004185E4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -458,6 +458,7 @@
 				F74DF9BB212B2EBD00A2290A /* libFastImage.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				F7E2E197211B6B8800796D5D /* libRCTAnimation.a in Frameworks */,
+				F7A15EFA2175C1E300FE9C9C /* StoreKit.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -620,6 +621,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F7A15EF92175C1E300FE9C9C /* StoreKit.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				8A9B2CF04F354847E1120184 /* libPods-FieldsReact.a */,
 			);
@@ -905,6 +907,9 @@
 						DevelopmentTeam = X62LLG8VK4;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
 							com.apple.Push = {
@@ -1357,7 +1362,6 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				F7D39604215611AC00B1471B /* Info.plist in Resources */,
 				F7EF6A8E211B7892004185E4 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1505,7 +1509,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				13B07FB21A68108700A75B9A /* Base */,
-				F7D661CA21477D6300460D71 /* fi */,
 			);
 			name = LaunchScreen.xib;
 			path = FieldsReact;

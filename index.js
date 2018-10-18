@@ -21,7 +21,9 @@ export default class FieldsApp extends Component {
     // this.notif = new PushService(this.onNotif.bind(this));
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    Platform.OS;
+  }
 
   render() {
     YellowBox.ignoreWarnings([
@@ -50,7 +52,10 @@ export default class FieldsApp extends Component {
     } else {
       return (
         <Provider store={store}>
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+          <SafeAreaView
+            style={{ flex: 1, backgroundColor: "white" }}
+            forceInset={{ top: "never" }}
+          >
             <StackNavigatorApp
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);

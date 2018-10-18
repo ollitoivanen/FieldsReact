@@ -195,5 +195,7 @@ export default {
   required_reputation: "Required reputation:",
   time_to_get_a_head_start: "Time to get a head start.",
   locked: "Locked",
-  unlocked: "Unlocked"
-};
+  unlocked: "Unlocked",
+  month: "month",
+  try_one_month_free: "try one month free"
+}

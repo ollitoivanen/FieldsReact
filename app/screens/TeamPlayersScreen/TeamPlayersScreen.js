@@ -15,7 +15,6 @@ import {
   getUserAndTeamData
 } from "FieldsReact/app/redux/app-redux.js";
 
-import { info, players, edit_team } from "../../strings/strings";
 import firebase from "react-native-firebase";
 import TeamPlayerListItem from "FieldsReact/app/components/TeamPlayerListItem/TeamPlayerListItem"; // we'll create this next
 import I18n from "FieldsReact/i18n";

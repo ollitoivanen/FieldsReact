@@ -7,7 +7,8 @@ import {
   Platform,
   Image,
   ScrollView,
-  AsyncStorage
+  AsyncStorage,
+  Linking
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -34,6 +35,7 @@ class FieldsPlusScreen extends Component {
     firebase
       .analytics()
       .setCurrentScreen("FieldsPlusScreen", "FieldsPlusScreen");
+    this.state = { subscription: [1, 2, 3] };
   }
   static navigationOptions = {
     header: null
@@ -44,45 +46,62 @@ class FieldsPlusScreen extends Component {
       android: ["fields_plus"]
     });
     try {
-      const result = await RNIap.initConnection();
-    //  const products = await RNIap.getSubscriptions(itemSkus);
+      await RNIap.initConnection();
+      const subscription = await RNIap.getSubscriptions(itemSkus);
+      this.setState({ subscription: subscription }, () => {
+        console.warn(this.state.subscription);
+      });
     } catch (err) {}
   }
   componentWillUnmount() {
+    RNIap.clearProducts();
+
     RNIap.endConnection();
   }
 
   buy = () => {
-    firebase.analytics().logEvent("buying_init");
-    var currentRep = this.props.userData.re;
-    var newRep = currentRep + 2000;
-    RNIap.buySubscription("fields_plus")
-      .then(purchase => {
-        firebase.analytics().logEvent("bying_success");
-        promise1 = firebase
-          .firestore()
-          .collection("Users")
-          .doc(firebase.auth().currentUser.uid)
-          .update({
-            fP: true,
-            re: newRep
+    try {
+      firebase.analytics().logEvent("buying_init");
+      var currentRep = this.props.userData.re;
+      var newRep = currentRep + 2000;
+      RNIap.buyProductWithoutFinishTransaction("fields_plus")
+        .then(() => {
+          RNIap.finishTransaction();
+
+          firebase.analytics().logEvent("bying_success");
+          promise1 = firebase
+            .firestore()
+            .collection("Users")
+            .doc(firebase.auth().currentUser.uid)
+            .update({
+              fP: true,
+              re: newRep
+            });
+
+          promise2 = AsyncStorage.setItem("fP", "true");
+
+          promise3 = this.props.getUserData();
+
+          Promise.all([promise1, promise2, promise3]).then(() => {
+            this.props.navigation.replace("PurchaseSuccessfulScreen");
           });
+        })
+        .catch(err => {
+          console.warn(err);
 
-        promise2 = AsyncStorage.setItem("fP", "true");
-
-        promise3 = this.props.getUserData();
-
-        Promise.all([promise1, promise2, promise3]).then(() => {
-          this.props.navigation.replace("PurchaseSuccessfulScreen");
+          firebase.analytics().logEvent("buying_declined"); // resetting UI
         });
-      })
-      .catch(err => {
-        console.warn(err);
-
-        firebase.analytics().logEvent("buying_declined"); // resetting UI
-      });
+    } catch (error) {}
   };
   render() {
+    const tapp = (
+      <Text
+        onPress={() => Linking.openURL("https://fields.one/privacy-policy/")}
+        style={styles.textSmallBlue}
+      >
+        Terms and Privacy Policy
+      </Text>
+    );
     return (
       <ScrollView style={{ flex: 1, backgroundColor: "#333333" }}>
         <View style={styles.container}>
@@ -91,7 +110,6 @@ class FieldsPlusScreen extends Component {
             style={{ height: 200, width: 200, margin: 32 }}
             resizeMode={"contain"}
           />
-          <Text style={styles.textBig}>{I18n.t("unlock_full_potential")}</Text>
 
           <View
             style={{
@@ -105,11 +123,23 @@ class FieldsPlusScreen extends Component {
             <Text style={styles.textBlue}>{I18n.t("fields_plus_unlocks")}</Text>
             <Text style={styles.text}>{I18n.t("training_history")}</Text>
             <Text style={styles.text}>{I18n.t("favorite_fields")}</Text>
+            <Text style={styles.text}>
+              {this.state.subscription[0].localizedPrice}/{I18n.t("month")},{" "}
+              {I18n.t("try_one_month_free")}
+            </Text>
           </View>
-          <Text style={styles.textSmall}>
-            {I18n.t("purchases_are_restored")}
-          </Text>
-
+          <View style={{ marginHorizontal: 10 }}>
+            <Text style={styles.textSmall}>
+              A {this.state.subscription[0].localizedPrice} purchase will be
+              applied to your iTunes account at the end of the trial or
+              immediately if the trial has already been depleted. Subscription
+              will automatically renew unless canceled at least 24-hours before
+              the end of the current one month period. You can cancel anytime
+              with your iTunes account settings. Any unused portion of a free
+              trial will be forfeited if you purchase a subscription. For more
+              information, see our {tapp}
+            </Text>
+          </View>
           <TouchableOpacity
             style={{
               padding: 30,
@@ -173,6 +203,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "center",
     color: "#c6c6c6",
+    marginVertical: 16
+  },
+  textSmallBlue: {
+    fontWeight: "bold",
+    fontSize: 12,
+    textAlign: "center",
+    color: "#3facff",
     marginVertical: 16
   },
   textBig: {

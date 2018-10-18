@@ -190,5 +190,8 @@ export default {
 
 
   locked: "Lukittu",
-  unlocked: "Avattu"
+  unlocked: "Avattu",
+  month: "kuukausi",
+  try_one_month_free: "kokeile kuukausi ilmaiseksi"
+
 };
