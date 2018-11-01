@@ -55,7 +55,9 @@ class DetailTeamScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("DetailTeamScreen", "DetailTeamScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("DetailTeamScreen", "DetailTeamScreen");
 
     var { params } = this.props.navigation.state;
     this.loadEvents();
@@ -165,7 +167,7 @@ class DetailTeamScreen extends Component {
         });
     };
     const sendRequest = () => {
-      firebase.analytics().logEvent("requestSent")
+      firebase.analytics().logEvent("requestSent");
 
       firebase
         .firestore()
@@ -271,19 +273,7 @@ class DetailTeamScreen extends Component {
           style={{ marginBottom: 50 }}
           data={this.state.events}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.item}
-              onPress={() =>
-                this.props.navigation.navigate("DetailEventScreen", {
-                  eventFieldName: item.eFN,
-                  eventType: item.eTY,
-                  startTime: item.startTime,
-                  endTime: item.eT,
-                  date: item.date,
-                  id: item.id
-                })
-              }
-            >
+            <TouchableOpacity style={styles.item}>
               <EventListItem {...item} />
             </TouchableOpacity>
           )}

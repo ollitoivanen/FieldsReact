@@ -19,7 +19,9 @@ export default class UserFriendListScreen extends Component {
   };
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("UserFriendListScreen", "UserFriendListScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("UserFriendListScreen", "UserFriendListScreen");
 
     this.retrieveData();
     this.state = {

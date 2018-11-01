@@ -225,25 +225,21 @@ class EditTeamScreen extends Component {
 
       if (this.state.teamUsername !== "") {
         if (clearPath !== null) {
-          ImageResizer.createResizedImage(
-            clearPath,
-            150,
-            150,
-            "JPEG",
-            80
-          ).then(({ uri }) => {
-            var { params } = this.props.navigation.state;
+          ImageResizer.createResizedImage(clearPath, 150, 150, "JPEG", 80).then(
+            ({ uri }) => {
+              var { params } = this.props.navigation.state;
 
-            storageRef
-              .child(
-                "teampics/" +
-                  this.props.userData.uTI +
-                  "/" +
-                  this.props.userData.uTI +
-                  ".jpg"
-              )
-              .putFile(uri);
-          });
+              storageRef
+                .child(
+                  "teampics/" +
+                    this.props.userData.uTI +
+                    "/" +
+                    this.props.userData.uTI +
+                    ".jpg"
+                )
+                .putFile(uri);
+            }
+          );
         }
         if (this.state.teamUsername === this.props.userData.uTN) {
           if (this.state.ogLt === null || this.state.ogLt === params.lt) {
@@ -276,7 +272,7 @@ class EditTeamScreen extends Component {
               .collection("Teams")
               .doc(this.props.userData.uTI)
               .update({
-                tUN: this.state.teamUsername.toLowerCase().trim(),
+                tUN: this.state.teamUsername.trim(),
                 co
               })
 
@@ -288,7 +284,7 @@ class EditTeamScreen extends Component {
                     .collection("Users")
                     .doc(doc.id)
                     .update({
-                      uTN: this.state.teamUsername.toLowerCase().trim()
+                      uTN: this.state.teamUsername.trim(),
                     });
                 });
               })
@@ -305,7 +301,7 @@ class EditTeamScreen extends Component {
               .collection("Teams")
               .doc(this.props.userData.uTI)
               .update({
-                tUN: this.state.teamUsername.toLowerCase().trim()
+                tUN: this.state.teamUsername.trim()
               })
 
               .then(() => {
@@ -316,7 +312,7 @@ class EditTeamScreen extends Component {
                     .collection("Users")
                     .doc(doc.id)
                     .update({
-                      uTN: this.state.teamUsername.toLowerCase().trim()
+                      uTN: this.state.teamUsername.trim()
                     });
                 });
               })

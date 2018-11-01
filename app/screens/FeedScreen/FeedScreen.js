@@ -327,7 +327,7 @@ class FeedScreen extends React.Component {
     firebase.analytics().setCurrentScreen("FeedScreen", "FeedScreen");
     this.notif = new PushService(this.onNotif.bind(this));
 
-    this.retrieveData();
+    this.getCurrentFields();
     this.getProfileImage();
 
     var { params } = this.props.navigation.state;

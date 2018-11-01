@@ -71,7 +71,7 @@ class ReputationPurchaseScreen extends Component {
     } catch (err) {}
   }
   componentWillUnmount() {
-    RNIap.clearProducts()
+    RNIap.clearProducts();
 
     RNIap.endConnection();
   }
@@ -141,16 +141,21 @@ class ReputationPurchaseScreen extends Component {
     } else {
       return (
         <ScrollView style={styles.container}>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 20,
-              margin: 20,
-              marginTop: 30
-            }}
-          >
-            {I18n.t("time_to_get_a_head_start")}
-          </Text>
+          <View style={styles.backButtonContainer}>
+            <TouchableOpacity
+              style={styles.backButton}
+              underlayColor="#bcbcbc"
+              onPress={() => this.props.navigation.goBack()}
+            >
+              <Image
+                style={styles.backButton}
+                source={{ uri: "back_button" }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.teamName}>
+              {I18n.t("time_to_get_a_head_start")}
+            </Text>
+          </View>
 
           <TouchableOpacity
             style={styles.item}
@@ -378,5 +383,22 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "white",
     margin: 5
+  },
+
+  backButtonContainer: {
+    flexDirection: "row",
+    paddingVertical: 20,
+    paddingHorizontal: 10
+  },
+  backButton: {
+    height: 48,
+    width: 48
+  },
+
+  teamName: {
+    fontWeight: "bold",
+    fontSize: 20,
+    alignSelf: "center",
+    marginStart: 12
   }
 });

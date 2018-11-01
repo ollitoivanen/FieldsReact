@@ -113,6 +113,11 @@ class DetailFieldScreen extends Component {
   loadEvents = () => {
     var { params } = this.props.navigation.state;
 
+
+    firebase.firestore().collection("Fields").doc(params.fieldID).get().then(doc=>{
+      this.setState({peopleHere: doc.data().pH})
+    })
+
     const events = [];
     var ref = firebase.firestore().collection("Events");
     const query = ref.where("eFI", "==", params.fieldID);

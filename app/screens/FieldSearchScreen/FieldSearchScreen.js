@@ -573,27 +573,28 @@ class FieldSearchScreen extends Component {
 
     const openFieldDetail = item => {
       var { params } = this.props.navigation.state;
-
       if (params.fromEvent === false) {
         firebase.analytics().logEvent("toFieldDetail");
 
-        this.props.navigation.navigate("DetailFieldScreen", {
-          fieldName: item.fN,
-          fieldID: item.id,
-          fieldType: item.fT,
-          goalCount: item.gC,
-          accessType: item.fAT,
-          peopleHere: item.pH,
-          currentFieldID: this.props.userData.cFI,
-          currentFieldName: this.props.userData.cFN,
-          timestamp: this.props.userData.ts,
-          trainingCount: this.props.userData.tC,
-          reputation: this.props.userData.re,
-          fIm: item.fIm,
-          lt: item.lt,
-          ln: item.ln,
-          d: item.d
-        });
+         
+            this.props.navigation.navigate("DetailFieldScreen", {
+              fieldName: item.fN,
+              fieldID: item.id,
+              fieldType: item.fT,
+              goalCount: item.gC,
+              accessType: item.fAT,
+              peopleHere: this.state.peopleOnTheField,
+              currentFieldID: this.props.userData.cFI,
+              currentFieldName: this.props.userData.cFN,
+              timestamp: this.props.userData.ts,
+              trainingCount: this.props.userData.tC,
+              reputation: this.props.userData.re,
+              fIm: item.fIm,
+              lt: item.lt,
+              ln: item.ln,
+              d: item.d
+            });
+          
       } else {
         this.props.navigation.navigate("CreateEventScreen", {
           fieldName: item.fN,

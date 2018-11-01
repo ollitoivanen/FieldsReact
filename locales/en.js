@@ -185,7 +185,7 @@ export default {
   yes: "yes",
   enter_account_information_to_delete: "Enter account information to delete",
   fields_plus: "Fields Plus",
-  try_it_out: "Put it into test",
+  try_it_out: "Buy",
   fields_plus_unlocks: "Fields Plus unlocks",
   training_history: "Training history",
   unlock_full_potential: "Unlock full potential of Fields with Fields Plus!",

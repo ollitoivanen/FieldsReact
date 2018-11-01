@@ -177,7 +177,7 @@ export default {
   yes: "kyllä",
   enter_account_information_to_delete: "Anna käyttäjätiedot poistaaksesi",
   fields_plus: "Fields Plus",
-  try_it_out: "Laita kokeiluun",
+  try_it_out: "Buy",
   fields_plus_unlocks: "Fields Plus avaa",
   training_history: "Treenihistorian",
   unlock_full_potential:

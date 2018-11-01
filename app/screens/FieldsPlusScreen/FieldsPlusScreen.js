@@ -60,38 +60,71 @@ class FieldsPlusScreen extends Component {
   }
 
   buy = () => {
-    try {
-      firebase.analytics().logEvent("buying_init");
-      var currentRep = this.props.userData.re;
-      var newRep = currentRep + 2000;
-      RNIap.buyProductWithoutFinishTransaction("fields_plus")
-        .then(() => {
-          RNIap.finishTransaction();
+    if (Platform.OS === "android") {
+      try {
+        firebase.analytics().logEvent("buying_init");
+        var currentRep = this.props.userData.re;
+        var newRep = currentRep + 2000;
+        RNIap.buySubscription("fields_plus")
+          .then(() => {
+            firebase.analytics().logEvent("buying_success");
+            promise1 = firebase
+              .firestore()
+              .collection("Users")
+              .doc(firebase.auth().currentUser.uid)
+              .update({
+                fP: true,
+                re: newRep
+              });
 
-          firebase.analytics().logEvent("bying_success");
-          promise1 = firebase
-            .firestore()
-            .collection("Users")
-            .doc(firebase.auth().currentUser.uid)
-            .update({
-              fP: true,
-              re: newRep
+            promise2 = AsyncStorage.setItem("fP", "true");
+
+            promise3 = this.props.getUserData();
+
+            Promise.all([promise1, promise2, promise3]).then(() => {
+              this.props.navigation.replace("PurchaseSuccessfulScreen");
             });
+          })
+          .catch(err => {
+            console.warn(err);
 
-          promise2 = AsyncStorage.setItem("fP", "true");
-
-          promise3 = this.props.getUserData();
-
-          Promise.all([promise1, promise2, promise3]).then(() => {
-            this.props.navigation.replace("PurchaseSuccessfulScreen");
+            firebase.analytics().logEvent("buying_declined"); // resetting UI
           });
-        })
-        .catch(err => {
-          console.warn(err);
+      } catch (error) {}
+    } else {
+      try {
+        firebase.analytics().logEvent("buying_init");
+        var currentRep = this.props.userData.re;
+        var newRep = currentRep + 2000;
+        RNIap.buyProductWithoutFinishTransaction("fields_plus")
+          .then(() => {
+            RNIap.finishTransaction();
 
-          firebase.analytics().logEvent("buying_declined"); // resetting UI
-        });
-    } catch (error) {}
+            firebase.analytics().logEvent("buying_success");
+            promise1 = firebase
+              .firestore()
+              .collection("Users")
+              .doc(firebase.auth().currentUser.uid)
+              .update({
+                fP: true,
+                re: newRep
+              });
+
+            promise2 = AsyncStorage.setItem("fP", "true");
+
+            promise3 = this.props.getUserData();
+
+            Promise.all([promise1, promise2, promise3]).then(() => {
+              this.props.navigation.replace("PurchaseSuccessfulScreen");
+            });
+          })
+          .catch(err => {
+            console.warn(err);
+
+            firebase.analytics().logEvent("buying_declined"); // resetting UI
+          });
+      } catch (error) {}
+    }
   };
   render() {
     const tapp = (
@@ -105,9 +138,22 @@ class FieldsPlusScreen extends Component {
     return (
       <ScrollView style={{ flex: 1, backgroundColor: "#333333" }}>
         <View style={styles.container}>
+          <View style={styles.backButtonContainer}>
+            <TouchableOpacity
+              style={styles.backButton}
+              underlayColor="#bcbcbc"
+              onPress={() => this.props.navigation.goBack()}
+            >
+              <Image
+                style={styles.backButton}
+                source={{ uri: "back_button_white" }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.teamName}>{I18n.t("fields_plus")}</Text>
+          </View>
           <Image
             source={{ uri: "f_plus_logo" }}
-            style={{ height: 200, width: 200, margin: 32 }}
+            style={{ height: 200, width: 200, margin: 32, alignSelf: "center" }}
             resizeMode={"contain"}
           />
 
@@ -180,8 +226,7 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#333333",
-    alignItems: "center"
+    backgroundColor: "#333333"
   },
 
   textBlue: {
@@ -218,5 +263,25 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#c6c6c6",
     marginVertical: 16
+  },
+
+  backButtonContainer: {
+    flexDirection: "row",
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+
+    flex: 1
+  },
+  backButton: {
+    height: 48,
+    width: 48
+  },
+
+  teamName: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "white",
+    alignSelf: "center",
+    marginStart: 12
   }
 });

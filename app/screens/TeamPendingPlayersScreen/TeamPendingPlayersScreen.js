@@ -48,7 +48,9 @@ class TeamPendingPlayersScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("TeamPendingPlayersScreen", "TeamPendingPlayersScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("TeamPendingPlayersScreen", "TeamPendingPlayersScreen");
 
     this.ref = firebase
       .firestore()
@@ -81,9 +83,7 @@ class TeamPendingPlayersScreen extends Component {
   };
 
   accept = item => {
-    firebase
-                  .analytics()
-                  .logEvent("player_accepted")
+    firebase.analytics().logEvent("player_accepted");
     firebase
       .firestore()
       .collection("Teams")
@@ -126,16 +126,14 @@ class TeamPendingPlayersScreen extends Component {
               .update({
                 pT: firebase.firestore.FieldValue.delete(),
                 uTI: this.props.userData.uTI,
-                uTN: this.props.userData.uTN
+                uTN: this.props.userData.uTN.trim()
               });
           });
       });
   };
 
   decline = item => {
-    firebase
-                  .analytics()
-                  .logEvent("player_declined")
+    firebase.analytics().logEvent("player_declined");
     firebase
       .firestore()
       .collection("Teams")

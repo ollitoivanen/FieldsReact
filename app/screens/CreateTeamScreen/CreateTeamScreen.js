@@ -146,7 +146,7 @@ class CreateTeamScreen extends Component {
         .collection("Teams")
         .doc(teamID)
         .set({
-          tUN: this.state.teamUsername.toLowerCase().trim(),
+          tUN: this.state.teamUsername.trim(),
           pC: 1,
           co
         })
@@ -177,7 +177,7 @@ class CreateTeamScreen extends Component {
               .update({
                 pT: firebase.firestore.FieldValue.delete(),
                 uTI: teamID,
-                uTN: teamName
+                uTN: teamName.trim()
               });
           } else {
             firebase
@@ -186,7 +186,7 @@ class CreateTeamScreen extends Component {
               .doc(userID)
               .update({
                 uTI: teamID,
-                uTN: teamName
+                uTN: teamName.trim()
               });
           }
         })
