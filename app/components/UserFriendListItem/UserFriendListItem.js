@@ -8,9 +8,7 @@ export default class Searchitem extends React.PureComponent {
   render() {
     return (
       <View style={styles.item}>
-        <Text style={styles.text} >
-          {this.props.fN}
-        </Text>
+        <Text style={styles.text}>{this.props.fN}</Text>
         <View style={styles.div} />
       </View>
     );

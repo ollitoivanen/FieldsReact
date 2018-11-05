@@ -337,7 +337,7 @@ class FeedScreen extends React.Component {
       currentUser: null,
       homeArea: "",
       friends: [],
-      teamImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png")
+      teamImage: null
     };
   }
   componentWillMount() {
@@ -349,6 +349,25 @@ class FeedScreen extends React.Component {
     const { currentUser } = this.state;
 
     var teamCard;
+    if (this.state.teamImage === null) {
+      var teamImage = (
+        <Image
+          style={styles.profileImage}
+          source={{ uri: "team_image_default" }}
+          resizeMode="cover"
+          borderRadius={50}
+        />
+      );
+    } else {
+      var teamImage = (
+        <FastImage
+          style={styles.profileImage}
+          source={this.state.teamImage}
+          resizeMode="cover"
+          borderRadius={50}
+        />
+      );
+    }
 
     if (this.props.userData.uTI !== undefined) {
       teamCard = (
@@ -359,12 +378,7 @@ class FeedScreen extends React.Component {
               firebase.analytics().logEvent("feed_to_team");
           }}
         >
-          <FastImage
-            style={styles.profileImage}
-            source={this.state.teamImage}
-            resizeMode="cover"
-            borderRadius={50}
-          />
+          {teamImage}
 
           <Text style={styles.teamCardText}>{this.props.userData.uTN}</Text>
         </TouchableOpacity>
@@ -378,9 +392,9 @@ class FeedScreen extends React.Component {
               firebase.analytics().logEvent("feed_to_noteam");
           }}
         >
-          <FastImage
+          <Image
             style={styles.profileImage}
-            source={require("FieldsReact/app/images/TeamImageDefault/team_image_default.png")}
+            source={{ uri: "team_image_default" }}
             resizeMode="cover"
             borderRadius={50}
           />

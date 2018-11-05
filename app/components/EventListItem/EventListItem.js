@@ -16,17 +16,15 @@ export default class EventListItem extends React.PureComponent {
     return (
       <View style={styles.cont}>
         <View style={styles.item}>
-          <Text style={styles.bigDateText} >
-            {this.props.date}
-          </Text>
+          <Text style={styles.bigDateText}>{this.props.date}</Text>
 
-          <Text style={styles.timeText} >
+          <Text style={styles.timeText}>
             {this.props.startTime + "-" + this.props.eT}
           </Text>
         </View>
         <View style={styles.item}>
-          <Text style={styles.trainingText} >
-            {I18n.t(['event_type_array', this.props.eTY]) + [eventField]}
+          <Text style={styles.trainingText}>
+            {I18n.t(["event_type_array", this.props.eTY]) + [eventField]}
           </Text>
         </View>
       </View>

@@ -9,7 +9,7 @@ export default class FieldSearchitem extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      fieldImagePath: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
+      fieldImagePath: null
     };
     if (this.props.fIm === true) {
       this.getImage();
@@ -35,21 +35,29 @@ export default class FieldSearchitem extends React.PureComponent {
   render() {
     var fieldImagePath;
     var fieldImage;
-
-    return (
-      <View style={styles.item}>
+    if (this.state.fieldImagePath === null) {
+      var fieldImagePath = (
+        <Image
+          style={styles.fieldImage}
+          source={{ uri: "field_image_default" }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var fieldImagePath = (
         <FastImage
           style={styles.fieldImage}
           source={this.state.fieldImagePath}
           resizeMode="cover"
         />
+      );
+    }
+    return (
+      <View style={styles.item}>
+        {fieldImagePath}
         <View>
-          <Text style={styles.text} >
-            {this.props.fN}
-          </Text>
-          <Text style={styles.distanceText} >
-            {this.props.d}
-          </Text>
+          <Text style={styles.text}>{this.props.fN}</Text>
+          <Text style={styles.distanceText}>{this.props.d}</Text>
         </View>
         <View style={styles.div} />
       </View>

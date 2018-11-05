@@ -5,11 +5,7 @@ export default class TeamPlayerListItem extends React.PureComponent {
   // toggle a todo as completed or not via update()
 
   render() {
-    var usernameText = (
-      <Text style={styles.textGray} >
-        {this.props.pUN}
-      </Text>
-    );
+    var usernameText = <Text style={styles.textGray}>{this.props.pUN}</Text>;
 
     return (
       <View style={styles.item}>

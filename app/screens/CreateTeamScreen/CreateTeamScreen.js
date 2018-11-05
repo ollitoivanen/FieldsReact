@@ -55,7 +55,7 @@ class CreateTeamScreen extends Component {
     this.state = {
       teamUsername: "",
       errorMessage: "",
-      teamImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
+      teamImage: null,
       clearPath: null
     };
   }
@@ -244,6 +244,25 @@ class CreateTeamScreen extends Component {
         </TouchableOpacity>
       );
     }
+    if (this.state.teamImage === null) {
+      var teamImage = (
+        <Image
+          style={styles.profileImageEdit}
+          source={{ uri: "team_image_default" }}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var teamImage = (
+        <FastImage
+          style={styles.profileImageEdit}
+          source={this.state.teamImage}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      );
+    }
     return (
       <ScrollView style={styles.editContainer}>
         <View style={styles.greenRowContainer}>
@@ -258,12 +277,7 @@ class CreateTeamScreen extends Component {
         </View>
 
         <TouchableOpacity onPress={() => this.showPicker()}>
-          <FastImage
-            style={styles.profileImageEdit}
-            source={this.state.teamImage}
-            borderRadius={35}
-            resizeMode="cover"
-          />
+          {teamImage}
         </TouchableOpacity>
 
         <Text style={styles.headerText}>{I18n.t("team_username")}</Text>

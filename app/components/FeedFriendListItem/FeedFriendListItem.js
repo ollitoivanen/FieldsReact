@@ -8,7 +8,7 @@ export default class FeedFriendListItem extends React.PureComponent {
     super(props);
 
     this.state = {
-      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+      profileImagePath: null
     };
     if (this.props.uIm === true) {
       this.getImage();
@@ -40,17 +40,28 @@ export default class FeedFriendListItem extends React.PureComponent {
     } else {
       var trainingTime = <Text style={styles.fieldText}>{this.props.cFN}</Text>;
     }
+    if (this.state.profileImagePath === null) {
+      var profileImagePath = (
+        <Image
+          style={styles.fieldImage}
+          source={{ uri: "profile_image_default" }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var profileImagePath = (
+        <FastImage
+          style={styles.fieldImage}
+          source={this.state.profileImagePath}
+          resizeMode="cover"
+        />
+      );
+    }
     return (
       <View>
         <View style={styles.item}>
-          <FastImage
-            style={styles.fieldImage}
-            source={this.state.profileImagePath}
-            resizeMode="cover"
-          />
-          <Text style={styles.text} >
-            {this.props.fN}
-          </Text>
+          {profileImagePath}
+          <Text style={styles.text}>{this.props.fN}</Text>
         </View>
         {trainingTime}
         <View style={styles.div} />

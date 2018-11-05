@@ -8,7 +8,7 @@ export default class UserSearchItem extends React.PureComponent {
     super(props);
 
     this.state = {
-      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+      profileImagePath: null
     };
     if (this.props.uIm === true) {
       this.getUserImage();
@@ -32,13 +32,26 @@ export default class UserSearchItem extends React.PureComponent {
   };
 
   render() {
-    return (
-      <View style={styles.item}>
+    if (this.state.profileImagePath === null) {
+      var profileImagePath = (
+        <Image
+          style={styles.fieldImage}
+          source={{ uri: "profile_image_default" }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var profileImagePath = (
         <FastImage
           style={styles.fieldImage}
           source={this.state.profileImagePath}
           resizeMode="cover"
         />
+      );
+    }
+    return (
+      <View style={styles.item}>
+        {profileImagePath}
         <Text style={styles.text}>{this.props.username}</Text>
         <View style={styles.div} />
       </View>

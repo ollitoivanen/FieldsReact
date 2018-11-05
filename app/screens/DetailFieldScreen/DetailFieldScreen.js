@@ -113,10 +113,14 @@ class DetailFieldScreen extends Component {
   loadEvents = () => {
     var { params } = this.props.navigation.state;
 
-
-    firebase.firestore().collection("Fields").doc(params.fieldID).get().then(doc=>{
-      this.setState({peopleHere: doc.data().pH})
-    })
+    firebase
+      .firestore()
+      .collection("Fields")
+      .doc(params.fieldID)
+      .get()
+      .then(doc => {
+        this.setState({ peopleHere: doc.data().pH });
+      });
 
     const events = [];
     var ref = firebase.firestore().collection("Events");
@@ -468,8 +472,7 @@ class DetailFieldScreen extends Component {
         d: "",
 
         expandeImageVisible: false,
-        fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
-        avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
+        fieldImage: null
       };
     } else {
       this.state = {
@@ -486,8 +489,7 @@ class DetailFieldScreen extends Component {
         d: params.d,
 
         expandeImageVisible: false,
-        fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
-        avatarSource: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png")
+        fieldImage: null
       };
     }
   }
@@ -597,18 +599,29 @@ class DetailFieldScreen extends Component {
       trainingButton = trainingButtonNotTraining;
     }
 
-    var fieldIm = (
-      <TouchableOpacity
-        style={{}}
-        onPress={() => this.setExpandedImageVisible()}
-      >
-        <FastImage
-          style={styles.profileImage}
-          source={this.state.fieldImage}
-          resizeMode="cover"
-        />
-      </TouchableOpacity>
-    );
+    if(this.state.fieldImage === null){
+      var fieldIm = (
+        <TouchableOpacity>
+          <Image
+            style={styles.profileImage}
+            source={{uri: 'field_image_default'}}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+      );
+    }else{
+      var fieldIm = (
+        <TouchableOpacity onPress={() => this.setExpandedImageVisible()}>
+          <FastImage
+            style={styles.profileImage}
+            source={this.state.fieldImage}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+      );
+    }
+
+    
 
     return (
       <View style={styles.container}>

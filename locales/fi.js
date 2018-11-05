@@ -188,10 +188,18 @@ export default {
   required_reputation: "Vaadittu reputaatio:",
   time_to_get_a_head_start: "Aika ottaa etumatkaa.",
 
-
   locked: "Lukittu",
   unlocked: "Avattu",
   month: "kuukausi",
-  try_one_month_free: "kokeile kuukausi ilmaiseksi"
+  try_one_month_free: "kokeile kuukausi ilmaiseksi",
 
+  this_is_awesome:
+    "Jalkapalloilija, löysit juuri jotain mahtavaa. Se on Fields.",
+  play_football:
+    "Pelaa jalkapalloa kentillä sinun lähelläsi ja ansaitse reputaatiota & merkkejä",
+  manage_team: "Hallitse joukkuettasi helpommin",
+  manage_team_2: "Rakenna joukkueesi ja aseta tapahtumia & näe kuka on tulossa",
+  find_best_time: "Löydä paras aika pelata jalkapalloa kentälläsi",
+  find_best_time_2:
+    "Näe kuinka moni harjoittelee kentällä ja mene, kun siellä on tilaa"
 };

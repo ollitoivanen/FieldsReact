@@ -282,7 +282,7 @@ class DetailProfileScreen extends Component {
       friendStatus: null,
       infoVisible: false,
       //Karinainen perkele
-      profileImagePath: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+      profileImagePath: null
     };
   }
 
@@ -453,6 +453,20 @@ class DetailProfileScreen extends Component {
       </View>
     );
 
+    if(this.state.profileImagePath === null){
+      var profileImage =  <Image
+      style={styles.profileImage}
+      source={{uri: 'profile_image_default'}}
+      resizeMode="cover"
+    />
+    }else{
+      var profileImage =  <FastImage
+      style={styles.profileImage}
+      source={this.state.profileImagePath}
+      resizeMode="cover"
+    />
+    }
+
     return (
       <View style={styles.container}>
         <Modal
@@ -518,11 +532,7 @@ class DetailProfileScreen extends Component {
         <View style={styles.containerHeader}>
           <View style={styles.backgroundGreen}>
             <View style={styles.imageTabContainer}>
-              <FastImage
-                style={styles.profileImage}
-                source={this.state.profileImagePath}
-                resizeMode="cover"
-              />
+             {profileImage}
             </View>
             <Text style={styles.username}>{params.un}</Text>
 

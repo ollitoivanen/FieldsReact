@@ -67,7 +67,7 @@ class CreateNewFieldScreen extends Component {
       chosenFieldType: 0,
       chosenAccessType: 2,
       goalCount: 1,
-      fieldImage: require("FieldsReact/app/images/FieldImageDefault/field_image_default.png"),
+      fieldImage: null,
       fieldImageInitial: null
     };
   }
@@ -295,7 +295,25 @@ class CreateNewFieldScreen extends Component {
         </TouchableOpacity>
       );
     }
-
+    if (this.state.fieldImage === null) {
+      var fieldImage = (
+        <Image
+          style={styles.profileImageEdit}
+          source={{ uri: "field_image_default" }}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var fieldImage = (
+        <FastImage
+          style={styles.profileImageEdit}
+          source={this.state.fieldImage}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      );
+    }
     return (
       <ScrollView style={styles.container}>
         <View style={styles.greenRowContainer}>
@@ -310,12 +328,7 @@ class CreateNewFieldScreen extends Component {
         </View>
 
         <TouchableOpacity onPress={() => this.showPicker()}>
-          <FastImage
-            style={styles.profileImageEdit}
-            source={this.state.fieldImage}
-            borderRadius={35}
-            resizeMode="cover"
-          />
+          {fieldImage}
         </TouchableOpacity>
 
         <Text style={styles.headerText}>{I18n.t("field_name")}</Text>

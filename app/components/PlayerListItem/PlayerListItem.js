@@ -5,23 +5,11 @@ export default class PlayerListItem extends React.PureComponent {
 
   render() {
     if (this.props.st === 0) {
-      var usernameText = (
-        <Text style={styles.textGreen} >
-          {this.props.unE}
-        </Text>
-      );
+      var usernameText = <Text style={styles.textGreen}>{this.props.unE}</Text>;
     } else if (this.props.st === 1) {
-      var usernameText = (
-        <Text style={styles.textGray} >
-          {this.props.unE}
-        </Text>
-      );
+      var usernameText = <Text style={styles.textGray}>{this.props.unE}</Text>;
     } else if (this.props.st === 2) {
-      var usernameText = (
-        <Text style={styles.textRed} >
-          {this.props.unE}
-        </Text>
-      );
+      var usernameText = <Text style={styles.textRed}>{this.props.unE}</Text>;
     }
     return (
       <View style={styles.item}>

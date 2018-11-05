@@ -16,14 +16,9 @@ import firebase from "react-native-firebase";
 import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 
-import { favorite_fields, no_favorite_fields } from "../../strings/strings";
 import FieldSearchItem from "FieldsReact/app/components/FieldSearchItem/FieldSearchItem";
-import TeamSearchItem from "FieldsReact/app/components/TeamSearchItem/TeamSearchItem";
-import UserSearchItem from "FieldsReact/app/components/UserSearchItem/UserSearchItem";
-import I18n from "FieldsReact/i18n";
 
-import Permissions from "react-native-permissions";
-import RNAndroidLocationEnabler from "react-native-android-location-enabler";
+import I18n from "FieldsReact/i18n";
 
 const mapStateToProps = state => {
   return {

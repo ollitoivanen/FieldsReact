@@ -1,5 +1,5 @@
 export default {
-  welcome: "Welcome to Fields! Let's create an account for you!",
+  welcome: "Welcome to Fields! Let's create an account for you.",
   welcome_back: "Welcome back!",
   username: "Username",
   email: "Email",
@@ -197,5 +197,14 @@ export default {
   locked: "Locked",
   unlocked: "Unlocked",
   month: "month",
-  try_one_month_free: "try one month free"
-}
+  try_one_month_free: "try one month free",
+  this_is_awesome:
+    "Football player, you just discovered something awesome. Fields.",
+  play_football:
+    "Play football on fields near you and earn reputation & badges",
+  manage_team: "Manage your team easier",
+  manage_team_2: "Build your team and set events & see who's coming",
+  find_best_time: "Find the best time to play football on your field",
+  find_best_time_2:
+    "Know how many people are training on the field and go when there's space"
+};

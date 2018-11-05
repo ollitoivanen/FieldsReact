@@ -265,169 +265,175 @@ export default class EditFieldScreen extends Component {
       this.setState({ goalCount: index });
       this.setGoalCountModal(false);
     };
+    if (this.state.fieldImage === null) {
+      var fieldImage = (
+        <Image
+          style={styles.profileImageEdit}
+          source={{ uri: "field_image_default" }}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var fieldImage = (
+        <FastImage
+          style={styles.profileImageEdit}
+          source={this.state.fieldImage}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      );
+    }
     return (
       <ScrollView style={styles.container}>
-      <View style={styles.paddingContainer}>
-        <View style={styles.greenRowContainer}>
-          <TouchableOpacity
-            style={styles.backButton}
-            underlayColor="#bcbcbc"
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Image style={styles.backButton} source={{ uri: "back_button" }} />
-          </TouchableOpacity>
-          <View style={{ flexDirection: "column" }}>
-            <Text style={styles.fieldName}>{I18n.t("edit_field")}</Text>
+        <View style={styles.paddingContainer}>
+          <View style={styles.greenRowContainer}>
+            <TouchableOpacity
+              style={styles.backButton}
+              underlayColor="#bcbcbc"
+              onPress={() => this.props.navigation.goBack()}
+            >
+              <Image
+                style={styles.backButton}
+                source={{ uri: "back_button" }}
+              />
+            </TouchableOpacity>
+            <View style={{ flexDirection: "column" }}>
+              <Text style={styles.fieldName}>{I18n.t("edit_field")}</Text>
+            </View>
           </View>
-        </View>
 
-        <TouchableOpacity onPress={() => this.showPicker()}>
-          <FastImage
-            style={styles.profileImageEdit}
-            source={this.state.fieldImage}
-            borderRadius={35}
-            resizeMode="cover"
+          <TouchableOpacity onPress={() => this.showPicker()}>
+            {fieldImage}
+          </TouchableOpacity>
+          <Text style={styles.headerText}>{I18n.t("field_name")}</Text>
+          <TextInput
+            style={styles.textInput}
+            maxLength={30}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder={I18n.t("field_name")}
+            value={this.state.fieldName}
+            onChangeText={fieldName => this.setState({ fieldName })}
           />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>{I18n.t("field_name")}</Text>
-        <TextInput
-          style={styles.textInput}
-          maxLength={30}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder={I18n.t("field_name")}
-          value={this.state.fieldName}
-          onChangeText={fieldName => this.setState({ fieldName })}
-        />
-        <TouchableOpacity
-          style={styles.getLocationBox}
-          onPress={() =>
-            this.props.navigation.navigate("MapScreen", {
-              markerSet: true,
-              lt: params.lt,
-              ln: params.ln,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-              from: "editField"
-            })
-          }
-        >
-          <Text style={styles.getLocationText}>
-            {I18n.t("change_field_location")}
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>{I18n.t("field_field_type")}</Text>
-
-        <TouchableOpacity onPress={() => this.setFieldTypeModal(true)}>
-          <Text style={styles.pickerText}>
-            {I18n.t(["field_type_array", this.state.chosenFieldType])}
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>{I18n.t("field_access_type")}</Text>
-
-        <TouchableOpacity onPress={() => this.setFieldAccessTypeModal(true)}>
-          <Text style={styles.pickerText}>
-            {I18n.t(["field_access_type_array", this.state.chosenAccessType])}
-          </Text>
-        </TouchableOpacity>
-
-        <Text style={styles.headerText}>{I18n.t("field_goal_count")}</Text>
-
-        <TouchableOpacity onPress={() => this.setGoalCountModal(true)}>
-          <Text style={styles.pickerText}>{this.state.goalCount}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => saveFieldData()}
-        >
-          <Text style={styles.buttonText}>{I18n.t("save")}</Text>
-        </TouchableOpacity>
-        {this.state.errorMessage && (
-          <Text style={styles.error}>{this.state.errorMessage}</Text>
-        )}
-        <Modal
-          transparent={true}
-          visible={this.state.fieldTypeModalVisible}
-          onRequestClose={() => {}}
-        >
           <TouchableOpacity
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-              backgroundColor: "#00000080",
-              alignItems: "center"
-            }}
-            onPress={() => {
-              this.setFieldTypeModal(!this.state.fieldTypeModalVisible);
-            }}
+            style={styles.getLocationBox}
+            onPress={() =>
+              this.props.navigation.navigate("MapScreen", {
+                markerSet: true,
+                lt: params.lt,
+                ln: params.ln,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+                from: "editField"
+              })
+            }
+          >
+            <Text style={styles.getLocationText}>
+              {I18n.t("change_field_location")}
+            </Text>
+          </TouchableOpacity>
+          <Text style={styles.headerText}>{I18n.t("field_field_type")}</Text>
+
+          <TouchableOpacity onPress={() => this.setFieldTypeModal(true)}>
+            <Text style={styles.pickerText}>
+              {I18n.t(["field_type_array", this.state.chosenFieldType])}
+            </Text>
+          </TouchableOpacity>
+          <Text style={styles.headerText}>{I18n.t("field_access_type")}</Text>
+
+          <TouchableOpacity onPress={() => this.setFieldAccessTypeModal(true)}>
+            <Text style={styles.pickerText}>
+              {I18n.t(["field_access_type_array", this.state.chosenAccessType])}
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={styles.headerText}>{I18n.t("field_goal_count")}</Text>
+
+          <TouchableOpacity onPress={() => this.setGoalCountModal(true)}>
+            <Text style={styles.pickerText}>{this.state.goalCount}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={() => saveFieldData()}
+          >
+            <Text style={styles.buttonText}>{I18n.t("save")}</Text>
+          </TouchableOpacity>
+          {this.state.errorMessage && (
+            <Text style={styles.error}>{this.state.errorMessage}</Text>
+          )}
+          <Modal
+            transparent={true}
+            visible={this.state.fieldTypeModalVisible}
+            onRequestClose={() => {}}
           >
             <TouchableOpacity
               style={{
-                backgroundColor: "#fff",
-                padding: 20
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
+                backgroundColor: "#00000080",
+                alignItems: "center"
               }}
               onPress={() => {
                 this.setFieldTypeModal(!this.state.fieldTypeModalVisible);
               }}
             >
-              <TouchableOpacity onPress={() => changeFieldType(0)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_type_array", 0])}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeFieldType(1)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_type_array", 1])}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeFieldType(2)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_type_array", 2])}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeFieldType(3)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_type_array", 3])}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeFieldType(4)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_type_array", 4])}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeFieldType(5)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_type_array", 5])}
-                </Text>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#fff",
+                  padding: 20
+                }}
+                onPress={() => {
+                  this.setFieldTypeModal(!this.state.fieldTypeModalVisible);
+                }}
+              >
+                <TouchableOpacity onPress={() => changeFieldType(0)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_type_array", 0])}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeFieldType(1)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_type_array", 1])}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeFieldType(2)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_type_array", 2])}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeFieldType(3)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_type_array", 3])}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeFieldType(4)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_type_array", 4])}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeFieldType(5)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_type_array", 5])}
+                  </Text>
+                </TouchableOpacity>
               </TouchableOpacity>
             </TouchableOpacity>
-          </TouchableOpacity>
-        </Modal>
+          </Modal>
 
-        <Modal
-          transparent={true}
-          visible={this.state.fieldAccessTypeModalVisible}
-          onRequestClose={() => {}}
-        >
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-              backgroundColor: "#00000080",
-              alignItems: "center"
-            }}
-            onPress={() => {
-              this.setFieldAccessTypeModal(
-                !this.state.fieldAccessTypeModalVisible
-              );
-            }}
+          <Modal
+            transparent={true}
+            visible={this.state.fieldAccessTypeModalVisible}
+            onRequestClose={() => {}}
           >
             <TouchableOpacity
               style={{
-                backgroundColor: "#fff",
-                padding: 20
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
+                backgroundColor: "#00000080",
+                alignItems: "center"
               }}
               onPress={() => {
                 this.setFieldAccessTypeModal(
@@ -435,86 +441,99 @@ export default class EditFieldScreen extends Component {
                 );
               }}
             >
-              <TouchableOpacity onPress={() => changeFieldAccessType(0)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_access_type_array", 0])}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeFieldAccessType(1)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_access_type_array", 1])}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeFieldAccessType(2)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_access_type_array", 2])}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeFieldAccessType(3)}>
-                <Text style={styles.dialogText}>
-                  {I18n.t(["field_access_type_array", 3])}
-                </Text>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#fff",
+                  padding: 20
+                }}
+                onPress={() => {
+                  this.setFieldAccessTypeModal(
+                    !this.state.fieldAccessTypeModalVisible
+                  );
+                }}
+              >
+                <TouchableOpacity onPress={() => changeFieldAccessType(0)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_access_type_array", 0])}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeFieldAccessType(1)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_access_type_array", 1])}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeFieldAccessType(2)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_access_type_array", 2])}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeFieldAccessType(3)}>
+                  <Text style={styles.dialogText}>
+                    {I18n.t(["field_access_type_array", 3])}
+                  </Text>
+                </TouchableOpacity>
               </TouchableOpacity>
             </TouchableOpacity>
-          </TouchableOpacity>
-        </Modal>
+          </Modal>
 
-        <Modal
-          transparent={true}
-          visible={this.state.fieldGoalCountModalVisible}
-          onRequestClose={() => {}}
-        >
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-              backgroundColor: "#00000080",
-              alignItems: "center"
-            }}
-            onPress={() => {
-              this.setGoalCountModal(!this.state.fieldGoalCountModalVisible);
-            }}
+          <Modal
+            transparent={true}
+            visible={this.state.fieldGoalCountModalVisible}
+            onRequestClose={() => {}}
           >
             <TouchableOpacity
               style={{
-                backgroundColor: "#fff",
-                padding: 20
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
+                backgroundColor: "#00000080",
+                alignItems: "center"
               }}
               onPress={() => {
                 this.setGoalCountModal(!this.state.fieldGoalCountModalVisible);
               }}
             >
-              <TouchableOpacity onPress={() => changeGoalCount(1)}>
-                <Text style={styles.dialogText}>{1}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeGoalCount(2)}>
-                <Text style={styles.dialogText}>{2}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeGoalCount(3)}>
-                <Text style={styles.dialogText}>{3}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeGoalCount(4)}>
-                <Text style={styles.dialogText}>{4}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeGoalCount(5)}>
-                <Text style={styles.dialogText}>{5}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeGoalCount(6)}>
-                <Text style={styles.dialogText}>{6}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeGoalCount(7)}>
-                <Text style={styles.dialogText}>{7}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeGoalCount(8)}>
-                <Text style={styles.dialogText}>{8}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeGoalCount(9)}>
-                <Text style={styles.dialogText}>{9}</Text>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#fff",
+                  padding: 20
+                }}
+                onPress={() => {
+                  this.setGoalCountModal(
+                    !this.state.fieldGoalCountModalVisible
+                  );
+                }}
+              >
+                <TouchableOpacity onPress={() => changeGoalCount(1)}>
+                  <Text style={styles.dialogText}>{1}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeGoalCount(2)}>
+                  <Text style={styles.dialogText}>{2}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeGoalCount(3)}>
+                  <Text style={styles.dialogText}>{3}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeGoalCount(4)}>
+                  <Text style={styles.dialogText}>{4}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeGoalCount(5)}>
+                  <Text style={styles.dialogText}>{5}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeGoalCount(6)}>
+                  <Text style={styles.dialogText}>{6}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeGoalCount(7)}>
+                  <Text style={styles.dialogText}>{7}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeGoalCount(8)}>
+                  <Text style={styles.dialogText}>{8}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => changeGoalCount(9)}>
+                  <Text style={styles.dialogText}>{9}</Text>
+                </TouchableOpacity>
               </TouchableOpacity>
             </TouchableOpacity>
-          </TouchableOpacity>
-        </Modal>
+          </Modal>
         </View>
       </ScrollView>
     );
@@ -527,8 +546,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "white"
   },
-  paddingContainer:{
-    paddingBottom: 26,
+  paddingContainer: {
+    paddingBottom: 26
   },
   backButtonContainer: {
     flexDirection: "row",

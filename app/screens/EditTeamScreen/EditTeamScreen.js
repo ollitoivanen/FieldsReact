@@ -284,7 +284,7 @@ class EditTeamScreen extends Component {
                     .collection("Users")
                     .doc(doc.id)
                     .update({
-                      uTN: this.state.teamUsername.trim(),
+                      uTN: this.state.teamUsername.trim()
                     });
                 });
               })
@@ -329,7 +329,25 @@ class EditTeamScreen extends Component {
         this.setState({ errorMessage: I18n.t("please_fill_all_fields") });
       }
     };
-
+    if (this.state.teamImage === null) {
+      var teamImage = (
+        <Image
+          style={styles.profileImageEdit}
+          source={{ uri: "team_image_default" }}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var teamImage = (
+        <FastImage
+          style={styles.profileImageEdit}
+          source={this.state.teamImage}
+          borderRadius={35}
+          resizeMode="cover"
+        />
+      );
+    }
     return (
       <ScrollView style={styles.container}>
         <View style={styles.greenRowContainer}>
@@ -346,12 +364,7 @@ class EditTeamScreen extends Component {
         </View>
 
         <TouchableOpacity onPress={() => this.showPicker()}>
-          <FastImage
-            style={styles.profileImageEdit}
-            source={this.state.teamImage}
-            borderRadius={35}
-            resizeMode="cover"
-          />
+          {teamImage}
         </TouchableOpacity>
         <Text style={styles.headerText}>{I18n.t("team_username")}</Text>
         <TextInput

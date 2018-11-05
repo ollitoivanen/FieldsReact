@@ -70,7 +70,8 @@ class ProfileScreen extends Component {
     this.state = {
       trainingTime: "",
       fC: "",
-      profileImage: require("FieldsReact/app/images/ProfileImageDefault/profile_image_default.png")
+      profileImage: null,
+      profileImageLoaded: false
     };
   }
 
@@ -134,7 +135,10 @@ class ProfileScreen extends Component {
       )
       .getDownloadURL()
       .then(downloadedFile => {
-        this.setState({ profileImage: { uri: downloadedFile.toString() } });
+        this.setState({
+          profileImage: { uri: downloadedFile.toString() },
+          profileImageLoaded: true
+        });
       })
       .catch(err => {});
   };
@@ -343,6 +347,14 @@ class ProfileScreen extends Component {
           resizeMode="cover"
         />
       );
+    } else {
+      var profileImage = (
+        <Image
+          style={styles.profileImage}
+          source={{uri: 'profile_image_default'}}
+          resizeMode="cover"
+        />
+      );
     }
     return (
       <View style={styles.container}>
@@ -393,6 +405,9 @@ class ProfileScreen extends Component {
             {currentFieldPlaceHolder}
 
             <TouchableOpacity
+              ref={view => {
+                this.myComponent = view;
+              }}
               style={styles.roundTextContainerBordered}
               onPress={() => {
                 this.props.navigation.navigate("ReputationScreen"),
@@ -405,7 +420,6 @@ class ProfileScreen extends Component {
               </Text>
             </TouchableOpacity>
             {fieldsPlusButton}
-
           </ScrollView>
         </View>
         <View style={styles.navigationContainer}>

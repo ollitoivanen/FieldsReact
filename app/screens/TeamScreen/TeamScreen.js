@@ -180,7 +180,7 @@ class TeamScreen extends Component {
       editVisible: false,
       leaveVisible: false,
       players: [],
-      teamImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png"),
+      teamImage: null,
       editImageClearPath: null
     };
   }
@@ -388,6 +388,24 @@ class TeamScreen extends Component {
         </View>
       );
     }
+
+    if (this.state.teamImage === null) {
+      var teamImage = (
+        <Image
+          style={styles.teamImage}
+          source={{ uri: "team_image_default" }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var teamImage = (
+        <FastImage
+          style={styles.teamImage}
+          source={this.state.teamImage}
+          resizeMode="cover"
+        />
+      );
+    }
     return (
       <View style={styles.container}>
         <Modal
@@ -528,12 +546,7 @@ class TeamScreen extends Component {
             <Text style={styles.teamName}>{this.props.userData.uTN}</Text>
           </View>
           <View style={styles.greenRowContainer}>
-            <FastImage
-              style={styles.teamImage}
-              source={this.state.teamImage}
-              resizeMode="cover"
-            />
-
+            {teamImage}
             <Text style={styles.teamUsername}>{this.props.userData.uTN}</Text>
           </View>
 

@@ -71,7 +71,7 @@ class DetailTeamScreen extends Component {
       removeAndSendRequestVisible: false,
       players: [],
       infoVisible: false,
-      profileImage: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png")
+      profileImage: null
     };
   }
 
@@ -288,6 +288,21 @@ class DetailTeamScreen extends Component {
         </View>
       );
     }
+    if (this.state.profileImage === null) {
+      var profileImage = (
+        <Image
+          style={styles.fieldImage}
+          source={{ uri: "team_image_default" }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      <FastImage
+        style={styles.fieldImage}
+        source={this.state.profileImage}
+        resizeMode="cover"
+      />;
+    }
 
     return (
       <View style={styles.container}>
@@ -440,11 +455,7 @@ class DetailTeamScreen extends Component {
             <Text style={styles.teamName}>{params.teamUsername}</Text>
           </View>
           <View style={styles.greenRowContainer}>
-            <FastImage
-              style={styles.fieldImage}
-              source={this.state.profileImage}
-              resizeMode="cover"
-            />
+            {profileImage}
 
             <Text style={styles.teamFullName}>{params.teamUsername}</Text>
           </View>

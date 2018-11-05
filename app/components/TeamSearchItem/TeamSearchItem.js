@@ -8,7 +8,7 @@ export default class TeamSearchitem extends React.PureComponent {
     super(props);
 
     this.state = {
-      profileImagePath: require("FieldsReact/app/images/TeamImageDefault/team_image_default.png")
+      profileImagePath: null
     };
     this.getTeamImage();
   }
@@ -31,16 +31,27 @@ export default class TeamSearchitem extends React.PureComponent {
   };
 
   render() {
-    return (
-      <View style={styles.item}>
+    if (this.state.profileImagePath === null) {
+      var profileImagePath = (
+        <Image
+          style={styles.fieldImage}
+          source={{ uri: "team_image_default" }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var profileImagePath = (
         <FastImage
           style={styles.fieldImage}
           source={this.state.profileImagePath}
           resizeMode="cover"
         />
-        <Text style={styles.text} >
-          {this.props.username}
-        </Text>
+      );
+    }
+    return (
+      <View style={styles.item}>
+        {profileImagePath}
+        <Text style={styles.text}>{this.props.username}</Text>
         <View style={styles.div} />
       </View>
     );

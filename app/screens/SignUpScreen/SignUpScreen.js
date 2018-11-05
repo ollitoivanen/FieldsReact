@@ -212,7 +212,6 @@ export default class SignUpScreen extends React.Component {
 
           <Modal visible={this.state.firstLaunch} onRequestClose={() => {}}>
             <Swiper
-              style={styles.wrapper}
               showsButtons={false}
               loop={false}
               showsPagination={true}
@@ -221,56 +220,72 @@ export default class SignUpScreen extends React.Component {
             >
               <View style={styles.slide1}>
                 <Text style={styles.headerTextBigGray}>
-                  {I18n.t("welcome_to_fields")}
+                  {I18n.t("this_is_awesome")}
                 </Text>
 
                 <Image
                   style={styles.logo}
-                  source={{ uri: "f_logo_white_bg" }}
+                  source={{ uri: "welcome_slide_1" }}
+                  resizeMode={"contain"}
                 />
-                <Text style={styles.headerTextGray}>{I18n.t("lets_see")}</Text>
+                <Text style={styles.headerTextGray}>{I18n.t("play_football")}</Text>
+                <TouchableOpacity
+                  style={styles.letsgoSmall}
+                  onPress={() => {
+                    this.setState({ firstLaunch: false }),
+                      firebase.analytics().logEvent("introduction_complete");
+                  }}
+                >
+                  <Text style={styles.headerTextWhite}>{I18n.t("lets_go")}</Text>
+                </TouchableOpacity>
               </View>
-              <View style={styles.slide2}>
-                <Text style={styles.headerTextBig}>
-                  {I18n.t("football_fields")}
+              <View style={styles.slide1}>
+                <Text style={styles.headerTextBigBlue}>
+                  {I18n.t("find_best_time")}
                 </Text>
 
                 <Image
                   style={styles.logo}
-                  source={{ uri: "football_field_art" }}
+                  source={{ uri: "welcome_slide_3" }}
+                  resizeMode={"contain"}
+                />
+                <Text style={styles.headerTextBlue}>
+                  {I18n.t("find_best_time_2")}
+                </Text>
+                <TouchableOpacity
+                  style={styles.letsgoSmall}
+                  onPress={() => {
+                    this.setState({ firstLaunch: false }),
+                      firebase.analytics().logEvent("introduction_complete");
+                  }}
+                >
+                  <Text style={styles.headerTextWhite}>{I18n.t("lets_go")}</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.slide1}>
+                <Text style={styles.headerTextBigBlue}>
+                  {I18n.t("manage_team")}
+                </Text>
+
+                <Image
+                  style={styles.logo}
+                  source={{ uri: "welcome_slide_2" }}
                   resizeMode={"contain"}
                 />
 
-                <Text style={styles.headerText}>{I18n.t("see_where")}</Text>
+                <Text style={styles.headerTextBlue}>{I18n.t("manage_team_2")}</Text>
+                <TouchableOpacity
+                  style={styles.letsgoSmall}
+                  onPress={() => {
+                    this.setState({ firstLaunch: false }),
+                      firebase.analytics().logEvent("introduction_complete");
+                  }}
+                >
+                  <Text style={styles.headerTextWhite}>{I18n.t("lets_go")}</Text>
+                </TouchableOpacity>
               </View>
-              <View style={styles.slide3}>
-                <Text style={styles.headerTextBig}>
-                  {I18n.t("manage_your_team")}
-                </Text>
-
-                <Image
-                  style={styles.logo}
-                  source={{ uri: "fields_play_art" }}
-                  resizeMode={"contain"}
-                />
-                <Text style={styles.headerText}>
-                  {I18n.t("set_team_events")}
-                </Text>
-              </View>
-              <View style={styles.slide2}>
-                <Text style={styles.headerTextBig}>
-                  {I18n.t("earn_reputation")}
-                </Text>
-
-                <Image
-                  style={styles.logo}
-                  source={{ uri: "fields_up_art" }}
-                  resizeMode={"contain"}
-                />
-                <Text style={styles.headerText}>
-                  {I18n.t("earn_reputation_by_training")}
-                </Text>
-              </View>
+              
+              
               <View style={styles.slide1}>
                 <Text style={styles.headerTextBigGray}>
                   {I18n.t("sounds_awesome_right")}
@@ -287,7 +302,7 @@ export default class SignUpScreen extends React.Component {
                       firebase.analytics().logEvent("introduction_complete");
                   }}
                 >
-                  <Text style={styles.headerText}>{I18n.t("lets_go")}</Text>
+                  <Text style={styles.headerTextBigWhite}>{I18n.t("lets_go")}</Text>
                 </TouchableOpacity>
               </View>
             </Swiper>
@@ -335,6 +350,32 @@ const styles = StyleSheet.create({
       }
     })
   },
+  letsgoSmall: {
+    ...Platform.select({
+      ios: {
+        position: 'absolute',
+        end: 16,
+        bottom: 16,
+        backgroundColor: "#3bd774",
+        padding: 2,
+        marginTop: 20,
+        borderRadius: 100,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10
+      },
+      android: {
+        position: 'absolute',
+        end: 16,
+        bottom: 16,
+        backgroundColor: "#3bd774",
+        padding: 2,
+        marginTop: 20,
+        borderRadius: 100,
+        elevation: 2
+      }
+    })
+  },
   buttonContainer: {
     backgroundColor: "#3bd774",
     padding: 15,
@@ -350,8 +391,8 @@ const styles = StyleSheet.create({
 
   logo: {
     marginTop: 10,
-    width: 200,
-    height: 200
+    width: 300,
+    height: 300 
   },
 
   logoContainer: {
@@ -393,7 +434,6 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
-  wrapper: {},
   slide1: {
     flex: 1,
     justifyContent: "center",
@@ -412,12 +452,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#3facff"
   },
+  headerTextBigWhite: {
+    fontWeight: "bold",
+    fontSize: 26,
+    textAlign: "center",
+    color: "white",
+    margin: 20
+  },
+  headerTextWhite: {
+    fontWeight: "bold",
+    fontSize: 14,
+    textAlign: "center",
+    color: "white",
+    margin: 5
+  },
 
   headerTextBigGray: {
     fontWeight: "bold",
     fontSize: 26,
     textAlign: "center",
-    color: "#a5a5a5",
+    color: "black",
     margin: 20
   },
 
@@ -425,23 +479,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
-    color: "#a5a5a5",
+    color: "black",
     margin: 20
   },
 
-  headerTextBig: {
+  
+
+  headerTextBigBlue: {
     fontWeight: "bold",
     fontSize: 26,
     textAlign: "center",
-    color: "white",
+    color: "black",
     margin: 20
   },
 
-  headerText: {
+  headerTextBlue: {
     fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
-    color: "white",
+    color: "black",
     margin: 20
   }
 });
