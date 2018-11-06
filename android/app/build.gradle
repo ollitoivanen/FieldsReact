@@ -158,13 +158,17 @@ dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:27.1.1"
-    implementation "com.facebook.react:react-native:+"// From node_modules
-    implementation "com.google.android.gms:play-services-base:15.0.1"
-    implementation "com.google.firebase:firebase-core:16.0.3"
-    implementation 'com.google.firebase:firebase-auth:16.0.3'
-    implementation "com.google.firebase:firebase-firestore:17.1.0"
-    implementation "com.google.firebase:firebase-storage:15.0.2"
-    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation "com.android.support:support-media-compat:27.1.1"
+    implementation "com.android.support:support-v4:27.1.1"
+
+
+    implementation "com.facebook.react:react-native:0.56.1"// From node_modules
+    implementation "com.google.android.gms:play-services-base:16.0.1"
+    implementation "com.google.firebase:firebase-core:16.0.4"
+    implementation 'com.google.firebase:firebase-auth:16.0.5'
+    implementation "com.google.firebase:firebase-firestore:17.1.2"
+    implementation "com.google.firebase:firebase-storage:16.0.4"
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
 
 
 }
