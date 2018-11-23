@@ -16,6 +16,7 @@ import { store } from "FieldsReact/app/redux/app-redux.js"; //Import the store
 import NavigationService from "./NavigationService";
 
 export default class FieldsApp extends Component {
+ 
   constructor(props) {
     super(props);
     // this.notif = new PushService(this.onNotif.bind(this));
@@ -36,7 +37,7 @@ export default class FieldsApp extends Component {
           <View style={{ flex: 1 }}>
             <StatusBar
               translucent={false}
-              backgroundColor="#3bd774"
+              backgroundColor="#111111"
               barStyle="light-content"
               animated={true}
             />
@@ -53,9 +54,13 @@ export default class FieldsApp extends Component {
       return (
         <Provider store={store}>
           <SafeAreaView
-            style={{ flex: 1, backgroundColor: "white" }}
+            style={{ flex: 1, backgroundColor: "#111111" }}
             forceInset={{ top: "never" }}
           >
+           <StatusBar
+              
+              barStyle="light-content"
+            />
             <StackNavigatorApp
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);

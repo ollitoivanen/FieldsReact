@@ -97,7 +97,7 @@ def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.fields.football"
@@ -138,20 +138,29 @@ android {
 
 
 dependencies {
-    compile project(':react-native-iap')
-    compile project(':react-native-i18n')
     compile project(':react-native-push-notification')
-    compile project(':react-native-android-location-enabler')
+    compile project(':react-native-maps')
     compile project(':react-native-image-resizer')
     compile project(':react-native-image-picker')
+    compile project(':react-native-iap')
+    compile project(':react-native-i18n')
+    compile project(':react-native-firebase')
     compile project(':react-native-fast-image')
+    compile project(':react-native-android-location-enabler')
+    implementation project(':react-native-iap')
+    implementation project(':react-native-i18n')
+    implementation project(':react-native-push-notification')
+    implementation project(':react-native-android-location-enabler')
+    implementation project(':react-native-image-resizer')
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-fast-image')
     implementation project(':react-native-maps')
    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
 
 
-    compile(project(':react-native-firebase')) {
+    implementation(project(':react-native-firebase')) {
         transitive = false
     }
 
@@ -162,13 +171,14 @@ dependencies {
     implementation "com.android.support:support-v4:27.1.1"
 
 
-    implementation "com.facebook.react:react-native:0.56.1"// From node_modules
+    implementation ("com.facebook.react:react-native:0.57.0") {force=true}// From node_modules
     implementation "com.google.android.gms:play-services-base:16.0.1"
     implementation "com.google.firebase:firebase-core:16.0.4"
     implementation 'com.google.firebase:firebase-auth:16.0.5'
     implementation "com.google.firebase:firebase-firestore:17.1.2"
     implementation "com.google.firebase:firebase-storage:16.0.4"
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.firebase:firebase-iid:17.0.4'
 
 
 }

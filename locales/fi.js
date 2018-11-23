@@ -201,5 +201,13 @@ export default {
   manage_team_2: "Rakenna joukkueesi ja aseta tapahtumia & näe kuka on tulossa",
   find_best_time: "Löydä paras aika pelata jalkapalloa kentälläsi",
   find_best_time_2:
-    "Näe kuinka moni harjoittelee kentällä ja mene, kun siellä on tilaa"
+    "Näe kuinka moni harjoittelee kentällä ja mene, kun siellä on tilaa",
+  start_game: "Aloita peli",
+   //New stribe
+   challenges: "Haasteet",
+   speed: 'Nopeus',
+  strength: 'Voima',
+  agility: 'Ketteryys',
+  stamina: 'Kestävyys',
+  motivation: 'Motivaatio'
 };

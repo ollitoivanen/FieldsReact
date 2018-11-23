@@ -48,6 +48,9 @@ const mapDispatchToProps = dispatch => {
 };
 
 class FeedScreen extends React.Component {
+  static navigationOptions = {
+    header: null
+  };
   componentDidMount() {
     AppState.addEventListener("change", this._handleAppStateChange);
   }
@@ -75,9 +78,6 @@ class FeedScreen extends React.Component {
       fieldID: notif.data.fieldID
     });
   }
-  static navigationOptions = {
-    header: null
-  };
 
   retrieveData = async () => {
     var { params } = this.props.navigation.state;
@@ -355,7 +355,6 @@ class FeedScreen extends React.Component {
           style={styles.profileImage}
           source={{ uri: "team_image_default" }}
           resizeMode="cover"
-          borderRadius={50}
         />
       );
     } else {
@@ -364,7 +363,6 @@ class FeedScreen extends React.Component {
           style={styles.profileImage}
           source={this.state.teamImage}
           resizeMode="cover"
-          borderRadius={50}
         />
       );
     }
@@ -402,6 +400,18 @@ class FeedScreen extends React.Component {
         </TouchableOpacity>
       );
     }
+
+    var startGameButton = (
+      <TouchableOpacity
+        style={styles.startGameButton}
+        onPress={() => {
+          this.props.navigation.navigate("StartGameScreen"),
+            firebase.analytics().logEvent("feed_to_team");
+        }}
+      >
+        <Text style={styles.startGameButtonText}>{I18n.t("challenges")}</Text>
+      </TouchableOpacity>
+    );
 
     if (this.state.friends.length === 0) {
       var feedFriendList = (
@@ -486,7 +496,7 @@ class FeedScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.rowCont}>{teamCard}</View>
-        <Text style={styles.friendsText}>{I18n.t("friends_fi")}</Text>
+        {startGameButton}
 
         {feedFriendList}
 
@@ -497,7 +507,7 @@ class FeedScreen extends React.Component {
           >
             <Image
               style={styles.navigationImage}
-              source={{ uri: "home_green" }}
+              source={{ uri: "home_icon_activated" }}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -512,7 +522,7 @@ class FeedScreen extends React.Component {
           >
             <Image
               style={styles.navigationImage}
-              source={{ uri: "field_icon" }}
+              source={{ uri: "play_icon" }}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -522,7 +532,10 @@ class FeedScreen extends React.Component {
                 firebase.analytics().logEvent("feed_to_profile");
             }}
           >
-            <Image style={styles.navigationImage} source={{ uri: "profile" }} />
+            <Image
+              style={styles.navigationImage}
+              source={{ uri: "profile_icon" }}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -538,7 +551,7 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: "#111111"
   },
   profileImage: {
     width: 60,
@@ -546,7 +559,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     borderWidth: 3,
-    borderColor: "#e0e0e0",
+    borderColor: "#4A4A4A",
     borderRadius: 30
   },
   rowCont: {
@@ -566,29 +579,24 @@ const styles = StyleSheet.create({
   },
 
   add_friends_text: {
-    fontWeight: "bold",
     fontSize: 20,
     marginBottom: 200,
     textAlign: "center",
-    color: "#e0e0e0"
+    color: "#e0e0e0",
+    fontFamily: "Product Sans"
   },
 
-  container1: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 60
-  },
   navigationContainer: {
     ...Platform.select({
       ios: {
-        backgroundColor: "white",
+        backgroundColor: "#111111",
         flexDirection: "row",
         shadowOffset: { width: 0, height: -1 },
         shadowOpacity: 0.1,
         shadowRadius: 3
       },
       android: {
-        backgroundColor: "white",
+        backgroundColor: "#111111",
         flexDirection: "row",
         alignItems: "flex-end",
         elevation: 10
@@ -599,7 +607,7 @@ const styles = StyleSheet.create({
   navigationItem: {
     flex: 1,
     height: 50,
-    backgroundColor: "white",
+    backgroundColor: "#111111",
     alignItems: "center",
     justifyContent: "center"
   },
@@ -607,7 +615,7 @@ const styles = StyleSheet.create({
   navigationItemGreen: {
     flex: 1,
     height: 50,
-    backgroundColor: "#3bd774",
+    backgroundColor: "#111111",
     alignItems: "center",
     justifyContent: "center"
   },
@@ -625,31 +633,42 @@ const styles = StyleSheet.create({
   },
 
   navigationImage: {
-    height: 35,
-    width: 35
+    height: 30,
+    width: 30
   },
 
   teamCard: {
     flexDirection: "row",
     padding: 10,
-    backgroundColor: "white",
-    borderWidth: 3,
+    backgroundColor: "#202020",
     borderRadius: 5,
-    borderColor: "#e0e0e0",
     marginHorizontal: 10,
     flex: 1,
     alignItems: "center"
   },
-
-  teamCardText: {
-    fontWeight: "bold",
-    flex: 1,
-    flexWrap: "wrap",
-    color: "black",
-    fontSize: 18,
-    marginStart: 16
+  startGameButton: {
+    padding: 20,
+    backgroundColor: "#D73B3B",
+    borderRadius: 5,
+    marginTop: 16,
+    marginHorizontal: 10,
+    alignItems: "center"
   },
 
+  teamCardText: {
+    flex: 1,
+    flexWrap: "wrap",
+    color: "white",
+    fontSize: 18,
+    marginStart: 16,
+    fontFamily: "Product Sans"
+  },
+  startGameButtonText: {
+    flexWrap: "wrap",
+    color: "white",
+    fontSize: 18,
+    fontFamily: "Product Sans"
+  },
   friendsText: {
     color: "black",
     fontWeight: "bold",

@@ -4,6 +4,15 @@ import android.app.Application;
 
 
 import com.facebook.react.ReactApplication;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import com.airbnb.android.react.maps.MapsPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.dooboolab.RNIap.RNIapPackage;
+import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import com.dylanvann.fastimage.FastImageViewPackage;
+import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
 import com.dooboolab.RNIap.RNIapPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
@@ -42,16 +51,17 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNIapPackage(),
-            new RNI18nPackage(),
             new ReactNativePushNotificationPackage(),
-            new RNAndroidLocationEnablerPackage(),
+            new MapsPackage(),
             new ImageResizerPackage(),
             new ImagePickerPackage(),
-            new FastImageViewPackage(),
-              new MapsPackage(),
-
+            new RNIapPackage(),
+            new RNI18nPackage(),
             new RNFirebasePackage(),
+            new FastImageViewPackage(),
+            new RNAndroidLocationEnablerPackage(),
+
+
               new RNFirebaseAnalyticsPackage(),
               new RNFirebaseStoragePackage(),
               new RNFirebaseCrashlyticsPackage(),

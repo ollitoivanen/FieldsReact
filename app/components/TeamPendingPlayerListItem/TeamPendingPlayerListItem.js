@@ -16,7 +16,7 @@ export default class TeamPlayerListItem extends React.PureComponent {
           resizeMode="cover"
         />
         {usernameText}
-      </View>
+      </View> //FuCK
     );
   }
 }

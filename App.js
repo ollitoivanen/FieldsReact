@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  Platform,
-  Image,
-  Text,
-  View,
-  AppRegistry,
-  Animated,
-  Easing
-} from "react-native";
+import { Animated, Easing } from "react-native";
 import { createStackNavigator } from "react-navigation";
 // import the different screens
 import LoadingScreen from "FieldsReact/app/screens/LoadingScreen/LoadingScreen";
@@ -45,7 +36,13 @@ import FieldsPlusScreen from "./app/screens/FieldsPlusScreen/FieldsPlusScreen";
 import PurchaseSuccessfulScreen from "./app/screens/PurchaseSuccessfulScreen/PurchaseSuccessfulScreen";
 import AllBadgesScreen from "./app/screens/AllBadgesScreen/AllBadgesScreen";
 import ReputationPurchaseScreen from "./app/screens/ReputationPurchaseScreen/ReputationPurchaseScreen";
-
+import StartGameScreen from "./app/screens/StartGameScreen/StartGameScreen";
+import DetailChallengeScreen from "./app/screens/DetailChallengeScreen/DetailChallengeScreen";
+import SpeedChallengeScreen from "./app/screens/SpeedChallengeScreen/SpeedChallengeScreen";
+import StrengthChallengeScreen from "./app/screens/StrengthChallengeScreen/StrengthChallengeScreen";
+import AgilityChallengeScreen from "./app/screens/AgilityChallengeScreen/AgilityChallengeScreen";
+import StaminaChallengeScreen from "./app/screens/StaminaChallengeScreen/StaminaChallengeScreen";
+import MotivationChallengeScreen from "./app/screens/MotivationChallengeScreen/MotivationChallengeScreen";
 
 const transitionConfig = () => ({
   transitionSpec: {
@@ -179,13 +176,32 @@ export const StackNavigatorApp = createStackNavigator(
     },
     ReputationPurchaseScreen: {
       screen: ReputationPurchaseScreen
+    },
+    StartGameScreen: {
+      screen: StartGameScreen
+    },
+    DetailChallengeScreen: {
+      screen: DetailChallengeScreen
+    },
+    SpeedChallengeScreen: {
+      screen: SpeedChallengeScreen
+    },
+    StrengthChallengeScreen: {
+      screen: StrengthChallengeScreen
+    },
+    AgilityChallengeScreen: {
+      screen: AgilityChallengeScreen
+    },
+    StaminaChallengeScreen: {
+      screen: StaminaChallengeScreen
+    },
+    MotivationChallengeScreen: {
+      screen: MotivationChallengeScreen
     }
   },
 
   {
     initialRouteName: "LoadingScreen",
-    transitionConfig,
-
-
+    transitionConfig
   }
 );

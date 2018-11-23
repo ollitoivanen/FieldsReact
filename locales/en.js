@@ -206,5 +206,13 @@ export default {
   manage_team_2: "Build your team and set events & see who's coming",
   find_best_time: "Find the best time to play football on your field",
   find_best_time_2:
-    "Know how many people are training on the field and go when there's space"
+    "Know how many people are training on the field and go when there's space",
+  start_game: "Start game",
+  //New stribe
+  challenges: "Challenges",
+  speed: 'Speed',
+  strength: 'Strength',
+  agility: 'Agility',
+  stamina: 'Stamina',
+  motivation: 'Motivation'
 };

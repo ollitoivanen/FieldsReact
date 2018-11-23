@@ -228,7 +228,9 @@ export default class SignUpScreen extends React.Component {
                   source={{ uri: "welcome_slide_1" }}
                   resizeMode={"contain"}
                 />
-                <Text style={styles.headerTextGray}>{I18n.t("play_football")}</Text>
+                <Text style={styles.headerTextGray}>
+                  {I18n.t("play_football")}
+                </Text>
                 <TouchableOpacity
                   style={styles.letsgoSmall}
                   onPress={() => {
@@ -236,7 +238,9 @@ export default class SignUpScreen extends React.Component {
                       firebase.analytics().logEvent("introduction_complete");
                   }}
                 >
-                  <Text style={styles.headerTextWhite}>{I18n.t("lets_go")}</Text>
+                  <Text style={styles.headerTextWhite}>
+                    {I18n.t("lets_go")}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.slide1}>
@@ -259,7 +263,9 @@ export default class SignUpScreen extends React.Component {
                       firebase.analytics().logEvent("introduction_complete");
                   }}
                 >
-                  <Text style={styles.headerTextWhite}>{I18n.t("lets_go")}</Text>
+                  <Text style={styles.headerTextWhite}>
+                    {I18n.t("lets_go")}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.slide1}>
@@ -273,7 +279,9 @@ export default class SignUpScreen extends React.Component {
                   resizeMode={"contain"}
                 />
 
-                <Text style={styles.headerTextBlue}>{I18n.t("manage_team_2")}</Text>
+                <Text style={styles.headerTextBlue}>
+                  {I18n.t("manage_team_2")}
+                </Text>
                 <TouchableOpacity
                   style={styles.letsgoSmall}
                   onPress={() => {
@@ -281,11 +289,12 @@ export default class SignUpScreen extends React.Component {
                       firebase.analytics().logEvent("introduction_complete");
                   }}
                 >
-                  <Text style={styles.headerTextWhite}>{I18n.t("lets_go")}</Text>
+                  <Text style={styles.headerTextWhite}>
+                    {I18n.t("lets_go")}
+                  </Text>
                 </TouchableOpacity>
               </View>
-              
-              
+
               <View style={styles.slide1}>
                 <Text style={styles.headerTextBigGray}>
                   {I18n.t("sounds_awesome_right")}
@@ -302,7 +311,9 @@ export default class SignUpScreen extends React.Component {
                       firebase.analytics().logEvent("introduction_complete");
                   }}
                 >
-                  <Text style={styles.headerTextBigWhite}>{I18n.t("lets_go")}</Text>
+                  <Text style={styles.headerTextBigWhite}>
+                    {I18n.t("lets_go")}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </Swiper>
@@ -353,7 +364,7 @@ const styles = StyleSheet.create({
   letsgoSmall: {
     ...Platform.select({
       ios: {
-        position: 'absolute',
+        position: "absolute",
         end: 16,
         bottom: 16,
         backgroundColor: "#3bd774",
@@ -365,7 +376,7 @@ const styles = StyleSheet.create({
         shadowRadius: 10
       },
       android: {
-        position: 'absolute',
+        position: "absolute",
         end: 16,
         bottom: 16,
         backgroundColor: "#3bd774",
@@ -392,7 +403,7 @@ const styles = StyleSheet.create({
   logo: {
     marginTop: 10,
     width: 300,
-    height: 300 
+    height: 300
   },
 
   logoContainer: {
@@ -482,8 +493,6 @@ const styles = StyleSheet.create({
     color: "black",
     margin: 20
   },
-
-  
 
   headerTextBigBlue: {
     fontWeight: "bold",

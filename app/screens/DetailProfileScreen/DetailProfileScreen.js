@@ -453,18 +453,22 @@ class DetailProfileScreen extends Component {
       </View>
     );
 
-    if(this.state.profileImagePath === null){
-      var profileImage =  <Image
-      style={styles.profileImage}
-      source={{uri: 'profile_image_default'}}
-      resizeMode="cover"
-    />
-    }else{
-      var profileImage =  <FastImage
-      style={styles.profileImage}
-      source={this.state.profileImagePath}
-      resizeMode="cover"
-    />
+    if (this.state.profileImagePath === null) {
+      var profileImage = (
+        <Image
+          style={styles.profileImage}
+          source={{ uri: "profile_image_default" }}
+          resizeMode="cover"
+        />
+      );
+    } else {
+      var profileImage = (
+        <FastImage
+          style={styles.profileImage}
+          source={this.state.profileImagePath}
+          resizeMode="cover"
+        />
+      );
     }
 
     return (
@@ -531,9 +535,7 @@ class DetailProfileScreen extends Component {
         </View>
         <View style={styles.containerHeader}>
           <View style={styles.backgroundGreen}>
-            <View style={styles.imageTabContainer}>
-             {profileImage}
-            </View>
+            <View style={styles.imageTabContainer}>{profileImage}</View>
             <Text style={styles.username}>{params.un}</Text>
 
             {userTeamPlaceHolder}

@@ -21,52 +21,69 @@ PODS:
   - BoringSSL/Implementation (10.0.6):
     - BoringSSL/Interface (= 10.0.6)
   - BoringSSL/Interface (10.0.6)
-  - DoubleConversion (1.1.5)
-  - Firebase/Auth (5.3.0):
+  - DoubleConversion (1.1.6)
+  - Firebase/Auth (5.11.0):
     - Firebase/CoreOnly
-    - FirebaseAuth (= 5.0.1)
-  - Firebase/Core (5.3.0):
+    - FirebaseAuth (= 5.0.4)
+  - Firebase/Core (5.11.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.0.1)
-  - Firebase/CoreOnly (5.3.0):
-    - FirebaseCore (= 5.0.4)
-  - Firebase/Firestore (5.3.0):
+    - FirebaseAnalytics (= 5.3.0)
+  - Firebase/CoreOnly (5.11.0):
+    - FirebaseCore (= 5.1.6)
+  - Firebase/Firestore (5.11.0):
     - Firebase/CoreOnly
-    - FirebaseFirestore (= 0.12.4)
-  - Firebase/Storage (5.3.0):
+    - FirebaseFirestore (= 0.13.6)
+  - Firebase/Storage (5.11.0):
     - Firebase/CoreOnly
-    - FirebaseStorage (= 3.0.0)
-  - FirebaseAnalytics (5.0.1):
-    - FirebaseCore (~> 5.0)
-    - FirebaseInstanceID (~> 3.0)
-    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - FirebaseStorage (= 3.0.2)
+  - FirebaseAnalytics (5.3.0):
+    - FirebaseCore (~> 5.1)
+    - FirebaseInstanceID (~> 3.3)
+    - GoogleAppMeasurement (~> 5.3)
+    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
+    - GoogleUtilities/MethodSwizzler (~> 5.2)
+    - GoogleUtilities/Network (~> 5.2)
+    - "GoogleUtilities/NSData+zlib (~> 5.2)"
     - nanopb (~> 0.3)
-  - FirebaseAuth (5.0.1):
+  - FirebaseAuth (5.0.4):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.0)
+    - GoogleUtilities/Environment (~> 5.2)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - FirebaseAuthInterop (1.0.0)
+  - FirebaseCore (5.1.6):
+    - GoogleUtilities/Logger (~> 5.2)
+  - FirebaseFirestore (0.13.6):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.1)
+    - FirebaseFirestore/abseil-cpp (= 0.13.6)
+    - "gRPC-C++ (~> 0.0.3)"
+    - gRPC-ProtoRPC (~> 1.0)
+    - leveldb-library (~> 1.20)
+    - nanopb (~> 0.3.8)
+    - Protobuf (~> 3.1)
+  - FirebaseFirestore/abseil-cpp (0.13.6):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.1)
+    - "gRPC-C++ (~> 0.0.3)"
+    - gRPC-ProtoRPC (~> 1.0)
+    - leveldb-library (~> 1.20)
+    - nanopb (~> 0.3.8)
+    - Protobuf (~> 3.1)
+  - FirebaseInstanceID (3.3.0):
+    - FirebaseCore (~> 5.1)
+    - GoogleUtilities/Environment (~> 5.3)
+    - GoogleUtilities/UserDefaults (~> 5.3)
+  - FirebaseStorage (3.0.2):
+    - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 5.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (5.0.4):
-    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
-  - FirebaseFirestore (0.12.4):
-    - FirebaseCore (~> 5.0)
-    - FirebaseFirestore/abseil-cpp (= 0.12.4)
-    - gRPC-ProtoRPC (~> 1.0)
-    - leveldb-library (~> 1.18)
-    - Protobuf (~> 3.1)
-  - FirebaseFirestore/abseil-cpp (0.12.4):
-    - FirebaseCore (~> 5.0)
-    - gRPC-ProtoRPC (~> 1.0)
-    - leveldb-library (~> 1.18)
-    - Protobuf (~> 3.1)
-  - FirebaseInstanceID (3.1.1):
-    - FirebaseCore (~> 5.0)
-  - FirebaseStorage (3.0.0):
-    - FirebaseCore (~> 5.0)
-    - GTMSessionFetcher/Core (~> 1.1)
+  - FLAnimatedImage (1.0.12)
   - Folly (2016.10.31.00):
     - boost-for-react-native
     - DoubleConversion
     - glog
-  - glog (0.3.4)
+  - glog (0.3.5)
   - Google-Maps-iOS-Utils (2.1.0):
     - Google-Maps-iOS-Utils/Clustering (= 2.1.0)
     - Google-Maps-iOS-Utils/Geometry (= 2.1.0)
@@ -83,36 +100,65 @@ PODS:
     - GoogleMaps
   - Google-Maps-iOS-Utils/QuadTree (2.1.0):
     - GoogleMaps
+  - GoogleAppMeasurement (5.3.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
+    - GoogleUtilities/MethodSwizzler (~> 5.2)
+    - GoogleUtilities/Network (~> 5.2)
+    - "GoogleUtilities/NSData+zlib (~> 5.2)"
+    - nanopb (~> 0.3)
   - GoogleMaps (2.5.0):
     - GoogleMaps/Maps (= 2.5.0)
   - GoogleMaps/Base (2.5.0)
   - GoogleMaps/Maps (2.5.0):
     - GoogleMaps/Base
-  - GoogleToolboxForMac/Defines (2.1.4)
-  - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
-    - GoogleToolboxForMac/Defines (= 2.1.4)
-  - gRPC (1.14.1):
-    - gRPC-RxLibrary (= 1.14.1)
-    - gRPC/Main (= 1.14.1)
-  - gRPC-Core (1.14.1):
-    - gRPC-Core/Implementation (= 1.14.1)
-    - gRPC-Core/Interface (= 1.14.1)
-  - gRPC-Core/Implementation (1.14.1):
-    - BoringSSL (~> 10.0)
-    - gRPC-Core/Interface (= 1.14.1)
+  - GoogleUtilities/AppDelegateSwizzler (5.3.6):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (5.3.6)
+  - GoogleUtilities/Logger (5.3.6):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/MethodSwizzler (5.3.6):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/Network (5.3.6):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (5.3.6)"
+  - GoogleUtilities/Reachability (5.3.6):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (5.3.6):
+    - GoogleUtilities/Logger
+  - gRPC (1.14.0):
+    - gRPC-RxLibrary (= 1.14.0)
+    - gRPC/Main (= 1.14.0)
+  - "gRPC-C++ (0.0.5)":
+    - "gRPC-C++/Implementation (= 0.0.5)"
+    - "gRPC-C++/Interface (= 0.0.5)"
+  - "gRPC-C++/Implementation (0.0.5)":
+    - "gRPC-C++/Interface (= 0.0.5)"
+    - gRPC-Core (= 1.14.0)
     - nanopb (~> 0.3)
-  - gRPC-Core/Interface (1.14.1)
-  - gRPC-ProtoRPC (1.14.1):
-    - gRPC-ProtoRPC/Main (= 1.14.1)
-  - gRPC-ProtoRPC/Main (1.14.1):
-    - gRPC (= 1.14.1)
-    - gRPC-RxLibrary (= 1.14.1)
+  - "gRPC-C++/Interface (0.0.5)"
+  - gRPC-Core (1.14.0):
+    - gRPC-Core/Implementation (= 1.14.0)
+    - gRPC-Core/Interface (= 1.14.0)
+  - gRPC-Core/Implementation (1.14.0):
+    - BoringSSL (~> 10.0)
+    - gRPC-Core/Interface (= 1.14.0)
+    - nanopb (~> 0.3)
+  - gRPC-Core/Interface (1.14.0)
+  - gRPC-ProtoRPC (1.14.0):
+    - gRPC-ProtoRPC/Main (= 1.14.0)
+  - gRPC-ProtoRPC/Main (1.14.0):
+    - gRPC (= 1.14.0)
+    - gRPC-RxLibrary (= 1.14.0)
     - Protobuf (~> 3.0)
-  - gRPC-RxLibrary (1.14.1)
-  - gRPC/Main (1.14.1):
-    - gRPC-Core (= 1.14.1)
-    - gRPC-RxLibrary (= 1.14.1)
-  - GTMSessionFetcher/Core (1.2.0)
+  - gRPC-RxLibrary (1.14.0)
+  - gRPC/Main (1.14.0):
+    - gRPC-Core (= 1.14.0)
+    - gRPC-RxLibrary (= 1.14.0)
+  - GTMSessionFetcher/Core (1.2.1)
   - leveldb-library (1.20)
   - Lock (1.29.2):
     - Lock/Core (= 1.29.2)
@@ -136,62 +182,71 @@ PODS:
   - Lock/WebView (1.29.2):
     - Lock/CoreUI
   - Masonry (0.6.4)
-  - nanopb (0.3.8):
-    - nanopb/decode (= 0.3.8)
-    - nanopb/encode (= 0.3.8)
-  - nanopb/decode (0.3.8)
-  - nanopb/encode (0.3.8)
+  - nanopb (0.3.901):
+    - nanopb/decode (= 0.3.901)
+    - nanopb/encode (= 0.3.901)
+  - nanopb/decode (0.3.901)
+  - nanopb/encode (0.3.901)
   - Protobuf (3.6.1)
-  - React (0.56.0):
-    - React/Core (= 0.56.0)
+  - React (0.57.0):
+    - React/Core (= 0.57.0)
+  - react-native-fast-image (4.0.14):
+    - FLAnimatedImage
+    - React
+    - SDWebImage/Core
+    - SDWebImage/GIF
   - react-native-google-maps (0.21.0):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 2.5.0)
     - React
+  - react-native-image-picker (0.14.3):
+    - React
+  - react-native-image-resizer (1.0.0):
+    - React
   - react-native-maps (0.21.0):
     - React
-  - React/Core (0.56.0):
-    - yoga (= 0.56.0.React)
-  - React/CxxBridge (0.56.0):
+  - React/Core (0.57.0):
+    - yoga (= 0.57.0.React)
+  - React/CxxBridge (0.57.0):
     - Folly (= 2016.10.31.00)
     - React/Core
     - React/cxxreact
-  - React/cxxreact (0.56.0):
+  - React/cxxreact (0.57.0):
     - boost-for-react-native (= 1.63.0)
     - Folly (= 2016.10.31.00)
     - React/jschelpers
     - React/jsinspector
-  - React/DevSupport (0.56.0):
+  - React/DevSupport (0.57.0):
     - React/Core
     - React/RCTWebSocket
-  - React/fishhook (0.56.0)
-  - React/jschelpers (0.56.0):
+  - React/fishhook (0.57.0)
+  - React/jschelpers (0.57.0):
     - Folly (= 2016.10.31.00)
     - React/PrivateDatabase
-  - React/jsinspector (0.56.0)
-  - React/PrivateDatabase (0.56.0)
-  - React/RCTActionSheet (0.56.0):
+  - React/jsinspector (0.57.0)
+  - React/PrivateDatabase (0.57.0)
+  - React/RCTActionSheet (0.57.0):
     - React/Core
-  - React/RCTAnimation (0.56.0):
+  - React/RCTAnimation (0.57.0):
     - React/Core
-  - React/RCTBlob (0.56.0):
+  - React/RCTBlob (0.57.0):
     - React/Core
-  - React/RCTGeolocation (0.56.0):
+  - React/RCTGeolocation (0.57.0):
     - React/Core
-  - React/RCTImage (0.56.0):
+  - React/RCTImage (0.57.0):
     - React/Core
     - React/RCTNetwork
-  - React/RCTLinkingIOS (0.56.0):
+  - React/RCTLinkingIOS (0.57.0):
     - React/Core
-  - React/RCTNetwork (0.56.0):
+  - React/RCTNetwork (0.57.0):
     - React/Core
-  - React/RCTSettings (0.56.0):
+  - React/RCTSettings (0.57.0):
     - React/Core
-  - React/RCTText (0.56.0):
+  - React/RCTText (0.57.0):
     - React/Core
-  - React/RCTVibration (0.56.0):
+  - React/RCTVibration (0.57.0):
     - React/Core
-  - React/RCTWebSocket (0.56.0):
+  - React/RCTWebSocket (0.57.0):
     - React/Core
     - React/fishhook
     - React/RCTBlob
@@ -199,17 +254,23 @@ PODS:
     - React
   - RNI18n (2.0.15):
     - React
+  - RNIap (2.3.17):
+    - React
+  - SDWebImage/Core (4.4.2)
+  - SDWebImage/GIF (4.4.2):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
   - SimpleKeychain (0.8.1)
   - TouchIDAuth (0.2.0):
     - SimpleKeychain (~> 0.3)
-  - yoga (0.56.0.React)
+  - yoga (0.57.0.React)
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - Firebase/Auth
-  - Firebase/Core
-  - Firebase/Firestore
-  - Firebase/Storage (~> 5.3.0)
+  - Firebase/Auth (~> 5.11.0)
+  - Firebase/Core (~> 5.11.0)
+  - Firebase/Firestore (~> 5.11.0)
+  - Firebase/Storage (~> 5.11.0)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
@@ -218,7 +279,10 @@ DEPENDENCIES:
   - Lock/Email
   - Lock/SMS
   - Lock/TouchID
+  - react-native-fast-image (from `../node_modules/react-native-fast-image`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
@@ -235,6 +299,7 @@ DEPENDENCIES:
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - RNI18n (from `../node_modules/react-native-i18n`)
+  - RNIap (from `../node_modules/react-native-iap`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
 SPEC REPOS:
@@ -245,14 +310,18 @@ SPEC REPOS:
     - Firebase
     - FirebaseAnalytics
     - FirebaseAuth
+    - FirebaseAuthInterop
     - FirebaseCore
     - FirebaseFirestore
     - FirebaseInstanceID
     - FirebaseStorage
+    - FLAnimatedImage
     - Google-Maps-iOS-Utils
+    - GoogleAppMeasurement
     - GoogleMaps
-    - GoogleToolboxForMac
+    - GoogleUtilities
     - gRPC
+    - "gRPC-C++"
     - gRPC-Core
     - gRPC-ProtoRPC
     - gRPC-RxLibrary
@@ -262,6 +331,7 @@ SPEC REPOS:
     - Masonry
     - nanopb
     - Protobuf
+    - SDWebImage
     - SimpleKeychain
     - TouchIDAuth
 
@@ -274,14 +344,22 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  react-native-fast-image:
+    :path: "../node_modules/react-native-fast-image"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   ReactNativePermissions:
     :path: "../node_modules/react-native-permissions"
   RNI18n:
     :path: "../node_modules/react-native-i18n"
+  RNIap:
+    :path: "../node_modules/react-native-iap"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
@@ -289,38 +367,47 @@ SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
-  DoubleConversion: a9706f16e388b53ff12cca34473428ee29746a26
-  Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
-  FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
-  FirebaseAuth: 463b8ce33bd5d05f706dcd4615499e3212b4132b
-  FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
-  FirebaseFirestore: 53f6fe858494c39dbfd5237655e0641152a88c89
-  FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
-  FirebaseStorage: 7ca4bb7b58a25fa647b04f524033fc7cb7eb272b
+  DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
+  Firebase: b48f9e653da971ecce5b8c749684bc8bb2d26bd3
+  FirebaseAnalytics: 63202d2665de4e6adcbdce189135255d8b5962ba
+  FirebaseAuth: 504b198ceb3472dca5c65bb95544ea44cfc9439e
+  FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
+  FirebaseCore: d16552f06821489ce1affe2e5e3e5593402ddfe3
+  FirebaseFirestore: 162502df850b584126c609f3449acfb7230d8c1a
+  FirebaseInstanceID: e2fa4cb35ef5558c200f7f0ad8a53e212215f93e
+  FirebaseStorage: fd82e5e5c474897e19972b34b22ac0f589dce04e
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
-  glog: b3b0330915eccea41c5cc9731a77cf564a9be5ea
+  glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
+  GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
   GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
-  GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
-  gRPC: 65fa2a50c4fd61940b76f4962d75c239c92c6a8d
-  gRPC-Core: e3ace1e1161e75903135de8d8231bb69c9d35721
-  gRPC-ProtoRPC: 78f976fc6a1eafc0e1f4965c255c313aa0859b1e
-  gRPC-RxLibrary: c4c826507ad3c8c8fab6887f153938eb04b86d59
-  GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
+  GoogleUtilities: 95996bea7c7d9b8fb811b7507669a4a8762f80c7
+  gRPC: 9d4c549f37c7cef22478634bac7a0405b6e3dbfb
+  "gRPC-C++": 19eec1ffd34de29453f5fab5b4697ad0f240ad51
+  gRPC-Core: f4836515817c0eb479aeeb9cc27c91c4ba62a9f6
+  gRPC-ProtoRPC: 76f6053639a842e1fb45fa82aa598bf3f4d9f66f
+  gRPC-RxLibrary: 3c305f32155024b116b780f389323c73a28197e6
+  GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   Lock: 3414fed031b4044509697dd9b9da9208bc68ad26
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
-  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
+  react-native-fast-image: cba3d9bf9c2cf8ddb643d887a686c53a5dd90a2c
   react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
+  react-native-image-picker: b303e31c3c4ada1d7cb1342423d328d2efb07fb3
+  react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
   RNI18n: 46b8694063fbd699f2c06a4dc8e835b3176763b1
+  RNIap: ef7dbcbb0ad7bb2400c14797ef3fad4e02ff0681
+  SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   SimpleKeychain: e2485c28d82fcece35e9e41faeac42ebfe614815
   TouchIDAuth: 0cf861f58a2cacfc1c12cb02de4850729d943c81
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: 47d343252a488c491e2e70546574ac377dba67e9
+PODFILE CHECKSUM: d440d6626c9a9a918059254498c232fedc885494
 
 COCOAPODS: 1.5.3
