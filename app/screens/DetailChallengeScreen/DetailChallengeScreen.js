@@ -19,9 +19,9 @@ export default class DetailChallengeScreen extends Component {
     this.state = {};
   }
 
-  openLevel = (category, levelNumber) => {
+  openLevel = (category, levelNumber, perk) => {
     if (category === "speed") {
-      this.props.navigation.navigate("SpeedChallengeScreen", { levelNumber });
+      this.props.navigation.navigate("SpeedChallengeScreen", { levelNumber, opponentSpeedPerk: perk });
     } else if (category === "strength") {
       this.props.navigation.navigate("StrengthChallengeScreen", { levelNumber});
     } else if (category === "agility") {
@@ -37,7 +37,17 @@ export default class DetailChallengeScreen extends Component {
 
   render() {
     const speedChallengeLevels = [
-      { id: "speedLevel1", value: "1", type: "speed" }
+      { id: "speedLevel1", value: "1", type: "speed", perk: 0.5},
+      { id: "speedLevel2", value: "2", type: "speed", perk: 0.6},
+      { id: "speedLevel3", value: "3", type: "speed", perk: 0.7},
+      { id: "speedLevel4", value: "4", type: "speed", perk: 0.8},
+      { id: "speedLevel5", value: "5", type: "speed", perk: 0.9},
+      { id: "speedLevel6", value: "6", type: "speed", perk: 1.0},
+      { id: "speedLevel7", value: "7", type: "speed", perk: 1.1},
+      { id: "speedLevel8", value: "8", type: "speed", perk: 1.2},
+      { id: "speedLevel9", value: "9", type: "speed", perk: 1.3},
+      { id: "speedLevel10", value: "10", type: "speed", perk: 1.4},
+
     ];
     const strengthChallengeLevels = [
       { id: "strengthLevel1", value: "1", type: "strength" },
@@ -87,7 +97,7 @@ export default class DetailChallengeScreen extends Component {
             <View style={itemContainer}>
               <TouchableOpacity
                 style={itemm}
-                onPress={() => this.openLevel(item.type, item.value)}
+                onPress={() => this.openLevel(item.type, item.value, item.perk)}
               >
                 <Text style={styles.levelText}>{item.value}</Text>
               </TouchableOpacity>
