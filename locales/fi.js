@@ -203,11 +203,12 @@ export default {
   find_best_time_2:
     "Näe kuinka moni harjoittelee kentällä ja mene, kun siellä on tilaa",
   start_game: "Aloita peli",
-   //New stribe
-   challenges: "Haasteet",
-   speed: 'Nopeus',
-  strength: 'Voima',
-  agility: 'Ketteryys',
-  stamina: 'Kestävyys',
-  motivation: 'Motivaatio'
+  //New stribe
+  challenges: "Haasteet",
+  speed: "Nopeus",
+  strength: "Voima",
+  agility: "Ketteryys",
+  stamina: "Kestävyys",
+  motivation: "Motivaatio",
+  level: 'Level'
 };

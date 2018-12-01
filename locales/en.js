@@ -214,5 +214,6 @@ export default {
   strength: 'Strength',
   agility: 'Agility',
   stamina: 'Stamina',
-  motivation: 'Motivation'
+  motivation: 'Motivation',
+  level: 'Level'
 };

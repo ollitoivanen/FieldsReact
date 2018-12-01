@@ -405,8 +405,7 @@ class FeedScreen extends React.Component {
       <TouchableOpacity
         style={styles.startGameButton}
         onPress={() => {
-          this.props.navigation.navigate("StartGameScreen"),
-            firebase.analytics().logEvent("feed_to_team");
+          this.props.navigation.navigate("StartGameScreen")
         }}
       >
         <Text style={styles.startGameButtonText}>{I18n.t("challenges")}</Text>
@@ -521,8 +520,8 @@ class FeedScreen extends React.Component {
             }}
           >
             <Image
-              style={styles.navigationImage}
-              source={{ uri: "play_icon" }}
+              style={styles.navigationImage2}
+              source={{ uri: "stribe_icon" }}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -635,6 +634,10 @@ const styles = StyleSheet.create({
   navigationImage: {
     height: 30,
     width: 30
+  },
+  navigationImage2:{
+    height: 40,
+    width: 40
   },
 
   teamCard: {

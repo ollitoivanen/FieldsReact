@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
 import I18n from "FieldsReact/i18n";
+import * as Animatable from "react-native-animatable";
+
 
 export default class StartGameScreen extends Component {
   static navigationOptions = {
@@ -23,6 +25,7 @@ export default class StartGameScreen extends Component {
           </TouchableOpacity>
           <Text style={styles.backText}>{I18n.t("challenges")}</Text>
         </View>
+        <Animatable.View animation={'zoomIn'} duration={300}useNativeDriver={true}>
         <TouchableOpacity
           style={styles.card}
           onPress={() => {
@@ -34,6 +37,9 @@ export default class StartGameScreen extends Component {
           <Image style={styles.backButton} source={{ uri: "speed_icon_red" }} />
           <Text style={styles.cardText}>{I18n.t("speed")}</Text>
         </TouchableOpacity>
+        </Animatable.View>
+        <Animatable.View animation={'zoomIn'} duration={300}useNativeDriver={true}>
+
         <TouchableOpacity
           style={styles.card}
           onPress={() => {
@@ -48,6 +54,10 @@ export default class StartGameScreen extends Component {
           />
           <Text style={styles.cardText}>{I18n.t("strength")}</Text>
         </TouchableOpacity>
+        </Animatable.View>
+
+        <Animatable.View animation={'zoomIn'} duration={300}useNativeDriver={true}>
+
         <TouchableOpacity
           style={styles.card}
           onPress={() => {
@@ -62,6 +72,10 @@ export default class StartGameScreen extends Component {
           />
           <Text style={styles.cardText}>{I18n.t("agility")}</Text>
         </TouchableOpacity>
+        </Animatable.View>
+
+        <Animatable.View animation={'zoomIn'} duration={300}useNativeDriver={true}>
+
         <TouchableOpacity
           style={styles.card}
           onPress={() => {
@@ -76,6 +90,10 @@ export default class StartGameScreen extends Component {
           />
           <Text style={styles.cardText}>{I18n.t("stamina")}</Text>
         </TouchableOpacity>
+        </Animatable.View>
+
+        <Animatable.View animation={'zoomIn'} duration={300} useNativeDriver={true}>
+
         <TouchableOpacity
           style={styles.card}
           onPress={() => {
@@ -90,6 +108,8 @@ export default class StartGameScreen extends Component {
           />
           <Text style={styles.cardText}>{I18n.t("motivation")}</Text>
         </TouchableOpacity>
+        </Animatable.View>
+
       </View>
     );
   }

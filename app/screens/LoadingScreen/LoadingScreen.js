@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import { getUserData } from "FieldsReact/app/redux/app-redux.js";
 import { getUserAndTeamData } from "../../redux/app-redux";
 import I18n from "FieldsReact/i18n";
+import * as Animatable from "react-native-animatable";
+
 
 const mapStateToProps = state => {
   return {
@@ -58,7 +60,7 @@ class LoadingScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#3bd774" />
+      <Animatable.Image style={styles.logo} animation={'fadeIn'} iterationCount={'infinite'} source={{uri: 'stribe_icon_activated'}}></Animatable.Image>
       </View>
     );
   }
@@ -69,11 +71,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white"
+    backgroundColor: "#111111"
   },
   logo: {
-    width: 200,
-    height: 200
+    width: 50,
+    height: 50
   }
 });
 export default connect(
