@@ -94,7 +94,9 @@ class DetailEventScreen extends Component {
 
   constructor(props) {
     super(props);
-    firebase.analytics().setCurrentScreen("DetailEventScreen", "DetailEventScreen");
+    firebase
+      .analytics()
+      .setCurrentScreen("DetailEventScreen", "DetailEventScreen");
 
     var { params } = this.props.navigation.state;
 

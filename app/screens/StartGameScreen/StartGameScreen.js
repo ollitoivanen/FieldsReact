@@ -3,7 +3,6 @@ import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
 import I18n from "FieldsReact/i18n";
 import * as Animatable from "react-native-animatable";
 
-
 export default class StartGameScreen extends Component {
   static navigationOptions = {
     header: null
@@ -25,91 +24,109 @@ export default class StartGameScreen extends Component {
           </TouchableOpacity>
           <Text style={styles.backText}>{I18n.t("challenges")}</Text>
         </View>
-        <Animatable.View animation={'zoomIn'} duration={300}useNativeDriver={true}>
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => {
-            this.props.navigation.navigate("DetailChallengeScreen", {
-              challenge: 'speed'
-            });
-          }}
+        <Animatable.View
+          animation={"zoomIn"}
+          duration={300}
+          useNativeDriver={true}
         >
-          <Image style={styles.backButton} source={{ uri: "speed_icon_red" }} />
-          <Text style={styles.cardText}>{I18n.t("speed")}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              this.props.navigation.navigate("DetailChallengeScreen", {
+                challenge: "speed"
+              });
+            }}
+          >
+            <Image
+              style={styles.backButton}
+              source={{ uri: "speed_icon_red" }}
+            />
+            <Text style={styles.cardText}>{I18n.t("speed")}</Text>
+          </TouchableOpacity>
         </Animatable.View>
-        <Animatable.View animation={'zoomIn'} duration={300}useNativeDriver={true}>
-
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => {
-            this.props.navigation.navigate("DetailChallengeScreen", {
-              challenge: 'strength'
-            });
-          }}
+        <Animatable.View
+          animation={"zoomIn"}
+          duration={300}
+          useNativeDriver={true}
         >
-          <Image
-            style={styles.backButton}
-            source={{ uri: "strength_icon_red" }}
-          />
-          <Text style={styles.cardText}>{I18n.t("strength")}</Text>
-        </TouchableOpacity>
-        </Animatable.View>
-
-        <Animatable.View animation={'zoomIn'} duration={300}useNativeDriver={true}>
-
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => {
-            this.props.navigation.navigate("DetailChallengeScreen", {
-              challenge: 'agility'
-            });
-          }}
-        >
-          <Image
-            style={styles.backButton}
-            source={{ uri: "agility_icon_red" }}
-          />
-          <Text style={styles.cardText}>{I18n.t("agility")}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              this.props.navigation.navigate("DetailChallengeScreen", {
+                challenge: "strength"
+              });
+            }}
+          >
+            <Image
+              style={styles.backButton}
+              source={{ uri: "strength_icon_red" }}
+            />
+            <Text style={styles.cardText}>{I18n.t("strength")}</Text>
+          </TouchableOpacity>
         </Animatable.View>
 
-        <Animatable.View animation={'zoomIn'} duration={300}useNativeDriver={true}>
-
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => {
-            this.props.navigation.navigate("DetailChallengeScreen", {
-              challenge: 'stamina'
-            });
-          }}
+        <Animatable.View
+          animation={"zoomIn"}
+          duration={300}
+          useNativeDriver={true}
         >
-          <Image
-            style={styles.backButton}
-            source={{ uri: "stamina_icon_red" }}
-          />
-          <Text style={styles.cardText}>{I18n.t("stamina")}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              this.props.navigation.navigate("DetailChallengeScreen", {
+                challenge: "agility"
+              });
+            }}
+          >
+            <Image
+              style={styles.backButton}
+              source={{ uri: "agility_icon_red" }}
+            />
+            <Text style={styles.cardText}>{I18n.t("agility")}</Text>
+          </TouchableOpacity>
         </Animatable.View>
 
-        <Animatable.View animation={'zoomIn'} duration={300} useNativeDriver={true}>
-
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => {
-            this.props.navigation.navigate("DetailChallengeScreen", {
-              challenge: 'motivation'
-            });
-          }}
+        <Animatable.View
+          animation={"zoomIn"}
+          duration={300}
+          useNativeDriver={true}
         >
-          <Image
-            style={styles.backButton}
-            source={{ uri: "motivation_icon_red" }}
-          />
-          <Text style={styles.cardText}>{I18n.t("motivation")}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              this.props.navigation.navigate("DetailChallengeScreen", {
+                challenge: "stamina"
+              });
+            }}
+          >
+            <Image
+              style={styles.backButton}
+              source={{ uri: "stamina_icon_red" }}
+            />
+            <Text style={styles.cardText}>{I18n.t("stamina")}</Text>
+          </TouchableOpacity>
         </Animatable.View>
 
+        <Animatable.View
+          animation={"zoomIn"}
+          duration={300}
+          useNativeDriver={true}
+        >
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => {
+              this.props.navigation.navigate("DetailChallengeScreen", {
+                challenge: "motivation"
+              });
+            }}
+          >
+            <Image
+              style={styles.backButton}
+              source={{ uri: "motivation_icon_red" }}
+            />
+            <Text style={styles.cardText}>{I18n.t("motivation")}</Text>
+          </TouchableOpacity>
+        </Animatable.View>
       </View>
     );
   }

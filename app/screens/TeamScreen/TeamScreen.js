@@ -9,7 +9,8 @@ import {
   FlatList,
   TextInput,
   AsyncStorage,
-  Platform
+  Platform,
+  
 } from "react-native";
 import { connect } from "react-redux";
 import FastImage from "react-native-fast-image";

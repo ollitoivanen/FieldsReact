@@ -24,6 +24,7 @@ export default class PlayerListItem extends React.PureComponent {
       </View>
     );
   }
+
 }
 const styles = StyleSheet.create({
   item: {

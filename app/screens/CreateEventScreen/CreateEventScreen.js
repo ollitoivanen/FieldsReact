@@ -166,7 +166,6 @@ class CreateEventScreen extends Component {
             const { unM } = doc.data();
             const id = doc.id;
             players.push({
-              key: doc.id,
               id,
               unM
             });

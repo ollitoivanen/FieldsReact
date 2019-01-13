@@ -53,21 +53,18 @@ class FeedScreen extends React.Component {
   };
   componentDidMount() {
     AppState.addEventListener("change", this._handleAppStateChange);
+    setInterval(() => {
+      console.warn(1);
+    }, 1000);
   }
+
   componentWillUnmount() {
     AppState.removeEventListener("change", this._handleAppStateChange);
   }
   _handleAppStateChange = nextAppState => {
-    if (nextAppState === "background" && this.props.userData.cFI !== "") {
-      PushNotification.getApplicationIconBadgeNumber(count => {
-        if (count === 0) {
-          this.notif.scheduledNotif(
-            this.props.userData.cFN,
-            this.props.userData.ts,
-            this.props.userData.cFI
-          );
-        }
-      });
+    // console.warn(nextAppState);
+    // this.notif.scheduledNotif("moi", "tämä", "toimii");
+    if (nextAppState === "background") {
     }
   };
   onNotif(notif) {
@@ -405,7 +402,7 @@ class FeedScreen extends React.Component {
       <TouchableOpacity
         style={styles.startGameButton}
         onPress={() => {
-          this.props.navigation.navigate("StartGameScreen")
+          this.props.navigation.navigate("StartGameScreen");
         }}
       >
         <Text style={styles.startGameButtonText}>{I18n.t("challenges")}</Text>
@@ -635,7 +632,7 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30
   },
-  navigationImage2:{
+  navigationImage2: {
     height: 40,
     width: 40
   },

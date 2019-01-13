@@ -250,7 +250,9 @@ export default class SpeedChallengeScreen extends Component {
                 }}
               />
               <Animatable.View ref={"progressBar2"} style={progressBar2}>
-                <Text style={styles.timeText}>You {Math.trunc(this.state.score2*100)}</Text>
+                <Text style={styles.timeText}>
+                  You {Math.trunc(this.state.score2 * 100)}
+                </Text>
               </Animatable.View>
             </View>
           </TouchableOpacity>

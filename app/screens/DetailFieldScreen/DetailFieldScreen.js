@@ -599,17 +599,17 @@ class DetailFieldScreen extends Component {
       trainingButton = trainingButtonNotTraining;
     }
 
-    if(this.state.fieldImage === null){
+    if (this.state.fieldImage === null) {
       var fieldIm = (
         <TouchableOpacity>
           <Image
             style={styles.profileImage}
-            source={{uri: 'field_image_default'}}
+            source={{ uri: "field_image_default" }}
             resizeMode="cover"
           />
         </TouchableOpacity>
       );
-    }else{
+    } else {
       var fieldIm = (
         <TouchableOpacity onPress={() => this.setExpandedImageVisible()}>
           <FastImage
@@ -620,8 +620,6 @@ class DetailFieldScreen extends Component {
         </TouchableOpacity>
       );
     }
-
-    
 
     return (
       <View style={styles.container}>

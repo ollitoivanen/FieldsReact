@@ -25,7 +25,7 @@ export default class EventListItem extends React.PureComponent {
         <View style={styles.item}>
           <Text style={styles.trainingText}>
             {I18n.t(["event_type_array", this.props.eTY]) + [eventField]}
-          </Text>
+          </Text>p
         </View>
       </View>
     );

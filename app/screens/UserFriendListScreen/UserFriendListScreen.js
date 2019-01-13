@@ -40,7 +40,6 @@ export default class UserFriendListScreen extends Component {
   };
 
   openDetailUser = id => {
-    
     firebase
       .firestore()
       .collection("Users")
@@ -59,8 +58,8 @@ export default class UserFriendListScreen extends Component {
           id: id
         });
         firebase
-      .analytics()
-      .logEvent("detail_profile_opened_from_user_friend_list");
+          .analytics()
+          .logEvent("detail_profile_opened_from_user_friend_list");
       });
   };
 
